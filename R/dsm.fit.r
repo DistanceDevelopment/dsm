@@ -42,8 +42,6 @@ dsm.fit <- function(ddfobject=ddfobject, phat=NULL, response=response, formula=f
 #
 {
 
-library(mgcv)
-#
 #  This stolen from Laake
 default.field.names <- function()
 {

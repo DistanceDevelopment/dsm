@@ -61,8 +61,7 @@ dsm.bootstrap.pre.post <- function(ddf.ID=ddf.ID, dsm.ID=dsm.ID, prediction.ID=p
 #     Call appropriate bootstrapping function, based on the value of 'method'
 #       I'm thinking about not allowing writing to a file within the functions, or at least not
 #         writing to the file reserved for containing the cell-by-cell SEs.
-  library(mgcv)
-  require(mrds)
+
 #      Set working directory to the temp directory defined by Distance
 #         This will enable writing the bootstrap counter to simply write a filename, without
 #         need to know the path, or pass the pathname to Louise's functions

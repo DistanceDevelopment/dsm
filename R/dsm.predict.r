@@ -40,7 +40,6 @@ dsm.predict <- function(gam.model=gam.model, newdata=NULL, field=FALSE, off=NULL
 
 
 {
-library(mgcv)
 #    Append cell size of prediction grid to prediction grid  if off.set argument is a number, otherwise manufacture
 if (!field)     { 
     prediction.grid <- data.frame(newdata, off.set=off)
