@@ -1,8 +1,8 @@
 # dsm.fit - fits a 'gam to segment-specific estimates of abundance
 #           resulting from object-specific detection probabilities
-dsm.fit <- function(ddfobject=ddfobject, phat=NULL, response=response, formula=formula,
-                    model.defn=list(fn="gam",family="quasipoisson"), obsdata=obsdata,
-                    segdata=segdata, wghts=NULL, link='log', off=NULL, convert.units=NULL)
+dsm.fit <- function(ddfobject, phat=NULL, response, formula,
+                    model.defn=list(fn="gam",family="quasipoisson"), obsdata,
+                    segdata, wghts=NULL, link='log', off=NULL, convert.units=NULL)
 # This function has its orgins as perform.gam.fromddf (found in a txt file dsm.R from Oct '05)
 # This incarnation modifies that such that calling arguments conform to that requested
 # by the DISTANCE VB DSMNEngineInterface.MakeInputFile by deleting region.table and sample.table
