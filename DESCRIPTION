@@ -1,0 +1,20 @@
+Package: dsm
+Version: 1.0.5
+Date: 2011-08-18
+Title: Density surface modelling (dsm) of distance sampling data
+Author: Eric Rexstad RUWPA
+Maintainer: Eric Rexstad <ericr@mcs.st-and.ac.uk>
+Description: This library implements density surface modelling
+       of line transect data, based on the methods of 
+       Hedley et al. (2004).  Outputs are point and interval
+       estimates of population abundance and density.
+       Designed to be called from the software Distance, which
+       is available from http://www.ruwpa.st-and.ac.uk/distance/
+       Hedley, S.L., S.T. Buckland and D.L. Borchers.  2004. 
+       "Spatial distance sampling methods" pp 48-70 in Advanced
+       Distance Sampling, Buckland, S.T. et al. (eds). Oxford
+       University Press.
+Depends: R (>= 2.0.0)
+LazyLoad: yes
+URL:  http://www.ruwpa.st-and.ac.uk/distance/
+License: GPL version 2 or later
