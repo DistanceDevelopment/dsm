@@ -20,6 +20,7 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
 #     model.defn   - list comprised of
 #                      function - gam or glm
 #                      family - family of distribution for error term (link function follows)
+#                      family.pars - a list of named parameters for the family specified, can be NULL
 #     obsdata      - object #, segment id, group size
 #     segdata      - segment id and covariates data relevant to each segment (lat, long, depth, etc)
 #     wghts        - direct pass-through argument to gam or glm
@@ -85,12 +86,12 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
 
    # If response is group or group.est - then change all cluster values to 1
    # if density is the responnse, then the response variable needs to be # detected divided by area!!!
-   if(response=="group" | response=="group.est" ){
+   if(response=="group" | response=="group.est"){
        obsdata[,cluster.name]<-rep(1,dim(obsdata)[1])
    }
 
    # Aggregate response values of the sightings over segments
-   if(response=="indiv" | response=="group" ){
+   if(response=="indiv" | response=="group"){
       responsedata<-aggregate(obsdata[,cluster.name],
                        list(obsdata[,segnum.name]), sum)
        off.set <- "eff.area"
@@ -111,7 +112,7 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
    dat<-merge(segdata,responsedata,by=segnum.name,all.x=T)
    dat$N[is.na(dat$N)]<-0
    # With density, we need to transform response variable to a density by dividing by area    
-   if (off.set == "none"){
+   if (off.set=="none"){
       dat$N<-dat$N/2*dat[,seglength.name]*ddfobject$meta.data$width*convert.units
    }
    # when density is response, offset should be 1.
@@ -140,7 +141,28 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
 
    # Paste link function argument together with family argument to present to gam/glm in the
    # form:  family=quasipoisson(link="log")
-   family.and.link<-eval(parse(text=paste(model.defn$family, "(link='", link, "')", sep="")))
+   if(family=="Tweedie"){
+      # need to specify the Tweedie parameters
+      if(is.null(model.defn$family.pars$p)){
+         error("You must specify the p parameter to use the Tweedie family! See ?Tweedie.")
+      }
+      family.and.link<-eval(parse(text=paste(model.defn$family,
+                                             "(link='", link, "',p=",model.defn$family.pars$p,")",
+                                             sep="")))
+   }else if(family=="quasi"){
+      # specify the variance relationship for quasi
+      if(is.null(model.defn$family.pars$variance)){
+         error("You must specify the variance relation to use the quasi family! See ?family.")
+      }
+      family.and.link<-eval(parse(text=paste(model.defn$family,
+                                             "(link='", link, 
+                                             "',variance='",model.defn$family.pars$variance,"')",
+                                             sep="")))
+   }else{
+      # if the family does not have extra parameters
+      family.and.link<-eval(parse(text=paste(model.defn$family, "(link='", link, "')", sep="")))
+   }
+
    if (!is.null(wghts)){
       wghts<-paste("dat$", wghts, sep="")
    }
