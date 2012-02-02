@@ -31,7 +31,6 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
 #     dsm.fit      - object produced by mgcv
 #
 # Functions Used:  gam (from 'mgcv')
-#
 {
 
    #  This stolen from Laake
@@ -47,7 +46,9 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
    # Truncate observations made at distances greater than the truncation width;
    # truncation value picked up from metadata contained within ddfobject
    # No truncation for strip transects
-   if (!is.null(ddfobject)) obsdata<-obsdata[obsdata[,distance.name]<=ddfobject$meta.data$width,]
+   if (!is.null(ddfobject)){
+      obsdata<-obsdata[obsdata[,distance.name]<=ddfobject$meta.data$width,]
+   }
 
    #  the following is borrowed (heavily) from dsm.count by Laake
    #  ER modification is to test for presence of phat argument and substitute 
@@ -55,17 +56,17 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
    if(response=="indiv.est" | response=="group.est" | 
          response=="indiv.den" | response=="group.den"){
       if(!is.null(phat)){
-         fitted.p <- phat
-         object.data <- obsdata$sightnum.name
+         fitted.p<-phat
+         object.data<-obsdata$sightnum.name
       }else{
-         fitted.p <- ddfobject$fitted
-         object.data <- names(ddfobject$fitted)
+         fitted.p<-ddfobject$fitted
+         object.data<-names(ddfobject$fitted)
       }
-      sig.prob <- data.frame(p = fitted.p, object = object.data)
+      sig.prob<-data.frame(p=fitted.p, object=object.data)
       # old stmt: sig.prob <- data.frame(p = ddfobject$fitted, object = names(ddfobject$fitted))
 
       # Merge observations with sighting probabilities
-      obsdata <- merge(obsdata, sig.prob, by = sightnum.name, all.x = T, sort = F)
+      obsdata <- merge(obsdata, sig.prob, by=sightnum.name, all.x=T, sort=F)
       # Revision 10 Nov 2008; merge drops segments when detects are not made by primary see MLB and CODA
       obsdata <- obsdata[!is.na(obsdata$p), ]       
 
@@ -73,9 +74,9 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
       #  for designs of type 'trial' objects observed by trackers will not have 
       #  computed detection probabilities, so, trap that type of design, interrogating
       #  the call to ddf (archived in ddfobject$call using an archane function 'languageEl'
-      field.design <- substr(languageEl(ddfobject$call, which="method"),1,5)
+      field.design<-substr(languageEl(ddfobject$call, which="method"),1,5)
 
-      if(field.design != "trial" && any(is.na(obsdata$p))){
+      if(field.design!="trial" && any(is.na(obsdata$p))){
          cat("The following sighting numbers don't have a matching detection probability\n")
          print(obsdata[,sightnum.name][is.na(obsdata$p)])
          stop("Function terminated")
@@ -110,14 +111,16 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
    dat<-merge(segdata,responsedata,by=segnum.name,all.x=T)
    dat$N[is.na(dat$N)]<-0
    # With density, we need to transform response variable to a density by dividing by area    
-   if (off.set == "none") dat$N <- dat$N / 2 *dat[,seglength.name] * ddfobject$meta.data$width *convert.units
+   if (off.set == "none"){
+      dat$N<-dat$N/2*dat[,seglength.name]*ddfobject$meta.data$width*convert.units
+   }
    # when density is response, offset should be 1.
-   dat$off.set <- switch(off.set,
-                  eff.area = 2 * dat[,seglength.name] * dat[,esw.name],
-                  area = 2 * dat[,seglength.name] * ddfobject$meta.data$width,
-                  none = 1)
+   dat$off.set<-switch(off.set,
+                       eff.area=2*dat[,seglength.name]*dat[,esw.name],
+                       area=2*dat[,seglength.name]*ddfobject$meta.data$width,
+                       none=1)
    # Altered 2 Feb 06 to use final argument passed into function from InputFileMaker
-   if(!is.null(convert.units) & off.set != "none"){
+   if(!is.null(convert.units) & off.set!="none"){
       dat$off.set<-dat$off.set*convert.units
    }
 
@@ -128,18 +131,20 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
 
    # Create formula 
    if(response=="indiv.den" | response=="group.den"){
-      formula <- as.formula(paste("N", deparse(formula,width.cutoff=500),
+      formula<-as.formula(paste("N", deparse(formula,width.cutoff=500),
                                   collapse=""))
    }else{
-      formula <- as.formula(paste("N", deparse(formula,width.cutoff=500),
+      formula<-as.formula(paste("N", deparse(formula,width.cutoff=500),
                                   "+ offset(off.set)",collapse=""))
    }
 
    # Paste link function argument together with family argument to present to gam/glm in the
    # form:  family=quasipoisson(link="log")
-   family.and.link <- eval(parse(text=paste(model.defn$family, "(link='", link, "')", sep="")))
-   if (!is.null(wghts)) wghts <- paste("dat$", wghts, sep="")
-   dat$area = 2 * dat[,seglength.name] * ddfobject$meta.data$width * convert.units
+   family.and.link<-eval(parse(text=paste(model.defn$family, "(link='", link, "')", sep="")))
+   if (!is.null(wghts)){
+      wghts<-paste("dat$", wghts, sep="")
+   }
+   dat$area<-2*dat[,seglength.name]*ddfobject$meta.data$width*convert.units
 
    # Fit model  hardwiring gamma=1.4 per Wood (2006:254) who cites Kim and Gu(2004) for overfitting
    # weights should be 'area' when density is response.
