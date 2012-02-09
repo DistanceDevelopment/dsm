@@ -3,11 +3,11 @@
   # this now conforms with new R conventions
   # uses packageStartupMessage which can then be
   # surpressed
-  print.dsm.version()
+  dsm.version()
 }
 
 # taken from mgcv
-print.dsm.version <- function(){ 
+dsm.version <- function(){ 
   library(help=mmds)$info[[1]] -> linfo
 
   version <- linfo[pmatch("Version",linfo)]

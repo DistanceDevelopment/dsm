@@ -38,5 +38,5 @@ Hedley, S.L., and S.T. Buckland. 2004. Spatial models for line transect sampling
 \url{http://www.ruwpa.st-and.ac.uk/distance/}
 }
 \examples{
-Not a stand-alone R package, rather to be used in conjunction with Distance 6 interface
+#Not a stand-alone R package, rather to be used in conjunction with Distance 6 interface
 }
