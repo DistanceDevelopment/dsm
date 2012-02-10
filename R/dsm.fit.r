@@ -2,7 +2,7 @@
 #           resulting from object-specific detection probabilities
 dsm.fit <- function(ddfobject, phat=NULL, response, formula,
                     model.defn=list(fn="gam",family="quasipoisson"), obsdata,
-                    segdata, wghts=NULL, link='log', off=NULL, convert.units=1)
+                    segdata, wghts=NULL, link='log',convert.units=1)
 # This function has its orgins as perform.gam.fromddf (found in a txt 
 # file dsm.R from Oct '05)
 #
@@ -11,10 +11,13 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
 # by deleting region.table and sample.table and adding offset, link, and 
 # weights as arguments
 #
+# Jan 2012, Dave Miller started updating and turning into a proper
+#           R library.
+#
 #  Arguments:
 #     ddfobject    - result from call to ddf; might be usurpt by phat 
-#                    argument below ddfobject is set to NULL when strip 
-#                    transects are analyzed
+#                    argument below 
+#                    ddfobject is set to NULL when strip transects are analyzed
 #     phat         - if present, represents estimated detection probabilities 
 #                    for each object present in the project database.  This 
 #                    breaks the obligation that detection functions for
@@ -28,6 +31,10 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
 #                      indiv.den
 #     formula      - formula for distribution surface -- includes basis 
 #                    and max basis size
+#        soap formulae must be of the form:
+#        b <- try(gam(z~s(x,y,k=40,bs="so",xt=list(bnd=bnd)),knots=knots))
+#        i.e. the boundary _must_ be called bnd
+#        note that for soap k is the complexity of the boundary smoother
 #     model.defn   - list comprised of
 #                      function - gam or glm
 #                      family - family of distribution for error term 
@@ -45,12 +52,12 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
 #     wghts        - direct pass-through argument to gam or glm
 #     link         - direct pass-through argument subtly merged with 
 #                    family with eval(paste()) construct
-#     offset       - direct pass-through argument **presently computed by 
-#                    this R-code**
 #     convert.units - value to alter length to width for calculation of offset
 #
 #  Value:
-#     dsm.fit      - object produced by mgcv
+#     dsm.fit      - list consisting of:
+#                       result   - object produced by mgcv
+#                       call.dsm - call to this function
 {
 
 #   #  This stolen from Laake
@@ -144,11 +151,13 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
    
    names(responsedata)<-c(segnum.name,"N")
 
-   # Next merge the response variable with the segment records and any response
-   # variable that is NA should be assigned 0 because these occur due to 0 sightings
+   # Next merge the response variable with the segment records and any 
+   # response variable that is NA should be assigned 0 because these 
+   # occur due to 0 sightings
    dat<-merge(segdata,responsedata,by=segnum.name,all.x=T)
    dat$N[is.na(dat$N)]<-0
-   # With density, we need to transform response variable to a density by dividing by area    
+   # With density, we need to transform response variable to a density 
+   # by dividing by area    
    if (off.set=="none"){
       dat$N<-dat$N/2*dat[,seglength.name]*ddfobject$meta.data$width*convert.units
    }
@@ -157,7 +166,8 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
                        eff.area=2*dat[,seglength.name]*dat[,esw.name],
                        area=2*dat[,seglength.name]*ddfobject$meta.data$width,
                        none=1)
-   # Altered 2 Feb 06 to use final argument passed into function from InputFileMaker
+   # Altered 2 Feb 06 to use final argument passed into function 
+   # from InputFileMaker
    if(!is.null(convert.units) & off.set!="none"){
       dat$off.set<-dat$off.set*convert.units
    }
@@ -178,15 +188,15 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
 
    ###########################################
    ### Response distribution, link function etc
-   # Paste link function argument together with family argument to present to gam/glm in the
-   # form:  family=quasipoisson(link="log")
+   # Paste link function argument together with family argument to 
+   # present to gam/glm in the form:  family=quasipoisson(link="log")
    if(model.defn$family=="Tweedie"){
       # need to specify the Tweedie parameters
       if(is.null(model.defn$family.pars$p)){
          error("You must specify the p parameter to use the Tweedie family! See ?Tweedie.")
       }
       family.and.link<-eval(parse(text=paste(model.defn$family,
-                                             "(link='", link, "',p=",model.defn$family.pars$p,")",
+                          "(link='", link, "',p=",model.defn$family.pars$p,")",
                                              sep="")))
    }else if(model.defn$family=="quasi"){
       # specify the variance relationship for quasi
@@ -194,12 +204,13 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
          error("You must specify the variance relation to use the quasi family! See ?family.")
       }
       family.and.link<-eval(parse(text=paste(model.defn$family,
-                                             "(link='", link, 
-                                             "',variance='",model.defn$family.pars$variance,"')",
+                             "(link='", link, 
+                          "',variance='",model.defn$family.pars$variance,"')",
                                              sep="")))
    }else{
       # if the family does not have extra parameters
-      family.and.link<-eval(parse(text=paste(model.defn$family, "(link='", link, "')", sep="")))
+      family.and.link<-eval(parse(text=paste(model.defn$family, 
+                            "(link='", link, "')", sep="")))
    }
 
    if (!is.null(wghts)){
@@ -207,19 +218,36 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
    }
    dat$area<-2*dat[,seglength.name]*ddfobject$meta.data$width*convert.units
 
-   # Fit model  hardwiring gamma=1.4 per Wood (2006:254) who cites Kim and Gu(2004) for overfitting
-   # weights should be 'area' when density is response.
    if(toupper(model.defn$fn)=="GAM"){
 
-      # if we are doing soap film smoothing, we need to check that everything works
+      # if we are doing soap film smoothing, we need make sure that we
+      # don't mess up the knots
       if(grepl('bs = "so"',as.character(formula)[3])){
+
+         # the boundary must be name bnd in the formula, 
+         # otherwise this breaks
+         bnd<-model.defn$bnd
+         knots<-model.defn$knots
+
+   
+         if(is.null(wghts)){
+            b<-try(gam(formula,family=family.and.link,data=dat,
+                   control=gam.control(keepData=TRUE),
+                   weights=NULL, gamma=1.4))
+         }else{
+            b<-try(gam(formula, family=family.and.link, data=dat,
+                   control=gam.control(keepData=TRUE),
+                   weights=eval(parse(text=wghts)),gamma=1.4))
+         }
+
+         # loop until the knots are okay
          while(b[[1]]==
-               "Error in check.knots(g) : Please (re)move problematic knots.\n"){
+             "Error in check.knots(g) : Please (re)move problematic knots.\n"){
 
             # find the problem knots
             warning.mess<-names(last.warning)
             problem.knots<-as.numeric(
-                            gsub("knot ([0-9]+) is in boundary cell of solution grid",
+                      gsub("knot ([0-9]+) is in boundary cell of solution grid",
                                    "\\1",warning.mess))
 
             # wiggle them
@@ -234,27 +262,41 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
             }
 
             # refit the model
-            b <- try(gam(z~s(x,y,k=40,bs="so",xt=list(bnd=bnd)),knots=knots))
+            if(is.null(wghts)){
+               b<-try(gam(formula,family=family.and.link,data=dat,
+                      control=gam.control(keepData=TRUE),
+                      weights=NULL, gamma=1.4))
+            }else{
+               b<-try(gam(formula, family=family.and.link, data=dat,
+                      control=gam.control(keepData=TRUE),
+                      weights=eval(parse(text=wghts)),gamma=1.4))
+            }
          }
 
+      }else{
+         # Non-soap model
+         # Fit model  hardwiring gamma=1.4 per Wood (2006:254) who cites 
+         # Kim and Gu(2004) for overfitting weights should be 'area' when 
+         # density is response.
+         if(is.null(wghts)){
+            b<-gam(formula,family=family.and.link,data=dat,
+                   control=gam.control(keepData=TRUE),weights=NULL, gamma=1.4)
+         }else{
+            b<-gam(formula, family=family.and.link, data=dat,
+                   control=gam.control(keepData=TRUE),
+                   weights=eval(parse(text=wghts)),gamma=1.4)
+         }
       }
 
 
-      if(is.null(wghts)){
-         b<-gam(formula,family=family.and.link,data=dat,
-                control=gam.control(keepData=TRUE),weights=NULL, gamma=1.4)
-       }else{
-         b<-gam(formula, family=family.and.link, data=dat,
-                control=gam.control(keepData=TRUE),
-                weights=eval(parse(text=wghts)),gamma=1.4)
-       }
    }else{
+      # GLM case
       if(is.null(wghts)){
-         b<-glm(formula, family=family.and.link, data=dat, control=glm.control(),
-                                    weights=NULL, gamma=1.4)
+         b<-glm(formula,family=family.and.link,data=dat,control=glm.control(),
+                                    weights=NULL,gamma=1.4)
       }else{
-         b<-glm(formula, family=family.and.link, data=dat, control=glm.control(),
-                                  weights=eval(parse(text=wghts)), gamma=1.4)
+         b<-glm(formula,family=family.and.link,data=dat,control=glm.control(),
+                                  weights=eval(parse(text=wghts)),gamma=1.4)
       }
    }
    # Return model object
