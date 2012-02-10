@@ -1,8 +1,66 @@
-# dsm.fit - fits a gam to segment-specific estimates of abundance
-#           resulting from object-specific detection probabilities
+#' Fits a GAM to segment-specific estimates of abundance
+#' resulting from object-specific detection probabilities
+#' 
+#' Function constructs and then invokes a call to \code{gam()} and
+#' returns the result of the fitting of the density surface model.
 dsm.fit <- function(ddfobject, phat=NULL, response, formula,
                     model.defn=list(fn="gam",family="quasipoisson"), obsdata,
                     segdata, wghts=NULL, link='log',convert.units=1)
+#' @param ddfobject result from call to \code{ddf}; might be usurpt by
+#'   the \code{phat} argument below.
+#'   If \code{ddfobject} is set to \code{NUL}L when strip transects 
+#'   are analyzed
+#' @param phat if present, represents estimated detection probabilities 
+#'   for each object present in the project database. This breaks the 
+#'   obligation that detection functions for use in \code{dsm} need come
+#'   from \code{mrds}. 
+#' @param response response to be modelled; choices are:
+#'   \tabular{ll}{\code{group} \tab \cr
+#'                \code{indiv} \tab \cr
+#'                \code{group.est} \tab \cr
+#'                \code{indiv.est} \tab \cr
+#'                \code{group.den} \tab \cr
+#'                \code{indiv.den} \tab \cr}
+#' @param formula formula for distribution surface. This should be a
+#'   valid \code{glm} or \code{gam} formula. In the GAM case, the \code{s}
+#'   term should include basis definition (\code{bs} and \code{k} terms). If
+#'   the soap film smoother is to be used (\code{bs="so"}), it must include
+#'   \code{xt=list(bnd=bnd)} for the boundary, in this case the \code{k}
+#'   parameter gives the complexity of the boundary smoother. See 
+#'   \code{\link{smooth.construct.so.smooth.spec}} for further details.
+#' @param model.defn a list comprised of
+#'   \tabular{ll}{\code{function} \tab "gam" or "glm" \cr
+#'                \code{family} \tab a \code{\link{family}} name (in 
+#'                   quotes) for the response (link function definition 
+#'                   follows) \cr
+#'                \code{family.pars} \tab a list of named parameters 
+#'                   for the family specified, can be \code{NULL}\cr
+#'                \code{bnd} \tab Only required for soap film smoothers. 
+#'                   A list with two elements, x and y which are the
+#'                   vertices of the boundary polygon see
+#'                   \code{\link{smooth.construct.so.smooth.spec}}\cr
+#'                \code{knots} \tab Only required for soap film smoothers.
+#'                   Internal knots for the soap film smoother.}
+#' @param obsdata observation data, see \code{\link{dsm-data}}. 
+#' @param segdata segment data, see \code{\link{dsm-data}}.
+#' @param wghts weights, directly passed to \code{gam} or \code{glm}.
+#' @param link link function, merged with \code{family} via 
+#'   \code{eval(paste())}.
+#' @param convert.units value to alter length to width for calculation 
+#'   of the offset.
+#' @return fit a list, consisting of:
+#'   \tabular{ll}{\code{result} \tab object produced by the \code{gam} or
+#'      \code{glm} call.\cr
+#'                \code{call.dsm} \tab the call to this function.}
+#' @note Any notes.
+#' @author Eric Rexstad, David L. Miller
+# @seealso 
+# @references
+# @keywords
+# @examples
+#
+#  Value:
+# History:
 # This function has its orgins as perform.gam.fromddf (found in a txt 
 # file dsm.R from Oct '05)
 #
@@ -14,50 +72,6 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
 # Jan 2012, Dave Miller started updating and turning into a proper
 #           R library.
 #
-#  Arguments:
-#     ddfobject    - result from call to ddf; might be usurpt by phat 
-#                    argument below 
-#                    ddfobject is set to NULL when strip transects are analyzed
-#     phat         - if present, represents estimated detection probabilities 
-#                    for each object present in the project database.  This 
-#                    breaks the obligation that detection functions for
-#                    use in DSM need come from the MRDS engine.
-#     response     - response to be modelled; choices are:
-#                      group
-#                      indiv
-#                      group.est
-#                      indiv.est
-#                      group.den
-#                      indiv.den
-#     formula      - formula for distribution surface -- includes basis 
-#                    and max basis size
-#        soap formulae must be of the form:
-#        b <- try(gam(z~s(x,y,k=40,bs="so",xt=list(bnd=bnd)),knots=knots))
-#        i.e. the boundary _must_ be called bnd
-#        note that for soap k is the complexity of the boundary smoother
-#     model.defn   - list comprised of
-#                      function - gam or glm
-#                      family - family of distribution for error term 
-#                                (link function follows)
-#                      family.pars - a list of named parameters 
-#                                    for the family specified, can be NULL
-#                      bnd - a list with two elements, x and y which are 
-#                            the vertices of the boundary polygon
-#                            see ?smooth.construct.so.smooth.spec in 
-#                            library(soap)
-#                      knots - internal knots for the soap film smoother
-#     obsdata      - object #, segment id, group size, distance
-#     segdata      - segment id and covariates data relevant to each 
-#                    segment (lat, long, depth, etc)
-#     wghts        - direct pass-through argument to gam or glm
-#     link         - direct pass-through argument subtly merged with 
-#                    family with eval(paste()) construct
-#     convert.units - value to alter length to width for calculation of offset
-#
-#  Value:
-#     dsm.fit      - list consisting of:
-#                       result   - object produced by mgcv
-#                       call.dsm - call to this function
 {
 
 #   #  This stolen from Laake
