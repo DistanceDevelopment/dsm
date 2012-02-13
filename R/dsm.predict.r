@@ -1,52 +1,63 @@
-dsm.predict <- function(gam.model=gam.model, newdata=NULL, field=FALSE, off=NULL, silent=FALSE)
-#
-#    dsm.predict - purpose to predict abundance within study area at locations
-#                  away from the transects surveyed.
-#
-#  Arguments:
-#     gam.model - fitted model object (created by previous call to gam())
-#     newdata   - know as 'prediction.covariates.dat.r' in D6 DSM statement of 
-#                 direction prediction grid data frame, spatially referenced 
-#                 (latitude and longitude) covariates e.g., sea temperature, depth, 
-#                 distance to shore, etc.
-#     field     - logical indicating whether offset is provides as constant (False) 
-#                 or field in grid dataframe (True)
-#     off.set   - area of cells in prediction grid (newdata), provided by Distance
-#                 Note covariates in this dataframe must have names *identical* 
-#                 to variable names used in fitting the gam
-#                 If entered between double quotes, will be a field named in 
-#                 prediction grid, otherwise a numeric constant
-#			         Assume if a constant comes in, it will already have had the link 
-#                 transform applied, whereas if field, apply link fn.
-#     silent    - Set to true when used in conjunction with variance bootstraps; in 
-#                 this case we don't wish to see the abundance estimate printed
-#                 This identical nature of the names in the model object and dataframe
-#                 is not currently enforced; however, some code along the line of
-#                 for (j in 1:length(names(newd))){
-#                    print(any(i<-grep(names(newd)[[j]], 
-#                      dimnames(attr(b$terms,"factors"))[[1]])))
-#                 }              
-#                 would perform some checking of this
-
-#               Failure to have all covariates in 'newdata' results in message 
-#               of this sort:
-#                 Error in eval(expr, envir, enclos) : object "x2" not found
-#                   In addition: Warning message:
-#                   not all required variables have been supplied in newdata!
-#                   in: predict.gam(b, newd, type = "response") 
-#
-#   Value:
-#         produces one-dimensional array of predicted values (without se's)
-#         as well as the call that generated this instance of the function
+#' Produce estimated abundance at each cell in the prediction grid
+dsm.predict<-function(gam.model, newdata=NULL, field=FALSE, off=NULL, silent=FALSE)
+#' Function that extends the fitted density surface model from the covered region
+#' to the entire study region courtesy of predicting with covariates available in
+#' each of the cells of the prediction grid.
+#' @param gam.model fitted model object (created by previous call to \code{gam()}/
+#'                  \code{dsm.fit()})
+#' @param newdata spatially referenced (latitude and longitude) covariates e.g.,   
+#'                sea temperature, depth, distance to shore, etc.
+#'                Known as 'prediction.covariates.dat.r' in D6 DSM statement of 
+#'                direction prediction grid data frame.
+#'                
+#' @param field logical indicating whether offset is provides as constant 
+#'              (\code{FALSE}) or field in grid dataframe (\code{TRUE}).
+#' @param off.set area of cells in prediction grid (\code{newdata}). 
+#'                 Provided by Distance
+#'                 Note covariates in this dataframe must have names *identical* 
+#'                 to variable names used in fitting the \code{gam()}
+#'                 If entered between double quotes, will be a field named in 
+#'                 prediction grid, otherwise a numeric constant
+#'			          Assume if a constant comes in, it will already have had the link 
+#'                 transform applied, whereas if field, apply link fn.
+#' @param silent  Set to true when used in conjunction with variance bootstraps; in 
+#'                this case we don't wish to see the abundance estimate printed
+#'                This identical nature of the names in the model object and dataframe
+#'                is not currently enforced; however, some code along the line of
+#'                \code{for (j in 1:length(names(newd))){
+#'                   print(any(i<-grep(names(newd)[[j]], 
+#'                     dimnames(attr(b$terms,"factors"))[[1]])))
+#'                }}         
+#'                would perform some checking of this
+#'
+#'                Failure to have all covariates in \code{newdata} results in message 
+#'                of this sort:
+#'                 Error in eval(expr, envir, enclos) : object "x2" not found
+#'                   In addition: Warning message:
+#'                   not all required variables have been supplied in newdata!
+#'                   in: predict.gam(b, newd, type = "response") 
+#'
+#'   Value:
+#' @return predicted list consisting of:
+#'          \tabular{ll}{\code{result} \tab one-dimensional array of predicted 
+#'                       values (without se's)\cr
+#'                       \code{call} \tab the call that generated this instance 
+#'                       of the function}
 
 #   Functions used:  predict.gam() from package mgcv
-#                    Note the default arguments in predict.gam()
-#                    newdata.guaranteed=FALSE and
-#                    na.action=na.pass (creation of NA as predicted value 
-#                                       where a covariate is missing)
-#                    seem believable; leave them at their defaults, *but*
-#                    type="response" is not the default argument, and needs to be 
-#                    specified
+#' @notes Presently, only density surface models fitted with \code{mgcv()} can be 
+#' used for prediction with this incarnation of \code{dsm.predict()}.
+#' Note the default arguments in \code{predict.gam()} \code{newdata.guaranteed=FALSE}
+#' and \code{na.action=na.pass} (creation of NA as predicted value where a covariate 
+#' is missing) seem believable; leave them at their defaults, *but* 
+#' \code{type="response"} is not the default argument, and needs to be specified.
+#' @author Eric Rexstad \email{ericr@mcs.st-and.ac.uk}, 
+#'         David L. Miller \email{dave@ninepointeightone.net}
+# @seealso 
+#' @references Hedley, S. and S. T. Buckland. 2004. Spatial models for line transect sampling. JABES 9:181-199.
+#'
+#' Wood, S.N. 2006. Generalized Additive Models: An Introduction with R. CRC/Chapman & Hall.
+
 {
    #  Append cell size of prediction grid to prediction grid  if off.set 
    #  argument is a number, otherwise manufacture
