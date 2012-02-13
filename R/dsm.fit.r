@@ -52,14 +52,18 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
 #'   \tabular{ll}{\code{result} \tab object produced by the \code{gam} or
 #'      \code{glm} call.\cr
 #'                \code{call.dsm} \tab the call to this function.}
-#' @note Any notes.
-#' @author Eric Rexstad, David L. Miller
+#' @note Note that the gamma parameter to \code{gam()} is hardwired here; 
+#'       set to a value of 1.4 (from advice in Wood (2006)) such that the 
+#'       \code{gam()} is inclined to not 'overfit.'
+#' @author Eric Rexstad \email{ericr@mcs.st-and.ac.uk}, 
+#'         David L. Miller \email{dave@ninepointeightone.net}
 # @seealso 
-# @references
+#' @references Hedley, S. and S. T. Buckland. 2004. Spatial models for line transect sampling. JABES 9:181-199.
+#'
+#' Wood, S.N. 2006. Generalized Additive Models: An Introduction with R. CRC/Chapman & Hall.
 # @keywords
 # @examples
 #
-#  Value:
 # History:
 # This function has its orgins as perform.gam.fromddf (found in a txt 
 # file dsm.R from Oct '05)
