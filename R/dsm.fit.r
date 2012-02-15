@@ -89,13 +89,10 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
 #   eval(parse(text=field.names))
    # above code just does this, but it is a bit obtuse
    # probably want to do something smart here...
-#   y.name<-'Latitude'
-#   x.name<-'Longitude'
    y.name<-'y'
    x.name<-'x'
    seglength.name<-'Effort'
-#   segnum.name<-'Sample.Label'
-   segnum.name<-'segment.id'
+   segnum.name<-'Sample.Label'
    distance.name<-'distance'
    cluster.name<-'size'
    esw.name<-'esw'
@@ -258,9 +255,12 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
                    weights=eval(parse(text=wghts)),gamma=1.4))
          }
 
-         # loop until the knots are okay
+         # loop until the knots are okay but not more than 5 times
+         max.wiggles<-1
          while(b[[1]]==
-             "Error in check.knots(g) : Please (re)move problematic knots.\n"){
+            "Error in check.knots(g) : Please (re)move problematic knots.\n" & 
+            max.wiggles<6
+              ){
 
             # find the problem knots
             warning.mess<-names(last.warning)
@@ -289,6 +289,8 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
                       control=gam.control(keepData=TRUE),
                       weights=eval(parse(text=wghts)),gamma=1.4))
             }
+
+            max.wiggles<-max.wiggles+1
          }
 
       }else{
@@ -306,6 +308,10 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
          }
       }
 
+      # if we had too many wiggles above
+      if(max.wiggles==5){
+         stop("Too many soap knot failures! Try different knots!")
+      }
 
    }else{
       # GLM case
