@@ -5,10 +5,10 @@
 #' returns the result of the fitting of the density surface model.
 dsm.fit <- function(ddfobject, phat=NULL, response, formula,
                     model.defn=list(fn="gam",family="quasipoisson"), obsdata,
-                    segdata, wghts=NULL, link='log',convert.units=1)
+                    segdata, wghts=NULL, link='log',convert.units=1,...)
 #' @param ddfobject result from call to \code{ddf}; might be usurpt by
 #'   the \code{phat} argument below.
-#'   If \code{ddfobject} is set to \code{NUL}L when strip transects 
+#'   If \code{ddfobject} is set to \code{NULL} when strip transects 
 #'   are analyzed
 #' @param phat if present, represents estimated detection probabilities 
 #'   for each object present in the project database. This breaks the 
@@ -243,23 +243,22 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
          # otherwise this breaks
          bnd<-model.defn$bnd
          knots<-model.defn$knots
-
    
          if(is.null(wghts)){
             b<-try(gam(formula,family=family.and.link,data=dat,
                    control=gam.control(keepData=TRUE),
-                   weights=NULL, gamma=1.4))
+                   weights=NULL, gamma=1.4,...))
          }else{
             b<-try(gam(formula, family=family.and.link, data=dat,
                    control=gam.control(keepData=TRUE),
-                   weights=eval(parse(text=wghts)),gamma=1.4))
+                   weights=eval(parse(text=wghts)),gamma=1.4,...))
          }
 
          # loop until the knots are okay but not more than 5 times
          max.wiggles<-1
-         while(b[[1]]==
-            "Error in check.knots(g) : Please (re)move problematic knots.\n" & 
-            max.wiggles<6
+         while((b[[1]]==
+            "Error in check.knots(g) : Please (re)move problematic knots.\n") & 
+            (max.wiggles<6)
               ){
 
             # find the problem knots
@@ -283,14 +282,19 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
             if(is.null(wghts)){
                b<-try(gam(formula,family=family.and.link,data=dat,
                       control=gam.control(keepData=TRUE),
-                      weights=NULL, gamma=1.4))
+                      weights=NULL, gamma=1.4,...))
             }else{
                b<-try(gam(formula, family=family.and.link, data=dat,
                       control=gam.control(keepData=TRUE),
-                      weights=eval(parse(text=wghts)),gamma=1.4))
+                      weights=eval(parse(text=wghts)),gamma=1.4,...))
             }
 
             max.wiggles<-max.wiggles+1
+         }
+
+         # if we had too many wiggles above
+         if(max.wiggles==5){
+            stop("Too many soap knot failures! Try different knots!")
          }
 
       }else{
@@ -308,10 +312,6 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
          }
       }
 
-      # if we had too many wiggles above
-      if(max.wiggles==5){
-         stop("Too many soap knot failures! Try different knots!")
-      }
 
    }else{
       # GLM case
