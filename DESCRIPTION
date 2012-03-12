@@ -4,7 +4,7 @@ Maintainer: Eric Rexstad <ericr@mcs.st-and.ac.uk>, David L Miller
 License: GPL version 2 or later
 Title: Density surface modelling (dsm) of distance sampling data
 LazyLoad: yes
-Author: Eric Rexstad RUWPA
+Author: Eric Rexstad, Louise Burt, David Miller
 Description: This library implements density surface modelling of line
     transect data, based on the methods of Hedley et al. (2004).
     Outputs are point and interval estimates of population abundance
@@ -16,6 +16,6 @@ Description: This library implements density surface modelling of line
 Version: 1.1.0
 URL: http://www.ruwpa.st-and.ac.uk/distance/
 Date: 2011-08-18
-Depends: R (>= 2.10.0),mgcv,mrds,soap
-Collate: 'dsm.aggregate.R' 'dsm.bootstrap.R' 'dsm.fit.R'
+Depends: R (>= 2.10.0),mgcv,mrds,soap,geoR
+Collate: 'dsm.aggregate.R' 'dsm.bootstrap.R' 'dsm.fit.R' 'dsm.check.R'
     'dsm.predict.R' 'param.movblk.variance.R' 'zzz.R'

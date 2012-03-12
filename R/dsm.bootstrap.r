@@ -4,100 +4,106 @@ dsm.bootstrap.pre.post <- function(ddf.ID=ddf.ID, dsm.ID=dsm.ID, prediction.ID=p
                           field.flag=FALSE, cell.area=NULL, path=path, 
 				  bpfile=bpfile, boxplot.coef=1.5)
 {
+# Function: pre-and post process information enroute to and returning from Louise's
+#           bootstrapping routines
 #
-#     Function:  pre-and post process information enroute to and returning from Louise's
-#                bootstrapping routines
-#
-#   Arguments:
-#     ddf.ID - ID number of ddf analysis to use, set to NULL if strip transect
-#     dsm.ID - ID number of dsm model to use
-#     prediction.ID - ID number of predict analysis to use for prediction grid
-#     method - bootstrapping procedure (movingblock on nonparametric) to use
-#     replicates - number of bootstrap replicates
-#     blocksize - block size for moving block
-#     detectionrefit - flag for including uncertainty in detection function i
-#                      n estimates of precision [not currently employed]
-#     alpha - magnitude of confidence interval
-#     fname - file where cell-specific se's are written
-#     field.flag - flag indicating whether prediction grid cell arera is fixed or field name (passed thru to bootstrap)
-#     cell.area - size of each cell in prediction grid (used to convert density to abundance)
-#     path - path to temporary directory to find file 'var.dat.r'
-#     bpfile - filename where counter of progress is written by variance_par_mb
+# Arguments:
+#  ddf.ID - ID number of ddf analysis to use, set to NULL if strip transect
+#  dsm.ID - ID number of dsm model to use
+#  prediction.ID - ID number of predict analysis to use for prediction grid
+#  method - bootstrapping procedure (movingblock on nonparametric) to use
+#  replicates - number of bootstrap replicates
+#  blocksize - block size for moving block
+#  detectionrefit - flag for including uncertainty in detection function i
+#                   n estimates of precision [not currently employed]
+#  alpha - magnitude of confidence interval
+#  fname - file where cell-specific se's are written
+#  field.flag - flag indicating whether prediction grid cell arera is fixed or field name (passed thru to bootstrap)
+#  cell.area - size of each cell in prediction grid (used to convert density to abundance)
+#  path - path to temporary directory to find file 'var.dat.r'
+#  bpfile - filename where counter of progress is written by variance_par_mb
 #	boxplot.coef - coefficient to determine how far out 'whiskers' extend from box; 
 #				larger values make it more difficult for an observation to be an outlier, 
 #				big numbers (e.g. 3, will reject few outliers, making large bootstrap variance)
 #
-#   Value:
-#     vector of cell-by-cell standard errors over the prediction grid   written to 'fname'
-#       list of
-#               lower.abund.ci - lower bound for study area-wide CI, not adjusted for detection uncertainty
-#               upper.abund.ci - upper bound for study area-wide CI, not adjusted for detection uncertainty
-#               raw.bootstrap.values - all boostrap estimates of abundance not adjusted for detection uncertainty
+# Value:
+#  vector of cell-by-cell standard errors over the prediction grid   written to 'fname'
+#  list of:
+#   lower.abund.ci - lower bound for study area-wide CI, not adjusted for detection uncertainty
+#   upper.abund.ci - upper bound for study area-wide CI, not adjusted for detection uncertainty
+#   raw.bootstrap.values - all boostrap estimates of abundance not adjusted for detection uncertainty
 #       and perhaps confidence interval across entire study area, and at sub-study area regions
 #
-#       Created 8/9 February, 3, 13 April, 27 June 2006 by Rexstad
+# Created 8/9 February, 3, 13 April, 27 June 2006 by Rexstad
 
-#   Step 1, data preparation
-#     Attach 'transect' to data used to build the detection function (ddf object)
+  # Step 1, data preparation
+  #  Attach 'transect' to data used to build the detection function (ddf object)
   vardata.in <- read.table(file=paste(path,"var.dat.r",sep=""),header=TRUE, sep="\t")
-#     rename the second column in var.dat.r to "Transect" as expected by Louise
+
+  # rename the second column in var.dat.r to "Transect" as expected by Louise
   names(vardata.in)[2] <- "Transect"
-  if (!is.null(ddf.ID)) ddfdata.name <- paste("ddf.dat.", ddf.ID, sep="")
-#       Following statement does not work, because ddf data names segment labels "label", not
-#           "Sample.label" as in the var.dat.r file; hence cannot merge upon the specified by=
-#  ddf.data <- merge(eval(parse(text=ddfdata.name)), vardata.in, by="Sample.Label")
+  if(!is.null(ddf.ID)){
+    ddfdata.name <- paste("ddf.dat.", ddf.ID, sep="")
+  }
 
-#     Attach 'transect' to data used for the dsm object
+  # Following statement does not work, because ddf data names segment labels "label", not
+  #     "Sample.label" as in the var.dat.r file; hence cannot merge upon the specified by=
+  #  ddf.data <- merge(eval(parse(text=ddfdata.name)), vardata.in, by="Sample.Label")
 
+  # Attach 'transect' to data used for the dsm object
   dsmdata.name <- paste("dsm.", dsm.ID, "$result$data", sep="")
   ready.to.overwrite <- merge(eval(parse(text=dsmdata.name)), vardata.in, by="Sample.Label")
   new.dsm.object <- eval(parse(text=paste("dsm.",dsm.ID,sep=""))) 
   new.dsm.object$result$data <- ready.to.overwrite
-#     Glue together names of ddf, dsm, and prediction R objects
-  if (!is.null(ddf.ID)) ddf.object.name <- eval(parse(text=paste("ddf.", ddf.ID,sep="")))
+
+  # Glue together names of ddf, dsm, and prediction R objects
+  if(!is.null(ddf.ID)){
+    ddf.object.name <- eval(parse(text=paste("ddf.", ddf.ID,sep="")))
+  }
   dsm.object.name <- eval(parse(text=paste("dsm.",dsm.ID,sep="")))  
   predict.object.name <- eval(parse(text=paste("dsm.predict.", prediction.ID,sep="")))
   
-#     Call appropriate bootstrapping function, based on the value of 'method'
-#       I'm thinking about not allowing writing to a file within the functions, or at least not
-#         writing to the file reserved for containing the cell-by-cell SEs.
-
-#      Set working directory to the temp directory defined by Distance
-#         This will enable writing the bootstrap counter to simply write a filename, without
-#         need to know the path, or pass the pathname to Louise's functions
+  # Call appropriate bootstrapping function, based on the value of 'method'
+  #   I'm thinking about not allowing writing to a file within the functions, or at least not
+  #   writing to the file reserved for containing the cell-by-cell SEs.
+  
+  # Set working directory to the temp directory defined by Distance
+  #    This will enable writing the bootstrap counter to simply write a filename, without
+  #    need to know the path, or pass the pathname to Louise's functions
   current.working.dir <- getwd()
   setwd(path)  
-  if (method=="movblock") {
-      bootstraps <- param.movblk.variance(dsm.object=new.dsm.object,pred.object=predict.object.name,
-                       samp.unit.name='Transect',B=replicates, block=blocksize, field=field.flag, 
-                       cell.name=cell.area, bpfile=bpfile)
-#           values returned are: 'short.var' holding cell-specific sufficient stats, and
-#                                'study.area.total' holding replicate-specific densities
-      } else {
-      print(cat("Sorry, we are unable to compute nonparametric bootstrap variance\n"))
-#      bootstraps <- dsm.variance.nonpar.f(ddf.object=ddf.object.name, dsm.object=dsm.object.name,
-#                            grid=grid.object.name, samp.unit.name='Transect', B=replicates)
-      }
-#     Send standard errors for each cell to a file for subsequent read into GIS layer  
-#       having applied machine formula with sufficient statistics contained in the return
-#       values from call to 'variance.par.mb.f'
+
+  if(method=="movblock"){
+    bootstraps <- param.movblk.variance(dsm.object=new.dsm.object,pred.object=predict.object.name,
+                     samp.unit.name='Transect',B=replicates, block=blocksize, field=field.flag, 
+                     cell.name=cell.area, bpfile=bpfile)
+  # values returned are: 'short.var' holding cell-specific sufficient stats, and
+  #                      'study.area.total' holding replicate-specific densities
+  }else{
+    print(cat("Sorry, we are unable to compute nonparametric bootstrap variance\n"))
+    #bootstraps <- dsm.variance.nonpar.f(ddf.object=ddf.object.name, dsm.object=dsm.object.name,
+    #                            grid=grid.object.name, samp.unit.name='Transect', B=replicates)
+  }
+  # Send standard errors for each cell to a file for subsequent read into GIS layer  
+  #   having applied machine formula with sufficient statistics contained in the return
+  #   values from call to 'variance.par.mb.f'
   machine.var <- (bootstraps$short.var$sumx.sq - (bootstraps$short.var$sumx^2/replicates)) / (replicates-1)
   vector.cell.se <- sqrt(machine.var)
   
-#   Done with the bootstrapping, restore correct working directory for remainder of function
+  # Done with the bootstrapping, restore correct working directory for remainder of function
   setwd(current.working.dir)
   write.table(vector.cell.se, file=fname, quote=FALSE, col.names=FALSE, sep="\t")
   
-#   produce confidence interval for overall study area abundance
-#
-#         first step will be to trim largest x% of bootstraps; 
-#               Percentage defined as amount necessary to bring median and trimmed mean within 8% of each other
-#         these are defined as 'outliers,' and will be printed to note their existence, but
-#         removed from all subsequent computations
- untrimmed.bootstraps <- bootstraps$study.area.total
- outliers <- boxplot.stats(untrimmed.bootstraps, coef=boxplot.coef)$out
- bootstrap.abund <- untrimmed.bootstraps[!(untrimmed.bootstraps %in% outliers)]
- trim <- length(outliers) / length(untrimmed.bootstraps)
+  # produce confidence interval for overall study area abundance
+  
+  # first step will be to trim largest x% of bootstraps; 
+  # Percentage defined as amount necessary to bring median and trimmed mean within 8% of each other
+  # these are defined as 'outliers,' and will be printed to note their existence, but
+  # removed from all subsequent computations
+  untrimmed.bootstraps <- bootstraps$study.area.total
+  outliers <- boxplot.stats(untrimmed.bootstraps, coef=boxplot.coef)$out
+  bootstrap.abund <- untrimmed.bootstraps[!(untrimmed.bootstraps %in% outliers)]
+  trim <- length(outliers) / length(untrimmed.bootstraps)
   cat('\tBootstrap variance computations:  outlier removal\t\n')
   cat('         Using the method associated with boxplots (',
         boxplot.coef,' * interquartile range) above uppper quartile\n')

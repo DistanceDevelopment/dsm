@@ -21,7 +21,7 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
 #'                \code{indiv.est} \tab \cr
 #'                \code{group.den} \tab \cr
 #'                \code{indiv.den} \tab \cr}
-#' @param formula formula for distribution surface. This should be a
+#' @param formula formula for the surface. This should be a
 #'   valid \code{glm} or \code{gam} formula. In the GAM case, the \code{s}
 #'   term should include basis definition (\code{bs} and \code{k} terms). If
 #'   the soap film smoother is to be used (\code{bs="so"}), it must include
@@ -324,6 +324,8 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
       }
    }
    # Return model object
-   return(list(result=b,call.dsm=match.call()))
-}
+   ret<-list(result=b,call.dsm=match.call(),data=dat)
+   class(ret)<-"dsm"
 
+   return(ret)
+}
