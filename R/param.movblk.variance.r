@@ -98,14 +98,14 @@ param.movblk.variance <- function(B, dsm.object, pred.object,
     bs.samp$N <- fit*exp(bs.resids)  
 
     # Fit model to dsm bootstrap sample
-	 dud.replicate <- FALSE
+    dud.replicate <- FALSE
     # Bit of a cheat because dud.replicate needs to be returned out 
     #  of the function(err) to be acted on 	
     # Handle chaos in gam fitting caused by pathological bootstrap resample
-	 tryCatch(dsm.bs.model <- eval(parse(text=dsm.fit.command)), 
+    tryCatch(dsm.bs.model <- eval(parse(text=dsm.fit.command)), 
                                   error=function(err){dud.replicate <<-TRUE})
 
-	 if(!dud.replicate){
+    if(!dud.replicate){
       # Do prediction using newly fitted dsm model created from bootstrap sample
       dsm.predict.bs <- tryCatch(eval(parse(text=pred.command)), 
                                  error= function(err) {rep(NA,length(fit))} )
