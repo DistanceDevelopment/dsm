@@ -1,9 +1,7 @@
 ## TODO
-# pretty-ify
 # get rid of dead code
 # split files
-# re-write?
-# add Tweedie stuff into get.model.details.f
+# add Tweedie stuff into get.model.details
 # documentation
 # add in detection function uncertainty stuff
 
@@ -57,8 +55,8 @@ param.movblk.variance <- function(n.boot, dsm.object, pred.object,
   num.sampling.unit <- length(name.sampling.unit)
 
   # Reconstruct dsm model fitting command - Note not using dsm.fit() 
-  model.details <- get.model.details.f(dsm.object$result)
-  dsm.fit.command <- get.dsm.fit.command.f(model.details)
+  model.details <- get.model.details(dsm.object$result)
+  dsm.fit.command <- get.dsm.fit.command(model.details)
 
   # Reconstruct prediction command
   pred.command <- paste("dsm.predict(gam.model=dsm.bs.model,newdata=",
@@ -74,7 +72,7 @@ param.movblk.variance <- function(n.boot, dsm.object, pred.object,
                                   data=dsm.object$result$data,
                                   name.su=name.sampling.unit)
   tot.num.blocks <- sum(block.info$num.block)
-  k <- sum(block.info$num.req)
+  num.blocks.required <- sum(block.info$num.req)
   block.vector <- 1:tot.num.blocks
 
   # Start bootstrapping
@@ -87,9 +85,9 @@ param.movblk.variance <- function(n.boot, dsm.object, pred.object,
       write(progress, file=bpfile, append=FALSE)
     }
 
-    bs.blocks <- sample(block.vector, k, replace=TRUE)
-    bs.resids <- generate.mb.sample(k = k, block.size = block.size, 
-                       which.blocks = bs.blocks, x = dsm.object$result$data, 
+    bs.blocks <- sample(block.vector, num.blocks.required, replace=TRUE)
+    bs.resids <- generate.mb.sample(num.blocks.required, block.size, 
+                       which.blocks = bs.blocks, dsm.data = dsm.object$result$data, 
                        unit.info = block.info, n.units = num.sampling.unit)
 
     # Back transform to get bootstrap observations
@@ -131,7 +129,9 @@ param.movblk.variance <- function(n.boot, dsm.object, pred.object,
 
 # sort out the block information 
 block.info.per.su <- function(block.size,data,name.su){
-# block.size=block.size,data=dsm.data,name.su=unique.sampling.units
+# block.size=block.size
+#data=dsm.data
+#name.su=unique.sampling.units
   unit <- NULL   
   unit$name <- name.su
   num.su <- length(name.su)
@@ -152,41 +152,67 @@ block.info.per.su <- function(block.size,data,name.su){
   unit$num.req[unit$num.req==0] <- 1
   unit <- data.frame(unit)
 
+  # returns a data frame, one row per sampling unit (e.g. transect)
+  #  each row consists of:
+  #  - name of the sampling unit  
+  #  - number of segments in that unit
+  #  - number of blocks available (= # segments - # blocks +1)
+  #  - block # for start of segment 
+  #  - block # for end of segment 
+  #  - # of blocks needed for the sampling unit (> # needed) 
+  
   return(unit)
 }
 
 
 # generates the vector of residuals which can be mapped back onto the data
-generate.mb.sample <- function(k, block.size, which.blocks, x, 
-                               unit.info, n.units){
-# k = required.num.blocks
+generate.mb.sample <- function(num.blocks.required, block.size, which.blocks, 
+                                dsm.data, unit.info, n.units){
+# num.blocks.required
 # block.len = len.block
 # which.blocks = bs.blocks
-# x = data
+# dsm.data
 # unit.info = unit.info
 # n.units = num.sampling.units
 
   bs <- NULL
   bs$block <- which.blocks
   bs <- data.frame(bs)
-  for(i in 1:k){
-    for(j in 1:n.units){
-      if(bs$block[i] >= unit.info$start.block[j] & 
-         bs$block[i] <= unit.info$end.block[j]){
-        bs$unit.name[i] <- as.character(unit.info$name[j])
-        if(j == 1){
-          bs$unit.block[i] <- bs$block[i]
-        }else{
-          bs$unit.block[i] <- bs$block[i] - unit.info$end.block[j - 1]
-        }
-      }
+
+  for(i in 1:num.blocks.required){
+    ## find the sampling unit that the block is in 
+
+    # is the block a start or end point for sampling unit?
+    j<-which(bs$block[i] == unit.info$start.block)
+    if(length(j)==0){
+      j<-which(bs$block[i] == unit.info$end.block)
     }
-    x.unit <- x[x$sampling.unit == bs$unit.name[i], ]            
+    # if not a start or end, then where is it?
+    if(length(j)==0){
+      find.block<-c(unit.info$start.block,bs$block[i])
+      j<-which(sort(find.block)==bs$block[i])-1
+    }
+
+    bs$unit.name[i] <- as.character(unit.info$name[j])
+    if(j == 1){
+      bs$unit.block[i] <- bs$block[i]
+    }else{
+      bs$unit.block[i] <- bs$block[i] - unit.info$end.block[j - 1]
+    }
+
+    # pull out the data for this sampling unit
+    x.unit <- dsm.data[dsm.data$sampling.unit == bs$unit.name[i], ]            
     x.unit <- data.frame(x.unit)
+
+    # pull out the rows corresponding to this block
+    # start row is the block number and the end row is
+    #  block length after that
     start.row <- bs$unit.block[i]
     end.row <- start.row + block.size - 1
     x.block <- x.unit[start.row:end.row, ]
     x.block <- data.frame(x.block)
+
+    # create a new frame if necessary and store the data
     if (i == 1){
       bs.data <- x.block
     }else{
@@ -197,23 +223,28 @@ generate.mb.sample <- function(k, block.size, which.blocks, x,
   # Now need to map this onto data vector so same length 
   # (ie chopping off unwanted bits of blocks)
   temp <- bs.data$log.resids
+  # storage
+  all.resids <- c()
+
+  # loop over the sample units
   for (j in 1:n.units) {
-    # Get number of observations in blocks
+    # Get number of segments in the blocks
     tb <- unit.info$num.req[j] * block.size
+    # grab enough residuals for this sample unit
     tran.resids <- temp[1:unit.info$num[j]]
+    # remove all of the ones we sampled (i.e. if we over sampled
+    # make sure that we get rid of them too
     temp <- temp[-(1:tb)] 
-    if (j==1){
-      all.resids <- tran.resids
-    }else{
-      all.resids <- c(all.resids,tran.resids) 
-    }
+
+    # store the result
+    all.resids <- c(all.resids,tran.resids) 
   } 
   return(all.resids)
 }
 
 
 # Extracts relevant details from model
-get.model.details.f <- function(modelname=modelname){
+get.model.details <- function(modelname=modelname){
   type <- class(modelname)[1]
   lnk <- modelname$family$link
   family <- modelname$family$family
@@ -245,7 +276,7 @@ get.model.details.f <- function(modelname=modelname){
 
 
 # Pastes together command for fitting glm/gam model
-get.dsm.fit.command.f <- function(model=model.details){
+get.dsm.fit.command <- function(model=model.details){
   if (model$famstr == "Negat"){
     fam <- paste("negative.binomial(link=",model$lnk,",theta=",
                  model$theta,")",sep="")
