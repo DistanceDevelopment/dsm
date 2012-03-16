@@ -1,59 +1,44 @@
 \name{param.movblk.variance}
 \alias{param.movblk.variance}
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{ Parametric moving-block variance estimator }
-\description{
-  Function reconstructs the density surface model used to fit the original response variable.
-  A sample is drawn using a moving block approach to allocation residuals, hence retaining
-  some spatial correlation structure.  Prediction is performed after the fitting of the original
-  model to data that have been permuted via the reallocation of residuals.  The resulting
-  estimated response in each cell is stored in a matrix, and vector of replicate total abundances
-  is stored for summary when all replicates are processed.
-}
+\title{Variance estimation via parametric moving block bootstrap}
 \usage{
-param.movblk.variance(B = num.boot, dsm.object = dsm.object, 
-                      pred.object = predict.object, samp.unit.name = "Transect",
-			    block = num.segs.in.block, field = FALSE, 
-			    cell.name = cell, bpfile = bpfile)
+  param.movblk.variance(n.boot, dsm.object, pred.data,
+    ds.uncertainty = FALSE, samp.unit.name = "Transect",
+    block.size, cell.size.name = NULL, cell.size = NULL,
+    bpfile = NULL)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{B}{ Number of bootstrap replicates }
-  \item{dsm.object}{ Object containing the density surface model fitted }
-  \item{pred.object}{ Object containing the name of the prediction grid }
-  \item{samp.unit.name}{ Scale of sampling within which moving blocks will be rearranged }
-  \item{block}{ Number of segments in each block }
-  \item{field}{ Boolean indicating whether cell size is constant for all cells (FALSE) or
-                if a field containing cell-specific size is provided (TRUE) }
-  \item{cell.name}{ If field=TRUE, the name of the field containing cell size }
-  \item{bpfile}{ Bootstrap progress file to update Distance as to progress }
-}
-\details{
-  Note that memory is allocated (using \code{memory.limit}) to the full amount
-  available on a Windows machine (or 2Gb) whichever is smaller.
-}
-\value{
-  Matrix of cell-specific summary statistics is returned for producing measures of
-  uncertainty at the cell level.  Also the total abundance for the entire study region
-  is added to a vector of replicate estimates.
-}
-%\references{ ~put references to the literature/web site here ~ }
-\author{ Louise Burt, RUWPA, \email{louise@mcs.st-and.ac.uk} \cr and Eric Rexstad \email{ericr@mcs.st-and.ac.uk} }
-\note{  
-To prevent storing the bootstrap replicate values (perhaps thousands) for each cell in the
-prediction grid (perhaps many thousands), this code makes use of the 'machine formula' for
-computing variance, by storing summary statistics (sum and sum of squares) for each cell of 
-the grid.
+  \item{n.boot}{number of bootstrap resamples.}
 
-The problem with this approach is that rogue values at the prediction cell level cannot be
-filtered for the final bootstrap variance estimate as they are filtered for the overall study
-region (\code{study.area.total}) estimate of variance.  The result is that cell-level 
-measures of precision are quite large because they are influenced by occasional 'rogue' values.
+  \item{dsm.object}{object returned from
+  \code{\link{dsm.fit()}}.}
+
+  \item{pred.grid}{a \code{data.frame} that holds
+  prediction points, must have the correct columns for
+  other environmental covariates.}
+
+  \item{ds.uncertainty}{incorporate uncertainty in the
+  detection function?}
+
+  \item{samp.unit.name}{name sampling unit to resample
+  (default 'Transect').}
+
+  \item{block.size}{number of segments in each block.}
+
+  \item{cell.size.name}{name of the column in pred.data
+  corresponding to the size of the prediction cells
+  (default NULL, see below).}
+
+  \item{cell.size}{scalar (or vector of length
+  \code{nrow(pred.data)}) of the sizes of the prediction
+  cells (default \code{NULL}, either \code{cell.size} or
+  \code{cell.size.name} MUST be specified).}
+
+  \item{bpfile}{path to a file to be used (usually by
+  Distance) to get generate a progress bar (default
+  \code{NULL} -- no file written).}
 }
-\seealso{  \code{\link{dsm.bootstrap.pre.post}} }
-%\examples{
-%}
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ }
+\description{
+  Variance estimation via parametric moving block bootstrap
+}
 
