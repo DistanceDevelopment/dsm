@@ -1,5 +1,5 @@
 #' Produce estimated abundance at each cell in the prediction grid
-dsm.predict<-function(gam.model, newdata=NULL, field=FALSE, off=NULL, silent=FALSE)
+#'
 #' Function that extends the fitted density surface model from the covered region
 #' to the entire study region courtesy of predicting with covariates available in
 #' each of the cells of the prediction grid.
@@ -37,7 +37,6 @@ dsm.predict<-function(gam.model, newdata=NULL, field=FALSE, off=NULL, silent=FAL
 #'                   not all required variables have been supplied in newdata!
 #'                   in: predict.gam(b, newd, type = "response") 
 #'
-#'   Value:
 #' @return predicted list consisting of:
 #'          \tabular{ll}{\code{result} \tab one-dimensional array of predicted 
 #'                       values (without se's)\cr
@@ -45,20 +44,21 @@ dsm.predict<-function(gam.model, newdata=NULL, field=FALSE, off=NULL, silent=FAL
 #'                       of the function}
 
 #   Functions used:  predict.gam() from package mgcv
-#' @notes Presently, only density surface models fitted with \code{mgcv()} can be 
+#' @note Presently, only density surface models fitted with \code{mgcv()} can be 
 #' used for prediction with this incarnation of \code{dsm.predict()}.
 #' Note the default arguments in \code{predict.gam()} \code{newdata.guaranteed=FALSE}
 #' and \code{na.action=na.pass} (creation of NA as predicted value where a covariate 
 #' is missing) seem believable; leave them at their defaults, *but* 
 #' \code{type="response"} is not the default argument, and needs to be specified.
-#' @author Eric Rexstad \email{ericr@mcs.st-and.ac.uk}, 
-#'         David L. Miller \email{dave@ninepointeightone.net}
+#' @author Eric Rexstad, David L. Miller 
 # @seealso 
 #' @references Hedley, S. and S. T. Buckland. 2004. Spatial models for line transect sampling. JABES 9:181-199.
 #'
 #' Wood, S.N. 2006. Generalized Additive Models: An Introduction with R. CRC/Chapman & Hall.
+#' @export
 
-{
+dsm.predict<-function(gam.model, newdata=NULL, field=FALSE, off=NULL, 
+                      silent=FALSE){
    #  Append cell size of prediction grid to prediction grid  if off.set 
    #  argument is a number, otherwise manufacture
    if (!field){ 

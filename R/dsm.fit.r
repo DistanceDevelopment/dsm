@@ -3,9 +3,7 @@
 #' 
 #' Function constructs and then invokes a call to \code{gam()} and
 #' returns the result of the fitting of the density surface model.
-dsm.fit <- function(ddfobject, phat=NULL, response, formula,
-                    model.defn=list(fn="gam",family="quasipoisson"), obsdata,
-                    segdata, wghts=NULL, link='log',convert.units=1,...)
+#' 
 #' @param ddfobject result from call to \code{ddf}; might be usurpt by
 #'   the \code{phat} argument below.
 #'   If \code{ddfobject} is set to \code{NULL} when strip transects 
@@ -55,14 +53,17 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
 #' @note Note that the gamma parameter to \code{gam()} is hardwired here; 
 #'       set to a value of 1.4 (from advice in Wood (2006)) such that the 
 #'       \code{gam()} is inclined to not 'overfit.'
-#' @author Eric Rexstad \email{ericr@mcs.st-and.ac.uk}, 
-#'         David L. Miller \email{dave@ninepointeightone.net}
+#' @author Eric Rexstad, David L. Miller 
 # @seealso 
 #' @references Hedley, S. and S. T. Buckland. 2004. Spatial models for line transect sampling. JABES 9:181-199.
 #'
 #' Wood, S.N. 2006. Generalized Additive Models: An Introduction with R. CRC/Chapman & Hall.
+#' @export 
 # @keywords
 # @examples
+dsm.fit <- function(ddfobject, phat=NULL, response, formula,
+                    model.defn=list(fn="gam",family="quasipoisson"), obsdata,
+                    segdata, wghts=NULL, link='log',convert.units=1,...)
 #
 # History:
 # This function has its orgins as perform.gam.fromddf (found in a txt 
@@ -342,7 +343,7 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
     }
   }
   # Return model object
-  ret<-list(result=b,call.dsm=match.call(),data=dat)
+  ret<-list(result=b,call.dsm=match.call(),data=dat,ddf=ddfobject)
   class(ret)<-"dsm"
 
   return(ret)

@@ -16,6 +16,14 @@ Description: This library implements density surface modelling of line
 Version: 1.1.0
 URL: http://www.ruwpa.st-and.ac.uk/distance/
 Date: 2011-08-18
-Depends: R (>= 2.10.0),mgcv,mrds,soap,geoR
-Collate: 'assign.par.R' 'dsm.aggregate.R' 'dsm.bootstrap.R' 'dsm.fit.R' 'dsm.check.R'
-    'dsm.predict.R' 'param.movblk.variance.R' 'varprop.R' 'zzz.R'
+Depends:
+    R (>= 2.10.0),mgcv,mrds,soap,geoR
+Collate:
+    'dsm.aggregate.R'
+    'dsm.bootstrap.R'
+    'dsm.fit.R'
+    'dsm.check.R'
+    'dsm.predict.R'
+    'param.movblk.variance.R'
+    'varprop.R'
+    'zzz.R'

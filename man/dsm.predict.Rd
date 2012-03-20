@@ -42,9 +42,7 @@
   in message of this sort: Error in eval(expr, envir,
   enclos) : object "x2" not found In addition: Warning
   message: not all required variables have been supplied in
-  newdata!  in: predict.gam(b, newd, type = "response")
-
-  Value:}
+  newdata!  in: predict.gam(b, newd, type = "response")}
 }
 \value{
   predicted list consisting of: \tabular{ll}{\code{result}
@@ -57,6 +55,18 @@
   from the covered region to the entire study region
   courtesy of predicting with covariates available in each
   of the cells of the prediction grid.
+}
+\note{
+  Presently, only density surface models fitted with
+  \code{mgcv()} can be used for prediction with this
+  incarnation of \code{dsm.predict()}. Note the default
+  arguments in \code{predict.gam()}
+  \code{newdata.guaranteed=FALSE} and
+  \code{na.action=na.pass} (creation of NA as predicted
+  value where a covariate is missing) seem believable;
+  leave them at their defaults, *but*
+  \code{type="response"} is not the default argument, and
+  needs to be specified.
 }
 \author{
   Eric Rexstad, David L. Miller

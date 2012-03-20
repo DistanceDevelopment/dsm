@@ -3,6 +3,28 @@
 #' Produces four plots: quantile-quantile plot, scale-location plot
 #' (optionally with LOESS line), fit to the residuals and empirical 
 #' variogram.
+#'
+#' @param dsm.obj object resulting from a call to \code{\link{dsm.fit}}.
+#' @param type the type of residuals to use for all of the plots.         
+
+#' @param rep argument to be passed to \code{\link{qq.gam}} (default 0).
+#' @param level argument to be passed to \code{\link{qq.gam}} (default 0.9).
+#' @param rl.col argument to be passed to \code{\link{qq.gam}} (default 2).
+#' @param rep.col argument to be passed to \code{\link{qq.gam}} (default 
+#' "gray80").
+#' @param loess should the LOESS smooth through the scale-location plot be
+#' shown? (default \code{TRUE}).
+#' @param x.name name of the \code{x} coordinate in the data (default "x").
+#' @param y.name name of the \code{y} coordinate in the data (default "y").
+#' @param gam.k complexity of the \code{\link{gam}} to be fitted to the 
+#' residuals, see \code{\link{choose.k}} for more information (default 30).
+#' @param vario.max maximum distance for the variogram; points further than 
+#' this distance apart will be ignored, see \code{\link{variog}} (default 100).
+#' @param ... other arguments to be passed to \code{\link{qq.gam}}.
+
+#' @return a plot!
+#' @author David L. Miller
+#' @export
 #
 # analogous to gam.check for gam() objects, but dsm specific
 # much of this is butchered from Simon Wood's gam.check()
@@ -21,26 +43,6 @@ dsm.check<-function(dsm.obj,type=c("deviance","pearson","response"),
   # TODO
   # better way of selecting k? -- uniquecombs()?
 
-#' @param dsm.obj object resulting from a call to \code{\link{dsm.fit}}.
-#' @param type the type of residuals to use for all of the plots.         
-
-#' @param rep argument to be passed to \code{\link{qq.gam}} (default 0).
-#' @param level argument to be passed to \code{\link{qq.gam}} (default 0.9).
-#' @param rl.col argument to be passed to \code{\link{qq.gam}} (default 2).
-#' @param rep.col argument to be passed to \code{\link{qq.gam}} (default 
-#' "gray80").
-#' @param loess should the LOESS smooth through the scale-location plot be
-#' shown? (default \code{TRUE}).
-#' @param x.name name of the \code{x} coordinate in the data (default "x").
-#' @param y.name name of the \code{y} coordinate in the data (default "y").
-#' @param gam.k complexity of the \code{\link{gam}} to be fitted to the 
-#' residuals, see \code{\link{choose.k}} for more information (default 30).
-#' @param vario.max maximum distance for the variogram; points further than 
-#' this distance apart will be ignored, see \code{\link{variog}} (default 100).
-#' @param ...){
-
-#' @return a plot!
-#' @author David L. Miller \email{dave@ninepointeightone.net}
 
 
   ### first, pull out the GAM part of the model

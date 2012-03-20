@@ -44,7 +44,8 @@
   points further than this distance apart will be ignored,
   see \code{\link{variog}} (default 100).}
 
-  \item{...){}{}
+  \item{...}{other arguments to be passed to
+  \code{\link{qq.gam}}.}
 }
 \value{
   a plot!

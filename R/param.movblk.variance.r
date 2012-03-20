@@ -3,45 +3,50 @@
 # split files
 # add Tweedie stuff into get.model.details
 # documentation
-# add in detection function uncertainty stuff
+# make up the missed replicates due to model errors?
+# new sampler doesn't do point transects at the moment
 
 #' Variance estimation via parametric moving block bootstrap
 #'
-
-param.movblk.variance <- function(n.boot, dsm.object, pred.object, 
-                                  samp.unit.name='Transect',block.size, 
-                                  field=FALSE, cell.name, bpfile=NULL){
-
 #' @param n.boot number of bootstrap resamples.
 #' @param dsm.object object returned from \code{\link{dsm.fit()}}.
 #' @param pred.grid a \code{data.frame} that holds prediction points, must have
-#'        the correct columns. 
+#'        the correct columns for other environmental covariates. 
+#' @param ds.uncertainty incorporate uncertainty in the detection function?
 #' @param samp.unit.name name sampling unit to resample (default 'Transect').
 #' @param block.size number of segments in each block.
-#' @param field=FALSE [[this and cell.name are linked, see below]]
-#' @param cell.name=cell [[size of the cell to convert density to abundance]]
+#' @param cell.size.name name of the column in pred.data corresponding to the
+#'        size of the prediction cells (default NULL, see below).
+#' @param cell.size scalar (or vector of length \code{nrow(pred.data)}) of the
+#'        sizes of the prediction cells (default \code{NULL}, either 
+#'        \code{cell.size} or \code{cell.size.name} MUST be specified).
 #' @param bpfile path to a file to be used (usually by Distance) to get 
-#'        generate a progress bar (default \code{NULL} -- not used).
+#'        generate a progress bar (default \code{NULL} -- no file written).
+#' @export
 
-  #prediction.call <- pred.object$call
-  # previously, prediction.call[3] held the name for the prediction data
-  # let's just fix that now...
-  pred.data<-pred.object
-  prediction.call<-c("","","pred.data")
 
-  # Tricky construction of cell size vector from field of prediction 
-  # cell R object
-  if(field){
-    cell.string <- paste(prediction.call[3],"$",as.character(cell.name), sep="")
-    cell.size <- eval(parse(text=cell.string))
-  }else{
-    cell.size <- cell.name
+param.movblk.variance <- function(n.boot, dsm.object, pred.data, 
+                                  ds.uncertainty=FALSE,
+                                  samp.unit.name='Transect',block.size, 
+                                  cell.size.name=NULL, cell.size=NULL, 
+                                  bpfile=NULL){
+
+  # make sure either the size of the prediction cell or the name
+  # of the corresponding column in pred.data is supplied
+  if((is.null(cell.size) & is.null(cell.size.name))|
+     (!is.null(cell.size) & !is.null(cell.size.name))){
+    stop("You must supply either cell.size or cell.size.name!\n")
   }
+
+  # construct cell size vector from field of prediction data
+  if(is.null(cell.size)){
+    cell.size<-pred.data[[cell.size.name]]
+  }  
 
   # Initialize some data structures for use in variance computations
   study.area.total <- numeric(length=0)
-  short.var <- data.frame(sumx=rep(0,length(pred.object[[1]])), 
-                          sumx.sq=rep(0,length(pred.object[[1]])))
+  short.var <- data.frame(sumx=rep(0,nrow(pred.data)), 
+                          sumx.sq=rep(0,nrow(pred.data)))
 
   # Sort out sampling unit for dsm object
   su.string <- paste("dsm.object$result$data$",samp.unit.name,sep="")
@@ -59,8 +64,8 @@ param.movblk.variance <- function(n.boot, dsm.object, pred.object,
   dsm.fit.command <- get.dsm.fit.command(model.details)
 
   # Reconstruct prediction command
-  pred.command <- paste("dsm.predict(gam.model=dsm.bs.model,newdata=",
-                        prediction.call[3],",field=FALSE,off=0, silent=TRUE)",
+  pred.command <- paste("dsm.predict(gam.model=dsm.bs.model,",
+                        "newdata=pred.data,field=FALSE,off=0, silent=TRUE)",
                         sep="")
 
   # Get residuals 
@@ -75,6 +80,12 @@ param.movblk.variance <- function(n.boot, dsm.object, pred.object,
   num.blocks.required <- sum(block.info$num.req)
   block.vector <- 1:tot.num.blocks
 
+  if(ds.uncertainty){
+    bs.type<-"count"
+  }else{
+    bs.type<-"resids"
+  }
+
   # Start bootstrapping
   for(i in 1:n.boot){
     # Compute proportion of bootstrapping completed, write it to file 
@@ -86,17 +97,93 @@ param.movblk.variance <- function(n.boot, dsm.object, pred.object,
     }
 
     bs.blocks <- sample(block.vector, num.blocks.required, replace=TRUE)
-    bs.resids <- generate.mb.sample(num.blocks.required, block.size, 
-                       which.blocks = bs.blocks, dsm.data = dsm.object$result$data, 
-                       unit.info = block.info, n.units = num.sampling.unit)
+    bs.resids <- generate.mb.sample(bs.type, num.blocks.required, block.size, 
+                                    bs.blocks, dsm.object$result$data, 
+                                    block.info, num.sampling.unit)
 
     # Back transform to get bootstrap observations
     bs.samp <- dsm.object$result$data
-    fit <- fitted(dsm.object$result)
-    if(sum(is.na(fit)) > 0 ){
-      stop("Missing values detected in survey covariates, cannot be used with moving block")
+
+    if(bs.type=="resids"){
+      fit <- fitted(dsm.object$result)
+      if(sum(is.na(fit)) > 0 ){
+        stop(paste("Missing values detected in survey covariates,",
+                   " cannot be used with moving block"))
+      }
+      bs.samp$N <- fit*exp(bs.resids)  
+    }else{
+
+    #### This only deals with count data at the moment
+    ####  => no individual level covariates
+
+    #### Much of this can be put up top, doesn't need to be calculated
+    #### each time
+
+      # how many distances to generate?
+      n.ds.samples<-sum(bs.resids)
+
+      # how many samples do we have so far?
+      n.samps<-0
+      dists<-c()
+
+      # create an object to hold the parameters
+      pars<-list()
+      ds.object<-dsm.object$ddf
+      pars$scale<-ds.object$ds$aux$ddfobj$scale$parameters
+      if(!is.null(ds.object$ds$aux$ddfobj$shape$parameters)){
+        pars$shape<-ds.object$ds$aux$ddfobj$shape$parameters
+      }
+      if(!is.null(ds.object$ds$aux$ddfobj$adjustment$parameters)){
+        pars$adjustment<-ds.object$ds$aux$ddfobj$adjustment$parameters
+      }
+
+
+      # do some rejection sampling
+      while(n.samps < n.ds.samples){
+
+        # generate some new distances
+        new.dists<-data.frame(distance=runif(n.ds.samples-n.samps)*
+                                          ds.object$ds$aux$width,
+                              detected=rep(1,n.ds.samples-n.samps),
+                              object=1:(n.ds.samples-n.samps))
+
+        U<-runif(n.ds.samples-n.samps)
+
+        # need to call out to mrds to get the data and model objects
+        # into the correct format
+        xmat <- mrds:::process.data(new.dists,ds.object$meta.data,
+                                    check=FALSE)$xmat
+        ddfobj <- mrds:::create.ddfobj(ds.object$call$dsmodel,xmat,
+                            ds.object$meta.data,pars)
+
+        # do the rejection...
+        # (evaluate the -log(L) then backtransform per-observation
+        # ONLY line transect at the moment!!
+        inout <- exp(-mrds:::flt.lnl(ds.object$par,ddfobj,
+                      misc.options=list(width=ds.object$ds$aux$width,
+                                        int.range=ds.object$ds$aux$int.range,
+                                        showit=FALSE, doeachint=TRUE,
+                                        point=ds.object$ds$aux$point,
+                                        integral.numeric=TRUE),TCI=FALSE))>U
+        dists<-c(dists,new.dists$distance[inout])
+
+        n.samps<-length(dists)
+      }
+      # make sure that we got the right number
+      dists<-dists[1:n.ds.samples]
+      dists<-data.frame(distance=dists,
+                        detected=rep(1,length(dists)),
+                        object=1:length(dists))
+
+      # fit the new model
+      ddf.call <- dsm.object$ddf$call
+      ddf.call$data <- dists
+      ddf.fitted<-eval(ddf.call)
+
+      # find the offset(s)
+      bs.samp$off.set<-rep(fitted(ddf.fitted,compute=TRUE,esw=TRUE)[1],nrow(bs.samp))
+
     }
-    bs.samp$N <- fit*exp(bs.resids)  
 
     # Fit model to dsm bootstrap sample
     dud.replicate <- FALSE
@@ -123,6 +210,8 @@ param.movblk.variance <- function(n.boot, dsm.object, pred.object,
       study.area.total <- append(study.area.total, NA)
     }
   }
+
+
   result <- list(short.var=short.var, study.area.total=study.area.total)
 }
 
@@ -166,8 +255,9 @@ block.info.per.su <- function(block.size,data,name.su){
 
 
 # generates the vector of residuals which can be mapped back onto the data
-generate.mb.sample <- function(num.blocks.required, block.size, which.blocks, 
+generate.mb.sample <- function(bs.type, num.blocks.required, block.size, which.blocks, 
                                 dsm.data, unit.info, n.units){
+# bs.type = "count" or "resids"
 # num.blocks.required
 # block.len = len.block
 # which.blocks = bs.blocks
@@ -222,29 +312,35 @@ generate.mb.sample <- function(num.blocks.required, block.size, which.blocks,
     
   # Now need to map this onto data vector so same length 
   # (ie chopping off unwanted bits of blocks)
-  temp <- bs.data$log.resids
+
+  if(bs.type=="resids"){
+    temp <- bs.data$log.resids
+  }else if(bs.type=="count"){
+    temp <- bs.data$N
+  }
+
   # storage
-  all.resids <- c()
+  bs.response <- c()
 
   # loop over the sample units
   for (j in 1:n.units) {
     # Get number of segments in the blocks
     tb <- unit.info$num.req[j] * block.size
     # grab enough residuals for this sample unit
-    tran.resids <- temp[1:unit.info$num[j]]
+    tran.response <- temp[1:unit.info$num[j]]
     # remove all of the ones we sampled (i.e. if we over sampled
     # make sure that we get rid of them too
     temp <- temp[-(1:tb)] 
 
     # store the result
-    all.resids <- c(all.resids,tran.resids) 
+    bs.response <- c(bs.response,tran.response) 
   } 
-  return(all.resids)
+  return(bs.response)
 }
 
 
 # Extracts relevant details from model
-get.model.details <- function(modelname=modelname){
+get.model.details <- function(modelname){
   type <- class(modelname)[1]
   lnk <- modelname$family$link
   family <- modelname$family$family
@@ -276,7 +372,7 @@ get.model.details <- function(modelname=modelname){
 
 
 # Pastes together command for fitting glm/gam model
-get.dsm.fit.command <- function(model=model.details){
+get.dsm.fit.command <- function(model){
   if (model$famstr == "Negat"){
     fam <- paste("negative.binomial(link=",model$lnk,",theta=",
                  model$theta,")",sep="")
@@ -317,22 +413,6 @@ resids.when.missing <- function(model=model.object){
   # plus 0.001 (arbitrary) to avoid logging zero   
   res <- log(obs+0.001) - log(fit+0.001)  
 
-  #return(res) ##?
+  return(res)
 }
 
-
-
-
-# this was commented out anyway... replaced by redids.when.missing(), above?
-# --------------------------------------------------------------------
-#get.log.resids.f <- function(model=model.object) {
-## Get residuals on log scale
-#  obs <- model$data$N
-#  fit <- fitted(model)
-#  if ((min(obs)==0) | (min(fit)==0) | ((min(obs)==0)&(min(fit)==0))) {
-#    obs <- obs + 1
-#    fit <- fit + 1
-#  }
-#  res <- log(obs) - log(fit)
-#res
-#}
