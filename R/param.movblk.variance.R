@@ -113,6 +113,8 @@ param.movblk.variance <- function(n.boot, dsm.object, pred.data,
       bs.samp$N <- fit*exp(bs.resids)  
     }else{
 
+      # replace the counts in N with the ones from the bootstrap
+      bs.samp$N <- bs.resids
     #### This only deals with count data at the moment
     ####  => no individual level covariates
 
@@ -295,8 +297,8 @@ generate.mb.sample <- function(bs.type, num.blocks.required, block.size, which.b
     x.unit <- data.frame(x.unit)
 
     # pull out the rows corresponding to this block
-    # start row is the block number and the end row is
-    #  block length after that
+    # start.row is the block number and the end row is
+    #  (block length) segments after that
     start.row <- bs$unit.block[i]
     end.row <- start.row + block.size - 1
     x.block <- x.unit[start.row:end.row, ]
