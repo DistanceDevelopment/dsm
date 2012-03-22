@@ -43,8 +43,6 @@ dsm.check<-function(dsm.obj,type=c("deviance","pearson","response"),
   # TODO
   # better way of selecting k? -- uniquecombs()?
 
-
-
   ### first, pull out the GAM part of the model
   if(class(dsm.obj)!="gam"){
     model<-dsm.obj$result
@@ -87,22 +85,20 @@ dsm.check<-function(dsm.obj,type=c("deviance","pearson","response"),
 
   ### variogram
 
-  # need geoR
-  library(geoR)
+  # need geoR for this!
+
+  # taken from the Red Book
+  coords<-matrix(0,length(model$model$x),2)
+  coords[,1]<-model$data$x
+  coords[,2]<-model$data$y
 
 
-   # taken from the Red Book
-   coords<-matrix(0,length(model$model$x),2)
-   coords[,1]<-model$data$x
-   coords[,2]<-model$data$y
+  gb<-list(data=residuals(model,type="d"),coords=coords)
+  vg<-variog(gb,max.dist=vario.max)
+  vg.env<-variog.mc.env(gb, obj.var = vg)
 
-
-   gb<-list(data=residuals(model,type="d"),coords=coords)
-   vg<-variog(gb,max.dist=vario.max)
-   vg.env<-variog.mc.env(gb, obj.var = vg)
-
-   # plot the variogram
-   plot(vg,envelope=vg.env,type="l",main="Emprical variogram")
+  # plot the variogram
+  plot(vg,envelope=vg.env,type="l",main="Emprical variogram")
 
   par(old.par)
 }

@@ -9,8 +9,8 @@ resulting from object-specific detection probabilities}
     convert.units = 1, ...)
 }
 \arguments{
-  \item{ddfobject}{result from call to \code{ddf}; might be
-  usurpt by the \code{phat} argument below.  If
+  \item{ddfobject}{result from call to \code{\link{ddf}};
+  might be usurpt by the \code{phat} argument below.  If
   \code{ddfobject} is set to \code{NULL} when strip
   transects are analyzed}
 
@@ -21,9 +21,13 @@ resulting from object-specific detection probabilities}
   \code{mrds}.}
 
   \item{response}{response to be modelled; choices are:
-  \tabular{ll}{\code{group} \tab \cr \code{indiv} \tab \cr
-  \code{group.est} \tab \cr \code{indiv.est} \tab \cr
-  \code{group.den} \tab \cr \code{indiv.den} \tab \cr}}
+  \tabular{ll}{\code{indiv} \tab - individual counts per
+  segment\cr \code{group} \tab - group counts per
+  segment\cr \code{indiv.est} \tab - estimated individual
+  abundance per segment\cr \code{group.est} \tab -
+  estimated group abundance per segment \cr
+  \code{indiv.den} \tab individual density per segment\cr
+  \code{group.den} \tab group density per segment\cr}}
 
   \item{formula}{formula for the surface. This should be a
   valid \code{glm} or \code{gam} formula. In the GAM case,
@@ -64,9 +68,11 @@ resulting from object-specific detection probabilities}
   calculation of the offset.}
 }
 \value{
-  fit a list, consisting of: \tabular{ll}{\code{result}
-  \tab object produced by the \code{gam} or \code{glm}
-  call.\cr \code{call.dsm} \tab the call to this function.}
+  a list, consisting of: \tabular{ll}{\code{result} \tab
+  object produced by the \code{gam} or \code{glm} call.\cr
+  \code{call.dsm} \tab the call to this function.
+  \code{data} \tab the data object supplied in the call\cr
+  \code{ddf} \tab the \code{\link{ddf}} object supplied}
 }
 \description{
   Function constructs and then invokes a call to
