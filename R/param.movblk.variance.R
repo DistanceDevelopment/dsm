@@ -80,12 +80,6 @@ param.movblk.variance <- function(n.boot, dsm.object, pred.data,
   num.blocks.required <- sum(block.info$num.req)
   block.vector <- 1:tot.num.blocks
 
-  if(ds.uncertainty){
-    bs.type<-"count"
-  }else{
-    bs.type<-"resids"
-  }
-
   # Start bootstrapping
   for(i in 1:n.boot){
     # Compute proportion of bootstrapping completed, write it to file 
@@ -97,32 +91,32 @@ param.movblk.variance <- function(n.boot, dsm.object, pred.data,
     }
 
     bs.blocks <- sample(block.vector, num.blocks.required, replace=TRUE)
-    bs.resids <- generate.mb.sample(bs.type, num.blocks.required, block.size, 
+    bs.resids <- generate.mb.sample(num.blocks.required, block.size, 
                                     bs.blocks, dsm.object$result$data, 
                                     block.info, num.sampling.unit)
 
     # Back transform to get bootstrap observations
     bs.samp <- dsm.object$result$data
+    fit <- fitted(dsm.object$result)
 
-    if(bs.type=="resids"){
-      fit <- fitted(dsm.object$result)
-      if(sum(is.na(fit)) > 0 ){
-        stop(paste("Missing values detected in survey covariates,",
-                   " cannot be used with moving block"))
-      }
-      bs.samp$N <- fit*exp(bs.resids)  
-    }else{
+    if(sum(is.na(fit)) > 0 ){
+      stop(paste("Missing values detected in survey covariates,",
+                 " cannot be used with moving block"))
+    }
+    bs.samp$N <- fit*exp(bs.resids)  
 
-      # replace the counts in N with the ones from the bootstrap
-      bs.samp$N <- bs.resids
-    #### This only deals with count data at the moment
-    ####  => no individual level covariates
+    # if we are incirporating detection function uncertainty, then 
+    # need to resample the distances
+    if(ds.uncertainty){
 
-    #### Much of this can be put up top, doesn't need to be calculated
-    #### each time
+      #### This only deals with count data at the moment
+      ####  => no individual level covariates
+      #### Much of this can be put up top, doesn't need to be calculated
+      #### each time
 
-      # how many distances to generate?
-      n.ds.samples<-sum(bs.resids)
+      # how many distances to generate? -- need to round
+      n.ds.samples<-round(sum(bs.samp$N),0)
+      bs.samp$N<-round(bs.samp$N,0)
 
       # how many samples do we have so far?
       n.samps<-0
@@ -257,9 +251,8 @@ block.info.per.su <- function(block.size,data,name.su){
 
 
 # generates the vector of residuals which can be mapped back onto the data
-generate.mb.sample <- function(bs.type, num.blocks.required, block.size, which.blocks, 
+generate.mb.sample <- function(num.blocks.required, block.size, which.blocks, 
                                 dsm.data, unit.info, n.units){
-# bs.type = "count" or "resids"
 # num.blocks.required
 # block.len = len.block
 # which.blocks = bs.blocks
@@ -315,11 +308,7 @@ generate.mb.sample <- function(bs.type, num.blocks.required, block.size, which.b
   # Now need to map this onto data vector so same length 
   # (ie chopping off unwanted bits of blocks)
 
-  if(bs.type=="resids"){
-    temp <- bs.data$log.resids
-  }else if(bs.type=="count"){
-    temp <- bs.data$N
-  }
+  temp <- bs.data$log.resids
 
   # storage
   bs.response <- c()
