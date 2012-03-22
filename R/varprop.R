@@ -1,15 +1,30 @@
 #' Variance propogation for DSM models
 #'
-#' Based on code from Mark Bravington and Sharon Hedley
+#' Based on (much more general) code from Mark Bravington and Sharon Hedley.
+#'
+#' @param dsm.obj an object returned from running \code{\link{dsm.fit}}.
+#' @param pred.grids list of prediction grids. Each element should be a 
+#'        \code{data.frame} with the same columns as the original data.
+#' @param pred.wts
+#' @param seglen.varname name for the column which holds the segment length 
+#'        (default value "Effort"). 
+#' @param type.pred should the predictions be on the "response" or "link" scale?
+#'        (default "response").
+#' @return a list with elements
+#'         \tabular{ll}{\code{model} \tab the fitted model object\cr
+#'                      \code{var.pred} \tab variance of
+#'                      }
+#' @author Mark Bravington, Sharon Hedley
 #' @export
 
-varprop<-function(fitobj, inputobj, pred.grids, 
-# first arg is dsm object, second is mrds
+varprop<-function(dsm.obj, pred.grids, 
     pred.wts=lapply( pred.grids, function( x) rep( 1/nrow(x), nrow( x))),
-    vmethod='delta', seglen.varname='Effort', 
-    type.pred=c( 'response', 'link'), ...) {
-###############
+    seglen.varname='Effort', type.pred="response", ...) {
 
+  # pull out the ddf object
+  ddf.obj<-dsm.obj$ddf
+
+  # this function changes the parameters in the ddf object
   tweakParams <- function(object, params) {
     if(missing(params)){
       return(object$par)
@@ -18,51 +33,54 @@ varprop<-function(fitobj, inputobj, pred.grids,
     object$ds$aux$ddfobj <- mrds:::assign.par(object$ds$aux$ddfobj,params)
     return(object)
   }
-  p0 <- tweakParams(inputobj) # returns the parameters to numderiv
 
-  callo <- fitobj$call  
-  fo2data <- fitobj$data
-  if( is.null( fo2data)) {
-    fo2data <- eval( callo$data, parent.frame()) # hit 'n' hope
-  }
-
-
+  # function to find the derivatives of -- the offset
   funco <- function(p){
-    ipo <- tweakParams(inputobj, p)
+    # set the parameters to be p
+    ipo <- tweakParams(ddf.obj, p)
+    # calculate the offset
     ret <- log(2 *unique(predict(ipo, esw=TRUE, compute=TRUE)$fitted)* 
             fo2data[[seglen.varname]])
     return(ret)
   }
 
+  # pull out the data and the call
+  callo <- dsm.obj$call  
+  fo2data <- dsm.obj$data
+
+  # find the derivatives
+  p0 <- tweakParams(ddf.obj) # returns the parameters to numderiv
   firstD <- numderiv( funco, p0)
   
-  if( all( firstD==0))
-    warning( 'Doffset/Dpars==0... really??!!') # will permit this, for testing!
-  
-  formo <- fitobj$formula
+  # if the derivatives were zero, throw an error
+  if( all( firstD==0)){
+    stop( 'Doffset/Dpars==0... really??!!') 
+  }
+
+  # now construct the extra term...
+  formo <- dsm.obj$formula
   dmat.name <- '.D1'
   names.to.avoid <- unique( c( all.names( formo), names( fo2data)))
-  while( dmat.name %in% names.to.avoid)
+  while( dmat.name %in% names.to.avoid){
     dmat.name <- '.' %&% dmat.name
-  fo2data[[ dmat.name]] <- firstD
-  
+  }
+  fo2data[[ dmat.name]] <- firstD 
   formo[[3]] <- call( '+', formo[[3]], as.symbol( dmat.name))
-  
-  # Tell it to penalize...
-  #paraterm <- list( list( getHessian( inputobj)))
-  paraterm<-list(list(inputobj$hess))
+  # put it all together
+  paraterm<-list(list(ddf.obj$hess))
   names( paraterm) <- dmat.name
-  callo$formula <- formo # should use pmatch
+  callo$formula <- formo 
   callo$paraPen <- c( callo$paraPen, paraterm)
-  callo$data <- fo2data # ideally not, as above
-  
+  callo$data <- fo2data 
+  # run the model
   fit.with.pen <- eval( callo, parent.frame())
 
-  ####
+  #### Diagnostics from Mark
   # check that it doesn't change the model fit much!
   #scatn( 'Comparison of fitted values when offset is flexible:')
-  #print( summary( fitted( fit.with.pen) - fitted( fitobj)))
+  #print( summary( fitted( fit.with.pen) - fitted( dsm.obj)))
   #scatn( "Should check param ests or fitted vals in 'fit.with.pen' are similar to original...")
+  #### /Diagnostics from Mark
 
   cft <- coef( fit.with.pen)
   preddo <- numeric( length( pred.grids))
@@ -71,39 +89,40 @@ varprop<-function(fitobj, inputobj, pred.grids,
   names( preddo) <- names( pred.grids) # if any
   dpred.db <- matrix( 0, length( pred.grids), length( cft))
   
-  type.pred <- match.arg( type.pred) 
-  { tmfn; dtmfn} %<-% switch( type.pred,
-    'response'=  
-      list( fitobj$family$linkinv, function( eta) sapply( eta, numderiv, f=tmfn)),
-    'link'= 
-      list( identity, function( eta) 1)
-  )
-  
+  # depending on whether we have response or link scale predictions...
+  if(type.pred=="response"){
+      tmfn<-dsm.obj$family$linkinv
+      dtmfn<-function( eta){sapply( eta, numderiv, f=tmfn)}
+  }else if(type.pred=="link"){ 
+      tmfn<-identity
+      dtmfn<-function( eta){1}
+  }
 
-  vmethod <- match.arg( vmethod)
+  # loop over the prediction grids
   for( ipg in seq_along( pred.grids)) {
+    # if we have a single paramter model (e.g. half-normal) need to be careful
     if(is.matrix(firstD)){
       pred.grids[[ ipg]][[ dmat.name]] <- matrix( 0, nrow( pred.grids[[ ipg]]), ncol( firstD))
     }else{
       pred.grids[[ ipg]][[ dmat.name]] <- rep(0, nrow( pred.grids[[ ipg]]))
     }
 
-
     # fancy lp matrix stuff
     lpmat <- predict( fit.with.pen, newdata=pred.grids[[ ipg]], type='lpmatrix')
     lppred <- lpmat %**% cft
-    if( vmethod=='delta') {
-      preddo[[ ipg]] <- pred.wts[[ ipg]] %**% tmfn( lppred)
-      dpred.db[ ipg,] <- pred.wts[[ ipg]] %**% (dtmfn( lppred) * lpmat)
-    }
+    preddo[[ ipg]] <- pred.wts[[ ipg]] %**% tmfn( lppred)
+    dpred.db[ ipg,] <- pred.wts[[ ipg]] %**% (dtmfn( lppred) * lpmat)
   } 
 
   # "'vpred' is the covariance of all the summary-things." - MVB  
   vpred <- dpred.db %**% tcrossprod( vcov( fit.with.pen), dpred.db) # A B A^tr 
   # inverse link
 
-  return(list(gam=fit.with.pen,vpred=vpred,preddo=preddo))
+  return(list(model=fit.with.pen,pred.var=vpred,pred=preddo))
 }
+
+
+####### this is all utility stuff below here, taken from Mark's packages
 
 # from Mark Bravington's handy2
 numderiv<-function (f, x0, eps = 1e-04, TWICE. = TRUE, param.name = NULL, 
@@ -138,21 +157,8 @@ numderiv<-function (f, x0, eps = 1e-04, TWICE. = TRUE, param.name = NULL,
     return(m)
 }
 
-# from handy2
-"%<-%"<-function( a, b){
-  # a must be of the form '{thing1;thing2;...}'
-  a <- as.list( substitute( a))[-1]
-  e <- sys.parent()
-  stopifnot( length( b) == length( a))
-  for( i in seq_along( a))
-    eval( call( '<-', a[[ i]], b[[i]]), envir=e)
-  NULL
-}
-
-
 # from mvbutils
-"%**%"<-function (x, y)
-{
+"%**%"<-function(x, y){
     dimnames(x) <- NULL
     dimnames(y) <- NULL
     if (length(dim(x)) == 2 && length(dim(y)) == 2 && dim(x)[2] ==
