@@ -1,5 +1,6 @@
 export(dsm.check)
 export(dsm.fit)
 export(dsm.predict)
+export(make_soap_grid)
 export(param.movblk.variance)
 export(varprop)

@@ -24,6 +24,7 @@ Collate:
     'dsm.fit.R'
     'dsm.check.R'
     'dsm.predict.R'
+    'makesoapgrid.R'
     'param.movblk.variance.R'
     'varprop.R'
     'zzz.R'
