@@ -1,7 +1,6 @@
 ## TODO
 # get rid of dead code
 # split files
-# add Tweedie stuff into get.model.details
 # documentation
 # make up the missed replicates due to model errors?
 # new sampler doesn't do point transects at the moment
@@ -59,14 +58,11 @@ param.movblk.variance <- function(n.boot, dsm.object, pred.data,
   name.sampling.unit <- unique(dsm.object$result$data$sampling.unit)
   num.sampling.unit <- length(name.sampling.unit)
 
-  # Reconstruct dsm model fitting command - Note not using dsm.fit() 
-  model.details <- get.model.details(dsm.object$result)
-  dsm.fit.command <- get.dsm.fit.command(model.details)
+  # Reconstruct dsm model fitting command -- this is a call to gam()
+  gam.call<-dsm.object$result$call
+  gam.call$formula<-dsm.object$result$formula
+  gam.call$family<-dsm.object$result$family
 
-  # Reconstruct prediction command
-  pred.command <- paste("dsm.predict(gam.model=dsm.bs.model,",
-                        "newdata=pred.data,field=FALSE,off=0, silent=TRUE)",
-                        sep="")
 
   # Get residuals 
   dsm.object$result$data$log.resids <- 
@@ -186,17 +182,35 @@ param.movblk.variance <- function(n.boot, dsm.object, pred.data,
     # Bit of a cheat because dud.replicate needs to be returned out 
     #  of the function(err) to be acted on 	
     # Handle chaos in gam fitting caused by pathological bootstrap resample
-    tryCatch(dsm.bs.model <- eval(parse(text=dsm.fit.command)), 
+    #tryCatch(dsm.bs.model <- eval(parse(text=dsm.fit.command)), 
+    #                              error=function(err){dud.replicate <<-TRUE})
+
+    # put the boostrap data into the gam call
+    gam.call$data<-bs.samp
+
+    tryCatch(dsm.bs.model <- eval(gam.call, parent.frame()), 
                                   error=function(err){dud.replicate <<-TRUE})
 
     if(!dud.replicate){
+
+      # is the offset supplied as a field in the predication data?
+      if(!is.null(pred.data$off.set)){
+        offset.field<-TRUE
+        offset.field.off<-NULL
+      }else{
+        offset.field<-FALSE
+        offset.field.off<-0
+      }
+
       # Do prediction using newly fitted dsm model created from bootstrap sample
-      dsm.predict.bs <- tryCatch(eval(parse(text=pred.command)), 
+      dsm.predict.bs <- tryCatch(dsm.predict(dsm.bs.model,newdata=pred.data,
+                                             field=offset.field,
+                                             off=offset.field.off), 
                                  error= function(err) {rep(NA,length(fit))} )
 
       # Don't save all cell values for all reps, rather, 
       #  populate dataframe with machine formula components for each cell
-      vector.cell.abundances <- dsm.predict.bs$result * cell.size
+      vector.cell.abundances <- dsm.predict.bs * cell.size
       short.var$sumx <- short.var$sumx + vector.cell.abundances
       short.var$sumx.sq <- short.var$sumx.sq + 
                            (vector.cell.abundances * vector.cell.abundances)
@@ -328,56 +342,6 @@ generate.mb.sample <- function(num.blocks.required, block.size, which.blocks,
   } 
   return(bs.response)
 }
-
-
-# Extracts relevant details from model
-get.model.details <- function(modelname){
-  type <- class(modelname)[1]
-  lnk <- modelname$family$link
-  family <- modelname$family$family
-  depvar <- all.vars(modelname$formula)[1]
-  # Need to get specific model depending on model family 
-  famstr <- substr(family,1,5)
-
-  # if negative binomial need to get theta
-  if (famstr=="Negat"){
-    theta <- get.theta.f(family)
-  }else{
-    theta <- NULL
-  }
-
-  # if quasi need to get variance function
-  if(famstr=="quasi" & nchar(family)==5){
-    var <- modelname$family$varfun
-  }else{ 
-    var <- NULL
-  }
-
-  # Get formula (can't just use modelname$formula as composed of 3 bits)    
-  form <- paste(modelname$formula[2],"~",modelname$formula[3],sep="")
-  model <- list(type=type,lnk=lnk,family=family,famstr=famstr,
-                theta=theta,var=var,form=form,depvar=depvar)
-
-  return(model)
-}
-
-
-# Pastes together command for fitting glm/gam model
-get.dsm.fit.command <- function(model){
-  if (model$famstr == "Negat"){
-    fam <- paste("negative.binomial(link=",model$lnk,",theta=",
-                 model$theta,")",sep="")
-  }else if(model$famstr=="quasi"&nchar(model$family)==5){ 
-    fam <- paste(model$family,"(link=",model$lnk,",var=",model$var,")",sep="")
-  }else{
-    fam <- paste(model$family,"(link=",model$lnk,")",sep="")
-  }
-  command <- paste(model$type,"(",model$form,",data=bs.samp,family=",
-                   fam,")",sep="")
-
-  return(command)
-}
-
 
 # This function is substitute for "get.log.residuals.f"
 # Modifications were needed to handle the possibility of missing values in 

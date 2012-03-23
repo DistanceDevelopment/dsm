@@ -1,11 +1,23 @@
 #' Variance propogation for DSM models
 #'
+#' Rather than use a bootstrap to calculate the variance in a \code{dsm} model,
+#' use the clever variance propogation trick from Williams et al. (2011).
+#'
+#' The idea is to refit the spatial model but including the Hessian of the 
+#' offset as an extra term. This new model can then be used to calculate 
+#' the variance of abundance estimates which incorporate detection function
+#' uncertainty.
+#' 
 #' Based on (much more general) code from Mark Bravington and Sharon Hedley.
 #'
 #' @param dsm.obj an object returned from running \code{\link{dsm.fit}}.
 #' @param pred.grids list of prediction grids. Each element should be a 
 #'        \code{data.frame} with the same columns as the original data.
-#' @param pred.wts
+#' @param pred.area a list with as many elements as there are in 
+#'        \code{pred.grids}. Each element is a vector as long as the number of
+#'        rows in the corresponding element of \code{pred.grids}. These give
+#'        the area associated with each prediction point. Default gives equal 
+#'        weighting to each point such that the "area" sums to one.
 #' @param seglen.varname name for the column which holds the segment length 
 #'        (default value "Effort"). 
 #' @param type.pred should the predictions be on the "response" or "link" scale?
@@ -14,15 +26,19 @@
 #'         \tabular{ll}{\code{model} \tab the fitted model object\cr
 #'                      \code{var.pred} \tab variance of
 #'                      }
-#' @author Mark Bravington, Sharon Hedley
+#' @author Mark Bravington, Sharon Hedley. Bugs added by David L Miller.
+#' @references 
+#' Williams, R., Hedley, S.L., Branch, T.A., Bravington, M.V., Zerbini, A.N. and Findlay, K.P. (2011). Chilean Blue Whales as a Case Study to Illustrate Methods to Estimate Abundance and Evaluate Conservation Status of Rare Species. Conservation Biology 25(3), 526–535.
 #' @export
 
 varprop<-function(dsm.obj, pred.grids, 
-    pred.wts=lapply( pred.grids, function( x) rep( 1/nrow(x), nrow( x))),
+    pred.area=lapply( pred.grids, function( x) rep( 1/nrow(x), nrow( x))),
     seglen.varname='Effort', type.pred="response", ...) {
 
   # pull out the ddf object
-  ddf.obj<-dsm.obj$ddf
+  ddf.obj <- dsm.obj$ddf
+  # and the gam
+  gam.obj <- dsm.obj$result
 
   # this function changes the parameters in the ddf object
   tweakParams <- function(object, params) {
@@ -45,7 +61,7 @@ varprop<-function(dsm.obj, pred.grids,
   }
 
   # pull out the data and the call
-  callo <- dsm.obj$call  
+  callo <- gam.obj$call  
   fo2data <- dsm.obj$data
 
   # find the derivatives
@@ -53,32 +69,33 @@ varprop<-function(dsm.obj, pred.grids,
   firstD <- numderiv( funco, p0)
   
   # if the derivatives were zero, throw an error
-  if( all( firstD==0)){
-    stop( 'Doffset/Dpars==0... really??!!') 
+  if(all(firstD==0)){
+    stop('Doffset/Dpars==0... really??!!') 
   }
 
   # now construct the extra term...
-  formo <- dsm.obj$formula
+  formo <- gam.obj$formula
   dmat.name <- '.D1'
   names.to.avoid <- unique( c( all.names( formo), names( fo2data)))
   while( dmat.name %in% names.to.avoid){
     dmat.name <- '.' %&% dmat.name
   }
   fo2data[[ dmat.name]] <- firstD 
-  formo[[3]] <- call( '+', formo[[3]], as.symbol( dmat.name))
+  formo[[3]] <- call( '+', formo[[3]], as.symbol(dmat.name))
   # put it all together
   paraterm<-list(list(ddf.obj$hess))
-  names( paraterm) <- dmat.name
+  names(paraterm) <- dmat.name
   callo$formula <- formo 
-  callo$paraPen <- c( callo$paraPen, paraterm)
+  callo$family<-gam.obj$family
+  callo$paraPen <- c(callo$paraPen, paraterm)
   callo$data <- fo2data 
   # run the model
-  fit.with.pen <- eval( callo, parent.frame())
+  fit.with.pen <- eval(callo, parent.frame())
 
   #### Diagnostics from Mark
   # check that it doesn't change the model fit much!
   #scatn( 'Comparison of fitted values when offset is flexible:')
-  #print( summary( fitted( fit.with.pen) - fitted( dsm.obj)))
+  #print( summary( fitted( fit.with.pen) - fitted( gam.obj)))
   #scatn( "Should check param ests or fitted vals in 'fit.with.pen' are similar to original...")
   #### /Diagnostics from Mark
 
@@ -91,7 +108,7 @@ varprop<-function(dsm.obj, pred.grids,
   
   # depending on whether we have response or link scale predictions...
   if(type.pred=="response"){
-      tmfn<-dsm.obj$family$linkinv
+      tmfn<-gam.obj$family$linkinv
       dtmfn<-function( eta){sapply( eta, numderiv, f=tmfn)}
   }else if(type.pred=="link"){ 
       tmfn<-identity
@@ -110,15 +127,15 @@ varprop<-function(dsm.obj, pred.grids,
     # fancy lp matrix stuff
     lpmat <- predict( fit.with.pen, newdata=pred.grids[[ ipg]], type='lpmatrix')
     lppred <- lpmat %**% cft
-    preddo[[ ipg]] <- pred.wts[[ ipg]] %**% tmfn( lppred)
-    dpred.db[ ipg,] <- pred.wts[[ ipg]] %**% (dtmfn( lppred) * lpmat)
+    preddo[[ ipg]] <- pred.area[[ ipg]] %**% tmfn( lppred)
+    dpred.db[ ipg,] <- pred.area[[ ipg]] %**% (dtmfn( lppred) * lpmat)
   } 
 
   # "'vpred' is the covariance of all the summary-things." - MVB  
+  # so we want the diagonals if length(pred.grids)>1
   vpred <- dpred.db %**% tcrossprod( vcov( fit.with.pen), dpred.db) # A B A^tr 
-  # inverse link
 
-  return(list(model=fit.with.pen,pred.var=vpred,pred=preddo))
+  return(list(model=fit.with.pen,pred.var=vpred))#,pred=preddo))
 }
 
 
