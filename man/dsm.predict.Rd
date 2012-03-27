@@ -2,12 +2,12 @@
 \alias{dsm.predict}
 \title{Produce estimated abundance at each cell in the prediction grid}
 \usage{
-  dsm.predict(gam.model, newdata = NULL, field = FALSE,
+  dsm.predict(model, newdata = NULL, field = FALSE,
     off = NULL)
 }
 \arguments{
-  \item{gam.model}{fitted model object (created by a call
-  to \code{\link{gam}} or \code{\link{dsm.fit}})}
+  \item{model}{fitted model object (created by a call to
+  \code{\link{gam}} or \code{\link{dsm.fit}})}
 
   \item{newdata}{spatially referenced covariates e.g.  sea
   temperature, depth, distance to shore, etc.  Note

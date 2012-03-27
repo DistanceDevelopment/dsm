@@ -1,6 +1,6 @@
 \name{dsm.check}
 \alias{dsm.check}
-\title{Do some rudimentary checks for a \code{dsm} model.}
+\title{Diagnostic checks for \code{dsm} models.}
 \usage{
   dsm.check(dsm.obj,
     type = c("deviance", "pearson", "response"), rep = 0,
