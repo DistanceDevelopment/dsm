@@ -1,11 +1,11 @@
-## TODO
-# get rid of dead code
-# split files
-# documentation
-# make up the missed replicates due to model errors?
-# new sampler doesn't do point transects at the moment
-
 #' Variance estimation via parametric moving block bootstrap
+#'
+#' Estimate the variance in abundance over an area using a moving block
+#' bootstrap. Two procedures are implemented, one incorporating detection
+#' function uncertainty, one not.
+#'
+#'
+#'
 #'
 #' @param n.boot number of bootstrap resamples.
 #' @param dsm.object object returned from \code{\link{dsm.fit()}}.
@@ -23,8 +23,13 @@
 #'        generate a progress bar (default \code{NULL} -- no file written).
 #' @export
 
+## TODO
+# documentation
+# make up the missed replicates due to model errors?
+# new sampler doesn't do point transects at the moment
 
-param.movblk.variance <- function(n.boot, dsm.object, pred.data, 
+# this used to be called param.movblk.variance
+dsm.var.movblk <- function(n.boot, dsm.object, pred.data, 
                                   ds.uncertainty=FALSE,
                                   samp.unit.name='Transect',block.size, 
                                   cell.size.name=NULL, cell.size=NULL, 
@@ -62,7 +67,6 @@ param.movblk.variance <- function(n.boot, dsm.object, pred.data,
   gam.call<-dsm.object$result$call
   gam.call$formula<-dsm.object$result$formula
   gam.call$family<-dsm.object$result$family
-
 
   # Get residuals 
   dsm.object$result$data$log.resids <- 

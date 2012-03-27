@@ -1,4 +1,4 @@
-#' Do some rudimentary checks for a \code{dsm} model.
+#' Diagnostic checks for \code{dsm} models.
 #'
 #' Produces four plots: quantile-quantile plot, scale-location plot
 #' (optionally with LOESS line), fit to the residuals and empirical 

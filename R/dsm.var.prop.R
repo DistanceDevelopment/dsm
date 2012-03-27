@@ -4,9 +4,13 @@
 #' use the clever variance propogation trick from Williams et al. (2011).
 #'
 #' The idea is to refit the spatial model but including the Hessian of the 
-#' offset as an extra term. This new model can then be used to calculate 
-#' the variance of abundance estimates which incorporate detection function
-#' uncertainty.
+#' offset as an extra term. Variance estimates using this new model can then 
+#' be used to calculate the variance of abundance estimates which incorporate 
+#' detection function uncertainty. Further mathematical details are given in 
+#' the paper in the references below.
+#'
+#' Many prediction grids can be supplied by supplying a list of 
+#' \code{data.frame}s to the function.
 #' 
 #' Based on (much more general) code from Mark Bravington and Sharon Hedley.
 #'
@@ -24,16 +28,17 @@
 #'        (default "response").
 #' @return a list with elements
 #'         \tabular{ll}{\code{model} \tab the fitted model object\cr
-#'                      \code{var.pred} \tab variance of
+#'                      \code{pred.var} \tab covariances of the regions given
+#'                      in \code{pred.grids}. Diagonal elements are the 
+#'                      variances in order.
 #'                      }
-#' @author Mark Bravington, Sharon Hedley. Bugs added by David L Miller.
+#' @author Mark V. Bravington, Sharon L. Hedley. Bugs added by David L. Miller.
 #' @references 
 #' Williams, R., Hedley, S.L., Branch, T.A., Bravington, M.V., Zerbini, A.N. and Findlay, K.P. (2011). Chilean Blue Whales as a Case Study to Illustrate Methods to Estimate Abundance and Evaluate Conservation Status of Rare Species. Conservation Biology 25(3), 526–535.
 #' @export
-
-varprop<-function(dsm.obj, pred.grids, 
+dsm.var.prop<-function(dsm.obj, pred.grids, 
     pred.area=lapply( pred.grids, function( x) rep( 1/nrow(x), nrow( x))),
-    seglen.varname='Effort', type.pred="response", ...) {
+    seglen.varname='Effort', type.pred="response") {
 
   # pull out the ddf object
   ddf.obj <- dsm.obj$ddf

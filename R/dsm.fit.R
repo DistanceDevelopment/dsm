@@ -51,7 +51,7 @@
 #' @return a list, consisting of:
 #'   \tabular{ll}{\code{result} \tab object produced by the \code{gam} or
 #'                  \code{glm} call.\cr
-#'                \code{call.dsm} \tab the call to this function.
+#'                \code{call.dsm} \tab the call to this function.\cr
 #'                \code{data} \tab the data object supplied in the call\cr
 #'                \code{ddf} \tab the \code{\link{ddf}} object supplied}
 #' @note Note that the gamma parameter to \code{gam()} is hardwired here; 
