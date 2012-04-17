@@ -12,7 +12,7 @@
 #'   for each object present in the project database. This breaks the 
 #'   obligation that detection functions for use in \code{dsm} need come
 #'   from \code{mrds}. 
-#' @param response response to be modelled; choices are:
+#' @param response response type to be modelled; choices are:
 #'   \tabular{ll}{\code{indiv} \tab - individual counts per segment\cr
 #'                \code{group} \tab - group counts per segment\cr
 #'                \code{indiv.est} \tab - estimated individual abundance per 
@@ -68,15 +68,15 @@
 dsm.fit <- function(ddfobject, phat=NULL, response, formula,
                     model.defn=list(fn="gam",family="quasipoisson"), obsdata,
                     segdata, wghts=NULL, link='log',convert.units=1,...)
-#
+
 # History:
 # This function has its orgins as perform.gam.fromddf (found in a txt 
 # file dsm.R from Oct '05)
 #
-# This incarnation modifies that such that calling arguments conform 
-# to that requested by the DISTANCE VB DSMNEngineInterface.MakeInputFile 
-# by deleting region.table and sample.table and adding offset, link, and 
-# weights as arguments
+# This [[the previous]] incarnation modifies that such that calling arguments 
+# conform  to that requested by the DISTANCE VB 
+# DSMNEngineInterface.MakeInputFile by deleting region.table and sample.table 
+# and adding offset, link, and weights as arguments
 #
 # Jan 2012, Dave Miller started updating and turning into a proper
 #           R library.
@@ -92,8 +92,8 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
 #   }
 #   field.names <- default.field.names()
 #   eval(parse(text=field.names))
-   # above code just does this, but it is a bit obtuse
-   # probably want to do something smart here...
+  # above code just does this, but it is a bit obtuse
+  # probably want to do something smart here...
   y.name<-'y'
   x.name<-'x'
   seglength.name<-'Effort'
@@ -226,12 +226,10 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
 
   ###########################################
   ### Response distribution, link function etc
-  # Paste link function argument together with family argument to 
-  # present to gam/glm in the form:  family=quasipoisson(link="log")
   if(model.defn$family=="Tweedie"){
     # need to specify the Tweedie parameters
     if(is.null(model.defn$family.pars$p)){
-       error("You must specify the p parameter to use the Tweedie family! See ?Tweedie.")
+       stop("You must specify the p parameter to use the Tweedie family! See ?Tweedie.")
     }
     family.and.link<-eval(parse(text=paste(model.defn$family,
                          "(link='", link, "',p=",model.defn$family.pars$p,")",
@@ -239,7 +237,7 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
   }else if(model.defn$family=="quasi"){
     # specify the variance relationship for quasi
     if(is.null(model.defn$family.pars$variance)){
-       error("You must specify the variance relation to use the quasi family! See ?family.")
+       stop("You must specify the variance relation to use the quasi family! See ?family.")
     }
     family.and.link<-eval(parse(text=paste(model.defn$family,
                            "(link='", link, 

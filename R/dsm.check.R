@@ -44,7 +44,7 @@ dsm.check<-function(dsm.obj,type=c("deviance","pearson","response"),
   # better way of selecting k? -- uniquecombs()?
 
   ### first, pull out the GAM part of the model
-  if(class(dsm.obj)!="gam"){
+  if(all(class(dsm.obj)!="gam")){
     model<-dsm.obj$result
   }else{
     model<-dsm.obj
@@ -87,18 +87,52 @@ dsm.check<-function(dsm.obj,type=c("deviance","pearson","response"),
 
   # need geoR for this!
 
-  # taken from the Red Book
+  # overall variogram
   coords<-matrix(0,length(model$model$x),2)
   coords[,1]<-model$data$x
   coords[,2]<-model$data$y
-
-
   gb<-list(data=residuals(model,type="d"),coords=coords)
   vg<-variog(gb,max.dist=vario.max)
   vg.env<-variog.mc.env(gb, obj.var = vg)
+  plot(vg,envelope=vg.env,type="l",main="Emprical variogram",xlim=c(0,50),ylim=c(0,1))
 
-  # plot the variogram
-  plot(vg,envelope=vg.env,type="l",main="Emprical variogram")
+  all.vg<-c()
+
+  for(tranid in unique(model$data$transect.id)){
+
+    ind <- model$data$transect.id==tranid
+    coords <- cbind(model$data$x[ind],model$data$y[ind])
+
+    gb <- list(data=residuals(model,type="d")[ind],coords=coords)
+    vg <- variog(gb,max.dist=vario.max)
+    vg$x <- vg$u
+    vg$y <- vg$v
+    lines(vg,type="l",col=rgb(190,190,190,100,maxColorValue=255))
+
+    all.vg<-rbind(all.vg,vg$y)
+
+  }
+
+  lines(x=vg$x,y=colMeans(all.vg),col="red")
+
+
+
+
+
+  ##### OLD CODE
+  ## taken from the Red Book
+  #coords<-matrix(0,length(model$model$x),2)
+  #coords[,1]<-model$data$x
+  #coords[,2]<-model$data$y
+
+  #gb<-list(data=residuals(model,type="d"),coords=coords)
+  #vg<-variog(gb,max.dist=vario.max)
+
+  #vg.env<-variog.mc.env(gb, obj.var = vg)
+
+  ## plot the variogram
+  #plot(vg,envelope=vg.env,type="l",main="Emprical variogram")
+  ##### / OLD CODE
 
   par(old.par)
 }
