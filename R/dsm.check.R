@@ -92,28 +92,29 @@ dsm.check<-function(dsm.obj,type=c("deviance","pearson","response"),
   coords[,1]<-model$data$x
   coords[,2]<-model$data$y
   gb<-list(data=residuals(model,type="d"),coords=coords)
-  vg<-variog(gb,max.dist=vario.max)
-  vg.env<-variog.mc.env(gb, obj.var = vg)
-  plot(vg,envelope=vg.env,type="l",main="Emprical variogram",xlim=c(0,50),ylim=c(0,1))
+  vg<-variog(gb,max.dist=vario.max,messages=FALSE)
+  #vg.env<-variog.mc.env(gb, obj.var = vg,messages=FALSE)
+  #plot(vg,envelope=vg.env,type="l",main="Emprical variogram",xlim=c(0,50),ylim=c(0,1))
+  plot(vg,type="l",main="Emprical variogram",xlim=c(0,50),ylim=c(0,1))
 
-  all.vg<-c()
+  #all.vg<-c()
 
-  for(tranid in unique(model$data$transect.id)){
+  #for(tranid in unique(model$data$Transect.Label)){
 
-    ind <- model$data$transect.id==tranid
-    coords <- cbind(model$data$x[ind],model$data$y[ind])
+  #  ind <- model$data$Transect.Label==tranid
+  #  coords <- cbind(model$data$x[ind],model$data$y[ind])
 
-    gb <- list(data=residuals(model,type="d")[ind],coords=coords)
-    vg <- variog(gb,max.dist=vario.max)
-    vg$x <- vg$u
-    vg$y <- vg$v
-    lines(vg,type="l",col=rgb(190,190,190,100,maxColorValue=255))
+  #  gb <- list(data=residuals(model,type="d")[ind],coords=coords)
+  #  vg <- variog(gb,max.dist=vario.max,messages=FALSE)
+  #  vg$x <- vg$u
+  #  vg$y <- vg$v
+  #  lines(vg,type="l",col=rgb(190,190,190,100,maxColorValue=255))
 
-    all.vg<-rbind(all.vg,vg$y)
+  #  all.vg<-rbind(all.vg,vg$y)
 
-  }
+  #}
 
-  lines(x=vg$x,y=colMeans(all.vg),col="red")
+  #lines(x=vg$x,y=colMeans(all.vg),col="red")
 
 
 

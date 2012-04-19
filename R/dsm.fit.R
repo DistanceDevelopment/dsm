@@ -201,7 +201,7 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
 
   # when density is response, offset should be 1.
   dat$off.set<-switch(off.set,
-                      eff.area=2*dat[,seglength.name]*fitted.p,
+                      eff.area=2*dat[,seglength.name]*ddfobject$meta.data$width*fitted.p,
                       area=2*dat[,seglength.name]*ddfobject$meta.data$width,
                       none=1)
   # Altered 2 Feb 06 to use final argument passed into function 
@@ -267,16 +267,16 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
       if(is.null(wghts)){
         b<-try(gam(formula,family=family.and.link,data=dat,
                control=gam.control(keepData=TRUE),
-               weights=NULL, gamma=1.4,...))
+               weights=NULL, gamma=1.4,knots=knots,...))
       }else{
         b<-try(gam(formula, family=family.and.link, data=dat,
-               control=gam.control(keepData=TRUE),
+               control=gam.control(keepData=TRUE),knots=knots,
                weights=eval(parse(text=wghts)),gamma=1.4,...))
       }
 
       # loop until the knots are okay but not more than 5 times
       max.wiggles<-1
-      while((b[[1]]==
+      while(any(b[[1]]==
         "Error in check.knots(g) : Please (re)move problematic knots.\n") & 
         (max.wiggles<6)){
 
@@ -300,11 +300,11 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
         # refit the model
         if(is.null(wghts)){
            b<-try(gam(formula,family=family.and.link,data=dat,
-                  control=gam.control(keepData=TRUE),
+                  control=gam.control(keepData=TRUE),knots=knots,
                   weights=NULL, gamma=1.4,...))
         }else{
            b<-try(gam(formula, family=family.and.link, data=dat,
-                  control=gam.control(keepData=TRUE),
+                  control=gam.control(keepData=TRUE),knots=knots,
                   weights=eval(parse(text=wghts)),gamma=1.4,...))
         }
 

@@ -51,34 +51,42 @@ dsm.predict<-function(model, newdata=NULL, field=FALSE, off=NULL){#,
   if("dsm" %in% class(model)){
     gam.model<-model$result
   }else{
-    gam.model<-model
+    stop("Model must be the result of a call to dsm.fit!")
   }
 
-  #  Append cell size of prediction grid to prediction grid  if off.set 
-  #  argument is a number, otherwise manufacture
-  if (!field){ 
-    if(length(off)==1){
-      off<-rep(off,nrow(newdata))
+  # is no new data are supplied, then we just predict at the data in 
+  # the object.
+  if(is.null(newdata)){
+    prediction.grid<-model$data
+  }else{
+
+
+    #  Append cell size of prediction grid to prediction grid  if off.set 
+    #  argument is a number, otherwise manufacture
+    if (!field){ 
+      if(length(off)==1){
+        off<-rep(off,nrow(newdata))
+      }
+
+      prediction.grid <- data.frame(newdata, off.set=off)
+    }else{
+    #else{
+    #  # match.call()[] provides literal strings of the arguments passed to this 
+    #  # function; I wish to build a string consisting of the string associated with 
+    #  # the 3rd argument concatenated with the string of the 5th argument; in 
+    #  # combination they give the name of the field in the dataframe containing 
+    #  # cell size
+    #  # if(gam.model$result$family$link=="log"){ # suggested by Louise 22 Sept 2008
+    #  if(gam.model$family$link=="log"){
+	  #    newdata$off.set<-eval(parse(text=paste("log(", match.call()[3], 
+    #                           "$", match.call()[5], ")", sep=""))) 
+    #  }else{
+    #     newdata$off.set<-eval(parse(text=paste(match.call()[3], 
+    #                           "$", match.call()[5], sep="")))
+    #  }
+      prediction.grid <- newdata 
     }
-
-    prediction.grid <- data.frame(newdata, off.set=off)
   }
-  #else{
-  #  # match.call()[] provides literal strings of the arguments passed to this 
-  #  # function; I wish to build a string consisting of the string associated with 
-  #  # the 3rd argument concatenated with the string of the 5th argument; in 
-  #  # combination they give the name of the field in the dataframe containing 
-  #  # cell size
-  #  # if(gam.model$result$family$link=="log"){ # suggested by Louise 22 Sept 2008
-  #  if(gam.model$family$link=="log"){
-	#    newdata$off.set<-eval(parse(text=paste("log(", match.call()[3], 
-  #                           "$", match.call()[5], ")", sep=""))) 
-  #  }else{
-  #     newdata$off.set<-eval(parse(text=paste(match.call()[3], 
-  #                           "$", match.call()[5], sep="")))
-  #  }
-    prediction.grid <- newdata 
-  #}
 
   result<-predict(gam.model, newdata=prediction.grid, 
                   type="response", na.action=na.pass)
