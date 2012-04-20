@@ -83,16 +83,6 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
 #
 {
 
-#   #  This stolen from Laake
-#   default.field.names <- function()
-#   {
-#   return(c("y.name<-'Latitude'","x.name<-'Longitude'","seglength.name<-'Effort'",
-#            "segnum.name<-'Sample.Label'","distance.name<-'distance'","cluster.name<-'size'",
-#            "esw.name<-'esw'","sightnum.name<-'object'","sampling.fraction.name<-'SF'"))
-#   }
-#   field.names <- default.field.names()
-#   eval(parse(text=field.names))
-  # above code just does this, but it is a bit obtuse
   # probably want to do something smart here...
   y.name<-'y'
   x.name<-'x'
@@ -100,9 +90,8 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
   segnum.name<-'Sample.Label'
   distance.name<-'distance'
   cluster.name<-'size'
-  esw.name<-'esw'
+  #esw.name<-'esw' # <- only used once below, not sure we want it
   sightnum.name<-'object'
-  sampling.fraction.name<-'SF'
 
   # Truncate observations made at distances greater than the truncation width;
   # truncation value picked up from metadata contained within ddfobject
@@ -148,9 +137,9 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
   # If response is group or group.est - then change all cluster values to 1
   # if density is the responnse, then the response variable needs to 
   # be # detected divided by area!!!
-  if(response=="group" | response=="group.est"){
-    obsdata[,cluster.name]<-rep(1,dim(obsdata)[1])
-  }
+  #if(response=="group" | response=="group.est"){
+  #  obsdata[,cluster.name]<-rep(1,dim(obsdata)[1])
+  #}
 
   # Aggregate response values of the sightings over segments
   if(response=="indiv" | response=="group"){
@@ -165,8 +154,9 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
     # did the user supply phat?
     if(!is.null(phat)){
       fitted.p<-unique(phat)
-    }else if(any(names(obsdata)==esw.name)){
-      fitted.p<-unique(obsdata[,esw.data]*ddfobject$width)
+    # don't think that this is a very good idea vvvvv
+    #}else if(any(names(obsdata)==esw.name)){
+    #  fitted.p<-unique(obsdata[,esw.data]*ddfobject$width)
     }else{
       fitted.p<-unique(ddfobject$fitted)
     }    
