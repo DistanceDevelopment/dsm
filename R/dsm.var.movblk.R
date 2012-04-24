@@ -116,7 +116,7 @@ dsm.var.movblk <- function(n.boot, dsm.object, pred.data,
       #### each time
 
       # how many distances to generate? -- need to round
-      n.ds.samples<-round(sum(bs.samp$N),0)
+      n.ds.samples<-round(sum(bs.samp$N,na.rm=TRUE),0)
       bs.samp$N<-round(bs.samp$N,0)
 
       # how many samples do we have so far?
@@ -134,38 +134,51 @@ dsm.var.movblk <- function(n.boot, dsm.object, pred.data,
         pars$adjustment<-ds.object$ds$aux$ddfobj$adjustment$parameters
       }
 
+      # if we just have a half-normal key function then we can
+      # directly simulate...
+      if(ds.object$ds$aux$ddfobj$type=="hn" & 
+          is.null(ds.object$ds$aux$ddfobj$adjustment$parameters)){
 
-      # do some rejection sampling
-      while(n.samps < n.ds.samples){
+        dists<-abs(rnorm(n.ds.samples,mean=0,sd=pars$scale))
 
-        # generate some new distances
-        new.dists<-data.frame(distance=runif(n.ds.samples-n.samps)*
-                                          ds.object$ds$aux$width,
-                              detected=rep(1,n.ds.samples-n.samps),
-                              object=1:(n.ds.samples-n.samps))
 
-        U<-runif(n.ds.samples-n.samps)
+      }else{
+        # otherwise do some rejection sampling
+        while(n.samps < n.ds.samples){
 
-        # need to call out to mrds to get the data and model objects
-        # into the correct format
-        xmat <- mrds:::process.data(new.dists,ds.object$meta.data,
-                                    check=FALSE)$xmat
-        ddfobj <- mrds:::create.ddfobj(ds.object$call$dsmodel,xmat,
-                            ds.object$meta.data,pars)
 
-        # do the rejection...
-        # (evaluate the -log(L) then backtransform per-observation
-        # ONLY line transect at the moment!!
-        inout <- exp(-mrds:::flt.lnl(ds.object$par,ddfobj,
-                      misc.options=list(width=ds.object$ds$aux$width,
-                                        int.range=ds.object$ds$aux$int.range,
-                                        showit=FALSE, doeachint=TRUE,
-                                        point=ds.object$ds$aux$point,
-                                        integral.numeric=TRUE),TCI=FALSE))>U
-        dists<-c(dists,new.dists$distance[inout])
 
-        n.samps<-length(dists)
+          # generate some new distances
+          new.dists<-data.frame(distance=runif(n.ds.samples-n.samps)*
+                                            ds.object$ds$aux$width,
+                                detected=rep(1,n.ds.samples-n.samps),
+                                object=1:(n.ds.samples-n.samps))
+
+          # generate acceptance probability
+          U<-runif(n.ds.samples-n.samps)
+
+          # need to call out to mrds to get the data and model objects
+          # into the correct format
+          xmat <- mrds:::process.data(new.dists,ds.object$meta.data,
+                                      check=FALSE)$xmat
+          ddfobj <- mrds:::create.ddfobj(ds.object$call$dsmodel,xmat,
+                              ds.object$meta.data,pars)
+
+          # do the rejection...
+          # (evaluate the -log(L) then backtransform per-observation)
+          # ONLY line transect at the moment!!
+          inout <- exp(-mrds:::flt.lnl(ds.object$par,ddfobj,
+                        misc.options=list(width=ds.object$ds$aux$width,
+                                          int.range=ds.object$ds$aux$int.range,
+                                          showit=FALSE, doeachint=TRUE,
+                                          point=ds.object$ds$aux$point,
+                                          integral.numeric=TRUE),TCI=FALSE))>U
+          dists<-c(dists,new.dists$distance[inout])
+
+          n.samps<-length(dists)
+        }
       }
+
       # make sure that we got the right number
       dists<-dists[1:n.ds.samples]
       dists<-data.frame(distance=dists,
@@ -175,10 +188,12 @@ dsm.var.movblk <- function(n.boot, dsm.object, pred.data,
       # fit the new model
       ddf.call <- dsm.object$ddf$call
       ddf.call$data <- dists
+      ddf.call$meta.data <- dsm.object$ddf$meta.data
       ddf.fitted<-eval(ddf.call)
 
       # find the offset(s)
-      bs.samp$off.set<-rep(fitted(ddf.fitted,compute=TRUE,esw=TRUE)[1],nrow(bs.samp))
+      bs.samp$off.set<-rep(fitted(ddf.fitted,compute=TRUE,esw=TRUE)[1],
+                           nrow(bs.samp))
 
     }
 
