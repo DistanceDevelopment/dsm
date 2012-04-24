@@ -20,9 +20,9 @@ resulting from object-specific detection probabilities}
   functions for use in \code{dsm} need come from
   \code{mrds}.}
 
-  \item{response}{response to be modelled; choices are:
-  \tabular{ll}{\code{indiv} \tab - individual counts per
-  segment\cr \code{group} \tab - group counts per
+  \item{response}{response type to be modelled; choices
+  are: \tabular{ll}{\code{indiv} \tab - individual counts
+  per segment\cr \code{group} \tab - group counts per
   segment\cr \code{indiv.est} \tab - estimated individual
   abundance per segment\cr \code{group.est} \tab -
   estimated group abundance per segment \cr

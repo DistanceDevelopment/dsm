@@ -3,9 +3,9 @@
 \title{Variance estimation via parametric moving block bootstrap}
 \usage{
   dsm.var.movblk(n.boot, dsm.object, pred.data,
-    ds.uncertainty = FALSE, samp.unit.name = "Transect",
-    block.size, cell.size.name = NULL, cell.size = NULL,
-    bpfile = NULL)
+    ds.uncertainty = FALSE,
+    samp.unit.name = "Transect.Label", block.size,
+    cell.size.name = NULL, cell.size = NULL, bpfile = NULL)
 }
 \arguments{
   \item{n.boot}{number of bootstrap resamples.}
@@ -21,7 +21,7 @@
   detection function?}
 
   \item{samp.unit.name}{name sampling unit to resample
-  (default 'Transect').}
+  (default 'Transect.Label').}
 
   \item{block.size}{number of segments in each block.}
 
