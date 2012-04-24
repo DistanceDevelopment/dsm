@@ -130,6 +130,8 @@ dsm.var.prop<-function(dsm.obj, pred.grids,
     }
 
     # fancy lp matrix stuff
+    # NB. when we use lpmatrix, the offset is _not_ included!
+    # hence the multiplication by pred.area below (see ?predict.gam)
     lpmat <- predict( fit.with.pen, newdata=pred.grids[[ ipg]], type='lpmatrix')
     lppred <- lpmat %**% cft
     preddo[[ ipg]] <- pred.area[[ ipg]] %**% tmfn( lppred)
