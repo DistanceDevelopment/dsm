@@ -12,7 +12,8 @@
 #' @param pred.grid a \code{data.frame} that holds prediction points, must have
 #'        the correct columns for other environmental covariates. 
 #' @param ds.uncertainty incorporate uncertainty in the detection function?
-#' @param samp.unit.name name sampling unit to resample (default 'Transect').
+#' @param samp.unit.name name sampling unit to resample (default 
+#'        'Transect.Label').
 #' @param block.size number of segments in each block.
 #' @param cell.size.name name of the column in pred.data corresponding to the
 #'        size of the prediction cells (default NULL, see below).
@@ -31,7 +32,7 @@
 # this used to be called param.movblk.variance
 dsm.var.movblk <- function(n.boot, dsm.object, pred.data, 
                                   ds.uncertainty=FALSE,
-                                  samp.unit.name='Transect',block.size, 
+                                  samp.unit.name='Transect.Label',block.size, 
                                   cell.size.name=NULL, cell.size=NULL, 
                                   bpfile=NULL){
 
@@ -196,6 +197,10 @@ dsm.var.movblk <- function(n.boot, dsm.object, pred.data,
                                   error=function(err){dud.replicate <<-TRUE})
 
     if(!dud.replicate){
+
+      dsm.bs.model<-list(result=dsm.bs.model)
+      class(dsm.bs.model)<-"dsm"
+
 
       # is the offset supplied as a field in the predication data?
       if(!is.null(pred.data$off.set)){
