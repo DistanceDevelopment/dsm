@@ -207,3 +207,8 @@ numderiv<-function (f, x0, eps = 1e-04, TWICE. = TRUE, param.name = NULL,
         dim(x) <- NULL
     x
 }
+
+# again, from mvbutils
+"%&%" <- function (a, b){
+  paste(a, b, sep = "")
+}

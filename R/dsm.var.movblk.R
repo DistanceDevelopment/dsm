@@ -4,9 +4,6 @@
 #' bootstrap. Two procedures are implemented, one incorporating detection
 #' function uncertainty, one not.
 #'
-#'
-#'
-#'
 #' @param n.boot number of bootstrap resamples.
 #' @param dsm.object object returned from \code{\link{dsm.fit()}}.
 #' @param pred.grid a \code{data.frame} that holds prediction points, must have
@@ -139,14 +136,11 @@ dsm.var.movblk <- function(n.boot, dsm.object, pred.data,
       if(ds.object$ds$aux$ddfobj$type=="hn" & 
           is.null(ds.object$ds$aux$ddfobj$adjustment$parameters)){
 
-        dists<-abs(rnorm(n.ds.samples,mean=0,sd=pars$scale))
-
+        dists<-abs(rnorm(n.ds.samples,mean=0,sd=exp(pars$scale)))
 
       }else{
         # otherwise do some rejection sampling
         while(n.samps < n.ds.samples){
-
-
 
           # generate some new distances
           new.dists<-data.frame(distance=runif(n.ds.samples-n.samps)*
