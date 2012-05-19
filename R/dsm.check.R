@@ -82,18 +82,21 @@ dsm.check<-function(dsm.obj,type=c("deviance","pearson","response"),
           asp=1,view=c("x","y")) 
 
   ### variogram
+  plot(1:10,1:10,type="n")
+  text(5,5,label="coming soon")
 
   # need geoR for this!
 
   # overall variogram
-  coords<-matrix(0,length(model$model$x),2)
-  coords[,1]<-model$data$x
-  coords[,2]<-model$data$y
-  gb<-list(data=residuals(model,type="d"),coords=coords)
-  vg<-variog(gb,max.dist=vario.max,messages=FALSE)
-  #vg.env<-variog.mc.env(gb, obj.var = vg,messages=FALSE)
-  #plot(vg,envelope=vg.env,type="l",main="Emprical variogram",xlim=c(0,50),ylim=c(0,1))
-  plot(vg,type="l",main="Emprical variogram",xlim=c(0,50),ylim=c(0,1))
+#  coords<-matrix(0,length(model$model$x),2)
+#  coords[,1]<-model$data$x
+#  coords[,2]<-model$data$y
+#  gb<-list(data=residuals(model,type="d"),coords=coords)
+#  vg<-variog(gb,max.dist=vario.max,messages=FALSE)
+#  #vg.env<-variog.mc.env(gb, obj.var = vg,messages=FALSE)
+#  #plot(vg,envelope=vg.env,type="l",main="Emprical variogram",xlim=c(0,50),ylim=c(0,1))
+#  plot(vg,type="l",main="Emprical variogram",xlim=c(0,50),ylim=c(0,1))
+
 
   #all.vg<-c()
 

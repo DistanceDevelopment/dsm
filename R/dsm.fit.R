@@ -83,6 +83,10 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
 #
 {
 
+  # list to hold various options...
+  model.spec<-list()
+  model.spec$response<-response
+
   # probably want to do something smart here...
   y.name<-'y'
   x.name<-'x'
@@ -162,7 +166,7 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
     }    
 
     if(length(fitted.p)!=1){
-      stop(paste("More than one unique probability of detection.\n",
+      stop(paste("Non-unique probability of detection.\n",
                  "Are you sure this is an \"indiv\"/\"group\" analysis?"))
     }
   }else if (response=="indiv.est" | response=="group.est"){
@@ -242,6 +246,8 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
   if (!is.null(wghts)){
     wghts<-paste("dat$", wghts, sep="")
   }
+
+  
   dat$area<-2*dat[,seglength.name]*ddfobject$meta.data$width*convert.units
 
   if(toupper(model.defn$fn)=="GAM"){
@@ -332,8 +338,20 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
                                 weights=eval(parse(text=wghts)),gamma=1.4)
     }
   }
+
+  # save which model we fit (GAM or GLM)
+  model.spec$model <- toupper(model.defn$fn)
+  # save what the offset was
+  model.spec$offset <- off.set
+
   # Return model object
-  ret<-list(result=b,call.dsm=match.call(),data=dat,ddf=ddfobject)
+  ret <- list(result=b,
+              call.dsm=match.call(),
+              data=dat,
+              ddf=ddfobject,
+              model.spec=model.spec
+             )
+
   class(ret)<-"dsm"
 
   return(ret)

@@ -2,8 +2,7 @@
 \alias{dsm.predict}
 \title{Produce estimated abundance at each cell in the prediction grid}
 \usage{
-  dsm.predict(model, newdata = NULL, field = FALSE,
-    off = NULL)
+  dsm.predict(model, newdata = NULL, off = NULL)
 }
 \arguments{
   \item{model}{fitted model object (created by a call to
@@ -14,16 +13,9 @@
   covariates in this dataframe must have names *identical*
   to variable names used in fitting the GAM.}
 
-  \item{field}{logical indicating whether offset is
-  provides as constant (\code{FALSE}) or field in grid
-  dataframe (\code{TRUE}).}
-
-  \item{off.set}{area of cells in prediction grid
-  (\code{newdata}).  If entered between double quotes, will
-  be a field named in prediction grid, otherwise a numeric
-  constant Assume if a constant comes in, it will already
-  have had the link transform applied, whereas if field,
-  apply link fn.}
+  \item{off.set}{offset for the cells in the prediction
+  grid (\code{newdata}).  NB this should NOT be logged, it
+  gets logged below.}
 }
 \value{
   array of predicted values.

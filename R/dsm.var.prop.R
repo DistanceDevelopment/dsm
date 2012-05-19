@@ -9,35 +9,28 @@
 #' detection function uncertainty. Further mathematical details are given in 
 #' the paper in the references below.
 #'
-#' Many prediction grids can be supplied by supplying a list of 
-#' \code{data.frame}s to the function.
-#' 
 #' Based on (much more general) code from Mark Bravington and Sharon Hedley.
 #'
 #' @param dsm.obj an object returned from running \code{\link{dsm.fit}}.
-#' @param pred.grids list of prediction grids. Each element should be a 
-#'        \code{data.frame} with the same columns as the original data.
-#' @param pred.area a list with as many elements as there are in 
-#'        \code{pred.grids}. Each element is a vector as long as the number of
-#'        rows in the corresponding element of \code{pred.grids}. These give
-#'        the area associated with each prediction point. Default gives equal 
-#'        weighting to each point such that the "area" sums to one.
+#' @param pred.data the prediction grid. A \code{data.frame} with the same 
+#'        columns as the original data.
+#' @param offset a vector as long as the number of rows in \code{pred.data}. 
+#'        These give the offset for each prediction point. Can also just be a
+#'        scalar, if all entries are the same. 
 #' @param seglen.varname name for the column which holds the segment length 
 #'        (default value "Effort"). 
 #' @param type.pred should the predictions be on the "response" or "link" scale?
 #'        (default "response").
 #' @return a list with elements
 #'         \tabular{ll}{\code{model} \tab the fitted model object\cr
-#'                      \code{pred.var} \tab covariances of the regions given
-#'                      in \code{pred.grids}. Diagonal elements are the 
-#'                      variances in order.
+#'                      \code{pred.var} \tab variances in abundance of the 
+#'                      the prediction region.
 #'                      }
 #' @author Mark V. Bravington, Sharon L. Hedley. Bugs added by David L. Miller.
 #' @references 
 #' Williams, R., Hedley, S.L., Branch, T.A., Bravington, M.V., Zerbini, A.N. and Findlay, K.P. (2011). Chilean Blue Whales as a Case Study to Illustrate Methods to Estimate Abundance and Evaluate Conservation Status of Rare Species. Conservation Biology 25(3), 526–535.
 #' @export
-dsm.var.prop<-function(dsm.obj, pred.grids, 
-    pred.area=lapply( pred.grids, function( x) rep( 1/nrow(x), nrow( x))),
+dsm.var.prop<-function(dsm.obj, pred.data, offset, 
     seglen.varname='Effort', type.pred="response") {
 
   # pull out the ddf object
@@ -69,8 +62,9 @@ dsm.var.prop<-function(dsm.obj, pred.grids,
   callo <- gam.obj$call  
   fo2data <- dsm.obj$data
 
-  # find the derivatives
-  p0 <- tweakParams(ddf.obj) # returns the parameters to numderiv
+  ## find the derivatives
+  # find the detection function parameters
+  p0 <- tweakParams(ddf.obj) 
   firstD <- numderiv( funco, p0)
   
   # if the derivatives were zero, throw an error
@@ -105,11 +99,8 @@ dsm.var.prop<-function(dsm.obj, pred.grids,
   #### /Diagnostics from Mark
 
   cft <- coef( fit.with.pen)
-  preddo <- numeric( length( pred.grids))
   real.preds <- list()
 
-  names( preddo) <- names( pred.grids) # if any
-  dpred.db <- matrix( 0, length( pred.grids), length( cft))
   
   # depending on whether we have response or link scale predictions...
   if(type.pred=="response"){
@@ -120,26 +111,25 @@ dsm.var.prop<-function(dsm.obj, pred.grids,
       dtmfn<-function( eta){1}
   }
 
-  # loop over the prediction grids
-  for( ipg in seq_along( pred.grids)) {
-    # if we have a single paramter model (e.g. half-normal) need to be careful
-    if(is.matrix(firstD)){
-      pred.grids[[ ipg]][[ dmat.name]] <- matrix( 0, nrow( pred.grids[[ ipg]]), ncol( firstD))
-    }else{
-      pred.grids[[ ipg]][[ dmat.name]] <- rep(0, nrow( pred.grids[[ ipg]]))
-    }
+  # if we have a single paramter model (e.g. half-normal) need to be careful
+  if(is.matrix(firstD)){
+    pred.data[[dmat.name]] <- matrix(0, nrow(pred.data), ncol(firstD))
+  }else{
+    pred.data[[dmat.name]] <- rep(0, nrow(pred.data))
+  }
 
-    # fancy lp matrix stuff
-    # NB. when we use lpmatrix, the offset is _not_ included!
-    # hence the multiplication by pred.area below (see ?predict.gam)
-    lpmat <- predict( fit.with.pen, newdata=pred.grids[[ ipg]], type='lpmatrix')
-    lppred <- lpmat %**% cft
-    preddo[[ ipg]] <- pred.area[[ ipg]] %**% tmfn( lppred)
-    dpred.db[ ipg,] <- pred.area[[ ipg]] %**% (dtmfn( lppred) * lpmat)
-  } 
+  pred.data$off.set <- rep(0, nrow(pred.data))
+
+  # fancy lp matrix stuff
+  # NB. when we use lpmatrix, the offset is _not_ included!
+  # hence the multiplication by offset below (see ?predict.gam)
+  lpmat <- predict( fit.with.pen, newdata=pred.data, type='lpmatrix')
+  lppred <- lpmat %**% cft
+  #preddo <- offset %**% tmfn( lppred)
+  dpred.db <- matrix(offset %**% (dtmfn( lppred) * lpmat), 1, length( cft))
 
   # "'vpred' is the covariance of all the summary-things." - MVB  
-  # so we want the diagonals if length(pred.grids)>1
+  # -- now we just have one prediction data object, it's the variance
   vpred <- dpred.db %**% tcrossprod( vcov( fit.with.pen), dpred.db) # A B A^tr 
 
   return(list(model=fit.with.pen,pred.var=vpred))#,pred=preddo))

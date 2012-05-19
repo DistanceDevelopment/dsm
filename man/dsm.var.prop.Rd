@@ -2,24 +2,20 @@
 \alias{dsm.var.prop}
 \title{Variance propogation for DSM models}
 \usage{
-  dsm.var.prop(dsm.obj, pred.grids,
-    pred.area = lapply(pred.grids, function(x) rep(1/nrow(x), nrow(x))),
+  dsm.var.prop(dsm.obj, pred.data, offset,
     seglen.varname = "Effort", type.pred = "response")
 }
 \arguments{
   \item{dsm.obj}{an object returned from running
   \code{\link{dsm.fit}}.}
 
-  \item{pred.grids}{list of prediction grids. Each element
-  should be a \code{data.frame} with the same columns as
-  the original data.}
+  \item{pred.data}{the prediction grid. A \code{data.frame}
+  with the same columns as the original data.}
 
-  \item{pred.area}{a list with as many elements as there
-  are in \code{pred.grids}. Each element is a vector as
-  long as the number of rows in the corresponding element
-  of \code{pred.grids}. These give the area associated with
-  each prediction point. Default gives equal weighting to
-  each point such that the "area" sums to one.}
+  \item{offset}{a vector as long as the number of rows in
+  \code{pred.data}.  These give the offset for each
+  prediction point. Can also just be a scalar, if all
+  entries are the same.}
 
   \item{seglen.varname}{name for the column which holds the
   segment length (default value "Effort").}
@@ -29,9 +25,8 @@
 }
 \value{
   a list with elements \tabular{ll}{\code{model} \tab the
-  fitted model object\cr \code{pred.var} \tab covariances
-  of the regions given in \code{pred.grids}. Diagonal
-  elements are the variances in order.  }
+  fitted model object\cr \code{pred.var} \tab variances in
+  abundance of the the prediction region.  }
 }
 \description{
   Rather than use a bootstrap to calculate the variance in
@@ -46,9 +41,6 @@
   incorporate detection function uncertainty. Further
   mathematical details are given in the paper in the
   references below.
-
-  Many prediction grids can be supplied by supplying a list
-  of \code{data.frame}s to the function.
 
   Based on (much more general) code from Mark Bravington
   and Sharon Hedley.

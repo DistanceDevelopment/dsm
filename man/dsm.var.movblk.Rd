@@ -2,41 +2,38 @@
 \alias{dsm.var.movblk}
 \title{Variance estimation via parametric moving block bootstrap}
 \usage{
-  dsm.var.movblk(n.boot, dsm.object, pred.data,
-    ds.uncertainty = FALSE,
-    samp.unit.name = "Transect.Label", block.size,
-    cell.size.name = NULL, cell.size = NULL, bpfile = NULL)
+  dsm.var.movblk(dsm.object, pred.data, n.boot, block.size,
+    off.set, ds.uncertainty = FALSE,
+    samp.unit.name = "Transect.Label", bpfile = NULL)
 }
 \arguments{
-  \item{n.boot}{number of bootstrap resamples.}
-
   \item{dsm.object}{object returned from
   \code{\link{dsm.fit()}}.}
 
-  \item{pred.grid}{a \code{data.frame} that holds
+  \item{pred.data}{a \code{data.frame} that holds
   prediction points, must have the correct columns for
-  other environmental covariates.}
+  other environmental covariates. It also MUST have a
+  column called \code{cell.area} which gives the area for
+  each prediction cell}
+
+  \item{n.boot}{number of bootstrap resamples.}
+
+  \item{block.size}{number of segments in each block.}
+
+  \item{off.set}{offset to be used in the model, see
+  \code{\link{offsets}}.  Note that this is NOT logged.}
 
   \item{ds.uncertainty}{incorporate uncertainty in the
-  detection function?}
+  detection function?  Note that this doesn't work for
+  covariate models for the detection function at the
+  moment.}
 
   \item{samp.unit.name}{name sampling unit to resample
   (default 'Transect.Label').}
 
-  \item{block.size}{number of segments in each block.}
-
-  \item{cell.size.name}{name of the column in pred.data
-  corresponding to the size of the prediction cells
-  (default NULL, see below).}
-
-  \item{cell.size}{scalar (or vector of length
-  \code{nrow(pred.data)}) of the sizes of the prediction
-  cells (default \code{NULL}, either \code{cell.size} or
-  \code{cell.size.name} MUST be specified).}
-
   \item{bpfile}{path to a file to be used (usually by
-  Distance) to get generate a progress bar (default
-  \code{NULL} -- no file written).}
+  Distance) to generate a progress bar (default \code{NULL}
+  -- no file written).}
 }
 \description{
   Estimate the variance in abundance over an area using a

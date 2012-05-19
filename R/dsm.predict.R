@@ -13,14 +13,10 @@
 #   Known as 'prediction.covariates.dat.r' in D6 DSM statement of 
 #   direction prediction grid data frame.
 #'                
-#' @param field logical indicating whether offset is provides as constant 
-#'              (\code{FALSE}) or field in grid dataframe (\code{TRUE}).
-#' @param off.set area of cells in prediction grid (\code{newdata}). 
-#                 Provided by Distance
-#'                 If entered between double quotes, will be a field named in 
-#'                 prediction grid, otherwise a numeric constant
-#'			       Assume if a constant comes in, it will already have had the link
-#'             transform applied, whereas if field, apply link fn.
+#' @param off.set offset for the cells in the prediction grid (\code{newdata}). 
+#'                NB this should NOT be logged, it gets logged below.
+#     Assume if a constant comes in, it will already have had the link
+#     transform applied, whereas if field, apply link fn.
 #### Commented out for the moment, not sure how useful it is...
 # @param silent Set to true when used in conjunction with variance bootstraps; in 
 #               this case we don't wish to see the abundance estimate printed
@@ -44,7 +40,7 @@
 #' @export
 #   Functions used:  predict.gam() from package mgcv
 
-dsm.predict<-function(model, newdata=NULL, field=FALSE, off=NULL){#, 
+dsm.predict<-function(model, newdata=NULL, off=NULL){#, 
 #                      silent=FALSE){
 
   # do we have a dsm object or a gam?
@@ -63,13 +59,13 @@ dsm.predict<-function(model, newdata=NULL, field=FALSE, off=NULL){#,
 
     #  Append cell size of prediction grid to prediction grid  if off.set 
     #  argument is a number, otherwise manufacture
-    if (!field){ 
-      if(length(off)==1){
-        off<-rep(off,nrow(newdata))
-      }
+    if(length(off)==1){
+      off<-rep(off,nrow(newdata))
+    }
 
-      prediction.grid <- data.frame(newdata, off.set=off)
-    }else{
+    off<-log(off)
+
+    prediction.grid <- data.frame(newdata, off.set=off)
     #else{
     #  # match.call()[] provides literal strings of the arguments passed to this 
     #  # function; I wish to build a string consisting of the string associated with 
@@ -84,8 +80,8 @@ dsm.predict<-function(model, newdata=NULL, field=FALSE, off=NULL){#,
     #     newdata$off.set<-eval(parse(text=paste(match.call()[3], 
     #                           "$", match.call()[5], sep="")))
     #  }
-      prediction.grid <- newdata 
-    }
+    #  prediction.grid <- newdata 
+    #}
   }
 
   result<-predict(gam.model, newdata=prediction.grid, 

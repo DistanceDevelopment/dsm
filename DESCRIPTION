@@ -29,3 +29,8 @@ Collate:
     'dsm.var.movblk.R'
     'dsm.var.prop.R'
     'trim.var.R'
+    'generate.ds.uncertainty.R'
+    'generate.mb.sample.R'
+    'block.info.per.su.R'
+    'dsm-package.R'
+    'latlong2km.R'
