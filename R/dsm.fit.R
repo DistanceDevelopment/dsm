@@ -146,7 +146,7 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
   #}
 
   # Aggregate response values of the sightings over segments
-  if(response=="indiv" | response=="group"){
+  if(response %in% c("indiv", "group")){
     responsedata<-aggregate(obsdata[,cluster.name],
                             list(obsdata[,segnum.name]), sum)
     off.set <- "eff.area"
@@ -169,7 +169,7 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
       stop(paste("Non-unique probability of detection.\n",
                  "Are you sure this is an \"indiv\"/\"group\" analysis?"))
     }
-  }else if (response=="indiv.est" | response=="group.est"){
+  }else if (response %in% c("indiv.est", "group.est")){
     responsedata<-aggregate(obsdata[,cluster.name]/obsdata$p,
                             list(obsdata[,segnum.name]), sum)
     off.set<-"area"
@@ -210,7 +210,7 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
   }
 
   # Create formula 
-  if(response=="indiv.den" | response=="group.den"){
+  if(response %in% c("indiv.den", "group.den")){
     formula<-as.formula(paste("N", deparse(formula,width.cutoff=500),
                               collapse=""))
   }else{
