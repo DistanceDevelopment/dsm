@@ -84,6 +84,7 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
 {
 
   # list to hold various options...
+  # this is mainly to pass back to summary() for convenience
   model.spec<-list()
   model.spec$response<-response
 
@@ -107,8 +108,7 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
   #  the following is borrowed (heavily) from dsm.count by Laake
   #  ER modification is to test for presence of phat argument and substitute 
   #     detection probabilities from phat if provided
-  if(response=="indiv.est" | response=="group.est" | 
-       response=="indiv.den" | response=="group.den"){
+  if(response %in% c("indiv.est","group.est","indiv.den", "group.den")){
     if(!is.null(phat)){
       fitted.p<-phat
       object.data<-obsdata$sightnum.name
