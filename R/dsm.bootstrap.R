@@ -1,10 +1,9 @@
 dsm.bootstrap.pre.post <- function(ddf.ID=ddf.ID, dsm.ID=dsm.ID, 
-                                   prediction.ID=prediction.ID,
-                                   method="movblock", replicates=replicates, 
-blocksize=blocksize,
-                          detectionrefit=FALSE, alpha=0.95, fname=fname,
-          field.flag=FALSE, cell.area=NULL, path=path, 
-				  bpfile=bpfile, boxplot.coef=1.5){
+                         prediction.ID=prediction.ID, method="movblock", 
+                         replicates=replicates, blocksize=blocksize,
+                         detectionrefit=FALSE, alpha=0.95, fname=fname,
+                         field.flag=FALSE, cell.area=NULL, path=path, 
+               				  bpfile=bpfile, boxplot.coef=1.5){
 # Function: pre-and post process information enroute to and returning from Louise's
 #           bootstrapping routines
 #
@@ -19,21 +18,29 @@ blocksize=blocksize,
 #                   n estimates of precision [not currently employed]
 #  alpha - magnitude of confidence interval
 #  fname - file where cell-specific se's are written
-#  field.flag - flag indicating whether prediction grid cell arera is fixed or field name (passed thru to bootstrap)
-#  cell.area - size of each cell in prediction grid (used to convert density to abundance)
+#  field.flag - flag indicating whether prediction grid cell arera is 
+#                 fixed or field name (passed thru to bootstrap)
+#  cell.area - size of each cell in prediction grid (used to 
+#                convert density to abundance)
 #  path - path to temporary directory to find file 'var.dat.r'
 #  bpfile - filename where counter of progress is written by variance_par_mb
-#	boxplot.coef - coefficient to determine how far out 'whiskers' extend from box; 
-#				larger values make it more difficult for an observation to be an outlier, 
-#				big numbers (e.g. 3, will reject few outliers, making large bootstrap variance)
+#	 boxplot.coef - coefficient to determine how far out 'whiskers' extend 
+#    from box; larger values make it more difficult for an observation to be 
+#    an outlier, big numbers (e.g. 3, will reject few outliers, making 
+#    large bootstrap variance)
 #
 # Value:
-#  vector of cell-by-cell standard errors over the prediction grid   written to 'fname'
+#  vector of cell-by-cell standard errors over the prediction grid 
+#     written to 'fname'
 #  list of:
-#   lower.abund.ci - lower bound for study area-wide CI, not adjusted for detection uncertainty
-#   upper.abund.ci - upper bound for study area-wide CI, not adjusted for detection uncertainty
-#   raw.bootstrap.values - all boostrap estimates of abundance not adjusted for detection uncertainty
-#       and perhaps confidence interval across entire study area, and at sub-study area regions
+#   lower.abund.ci - lower bound for study area-wide CI, 
+#                       not adjusted for detection uncertainty
+#   upper.abund.ci - upper bound for study area-wide CI, 
+#                       not adjusted for detection uncertainty
+#   raw.bootstrap.values - all boostrap estimates of abundance not 
+#                            adjusted for detection uncertainty and perhaps 
+#                            confidence interval across entire study area, 
+#                            and at sub-study area regions
 #
 # Created 8/9 February, 3, 13 April, 27 June 2006 by Rexstad
 

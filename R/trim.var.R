@@ -16,6 +16,13 @@
 #' @author Louise Burt
 trim.var<-function(untrimmed.bootstraps){
   outliers <- boxplot.stats(untrimmed.bootstraps, coef=1.5)$out
-  bootstrap.abund <- untrimmed.bootstraps[!(untrimmed.bootstraps %in% outliers)]  
-  return(var(bootstrap.abund))
+  bootstrap.abund <-untrimmed.bootstraps[!(untrimmed.bootstraps %in% outliers)]
+
+  ret <- var(bootstrap.abund)
+
+  attr(ret,"trim.prop") <- length(outliers) / length(untrimmed.bootstraps)
+  attr(ret,"untrimn") <- length(untrimmed.bootstraps)
+  attr(ret,"outliers") <- length(outliers) 
+
+  return(ret)
 }

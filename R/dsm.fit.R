@@ -138,12 +138,12 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
     }
   }
 
-  # If response is group or group.est - then change all cluster values to 1
-  # if density is the responnse, then the response variable needs to 
-  # be # detected divided by area!!!
-  #if(response=="group" | response=="group.est"){
-  #  obsdata[,cluster.name]<-rep(1,dim(obsdata)[1])
-  #}
+  # If response is group or group.est  then we are estimating the group
+  # abundance rather than individual abundance! 
+  # Need to multiply up for "group"
+  if(response=="group" | response=="group.est"){
+    obsdata[,cluster.name]<-rep(1,dim(obsdata)[1])
+  }
 
   # Aggregate response values of the sightings over segments
   if(response %in% c("indiv", "group")){
@@ -198,6 +198,7 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
                       eff.area=2*dat[,seglength.name]*ddfobject$meta.data$width*fitted.p,
                       area=2*dat[,seglength.name]*ddfobject$meta.data$width,
                       none=1)
+
   # Altered 2 Feb 06 to use final argument passed into function 
   # from InputFileMaker
   if(!is.null(convert.units) & off.set!="none"){
@@ -343,6 +344,9 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
   model.spec$model <- toupper(model.defn$fn)
   # save what the offset was
   model.spec$offset <- off.set
+  # what was the model formula?
+  model.spec$formula<-formula
+  model.spec$family<-as.character(family.and.link)
 
   # Return model object
   ret <- list(result=b,

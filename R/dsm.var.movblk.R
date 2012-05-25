@@ -51,6 +51,9 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
   short.var <- data.frame(sumx=rep(0,nrow(pred.data)), 
                           sumx.sq=rep(0,nrow(pred.data)))
 
+  # save the original off.set that was supplied
+  original.offset<-off.set
+
   # Sort out sampling unit for dsm object
   dsm.object$result$data$sampling.unit <- 
                         dsm.object$result$data[[samp.unit.name]]
@@ -175,7 +178,22 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
     }
   }
 
-  result <- list(short.var=short.var, study.area.total=study.area.total)
+  result <- list(short.var=short.var, 
+                 study.area.total=study.area.total,
+                 ds.uncertainty=ds.uncertainty,
+                 bootstrap=TRUE,
+                 pred.data=pred.data,
+                 n.boot=n.boot, 
+                 off.set=original.offset,
+                 block.size=block.size 
+                )
+
+  # package up the ddf result if we did detection function uncertainty
+#  if(!ds.uncertainty){
+    result$dsm.object <- dsm.object
+#  }
+
+  class(result)<-c("dsm.var")
 
   return(result)
 }

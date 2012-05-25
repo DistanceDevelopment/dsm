@@ -34,3 +34,8 @@ Collate:
     'block.info.per.su.R'
     'dsm-package.R'
     'latlong2km.R'
+    'ddf.model.description.R'
+    'print.summary.dsm.R'
+    'summary.dsm.R'
+    'print.summary.dsm.var.R'
+    'summary.dsm.var.R'
