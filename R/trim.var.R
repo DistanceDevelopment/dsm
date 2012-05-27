@@ -23,6 +23,7 @@ trim.var<-function(untrimmed.bootstraps){
   attr(ret,"trim.prop") <- length(outliers) / length(untrimmed.bootstraps)
   attr(ret,"untrimn") <- length(untrimmed.bootstraps)
   attr(ret,"outliers") <- length(outliers) 
+  attr(ret,"trim.ind") <- !(untrimmed.bootstraps %in% outliers)
 
   return(ret)
 }

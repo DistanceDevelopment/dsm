@@ -28,21 +28,32 @@ print.summary.dsm.var<-function(x,...){
     cat("Infinites         :",x$boot.infinite,"\n") 
     cat("NAs               :",x$boot.NA,"\n")       
     cat("NaNs              :",x$boot.NaN,"\n")      
-    cat("Usable replicates : ",x$boot.finite,
+    cat("Usable replicates : ",x$boot.usable,
                               " (",100-(100*x$trim.prop),"%)\n",sep="")
 
-    cat("\nPercentile method confidence intervals for density surface component only:\n")
+    cat("\nPercentrile bootstrap confidence interval and median:\n")
+    if(!x$ds.uncertainty){
+      cat("(Spatial model component only.)\n")
+    }
     print(x$quantiles)
 
-    cat("\n\n")
-    cat("Point estimate :", x$pred.est,"\n",
-        "Standard error :", x$se,"\n")
 
-    cat("\n       Estimated CV for density surface model",
-              round(x$boot.cv,4),"\n")
+  }else if(!x$bootstrap){
+    cat("Summary of uncertainty in a density surface model calculated\n")
+    cat(" by variance propagation.\n")
+
+
+  #model 
+  #deriv
+    cat("\nQuantiles of differences between fitted model and variance model\n")
+    print(x$saved$model.check)
 
   }
 
+  cat("\n\n")
+  cat("Point estimate           :", x$pred.est,"\n")
+  cat("Standard error           :", x$se,"\n")
+  cat("Coefficient of variation :", round(x$cv,4),"\n")
 
   cat("\n")
 

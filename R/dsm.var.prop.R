@@ -13,8 +13,10 @@
 #'
 #' @param dsm.obj an object returned from running \code{\link{dsm.fit}}.
 #' @param pred.data the prediction grid. A \code{data.frame} with the same 
-#'        columns as the original data.
-#' @param offset a vector as long as the number of rows in \code{pred.data}. 
+#'        columns as the original data. If there is a column named 
+#'        \code{off.set}, it will be ignored in favour of the argument to this
+#'        function.
+#' @param off.set a vector as long as the number of rows in \code{pred.data}. 
 #'        These give the offset for each prediction point. Can also just be a
 #'        scalar, if all entries are the same. 
 #' @param seglen.varname name for the column which holds the segment length 
@@ -30,13 +32,8 @@
 #' @references 
 #' Williams, R., Hedley, S.L., Branch, T.A., Bravington, M.V., Zerbini, A.N. and Findlay, K.P. (2011). Chilean Blue Whales as a Case Study to Illustrate Methods to Estimate Abundance and Evaluate Conservation Status of Rare Species. Conservation Biology 25(3), 526–535.
 #' @export
-dsm.var.prop<-function(dsm.obj, pred.data, offset, 
+dsm.var.prop<-function(dsm.obj, pred.data, off.set, 
     seglen.varname='Effort', type.pred="response") {
-
-  # pull out the ddf object
-  ddf.obj <- dsm.obj$ddf
-  # and the gam
-  gam.obj <- dsm.obj$result
 
   # this function changes the parameters in the ddf object
   tweakParams <- function(object, params) {
@@ -58,6 +55,12 @@ dsm.var.prop<-function(dsm.obj, pred.data, offset,
     return(ret)
   }
 
+
+  # pull out the ddf object
+  ddf.obj <- dsm.obj$ddf
+  # and the gam
+  gam.obj <- dsm.obj$result
+
   # pull out the data and the call
   callo <- gam.obj$call  
   fo2data <- dsm.obj$data
@@ -65,7 +68,7 @@ dsm.var.prop<-function(dsm.obj, pred.data, offset,
   ## find the derivatives
   # find the detection function parameters
   p0 <- tweakParams(ddf.obj) 
-  firstD <- numderiv( funco, p0)
+  firstD <- numderiv(funco, p0)
   
   # if the derivatives were zero, throw an error
   if(all(firstD==0)){
@@ -81,26 +84,24 @@ dsm.var.prop<-function(dsm.obj, pred.data, offset,
   }
   fo2data[[ dmat.name]] <- firstD 
   formo[[3]] <- call( '+', formo[[3]], as.symbol(dmat.name))
+
   # put it all together
-  paraterm<-list(list(ddf.obj$hess))
+  paraterm <- list(list(ddf.obj$hess))
   names(paraterm) <- dmat.name
   callo$formula <- formo 
   callo$family<-gam.obj$family
   callo$paraPen <- c(callo$paraPen, paraterm)
   callo$data <- fo2data 
+
   # run the model
   fit.with.pen <- eval(callo, parent.frame())
 
-  #### Diagnostics from Mark
-  # check that it doesn't change the model fit much!
-  #scatn( 'Comparison of fitted values when offset is flexible:')
-  #print( summary( fitted( fit.with.pen) - fitted( gam.obj)))
-  #scatn( "Should check param ests or fitted vals in 'fit.with.pen' are similar to original...")
-  #### /Diagnostics from Mark
+  # Diagnostic from Mark
+  # check that the fitted model isn't too different, used in summary()
+  model.check<-summary(fitted(fit.with.pen) - fitted(gam.obj))
 
-  cft <- coef( fit.with.pen)
-  real.preds <- list()
-
+  # grab the coefficients
+  cft <- coef(fit.with.pen)
   
   # depending on whether we have response or link scale predictions...
   if(type.pred=="response"){
@@ -118,6 +119,9 @@ dsm.var.prop<-function(dsm.obj, pred.data, offset,
     pred.data[[dmat.name]] <- rep(0, nrow(pred.data))
   }
 
+  # we're going to use the offset term supplied to the function, so 
+  # make sure that we don't use the offset twice
+  pred.data.save <- pred.data
   pred.data$off.set <- rep(0, nrow(pred.data))
 
   # fancy lp matrix stuff
@@ -126,13 +130,28 @@ dsm.var.prop<-function(dsm.obj, pred.data, offset,
   lpmat <- predict( fit.with.pen, newdata=pred.data, type='lpmatrix')
   lppred <- lpmat %**% cft
   #preddo <- offset %**% tmfn( lppred)
-  dpred.db <- matrix(offset %**% (dtmfn( lppred) * lpmat), 1, length( cft))
+  dpred.db <- matrix(off.set %**% (dtmfn( lppred) * lpmat), 1, length( cft))
 
   # "'vpred' is the covariance of all the summary-things." - MVB  
   # -- now we just have one prediction data object, it's the variance
   vpred <- dpred.db %**% tcrossprod( vcov( fit.with.pen), dpred.db) # A B A^tr 
 
-  return(list(model=fit.with.pen,pred.var=vpred))#,pred=preddo))
+
+  pred.data <- pred.data.save
+
+  ret <- list(model = fit.with.pen,
+              dsm.object = dsm.obj,
+              pred.data = pred.data,
+              pred.var = vpred,
+              bootstrap = FALSE,
+              model.check = model.check,
+              deriv = firstD,
+              off.set = off.set 
+              )
+
+  class(ret) <- "dsm.var"
+
+  return(ret)
 }
 
 

@@ -147,7 +147,7 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
     gam.call<-dsm.object$result$call
     gam.call$formula<-dsm.object$result$formula
     gam.call$family<-dsm.object$result$family
-    # put the boostrap data into the gam call
+    # put the bootstrap data into the gam call
     gam.call$data<-bs.samp
     
     # Handle chaos in gam fitting caused by pathological bootstrap resample

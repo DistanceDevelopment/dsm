@@ -2,7 +2,7 @@
 \alias{dsm.var.prop}
 \title{Variance propogation for DSM models}
 \usage{
-  dsm.var.prop(dsm.obj, pred.data, offset,
+  dsm.var.prop(dsm.obj, pred.data, off.set,
     seglen.varname = "Effort", type.pred = "response")
 }
 \arguments{
@@ -10,9 +10,11 @@
   \code{\link{dsm.fit}}.}
 
   \item{pred.data}{the prediction grid. A \code{data.frame}
-  with the same columns as the original data.}
+  with the same columns as the original data. If there is a
+  column named \code{off.set}, it will be ignored in favour
+  of the argument to this function.}
 
-  \item{offset}{a vector as long as the number of rows in
+  \item{off.set}{a vector as long as the number of rows in
   \code{pred.data}.  These give the offset for each
   prediction point. Can also just be a scalar, if all
   entries are the same.}

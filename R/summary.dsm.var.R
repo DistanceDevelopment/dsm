@@ -15,13 +15,20 @@
 #'
 summary.dsm.var<-function(object, alpha=0.05, ...){
 
+  # storage
   sinfo<-list()
+
+  # estimate from prediction
+  mod1.pred <- dsm.predict(object$dsm.object,
+                           newdata=object$pred.data,
+                           off=object$off.set)
+  sinfo$pred.est <- sum(mod1.pred,na.rm=TRUE)
+
 
   if(object$bootstrap){
 
     #  short.var=short.var
     #  study.area.total=study.area.total
-    pred.data <- object$pred.data
 
     sinfo$block.size <- object$block.size 
     sinfo$n.boot <- object$n.boot
@@ -31,11 +38,6 @@ summary.dsm.var<-function(object, alpha=0.05, ...){
     # bootstrap abundances
     bootstrap.abund <- object$study.area.total
 
-    # estimate from prediction
-    mod1.pred <- dsm.predict(object$dsm.object,
-                             newdata=pred.data,
-                             off=object$off.set)
-    pred.est <- sum(mod1.pred,na.rm=TRUE)
 
     # delta method, if necessary
     if(!object$ds.uncertainty){
@@ -53,7 +55,7 @@ summary.dsm.var<-function(object, alpha=0.05, ...){
 
       # cv squared of the Ns from the bootstrap
       cvNbs.sq <- (sqrt(trim.var(bootstrap.abund[is.finite(bootstrap.abund)]))/
-                   pred.est)^2
+                   sinfo$pred.est)^2
 #                   mean(bootstrap.abund[
 #                       is.finite(bootstrap.abund)],na.rm=TRUE))^2
 
@@ -64,10 +66,10 @@ summary.dsm.var<-function(object, alpha=0.05, ...){
 
       # cv of N
       cvN <- sqrt(cvp.sq+cvNbs.sq)
-      sinfo$boot.cv <- cvN
+      sinfo$cv <- cvN
 
       # variance (delta method)
-      sinfo$var <- (cvN*pred.est)^2
+      sinfo$var <- (cvN*sinfo$pred.est)^2
       sinfo$se <- sqrt(sinfo$var)
     }else{
       # if we used detection function uncertainty
@@ -79,31 +81,36 @@ summary.dsm.var<-function(object, alpha=0.05, ...){
       sinfo$var <- trimmed.variance
       sinfo$se <- sqrt(trimmed.variance)
 
-      sinfo$boot.cv <- cvN
+      sinfo$cv <- sinfo$se/sinfo$pred.est
     }
 
-    # general bootstrap stuff
+    ### general bootstrap stuff
+
+    # how many duds did we have?
     sinfo$trim.prop <- attr(trimmed.variance, "trim.prop")
+    sinfo$trim.ind <- attr(trimmed.variance, "trim.ind")
     sinfo$boot.outliers <- attr(trimmed.variance, "outliers")
     sinfo$boot.infinite <- sum(is.infinite(bootstrap.abund))
     sinfo$boot.finite <- sum(!is.infinite(bootstrap.abund))
     sinfo$boot.NA <- sum(is.na(bootstrap.abund))
     sinfo$boot.NaN <- sum(is.nan(bootstrap.abund))
+    sinfo$boot.usable <- sinfo$boot.finite - sinfo$boot.outliers 
 
-# don't use this at the moment
-#    sinfo$boot.median <- median(bootstrap.abund[
-#                                    is.finite(bootstrap.abund)],
-#                                na.rm=TRUE)
-
-    sinfo$quantiles <- quantile(bootstrap.abund[is.finite(bootstrap.abund)], 
-                                c((1-alpha)/2, 1-((1-alpha)/2)),na.rm=TRUE)
+    # grab the %ile c.i.s at alpha, 1-alpha and also median
+    sinfo$quantiles <- quantile(bootstrap.abund[sinfo$trim.ind], 
+                                c(alpha, 0.5, 1-alpha),na.rm=TRUE)
+    attr(sinfo$quantiles,"names")[2] <- "Median"
 
 
     
 
   }else if(object$bootstrap==FALSE){
     # varprop stuff
+    sinfo$saved<-object
+    sinfo$bootstrap <- object$bootstrap
+    sinfo$se <- sqrt(object$pred.var)
 
+    sinfo$cv <- sinfo$se/sinfo$pred.est
   }
 
   class(sinfo) <- "summary.dsm.var"
