@@ -41,3 +41,4 @@ Collate:
     'summary.dsm.var.R'
     'print.dsm.R'
     'print.dsm.var.R'
+    'plot.dsm.var.R'
