@@ -91,7 +91,15 @@ dsm.var.prop<-function(dsm.obj, pred.data, off.set,
   callo$formula <- formo 
   callo$family<-gam.obj$family
   callo$paraPen <- c(callo$paraPen, paraterm)
-  callo$data <- fo2data 
+  callo$data <- fo2data
+
+  # if bnd or knots were used... 
+  if(!is.null(callo$knots)){
+    callo$knots <- dsm.obj$model.spec$knots
+  }
+  if(!is.null(callo$bnd)){
+    callo$bnd <- dsm.obj$model.spec$bnd
+  }
 
   # run the model
   fit.with.pen <- eval(callo, parent.frame())

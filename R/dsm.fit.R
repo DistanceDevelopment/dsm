@@ -142,8 +142,12 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
   # abundance rather than individual abundance! 
   # Need to multiply up for "group"
   if(response=="group" | response=="group.est"){
-    obsdata[,cluster.name]<-rep(1,dim(obsdata)[1])
+    obsdata[,cluster.name][obsdata[,cluster.name]>0] <- 1
   }
+
+  # how many segments had observations?
+  model.spec$n.segs.withdata <- sum(obsdata[,cluster.name]>0)
+  model.spec$n.segs <- length(obsdata[,cluster.name])
 
   # Aggregate response values of the sightings over segments
   if(response %in% c("indiv", "group")){
@@ -312,6 +316,10 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
       if(max.wiggles==5){
         stop("Too many soap knot failures! Try different knots!")
       }
+
+      # save this for later (e.g. variance estimation!)
+      model.spec$bnd<-bnd
+      model.spec$knots<-knots
 
     }else{
        # Non-soap model

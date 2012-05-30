@@ -147,6 +147,14 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
     gam.call<-dsm.object$result$call
     gam.call$formula<-dsm.object$result$formula
     gam.call$family<-dsm.object$result$family
+    # if bnd or knots were used... 
+    if(!is.null(gam.call$knots)){
+      gam.call$knots <- dsm.object$model.spec$knots
+    }
+    if(!is.null(gam.call$bnd)){
+      gam.call$bnd <- dsm.object$model.spec$bnd
+    }
+
     # put the bootstrap data into the gam call
     gam.call$data<-bs.samp
     

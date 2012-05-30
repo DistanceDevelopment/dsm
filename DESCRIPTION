@@ -39,3 +39,5 @@ Collate:
     'summary.dsm.R'
     'print.summary.dsm.var.R'
     'summary.dsm.var.R'
+    'print.dsm.R'
+    'print.dsm.var.R'

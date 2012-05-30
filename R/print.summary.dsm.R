@@ -21,9 +21,6 @@ print.summary.dsm<-function(x,...){
   cat("Response : ", x$model.spec$response, "\n")
   cat("Offset   : ", x$model.spec$offset, "\n")
 
-
-  cat("\n\n")
-
   ### Detection function information
   cat("\nSummary of detection function\n")
   cat("\nForm: ",x$ddf$model.description,"\n")
@@ -31,6 +28,7 @@ print.summary.dsm<-function(x,...){
   cat("Distance range         : ", x$ddf$left, " - ",x$ddf$width,"\n")
   cat("Detection function AIC : ", x$ddf$aic, "\n")
 
+  cat("\n")
 
   # information on average p
   parameters <- data.frame(Estimate=c(x$ddf$average.p))
@@ -50,21 +48,29 @@ print.summary.dsm<-function(x,...){
 
   ### GAM things...
   if(x$model.spec$model=="GAM"){
-    cat("\nSummary of detection function\n")
+    cat("\nSummary of GAM\n")
     cat("\nFormula: ",as.character(x$model.spec$formula),"\n")
-    cat("Number of observations :",x$gam$n,"\n")
+
+    cat("\n")
+
+    cat("Number of segments                   :",x$model.spec$n.segs,"\n")
+    cat("Number of segments with observations :",x$model.spec$n.segs.withdata,
+          "(",100*x$model.spec$n.segs.withdata/x$model.spec$n.segs,"%)\n")
     cat("R-sq.(adj)             :",formatC(x$gam$r.sq,digits=3,width=5),"\n")
     if(length(x$gam$dev.expl)>0){
-      cat("Deviance explained   :",
+      cat("Deviance explained     :",
           formatC(x$gam$dev.expl*100,digits=3,width=4),"%\n",sep="")
     }
     if(!is.null(x$gam$method)&&!(x$gam$method%in%c("PQL","lme.ML","lme.REML"))){
-      cat(x$gam$method," score      :",formatC(x$gam$sp.criterion,digits=5),"\n",sep="")
+      cat(x$gam$method," score            : ",
+          formatC(x$gam$sp.criterion,digits=5),"\n",sep="")
     }
 
   }else if(x$model.spec$model=="GLM"){
     cat("Model summary not implemented for GLMs at the moment\n")
   }
+  
+  cat("\n")
 
   invisible()
 }

@@ -31,7 +31,7 @@ print.summary.dsm.var<-function(x,...){
     cat("Usable replicates : ",x$boot.usable,
                               " (",100-(100*x$trim.prop),"%)\n",sep="")
 
-    cat("\nPercentrile bootstrap confidence interval and median:\n")
+    cat("\nPercentile bootstrap confidence interval and median:\n")
     if(!x$ds.uncertainty){
       cat("(Spatial model component only.)\n")
     }
