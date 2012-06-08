@@ -9,31 +9,66 @@
 #' detection function uncertainty. Further mathematical details are given in 
 #' the paper in the references below.
 #'
+#' Many prediction grids can be supplied by supplying a list of 
+#' \code{data.frame}s to the function.
+#' 
 #' Based on (much more general) code from Mark Bravington and Sharon Hedley.
 #'
 #' @param dsm.obj an object returned from running \code{\link{dsm.fit}}.
-#' @param pred.data the prediction grid. A \code{data.frame} with the same 
-#'        columns as the original data. If there is a column named 
-#'        \code{off.set}, it will be ignored in favour of the argument to this
-#'        function.
-#' @param off.set a vector as long as the number of rows in \code{pred.data}. 
-#'        These give the offset for each prediction point. Can also just be a
-#'        scalar, if all entries are the same. 
+#' @param pred.data either: a single prediction grid or list of prediction 
+#'        grids. Each grid should be a \code{data.frame} with the same 
+#'        columns as the original data.
+#' @param off.set a a vector or list of vectors with as many elements as there 
+#'        are in \code{pred.data}. Each vector is as long as the number of
+#'        rows in the corresponding element of \code{pred.data}. These give
+#'        the area associated with each prediction point. 
 #' @param seglen.varname name for the column which holds the segment length 
 #'        (default value "Effort"). 
 #' @param type.pred should the predictions be on the "response" or "link" scale?
 #'        (default "response").
 #' @return a list with elements
 #'         \tabular{ll}{\code{model} \tab the fitted model object\cr
-#'                      \code{pred.var} \tab variances in abundance of the 
-#'                      the prediction region.
+#'                      \code{pred.var} \tab covariances of the regions given
+#'                      in \code{pred.data}. Diagonal elements are the 
+#'                      variances in order\cr
+#'                      \code{bootstrap} \tab logical, always \code{FALSE}\cr
+#'                      \code{pred.data} \tab as above\cr
+#'                      \code{off.set} \tab as above\cr
+#'                      \code{model}\tab the fitted model with the extra term\cr
+#'                      \code{dsm.object} \tab the original model, as above\cr
+#'                      \code{model.check} \tab simple check of subtracting the
+#'                        coefficients of the two models to see if there is a
+#'                        large difference\cr
+#'                      \code{deriv} \tab numerically calculated Hessian of the
+#'                        offset\cr.
 #'                      }
 #' @author Mark V. Bravington, Sharon L. Hedley. Bugs added by David L. Miller.
 #' @references 
 #' Williams, R., Hedley, S.L., Branch, T.A., Bravington, M.V., Zerbini, A.N. and Findlay, K.P. (2011). Chilean Blue Whales as a Case Study to Illustrate Methods to Estimate Abundance and Evaluate Conservation Status of Rare Species. Conservation Biology 25(3), 526–535.
 #' @export
-dsm.var.prop<-function(dsm.obj, pred.data, off.set, 
+dsm.var.prop<-function(dsm.obj, pred.data,off.set, 
     seglen.varname='Effort', type.pred="response") {
+
+  # make sure if one of pred.data and off.set is not a list we break
+  # if we didn't have a list, then put them in a list so everything works
+  if(is.data.frame(pred.data) & is.vector(off.set)){
+    pred.data <- list(pred.data)
+    off.set <- list(off.set)
+#    pred.data[[1]] <- pred.data
+#    off.set[[1]] <- off.set
+  }else if(is.list(off.set)){
+    if(length(pred.data)!=length(off.set)){
+      stop("pred.data and off.set don't have the same number of elements")
+    }
+  }
+
+  pred.data.save<-pred.data
+  off.set.save<-off.set
+
+  # pull out the ddf object
+  ddf.obj <- dsm.obj$ddf
+  # and the gam
+  gam.obj <- dsm.obj$result
 
   # this function changes the parameters in the ddf object
   tweakParams <- function(object, params) {
@@ -55,20 +90,13 @@ dsm.var.prop<-function(dsm.obj, pred.data, off.set,
     return(ret)
   }
 
-
-  # pull out the ddf object
-  ddf.obj <- dsm.obj$ddf
-  # and the gam
-  gam.obj <- dsm.obj$result
-
   # pull out the data and the call
   callo <- gam.obj$call  
   fo2data <- dsm.obj$data
 
-  ## find the derivatives
-  # find the detection function parameters
-  p0 <- tweakParams(ddf.obj) 
-  firstD <- numderiv(funco, p0)
+  # find the derivatives
+  p0 <- tweakParams(ddf.obj) # returns the parameters to numderiv
+  firstD <- numderiv( funco, p0)
   
   # if the derivatives were zero, throw an error
   if(all(firstD==0)){
@@ -84,22 +112,13 @@ dsm.var.prop<-function(dsm.obj, pred.data, off.set,
   }
   fo2data[[ dmat.name]] <- firstD 
   formo[[3]] <- call( '+', formo[[3]], as.symbol(dmat.name))
-
   # put it all together
-  paraterm <- list(list(ddf.obj$hess))
+  paraterm<-list(list(ddf.obj$hess))
   names(paraterm) <- dmat.name
   callo$formula <- formo 
   callo$family<-gam.obj$family
   callo$paraPen <- c(callo$paraPen, paraterm)
-  callo$data <- fo2data
-
-  # if bnd or knots were used... 
-  if(!is.null(callo$knots)){
-    callo$knots <- dsm.obj$model.spec$knots
-  }
-  if(!is.null(callo$bnd)){
-    callo$bnd <- dsm.obj$model.spec$bnd
-  }
+  callo$data <- fo2data 
 
   # run the model
   fit.with.pen <- eval(callo, parent.frame())
@@ -108,60 +127,64 @@ dsm.var.prop<-function(dsm.obj, pred.data, off.set,
   # check that the fitted model isn't too different, used in summary()
   model.check<-summary(fitted(fit.with.pen) - fitted(gam.obj))
 
-  # grab the coefficients
   cft <- coef(fit.with.pen)
+  preddo <- numeric(length(pred.data))
+
+  names(preddo) <- names(pred.data) # if any
+  dpred.db <- matrix(0, length(pred.data), length(cft))
   
   # depending on whether we have response or link scale predictions...
   if(type.pred=="response"){
-      tmfn<-gam.obj$family$linkinv
-      dtmfn<-function( eta){sapply( eta, numderiv, f=tmfn)}
+      tmfn <- gam.obj$family$linkinv
+      dtmfn <- function(eta){sapply(eta, numderiv, f=tmfn)}
   }else if(type.pred=="link"){ 
-      tmfn<-identity
-      dtmfn<-function( eta){1}
+      tmfn <- identity
+      dtmfn <- function(eta){1}
   }
 
-  # if we have a single paramter model (e.g. half-normal) need to be careful
-  if(is.matrix(firstD)){
-    pred.data[[dmat.name]] <- matrix(0, nrow(pred.data), ncol(firstD))
-  }else{
-    pred.data[[dmat.name]] <- rep(0, nrow(pred.data))
-  }
+  # loop over the prediction grids
+  for( ipg in seq_along(pred.data)) {
+    # if we have a single paramter model (e.g. half-normal) need to be careful
+    if(is.matrix(firstD)){
+      pred.data[[ipg]][[dmat.name]] <- matrix(0, 
+                                              nrow(pred.data[[ipg]]), 
+                                              ncol(firstD))
+    }else{
+      pred.data[[ipg]][[dmat.name]] <- rep(0, nrow(pred.data[[ipg]]))
+    }
 
-  # we're going to use the offset term supplied to the function, so 
-  # make sure that we don't use the offset twice
-  pred.data.save <- pred.data
-  pred.data$off.set <- rep(0, nrow(pred.data))
+    ### fancy lp matrix stuff
+    # set the offset to be zero here so we can use lp
+    pred.data[[ipg]]$off.set<-rep(0,nrow(pred.data[[ipg]]))
 
-  # fancy lp matrix stuff
-  # NB. when we use lpmatrix, the offset is _not_ included!
-  # hence the multiplication by offset below (see ?predict.gam)
-  lpmat <- predict( fit.with.pen, newdata=pred.data, type='lpmatrix')
-  lppred <- lpmat %**% cft
-  #preddo <- offset %**% tmfn( lppred)
-  dpred.db <- matrix(off.set %**% (dtmfn( lppred) * lpmat), 1, length( cft))
+    lpmat <- predict( fit.with.pen, newdata=pred.data[[ ipg]], type='lpmatrix')
+    lppred <- lpmat %**% cft
+
+    preddo[[ipg]] <- off.set[[ipg]] %**% tmfn(lppred)
+    dpred.db[ipg,] <- off.set[[ipg]] %**% (dtmfn(lppred)*lpmat)
+  } 
 
   # "'vpred' is the covariance of all the summary-things." - MVB  
-  # -- now we just have one prediction data object, it's the variance
-  vpred <- dpred.db %**% tcrossprod( vcov( fit.with.pen), dpred.db) # A B A^tr 
+  # so we want the diagonals if length(pred.data)>1
+  # A B A^tr 
+  vpred <- dpred.db %**% tcrossprod(vcov(fit.with.pen), dpred.db) 
 
+  result <- list(pred.var = vpred,
+                 bootstrap = FALSE,
+                 pred.data = pred.data.save,
+                 off.set = off.set.save,
+                 model = fit.with.pen,
+                 dsm.object = dsm.obj,
+                 model.check = model.check,
+                 deriv = firstD,
+                 seglen.varname=seglen.varname, 
+                 type.pred=type.pred
+                )
 
-  pred.data <- pred.data.save
+  class(result) <- "dsm.var"
 
-  ret <- list(model = fit.with.pen,
-              dsm.object = dsm.obj,
-              pred.data = pred.data,
-              pred.var = vpred,
-              bootstrap = FALSE,
-              model.check = model.check,
-              deriv = firstD,
-              off.set = off.set 
-              )
-
-  class(ret) <- "dsm.var"
-
-  return(ret)
+  return(result)
 }
-
 
 ####### this is all utility stuff below here, taken from Mark's packages
 
@@ -223,9 +246,4 @@ numderiv<-function (f, x0, eps = 1e-04, TWICE. = TRUE, param.name = NULL,
     if ((!is.null(dim(x)) && any(dim(x) == 1)))
         dim(x) <- NULL
     x
-}
-
-# again, from mvbutils
-"%&%" <- function (a, b){
-  paste(a, b, sep = "")
 }

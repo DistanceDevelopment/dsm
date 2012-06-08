@@ -18,14 +18,12 @@ summary.dsm.var<-function(object, alpha=0.05, ...){
   # storage
   sinfo<-list()
 
-  # estimate from prediction
-  mod1.pred <- dsm.predict(object$dsm.object,
-                           newdata=object$pred.data,
-                           off=object$off.set)
-  sinfo$pred.est <- sum(mod1.pred,na.rm=TRUE)
-
-
   if(object$bootstrap){
+    # grab the predicted values
+    mod1.pred <- dsm.predict(object$dsm.object,
+                             newdata=object$pred.data,
+                             off=object$off.set)
+    sinfo$pred.est <- sum(mod1.pred,na.rm=TRUE)
 
     #  short.var=short.var
     #  study.area.total=study.area.total
@@ -56,8 +54,6 @@ summary.dsm.var<-function(object, alpha=0.05, ...){
       # cv squared of the Ns from the bootstrap
       cvNbs.sq <- (sqrt(trim.var(bootstrap.abund[is.finite(bootstrap.abund)]))/
                    sinfo$pred.est)^2
-#                   mean(bootstrap.abund[
-#                       is.finite(bootstrap.abund)],na.rm=TRUE))^2
 
       # save the s.e. of N from bootstrap
       trimmed.variance <- trim.var(bootstrap.abund[
@@ -108,7 +104,34 @@ summary.dsm.var<-function(object, alpha=0.05, ...){
     # varprop stuff
     sinfo$saved<-object
     sinfo$bootstrap <- object$bootstrap
-    sinfo$se <- sqrt(object$pred.var)
+
+    # what if we had multiple areas (ie this is from a CV plot?)
+    if(all(dim(object$pred.var)==1,1)){
+      sinfo$se <- sqrt(object$pred.var)
+    }else{
+      # re run the variance calculation, putting everything together
+      pd<-c()
+      off<-c()
+      for(i in 1:length(object$pred.data)){
+        pd<-rbind(pd,object$pred.data[[i]])
+        off<-rbind(off,object$off.set[[i]])
+      }
+      object$pred.data <- pd
+      object$off.set <- as.vector(off)
+
+      # grab the predicted values
+      mod1.pred <- dsm.predict(object$dsm.object,
+                               newdata=object$pred.data,
+                               off=object$off.set)
+      sinfo$pred.est <- sum(mod1.pred,na.rm=TRUE)
+
+      var.prop <- dsm.var.prop(object$dsm.obj, object$pred.data, object$off.set,
+                               object$seglen.varname, object$type.pred)
+
+      
+      sinfo$se <- sqrt(var.prop$pred.var)
+
+    }
 
     sinfo$cv <- sinfo$se/sinfo$pred.est
   }

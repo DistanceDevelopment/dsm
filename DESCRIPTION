@@ -17,7 +17,7 @@ Version: 1.1.0
 URL: http://github.com/dill/dsm
 Date: 2012-04-24
 Depends:
-    R (>= 2.10.0),mgcv,mrds,soap,geoR
+    R (>= 2.10.0),mgcv,mrds,soap,geoR,ggplot2
 Collate:
     'dsm.aggregate.R'
     'dsm.bootstrap.R'
