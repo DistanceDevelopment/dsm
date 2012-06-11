@@ -49,20 +49,22 @@ print.summary.dsm<-function(x,...){
   ### GAM things...
   if(x$model.spec$model=="GAM"){
     cat("\nSummary of GAM\n")
-    cat("\nFormula: ",as.character(x$model.spec$formula),"\n")
+    cat("\nFormula: ",as.character(x$model.spec$formula)[c(2,1,3)],"\n")
 
     cat("\n")
 
     cat("Number of segments                   :",x$model.spec$n.segs,"\n")
-    cat("Number of segments with observations :",x$model.spec$n.segs.withdata,
-          "(",100*x$model.spec$n.segs.withdata/x$model.spec$n.segs,"%)\n")
-    cat("R-sq.(adj)             :",formatC(x$gam$r.sq,digits=3,width=5),"\n")
+    cat("Number of segments with observations :",
+        x$model.spec$n.segs.withdata,
+        "(",100*x$model.spec$n.segs.withdata/x$model.spec$n.segs,"%)\n")
+    cat("R-sq.(adj)                           :",
+        formatC(x$gam$r.sq,digits=3,width=5),"\n")
     if(length(x$gam$dev.expl)>0){
-      cat("Deviance explained     :",
+      cat("Deviance explained                   : ",
           formatC(x$gam$dev.expl*100,digits=3,width=4),"%\n",sep="")
     }
     if(!is.null(x$gam$method)&&!(x$gam$method%in%c("PQL","lme.ML","lme.REML"))){
-      cat(x$gam$method," score            : ",
+      cat(x$gam$method," score                          : ",
           formatC(x$gam$sp.criterion,digits=5),"\n",sep="")
     }
 
