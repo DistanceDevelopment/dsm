@@ -4,7 +4,8 @@
 \usage{
   dsm.var.movblk(dsm.object, pred.data, n.boot, block.size,
     off.set, ds.uncertainty = FALSE,
-    samp.unit.name = "Transect.Label", bpfile = NULL)
+    samp.unit.name = "Transect.Label",
+    progress.file = NULL, bs.file = NULL)
 }
 \arguments{
   \item{dsm.object}{object returned from
@@ -31,9 +32,14 @@
   \item{samp.unit.name}{name sampling unit to resample
   (default 'Transect.Label').}
 
-  \item{bpfile}{path to a file to be used (usually by
-  Distance) to generate a progress bar (default \code{NULL}
-  -- no file written).}
+  \item{progress.file}{path to a file to be used (usually
+  by Distance) to generate a progress bar (default
+  \code{NULL} -- no file written).}
+
+  \item{bs.file}{path to a file to store each boostrap
+  round (this stores all of the bootstrap results rather
+  than just the summaries, enabling outliers to be detected
+  and removed.}
 }
 \description{
   Estimate the variance in abundance over an area using a

@@ -18,8 +18,12 @@
 #'        function at the moment.
 #' @param samp.unit.name name sampling unit to resample (default 
 #'        'Transect.Label').
-#' @param bpfile path to a file to be used (usually by Distance) to 
+#' @param progress.file path to a file to be used (usually by Distance) to 
 #'        generate a progress bar (default \code{NULL} -- no file written).
+#' @param bs.file path to a file to store each boostrap round (this stores all
+#'        of the bootstrap results rather than just the summaries, enabling
+#'        outliers to be detected and removed. (Default \code{NULL}).
+#' @param bar should a progress bar be printed to screen? (Default \code{TRUE}).
 #' @export
 
 ## TODO
@@ -36,7 +40,7 @@
 dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size, 
                            off.set, ds.uncertainty=FALSE,
                            samp.unit.name='Transect.Label',
-                           bpfile=NULL){
+                           progress.file=NULL, bs.file=NULL,bar=TRUE){
 
   # check the user didn't ask for individual level covars and detection
   # function uncertainty
@@ -85,14 +89,19 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
   num.blocks.required <- sum(block.info$num.req)
   block.vector <- 1:tot.num.blocks
 
+  # do we want to print a progress bar?
+  if(bar){
+    pb <- txtProgressBar(min=0,max=n.boot,style=3)
+  }
+
   # Start bootstrapping
   for(i in 1:n.boot){
     # Compute proportion of bootstrapping completed, write it to file 
-    # passed as argument 'bpfile'
+    # passed as argument 'progress.file'
     # This file will be read by Distance to present a progress bar.
-    if(!is.null(bpfile)){
+    if(!is.null(progress.file)){
       progress <- round(i/n.boot, 2)* 100
-      write(progress, file=bpfile, append=FALSE)
+      write(progress, file=progress.file, append=FALSE)
     }
 
     bs.blocks <- sample(block.vector, num.blocks.required, replace=TRUE)
@@ -181,9 +190,43 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
       short.var$sumx.sq <- short.var$sumx.sq + 
                            (vector.cell.abundances * vector.cell.abundances)
       study.area.total[i] <- sum(vector.cell.abundances, na.rm=TRUE)
+
+      # if we supplied bs.file, then write detailed, per replicate
+      # data
+      # if it's the first time and the file already exists, modify the name 
+      # use that
+      if(!is.null(bs.file) & i==1){
+        if(file.exists(bs.file)){
+          a.number <- 1
+          bs.file2 <- strsplit(bs.file,"\\.")[[1]]
+          bs.file2.end <- paste('.',bs.file2[length(bs.file2)],sep="")
+          bs.file2.start <- paste(bs.file2[1:(length(bs.file2)-1)],collapse=".")
+          bs.file2 <- paste(bs.file2.start,"-",a.number,bs.file2.end,
+                            collapse="",sep="")
+          while(file.exists(bs.file2)){
+            a.number <- a.number+1
+            bs.file2 <- paste(bs.file2.start,"-",a.number,bs.file2.end,
+                              collapse="",sep="")
+          }
+          warning(paste("Filename",bs.file,"was taken, writing to file",
+                         bs.file2))
+          bs.file<-bs.file2
+        }
+      }
+      if(!is.null(bs.file)){
+        # append to the file bs.file
+        write.table(t(dsm.predict.bs),bs.file,append=TRUE,
+                    sep=",",col.names=FALSE)
+      }
+
     }else{
       study.area.total[i] <- NA
     }
+
+    if(bar){
+      setTxtProgressBar(pb, i)
+    }
+
   }
 
   result <- list(short.var=short.var, 
@@ -193,7 +236,8 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
                  pred.data=pred.data,
                  n.boot=n.boot, 
                  off.set=original.offset,
-                 block.size=block.size 
+                 block.size=block.size,
+                 bs.file=bs.file
                 )
 
   # package up the ddf result if we did detection function uncertainty
@@ -202,6 +246,10 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
 #  }
 
   class(result)<-c("dsm.var")
+
+  if(bar){
+    cat("\n")
+  }
 
   return(result)
 }

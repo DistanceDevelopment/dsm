@@ -53,16 +53,47 @@ plot.dsm.var<-function(object, poly=NULL, ..., limits=NULL){
     #sinfo$bootstrap <- TRUE
     #sinfo$ds.uncertainty <- object$ds.uncertainty
 
-    # bootstrap cell abundances
-    short.var <- object$short.var
+    # if we didn't save each bootstrap replicate
+    if(is.null(object$bs.file)){
+      # bootstrap cell abundances
+      short.var <- object$short.var
 
-    ### think about trimming here -- save everything and trim at this
-    ### stage, will probably need to check that the var won't be too big
+      ### think about trimming here -- save everything and trim at this
+      ### stage, will probably need to check that the var won't be too big
 
-    n <- length(short.var$sumx.sq)
+      n <- length(short.var$sumx.sq)
 
-    cell.se<-sqrt((short.var$sumx.sq/(n-1))-((short.var$sumx/n)^2*(n/(n-1))))
-    cell.cv <- cell.se/mod.pred
+      cell.se<-sqrt((short.var$sumx.sq/(n-1))-((short.var$sumx/n)^2*(n/(n-1))))
+      cell.cv <- cell.se/mod.pred
+
+    }else{
+      # if we did save each replicate...
+
+      # load the data
+      bs.save <- read.csv(object$bs.file,head=FALSE)
+
+      # first col is just the ids
+      bs.save <- bs.save[,-1]
+
+      n <- ncol(bs.save)
+
+      # don't do this because it's not consistant with what's in the summary()
+      #cell.se <- sqrt(apply(trim.var,1,bs.save))
+      #cell.cv <- cell.se/mod.pred
+
+      # calculate the overall trimmed variance
+      tv <- trim.var(object$study.area.total) 
+      # there is an attribute that is an indicator of which to keep
+      trim.ind <- attr(tv,"trim.ind")
+      # keep those
+      bs.save <- bs.save[trim.ind,]
+
+      # calculate the variance
+#      cell.se <- sqrt(apply(bs.save,2,var))
+      cell.se <- colSums(bs.save^2)/(n-1) - ((colSums(bs.save)/n)^2)*(n/(n-1))
+      cell.se <- sqrt(cell.se)
+      cell.cv <- cell.se/mod.pred
+    }
 
     # delta method, if necessary
     if(!object$ds.uncertainty){
@@ -81,6 +112,7 @@ plot.dsm.var<-function(object, poly=NULL, ..., limits=NULL){
       # delta method
       cell.cv <- sqrt(cvp.sq+cell.cv.sq)
     }
+
 
 
   }else if(object$bootstrap==FALSE){

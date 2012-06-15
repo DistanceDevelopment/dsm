@@ -56,7 +56,8 @@ dsm.check<-function(dsm.obj,type=c("deviance","pearson","response"),
 
 
   ### QQ-plot
-  qq.gam(model, rep=rep, level=level, type=type, rl.col=rl.col, rep.col=rep.col, ...)
+  qq.gam(model, rep=rep, level=level, type=type, 
+         rl.col=rl.col, rep.col=rep.col, ...)
 
   ### scale-location plot
   sl.dat<-data.frame(x=fitted.vals,y=abs(resids))
@@ -77,64 +78,95 @@ dsm.check<-function(dsm.obj,type=c("deviance","pearson","response"),
   new.dat<-data.frame(x=model$data$x,
                       y=model$data$y,
                       z=resids)
-  b<-gam(z~s(x,y,k=gam.k),data=new.dat)
+  b<-gam(z~s(x,y,k=gam.k)-1,data=new.dat)
   vis.gam(b,plot.type="contour",main="Fit to residuals",
-          asp=1,view=c("x","y")) 
+          asp=1,view=c("x","y"),type="response") 
+
 
   ### variogram
-  plot(1:10,1:10,type="n")
-  text(5,5,label="coming soon")
+  #plot(1:10,1:10,type="n")
+  #text(5,5,label="coming soon")
 
   # need geoR for this!
+  # some of this taken from Charles Paxton's talk at a Distance Sampling
+  # workshop
 
-  # overall variogram
-#  coords<-matrix(0,length(model$model$x),2)
-#  coords[,1]<-model$data$x
-#  coords[,2]<-model$data$y
-#  gb<-list(data=residuals(model,type="d"),coords=coords)
-#  vg<-variog(gb,max.dist=vario.max,messages=FALSE)
-#  #vg.env<-variog.mc.env(gb, obj.var = vg,messages=FALSE)
-#  #plot(vg,envelope=vg.env,type="l",main="Emprical variogram",xlim=c(0,50),ylim=c(0,1))
-#  plot(vg,type="l",main="Emprical variogram",xlim=c(0,50),ylim=c(0,1))
+  ####creates data frame of co-ords (x,y) and residuals
+  #df1 <- data.frame(resids, model$data$x, model$data$y)
+  ### creates geo object
+  #df1geo <- as.geodata(df1, coords.col = 2:3, data.col = 1) 
+  #### calculates variogram can specify max.dist and direction
+  #var1 <- variog(df1geo)
+  ### plot variogram
+  #plot(var1,ylim=c(0,2),xlim=c(0,200000),scaled=TRUE) ## plot variogram
+
+  # save a lot of things!
+  all.dat<-c()
+  vg.save <- c()
+  vg.list<-list()
+  i<-1
+
+  for(tranid in unique(model$data$Transect.Label)){
+    ind <- model$data$Transect.Label==tranid
+
+    # let's assume that Sample.Label has the format
+    #  Transect.Label-number
+    this.dat <- data.frame(Effort = model$data$Effort[ind],
+                           Sample.Label = model$data$Sample.Label[ind],
+                           resids = resids[ind])
+
+    # create a column of the just number of the segment within the transect
+    this.dat$Sample.Number <- as.numeric(sub("\\d+-","",
+                                         as.character(this.dat$Sample.Label)))
+    # sort the data.frame by that
+    this.dat <- this.dat[order(this.dat$Sample.Number),]
+
+    # now pretend that that each segment lies along y=0, with distances
+    # between the segments as the sum of the efforts.
+    fake.dat <- data.frame(x=cumsum(this.dat$Effort),
+                           y=rep(0,length(this.dat$Effort)),
+                           resids=this.dat$resids)
+
+    all.dat <- rbind(all.dat, fake.dat)
+
+    dfigeo <- as.geodata(fake.dat, coords.col = 1:2, data.col = 3)
+    vg <- variog(dfigeo, messages=FALSE)
+
+    vg.save <- rbind(vg.save, cbind(vg$u,vg$v))
+    vg.list[[i]] <- vg
+    i<-i+1
+  }
+
+  # format this
+  vg.save <- as.data.frame(vg.save)
+  names(vg.save) <- c("x","y")
+
+  # take the full data (jitter it so we don't have issues with colocated points)
+  all.dat <- jitterDupCoords(as.geodata(all.dat,
+                                        coords.col=1:2,data.col=3,
+                                        messages=FALSE),
+                             0.001)
+  
+  # fit the variogram
+  all.vg <- variog(all.dat, messages=FALSE)
+  #plot(all.vg,type="l",scaled=TRUE,ylim=c(0,max(vg.save$y)))
+  plot(all.vg,type="l",ylim=c(0,max(vg.save$y)),
+       main="Semivariogram",xlab="Distance",ylab="Semivariance")
+
+  # an apply to plot all the lines, just does the line below
+  # need to assign, but nothing happens with the var
+  #  lines(vg,type="l",col=rgb(200,200,200,190,maxColorValue=255),scaled=TRUE)
+  fake.res <- lapply(vg.list,lines,type="l",
+                     col=rgb(200,200,200,190,maxColorValue=255))#,
+#                     scaled=TRUE)
+  rm(fake.res)
 
 
-  #all.vg<-c()
-
-  #for(tranid in unique(model$data$Transect.Label)){
-
-  #  ind <- model$data$Transect.Label==tranid
-  #  coords <- cbind(model$data$x[ind],model$data$y[ind])
-
-  #  gb <- list(data=residuals(model,type="d")[ind],coords=coords)
-  #  vg <- variog(gb,max.dist=vario.max,messages=FALSE)
-  #  vg$x <- vg$u
-  #  vg$y <- vg$v
-  #  lines(vg,type="l",col=rgb(190,190,190,100,maxColorValue=255))
-
-  #  all.vg<-rbind(all.vg,vg$y)
-
-  #}
-
-  #lines(x=vg$x,y=colMeans(all.vg),col="red")
+  lo <- loess(y~x,vg.save)
+  lines(x=seq(0,max(all.dat$coords[,1]),len=1000),
+        y=predict(lo,data.frame(x=seq(0,max(all.dat$coords[,1]),len=1000))),lty=2)
 
 
-
-
-
-  ##### OLD CODE
-  ## taken from the Red Book
-  #coords<-matrix(0,length(model$model$x),2)
-  #coords[,1]<-model$data$x
-  #coords[,2]<-model$data$y
-
-  #gb<-list(data=residuals(model,type="d"),coords=coords)
-  #vg<-variog(gb,max.dist=vario.max)
-
-  #vg.env<-variog.mc.env(gb, obj.var = vg)
-
-  ## plot the variogram
-  #plot(vg,envelope=vg.env,type="l",main="Emprical variogram")
-  ##### / OLD CODE
 
   par(old.par)
 }
