@@ -129,43 +129,45 @@ dsm.check<-function(dsm.obj,type=c("deviance","pearson","response"),
 
     all.dat <- rbind(all.dat, fake.dat)
 
-    dfigeo <- as.geodata(fake.dat, coords.col = 1:2, data.col = 3)
-    vg <- variog(dfigeo, messages=FALSE)
+    #dfigeo <- as.geodata(fake.dat, coords.col = 1:2, data.col = 3)
+    #vg <- variog(dfigeo, messages=FALSE)
 
-    vg.save <- rbind(vg.save, cbind(vg$u,vg$v))
-    vg.list[[i]] <- vg
-    i<-i+1
+    #vg.save <- rbind(vg.save, cbind(vg$u,vg$v))
+    #vg.list[[i]] <- vg
+    #i<-i+1
   }
 
   # format this
-  vg.save <- as.data.frame(vg.save)
-  names(vg.save) <- c("x","y")
+  #vg.save <- as.data.frame(vg.save)
+  #names(vg.save) <- c("x","y")
 
   # take the full data (jitter it so we don't have issues with colocated points)
-  all.dat <- jitterDupCoords(as.geodata(all.dat,
-                                        coords.col=1:2,data.col=3,
-                                        messages=FALSE),
-                             0.001)
+  #all.dat <- jitterDupCoords(as.geodata(all.dat,
+  #                                      coords.col=1:2,data.col=3,
+  #                                      messages=FALSE),
+  #                           0.001)
   
   # fit the variogram
-  all.vg <- variog(all.dat, messages=FALSE)
-  #plot(all.vg,type="l",scaled=TRUE,ylim=c(0,max(vg.save$y)))
-  plot(all.vg,type="l",ylim=c(0,max(vg.save$y)),
-       main="Semivariogram",xlab="Distance",ylab="Semivariance")
+  #all.vg <- variog(all.dat, messages=FALSE)
+  ##plot(all.vg,type="l",scaled=TRUE,ylim=c(0,max(vg.save$y)))
+  #plot(all.vg,type="l",ylim=c(0,max(vg.save$y)),
+  #     main="Semivariogram",xlab="Distance",ylab="Semivariance")
 
-  # an apply to plot all the lines, just does the line below
-  # need to assign, but nothing happens with the var
-  #  lines(vg,type="l",col=rgb(200,200,200,190,maxColorValue=255),scaled=TRUE)
-  fake.res <- lapply(vg.list,lines,type="l",
-                     col=rgb(200,200,200,190,maxColorValue=255))#,
-#                     scaled=TRUE)
-  rm(fake.res)
+  ## an apply to plot all the lines, just does the line below
+  ## need to assign, but nothing happens with the var
+  ##  lines(vg,type="l",col=rgb(200,200,200,190,maxColorValue=255),scaled=TRUE)
+  #fake.res <- lapply(vg.list,lines,type="l",
+  #                   col=rgb(200,200,200,190,maxColorValue=255))#,
+# #                    scaled=TRUE)
+  #rm(fake.res)
 
 
-  lo <- loess(y~x,vg.save)
-  lines(x=seq(0,max(all.dat$coords[,1]),len=1000),
-        y=predict(lo,data.frame(x=seq(0,max(all.dat$coords[,1]),len=1000))),lty=2)
+  #lo <- loess(y~x,vg.save)
+  #lines(x=seq(0,max(all.dat$coords[,1]),len=1000),
+  #      y=predict(lo,data.frame(x=seq(0,max(all.dat$coords[,1]),len=1000))),lty=2)
 
+  # calculate the acf...
+  acf.fit <- acf(all.dat)
 
 
   par(old.par)
