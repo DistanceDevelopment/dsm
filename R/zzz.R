@@ -8,7 +8,7 @@
 
 # taken from mgcv
 dsm.version <- function(){ 
-  library(help=mmds)$info[[1]] -> linfo
+  library(help=dsm)$info[[1]] -> linfo
 
   version <- linfo[pmatch("Version",linfo)]
   built <- linfo[pmatch("Built",linfo)]
