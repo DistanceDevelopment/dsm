@@ -80,7 +80,7 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
     return(object)
   }
 
-  # function to find the derivatives of -- the offset
+  # function to find the derivatives of the offset
   funco <- function(p){
     # set the parameters to be p
     ipo <- tweakParams(ddf.obj, p)

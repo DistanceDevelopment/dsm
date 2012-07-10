@@ -167,7 +167,7 @@ dsm.check<-function(dsm.obj,type=c("deviance","pearson","response"),
   #      y=predict(lo,data.frame(x=seq(0,max(all.dat$coords[,1]),len=1000))),lty=2)
 
   # calculate the acf...
-  acf.fit <- acf(all.dat)
+  #acf.fit <- acf(all.dat)
 
 
   par(old.par)

@@ -44,9 +44,10 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
 
   # check the user didn't ask for individual level covars and detection
   # function uncertainty
-  if(ds.uncertainty & (
-          dsm.object$model.spec$response=="indiv.est"|
-          dsm.object$model.spec$response=="group.est")){
+  if(ds.uncertainty &
+     dsm.object$ddf$ds$aux$ddfobj$scale$formula != "~1"){
+#          dsm.object$model.spec$response=="indiv.est"|
+#          dsm.object$model.spec$response=="group.est")){
     stop("Detection function uncertainty with covariates is not supported")
   }
 

@@ -138,10 +138,9 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
     }
   }
 
-  # If response is group or group.est  then we are estimating the group
+  # If response is "group" then we are estimating the group
   # abundance rather than individual abundance! 
-  # Need to multiply up for "group"
-  if(response=="group" | response=="group.est"){
+  if(response=="group" | response =="group.est"){
     obsdata[,cluster.name][obsdata[,cluster.name]>0] <- 1
   }
 
