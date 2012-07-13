@@ -21,13 +21,11 @@ resulting from object-specific detection probabilities}
   \code{mrds}.}
 
   \item{response}{response type to be modelled; choices
-  are: \tabular{ll}{\code{indiv} \tab - individual counts
-  per segment\cr \code{group} \tab - group counts per
-  segment\cr \code{indiv.est} \tab - estimated individual
-  abundance per segment\cr \code{group.est} \tab -
-  estimated group abundance per segment \cr
-  \code{indiv.den} \tab individual density per segment\cr
-  \code{group.den} \tab group density per segment\cr}}
+  are: \tabular{ll}{\code{indiv} \tab - estimate individual
+  abundance\cr \code{group} \tab - estimate group counts
+  abundance\cr \code{indiv.den} \tab individual density per
+  segment\cr \code{group.den} \tab group density per
+  segment\cr}}
 
   \item{formula}{formula for the surface. This should be a
   valid \code{glm} or \code{gam} formula. In the GAM case,

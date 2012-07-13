@@ -5,7 +5,7 @@
   dsm.var.movblk(dsm.object, pred.data, n.boot, block.size,
     off.set, ds.uncertainty = FALSE,
     samp.unit.name = "Transect.Label",
-    progress.file = NULL, bs.file = NULL)
+    progress.file = NULL, bs.file = NULL, bar = TRUE)
 }
 \arguments{
   \item{dsm.object}{object returned from
@@ -37,9 +37,12 @@
   \code{NULL} -- no file written).}
 
   \item{bs.file}{path to a file to store each boostrap
-  round (this stores all of the bootstrap results rather
+  round. This stores all of the bootstrap results rather
   than just the summaries, enabling outliers to be detected
-  and removed.}
+  and removed. (Default \code{NULL}).}
+
+  \item{bar}{should a progress bar be printed to screen?
+  (Default \code{TRUE}).}
 }
 \description{
   Estimate the variance in abundance over an area using a

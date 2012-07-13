@@ -13,12 +13,10 @@
 #'   obligation that detection functions for use in \code{dsm} need come
 #'   from \code{mrds}. 
 #' @param response response type to be modelled; choices are:
-#'   \tabular{ll}{\code{indiv} \tab - individual counts per segment\cr
-#'                \code{group} \tab - group counts per segment\cr
-#'                \code{indiv.est} \tab - estimated individual abundance per 
-#'                  segment\cr
-#'                \code{group.est} \tab - estimated group abundance per 
-#'                  segment \cr
+#'   \tabular{ll}{\code{indiv} \tab - estimate individual abundance\cr
+#'                \code{group} \tab - estimate group counts abundance\cr
+#                \code{indiv.est} \tab - estimate individual abundance\cr
+#                \code{group.est} \tab - estimated group abundance\cr
 #'                \code{indiv.den} \tab individual density per segment\cr
 #'                \code{group.den} \tab group density per segment\cr}
 #' @param formula formula for the surface. This should be a
@@ -108,7 +106,7 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
   #  the following is borrowed (heavily) from dsm.count by Laake
   #  ER modification is to test for presence of phat argument and substitute 
   #     detection probabilities from phat if provided
-  if(response %in% c("indiv.est","group.est","indiv.den", "group.den")){
+#  if(response %in% c("indiv.est","group.est","indiv.den", "group.den")){
     if(!is.null(phat)){
       fitted.p<-phat
       object.data<-obsdata$sightnum.name
@@ -136,11 +134,11 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
       print(obsdata[,sightnum.name][is.na(obsdata$p)])
       stop("Function terminated")
     }
-  }
+#  }
 
   # If response is "group" then we are estimating the group
   # abundance rather than individual abundance! 
-  if(response=="group" | response =="group.est"){
+  if(response=="group"){# | response =="group.est"){
     obsdata[,cluster.name][obsdata[,cluster.name]>0] <- 1
   }
 
@@ -148,38 +146,52 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
   model.spec$n.segs.withdata <- sum(obsdata[,cluster.name]>0)
   model.spec$n.segs <- length(obsdata[,cluster.name])
 
+  # are there covariates in the detection function?
+  mcds<-TRUE
+  if(ddfobject$ds$aux$ddfobj$scale$formula == "~1"){
+    mcds<-FALSE
+  }
+
+
   # Aggregate response values of the sightings over segments
-  if(response %in% c("indiv", "group")){
-    responsedata<-aggregate(obsdata[,cluster.name],
-                            list(obsdata[,segnum.name]), sum)
-    off.set <- "eff.area"
 
-    # need to find the fitted ps to divide through by below
-    # we don't have individual level covariates, so there is only
-    # one p
-  
-    # did the user supply phat?
-    if(!is.null(phat)){
-      fitted.p<-unique(phat)
-    # don't think that this is a very good idea vvvvv
-    #}else if(any(names(obsdata)==esw.name)){
-    #  fitted.p<-unique(obsdata[,esw.data]*ddfobject$width)
-    }else{
-      fitted.p<-unique(ddfobject$fitted)
-    }    
-
-    if(length(fitted.p)!=1){
-      stop(paste("Non-unique probability of detection.\n",
-                 "Are you sure this is an \"indiv\"/\"group\" analysis?"))
-    }
-  }else if (response %in% c("indiv.est", "group.est")){
-    responsedata<-aggregate(obsdata[,cluster.name]/obsdata$p,
-                            list(obsdata[,segnum.name]), sum)
-    off.set<-"area"
-  }else{
+  # for the density models
+  if(response %in% c("indiv.den","group.den")){
     responsedata <- aggregate(obsdata[,cluster.name]/obsdata$p,
                               list(obsdata[,segnum.name]), sum) 
     off.set <- "none"
+  # for group and individual abundance
+  }else{
+#  if(response %in% c("indiv", "group")){
+    if(!mcds){
+      responsedata<-aggregate(obsdata[,cluster.name],
+                              list(obsdata[,segnum.name]), sum)
+      off.set <- "eff.area"
+
+      # need to find the fitted ps to divide through by below
+      # we don't have individual level covariates, so there is only
+      # one p
+    
+      # did the user supply phat?
+      if(!is.null(phat)){
+        fitted.p<-unique(phat)
+      # don't think that this is a very good idea vvvvv
+      #}else if(any(names(obsdata)==esw.name)){
+      #  fitted.p<-unique(obsdata[,esw.data]*ddfobject$width)
+      }else{
+        fitted.p<-unique(ddfobject$fitted)
+      }    
+
+#      if(length(fitted.p)!=1){
+#        stop(paste("Non-unique probability of detection.\n",
+#                   "Are you sure this is an \"indiv\"/\"group\" analysis?"))
+#      }
+#    }else if (response %in% c("indiv.est", "group.est")){
+    }else{
+      responsedata<-aggregate(obsdata[,cluster.name]/obsdata$p,
+                              list(obsdata[,segnum.name]), sum)
+      off.set<-"area"
+    }
   }
   
   # we'll just call the response N, whatever we're actually modelling

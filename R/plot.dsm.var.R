@@ -22,8 +22,7 @@
 # plot transect lines
 # covariates in the detection function
 
-
-plot.dsm.var<-function(object, poly=NULL, ..., limits=NULL){
+plot.dsm.var<-function(object, poly=NULL, ..., limits=NULL,xlab="x",ylab="y"){
 
   # if we did used the random effects trick, collapse everything down
   if(!object$bootstrap){
@@ -89,10 +88,13 @@ plot.dsm.var<-function(object, poly=NULL, ..., limits=NULL){
       bs.save <- bs.save[trim.ind,]
 
       # calculate the variance
-#      cell.se <- sqrt(apply(bs.save,2,var))
-      cell.se <- colSums(bs.save^2)/(n-1) - ((colSums(bs.save)/n)^2)*(n/(n-1))
-      cell.se <- sqrt(cell.se)
+      cell.se <- sqrt(apply(bs.save,2,var))
+#      cell.se <- colSums(bs.save^2)/(n-1) - ((colSums(bs.save)/n)^2)*(n/(n-1))
+#      cell.se <- sqrt(cell.se)
       cell.cv <- cell.se/mod.pred
+
+      rm(bs.save)
+      gc()
     }
 
     # delta method, if necessary
@@ -140,7 +142,7 @@ plot.dsm.var<-function(object, poly=NULL, ..., limits=NULL){
                   panel.grid.minor=theme_blank(),
                   panel.background=theme_rect())
   p <- ggplot(plotdata) + gg.opts
-  p <- p + labs(fill="CV")
+  p <- p + labs(fill="CV",x=xlab,y=ylab)
   p <- p+geom_tile(aes(x=x, y=y, fill=cell.cv, width=width, height=height))
   p <- p + coord_equal()
   p <- p + scale_fill_gradientn(colours=heat_hcl(200),
