@@ -84,27 +84,8 @@ dsm.check<-function(dsm.obj,type=c("deviance","pearson","response"),
 
 
   ### variogram
-  #plot(1:10,1:10,type="n")
-  #text(5,5,label="coming soon")
-
-  # need geoR for this!
-  # some of this taken from Charles Paxton's talk at a Distance Sampling
-  # workshop
-
-  ####creates data frame of co-ords (x,y) and residuals
-  #df1 <- data.frame(resids, model$data$x, model$data$y)
-  ### creates geo object
-  #df1geo <- as.geodata(df1, coords.col = 2:3, data.col = 1) 
-  #### calculates variogram can specify max.dist and direction
-  #var1 <- variog(df1geo)
-  ### plot variogram
-  #plot(var1,ylim=c(0,2),xlim=c(0,200000),scaled=TRUE) ## plot variogram
-
   # save a lot of things!
   all.dat<-c()
-  vg.save <- c()
-  vg.list<-list()
-  i<-1
 
   for(tranid in unique(model$data$Transect.Label)){
     ind <- model$data$Transect.Label==tranid
@@ -124,51 +105,22 @@ dsm.check<-function(dsm.obj,type=c("deviance","pearson","response"),
     # now pretend that that each segment lies along y=0, with distances
     # between the segments as the sum of the efforts.
     fake.dat <- data.frame(x=cumsum(this.dat$Effort),
-                           y=rep(0,length(this.dat$Effort)),
                            resids=this.dat$resids)
 
     all.dat <- rbind(all.dat, fake.dat)
-
-    #dfigeo <- as.geodata(fake.dat, coords.col = 1:2, data.col = 3)
-    #vg <- variog(dfigeo, messages=FALSE)
-
-    #vg.save <- rbind(vg.save, cbind(vg$u,vg$v))
-    #vg.list[[i]] <- vg
-    #i<-i+1
   }
 
-  # format this
-  #vg.save <- as.data.frame(vg.save)
-  #names(vg.save) <- c("x","y")
-
-  # take the full data (jitter it so we don't have issues with colocated points)
-  #all.dat <- jitterDupCoords(as.geodata(all.dat,
-  #                                      coords.col=1:2,data.col=3,
-  #                                      messages=FALSE),
-  #                           0.001)
-  
-  # fit the variogram
-  #all.vg <- variog(all.dat, messages=FALSE)
-  ##plot(all.vg,type="l",scaled=TRUE,ylim=c(0,max(vg.save$y)))
-  #plot(all.vg,type="l",ylim=c(0,max(vg.save$y)),
-  #     main="Semivariogram",xlab="Distance",ylab="Semivariance")
-
-  ## an apply to plot all the lines, just does the line below
-  ## need to assign, but nothing happens with the var
-  ##  lines(vg,type="l",col=rgb(200,200,200,190,maxColorValue=255),scaled=TRUE)
-  #fake.res <- lapply(vg.list,lines,type="l",
-  #                   col=rgb(200,200,200,190,maxColorValue=255))#,
-# #                    scaled=TRUE)
-  #rm(fake.res)
-
-
-  #lo <- loess(y~x,vg.save)
-  #lines(x=seq(0,max(all.dat$coords[,1]),len=1000),
-  #      y=predict(lo,data.frame(x=seq(0,max(all.dat$coords[,1]),len=1000))),lty=2)
-
   # calculate the acf...
-  #acf.fit <- acf(all.dat)
+  acf.fit <- acf(all.dat,plot=FALSE,type="covariance")
 
+  plot(acf.fit$lag[,,2][,1], acf.fit$acf[,,2][,2],type="l", 
+       xlab="lag",ylab="correlation", main="Autocorrelogram")
+
+  #plot(all.dat)
 
   par(old.par)
+
+  invisible()
+#return(acf.fit)
+#return(all.dat)
 }
