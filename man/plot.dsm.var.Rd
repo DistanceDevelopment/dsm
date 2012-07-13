@@ -3,7 +3,7 @@
 \title{Create plots of abundance uncertainty}
 \usage{
   \method{plot}{dsm.var} (object, poly = NULL, ...,
-    limits = NULL)
+    limits = NULL, xlab = "x", ylab = "y")
 }
 \arguments{
   \item{object}{a \code{dsm.var} object}
