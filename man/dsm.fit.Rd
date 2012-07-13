@@ -82,6 +82,10 @@ resulting from object-specific detection probabilities}
   hardwired here; set to a value of 1.4 (from advice in
   Wood (2006)) such that the \code{gam()} is inclined to
   not 'overfit.'
+
+  To use the soap film smoother, the package soap must be
+  downloaded from Simon Wood's website at:
+  http://www.maths.bath.ac.uk/~sw283/simon/software.html
 }
 \author{
   Eric Rexstad, David L. Miller
