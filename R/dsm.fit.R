@@ -55,6 +55,11 @@
 #' @note Note that the gamma parameter to \code{gam()} is hardwired here; 
 #'       set to a value of 1.4 (from advice in Wood (2006)) such that the 
 #'       \code{gam()} is inclined to not 'overfit.'
+#'
+#'      To use the soap film smoother, the package soap must be downloaded from
+#'      Simon Wood's website at: 
+#'      http://www.maths.bath.ac.uk/~sw283/simon/software.html
+#'
 #' @author Eric Rexstad, David L. Miller 
 # @seealso 
 #' @references Hedley, S. and S. T. Buckland. 2004. Spatial models for line transect sampling. JABES 9:181-199.
@@ -270,6 +275,9 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
     # if we are doing soap film smoothing, we need make sure that we
     # don't mess up the knots
     if(grepl('bs = "so"',as.character(formula)[3])){
+
+      # need to have soap installed!
+      require(soap)
 
       # the boundary must be name bnd in the formula, 
       # otherwise this breaks
