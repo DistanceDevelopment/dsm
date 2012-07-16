@@ -111,35 +111,35 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
   #  the following is borrowed (heavily) from dsm.count by Laake
   #  ER modification is to test for presence of phat argument and substitute 
   #     detection probabilities from phat if provided
-#  if(response %in% c("indiv.est","group.est","indiv.den", "group.den")){
-    if(!is.null(phat)){
-      fitted.p<-phat
-      object.data<-obsdata$sightnum.name
-    }else{
-      fitted.p<-ddfobject$fitted
-      object.data<-names(ddfobject$fitted)
-    }
-    sig.prob<-data.frame(p=fitted.p, object=object.data)
-
-    # Merge observations with sighting probabilities
-    obsdata <- merge(obsdata, sig.prob, by=sightnum.name, all.x=T, sort=F)
-    # Revision 10 Nov 2008; merge drops segments when detects are 
-    # not made by primary see MLB and CODA
-    obsdata <- obsdata[!is.na(obsdata$p), ]       
-
-    # Check to see if any of the observations are missing a detection 
-    # probability for designs of type 'trial' objects observed by 
-    # trackers will not have computed detection probabilities, so, trap 
-    # that type of design, interrogating the call to ddf (archived in 
-    # ddfobject$call using an archane function 'languageEl'
-    field.design<-substr(languageEl(ddfobject$call, which="method"),1,5)
-
-    if(field.design!="trial" && any(is.na(obsdata$p))){
-      cat("The following sighting numbers don't have a matching detection probability\n")
-      print(obsdata[,sightnum.name][is.na(obsdata$p)])
-      stop("Function terminated")
-    }
-#  }
+##  if(response %in% c("indiv.est","group.est","indiv.den", "group.den")){
+#    if(!is.null(phat)){
+#      fitted.p<-phat
+#      object.data<-obsdata$sightnum.name
+#    }else{
+#      fitted.p<-ddfobject$fitted
+#      object.data<-names(ddfobject$fitted)
+#    }
+#    sig.prob<-data.frame(p=fitted.p, object=object.data)
+#
+#    # Merge observations with sighting probabilities
+#    obsdata <- merge(obsdata, sig.prob, by=sightnum.name, all.x=T, sort=F)
+#    # Revision 10 Nov 2008; merge drops segments when detects are 
+#    # not made by primary see MLB and CODA
+#    obsdata <- obsdata[!is.na(obsdata$p), ]       
+#
+#    # Check to see if any of the observations are missing a detection 
+#    # probability for designs of type 'trial' objects observed by 
+#    # trackers will not have computed detection probabilities, so, trap 
+#    # that type of design, interrogating the call to ddf (archived in 
+#    # ddfobject$call using an archane function 'languageEl'
+#    field.design<-substr(languageEl(ddfobject$call, which="method"),1,5)
+#
+#    if(field.design!="trial" && any(is.na(obsdata$p))){
+#      cat("The following sighting numbers don't have a matching detection probability\n")
+#      print(obsdata[,sightnum.name][is.na(obsdata$p)])
+#      stop("Function terminated")
+#    }
+##  }
 
   # If response is "group" then we are estimating the group
   # abundance rather than individual abundance! 
@@ -149,7 +149,7 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
 
   # how many segments had observations?
   model.spec$n.segs.withdata <- sum(obsdata[,cluster.name]>0)
-  model.spec$n.segs <- length(obsdata[,cluster.name])
+  model.spec$n.segs <- nrow(obsdata)
 
   # are there covariates in the detection function?
   mcds<-TRUE
@@ -180,18 +180,10 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
       # did the user supply phat?
       if(!is.null(phat)){
         fitted.p<-unique(phat)
-      # don't think that this is a very good idea vvvvv
-      #}else if(any(names(obsdata)==esw.name)){
-      #  fitted.p<-unique(obsdata[,esw.data]*ddfobject$width)
       }else{
         fitted.p<-unique(ddfobject$fitted)
       }    
 
-#      if(length(fitted.p)!=1){
-#        stop(paste("Non-unique probability of detection.\n",
-#                   "Are you sure this is an \"indiv\"/\"group\" analysis?"))
-#      }
-#    }else if (response %in% c("indiv.est", "group.est")){
     }else{
       responsedata<-aggregate(obsdata[,cluster.name]/obsdata$p,
                               list(obsdata[,segnum.name]), sum)
@@ -269,8 +261,6 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
   }
 
   
-  dat$area<-2*dat[,seglength.name]*ddfobject$meta.data$width*convert.units
-
   if(toupper(model.defn$fn)=="GAM"){
     # if we are doing soap film smoothing, we need make sure that we
     # don't mess up the knots

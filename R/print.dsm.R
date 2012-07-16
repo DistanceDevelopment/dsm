@@ -27,7 +27,8 @@ print.dsm<-function(x,...){
   ### GAM things...
   if(x$model.spec$model=="GAM"){
     cat("\nSummary of GAM\n")
-    cat("\nFormula: ",as.character(x$model.spec$formula),"\n")
+    cat("\nFormula: ",as.character(x$model.spec$formula)[2],"~",
+                      as.character(x$model.spec$formula)[-c(1,2)],"\n")
   }else if(x$model.spec$model=="GLM"){
     cat("Print not implemented for GLMs at the moment\n")
   }
