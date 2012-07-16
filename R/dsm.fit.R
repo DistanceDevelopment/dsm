@@ -107,9 +107,14 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
      obsdata<-obsdata[obsdata[,distance.name]<=ddfobject$meta.data$width,]
   }
 
+  # are the data in groups/clusters?
+  groups <- TRUE
+  if(all(obsdata[,cluster.name]==1)){
+    groups <- FALSE 
+  }
   # If response is "group" then we are estimating the group
   # abundance rather than individual abundance! 
-  if(response=="group"){# | response =="group.est"){
+  if(response=="group"){
     obsdata[,cluster.name][obsdata[,cluster.name]>0] <- 1
   }
 
@@ -117,44 +122,63 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
   model.spec$n.segs.withdata <- sum(obsdata[,cluster.name]>0)
   model.spec$n.segs <- nrow(obsdata)
 
-  # are there covariates in the detection function?
+
+  ### what kind of data are we working with?
+  #  - did the user supply phat?
+  #  - are there covariates in the detection function?
+#  #  - are the data in groups?
   mcds<-TRUE
-  if(ddfobject$ds$aux$ddfobj$scale$formula == "~1"){
-    mcds<-FALSE
-  }
+  if(!is.null(phat)){
+    fitted.p<-phat
+    # if all the ps are the same, let's assume this is a CDS analysis
+    if(length(unique(fitted.p))==1){
+      mcds <- FALSE
+      fitted.p <- unique(fitted.p)
+    }
+  }else{
+    fitted.p<-ddfobject$fitted
+    if(ddfobject$ds$aux$ddfobj$scale$formula == "~1"){
+      mcds <- FALSE
+      fitted.p <- unique(fitted.p)
+    }
+  }    
 
   # Aggregate response values of the sightings over segments
-
   # for the density models
   if(response %in% c("indiv.den","group.den")){
-    responsedata <- aggregate(obsdata[,cluster.name]/obsdata$p,
-                              list(obsdata[,segnum.name]), sum) 
-    off.set <- "none"
-  # for group and individual abundance
-  }else{
-    if(!mcds){
-      responsedata<-aggregate(obsdata[,cluster.name],
-                              list(obsdata[,segnum.name]), sum)
-      off.set <- "eff.area"
-
-      # need to find the fitted ps to divide through by below
-      # we don't have individual level covariates, so there is only
-      # one p
-    
-      # did the user supply phat?
-      if(!is.null(phat)){
-        fitted.p<-unique(phat)
-      }else{
-        fitted.p<-unique(ddfobject$fitted)
-      }    
-
+    if(groups){
+      responsedata <- aggregate(obsdata[,cluster.name]/fitted.p,
+                                list(obsdata[,segnum.name]), sum)
     }else{
-      responsedata<-aggregate(obsdata[,cluster.name]/obsdata$p,
-                              list(obsdata[,segnum.name]), sum)
-      off.set<-"area"
+      responsedata <- aggregate(obsdata[,cluster.name],
+                                list(obsdata[,segnum.name]), sum) 
     }
+    off.set <- "none"
+  }else if(response == "group" & !mcds){
+  # group abundance without covariates
+    responsedata <- aggregate(obsdata[,cluster.name],
+                              list(obsdata[,segnum.name]), sum)
+    off.set <- "eff.area"
+
+  }else if(response == "indiv" & !mcds){
+  # individual abundance without covariates
+    off.set <- "eff.area"
+    if(groups){
+      responsedata <- aggregate(obsdata[,cluster.name]/fitted.p,
+                                list(obsdata[,segnum.name]), sum)
+    }else{
+      responsedata <- aggregate(obsdata[,cluster.name],
+                                list(obsdata[,segnum.name]), sum)
+    }
+  }else if(mcds){
+  # group abundance with covariates
+  # individual abundance with covariates
+    responsedata <- aggregate(obsdata[,cluster.name]/fitted.p,
+                              list(obsdata[,segnum.name]), sum)
+    off.set<-"area"
+
   }
-  
+
   # we'll just call the response N, whatever we're actually modelling
   names(responsedata)<-c(segnum.name,"N")
 
@@ -166,7 +190,7 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
   # With density, we need to transform response variable to a density 
   # by dividing by area    
   if (off.set=="none"){
-    dat$N<-dat$N/2*dat[,seglength.name]*ddfobject$meta.data$width*convert.units
+    dat$D<-dat$N/(2*dat[,seglength.name]*ddfobject$meta.data$width)#*convert.units)
   }
 
   # when density is response, offset should be 1.
@@ -188,7 +212,7 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
 
   # Create formula 
   if(response %in% c("indiv.den", "group.den")){
-    formula<-as.formula(paste("N", deparse(formula,width.cutoff=500),
+    formula<-as.formula(paste("D", deparse(formula,width.cutoff=500),
                               collapse=""))
   }else{
     formula<-as.formula(paste("N", deparse(formula,width.cutoff=500),
