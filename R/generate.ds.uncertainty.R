@@ -47,12 +47,6 @@ generate.ds.uncertainty<-function(ds.object){
     
     # otherwise we need to do some rejection sampling
     }else{
-      # need to call out to mrds to get the data and model objects
-      # into the correct format
-      xmat <- mrds:::process.data(new.dists,ds.object$meta.data,
-                                  check=FALSE)$xmat
-      ddfobj <- mrds:::create.ddfobj(ds.object$call$dsmodel,xmat,
-                          ds.object$meta.data,pars)
 
       while(n.samps < n.ds.samples){
     
@@ -61,6 +55,13 @@ generate.ds.uncertainty<-function(ds.object){
                                           ds.object$ds$aux$width,
                               detected=rep(1,n.ds.samples-n.samps),
                               object=1:(n.ds.samples-n.samps))
+
+        # need to call out to mrds to get the data and model objects
+        # into the correct format
+        xmat <- mrds:::process.data(new.dists,ds.object$meta.data,
+                                    check=FALSE)$xmat
+        ddfobj <- mrds:::create.ddfobj(ds.object$call$dsmodel,xmat,
+                            ds.object$meta.data,pars)
     
         # generate acceptance probability
         U<-runif(n.ds.samples-n.samps)
@@ -68,12 +69,12 @@ generate.ds.uncertainty<-function(ds.object){
         # do the rejection...
         # (evaluate the -log(L) then backtransform per-observation)
         # ONLY line transect at the moment!!
-        inout <- exp(-mrds:::flt.lnl(ds.object$par,ddfobj,
+        inout <- exp(-mrds:::flnl(ds.object$par,ddfobj,
                       misc.options=list(width=ds.object$ds$aux$width,
                                         int.range=ds.object$ds$aux$int.range,
                                         showit=FALSE, doeachint=TRUE,
                                         point=ds.object$ds$aux$point,
-                                        integral.numeric=TRUE),TCI=FALSE))>U
+                                        integral.numeric=TRUE))) > U
         dists<-c(dists,new.dists$distance[inout])
     
         n.samps<-length(dists)
