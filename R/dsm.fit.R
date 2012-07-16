@@ -98,7 +98,6 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
   segnum.name<-'Sample.Label'
   distance.name<-'distance'
   cluster.name<-'size'
-  #esw.name<-'esw' # <- only used once below, not sure we want it
   sightnum.name<-'object'
 
   # Truncate observations made at distances greater than the truncation width;
@@ -107,39 +106,6 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
   if (!is.null(ddfobject)){
      obsdata<-obsdata[obsdata[,distance.name]<=ddfobject$meta.data$width,]
   }
-
-  #  the following is borrowed (heavily) from dsm.count by Laake
-  #  ER modification is to test for presence of phat argument and substitute 
-  #     detection probabilities from phat if provided
-##  if(response %in% c("indiv.est","group.est","indiv.den", "group.den")){
-#    if(!is.null(phat)){
-#      fitted.p<-phat
-#      object.data<-obsdata$sightnum.name
-#    }else{
-#      fitted.p<-ddfobject$fitted
-#      object.data<-names(ddfobject$fitted)
-#    }
-#    sig.prob<-data.frame(p=fitted.p, object=object.data)
-#
-#    # Merge observations with sighting probabilities
-#    obsdata <- merge(obsdata, sig.prob, by=sightnum.name, all.x=T, sort=F)
-#    # Revision 10 Nov 2008; merge drops segments when detects are 
-#    # not made by primary see MLB and CODA
-#    obsdata <- obsdata[!is.na(obsdata$p), ]       
-#
-#    # Check to see if any of the observations are missing a detection 
-#    # probability for designs of type 'trial' objects observed by 
-#    # trackers will not have computed detection probabilities, so, trap 
-#    # that type of design, interrogating the call to ddf (archived in 
-#    # ddfobject$call using an archane function 'languageEl'
-#    field.design<-substr(languageEl(ddfobject$call, which="method"),1,5)
-#
-#    if(field.design!="trial" && any(is.na(obsdata$p))){
-#      cat("The following sighting numbers don't have a matching detection probability\n")
-#      print(obsdata[,sightnum.name][is.na(obsdata$p)])
-#      stop("Function terminated")
-#    }
-##  }
 
   # If response is "group" then we are estimating the group
   # abundance rather than individual abundance! 
@@ -157,7 +123,6 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
     mcds<-FALSE
   }
 
-
   # Aggregate response values of the sightings over segments
 
   # for the density models
@@ -167,7 +132,6 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
     off.set <- "none"
   # for group and individual abundance
   }else{
-#  if(response %in% c("indiv", "group")){
     if(!mcds){
       responsedata<-aggregate(obsdata[,cluster.name],
                               list(obsdata[,segnum.name]), sum)
