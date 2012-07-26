@@ -10,20 +10,25 @@
 #' @param object a \code{dsm.var} object
 #' @param poly a \code{list} or \code{data.frame} with columns \code{x} and 
 #'        \code{y}, which gives the coordinates of a polygon to draw.
-#' @param \dots any arguments that can usually be passed to a 
 #' @param limits limits for the fill colours
-#' \code{\link{plot}} method 
+#' @param breaks breaks for the colour fill
+#' @param legend.breaks breaks as they should be displayed
+#' @param xlab label for the \code{x} axis
+#' @param ylab label for the \code{y} axis
+#' @param observations should observations be plotted?
+#' @param plot actually plot the map, or just return a \code{ggplot2} object?
+#' @param \dots any arguments that can usually be passed to a 
 #' @return a plot 
 #' 
 #' @author David L. Miller
 #'
 ### TODO
-# plot observations
 # plot transect lines
 # covariates in the detection function
 
-plot.dsm.var<-function(object, poly=NULL, ..., limits=NULL, breaks=NULL,
-                       legend.breaks=NULL, xlab="x", ylab="y"){
+plot.dsm.var<-function(object, poly=NULL, limits=NULL, breaks=NULL,
+                       legend.breaks=NULL, xlab="x", ylab="y", 
+                       observations=TRUE, plot=TRUE, ...){
 
   # if we did used the random effects trick, collapse everything down
   if(!object$bootstrap){
@@ -148,10 +153,10 @@ plot.dsm.var<-function(object, poly=NULL, ..., limits=NULL, breaks=NULL,
   # build the plot
   gg.opts <- opts(panel.grid.major=theme_blank(),
                   panel.grid.minor=theme_blank(),
-                  panel.background=theme_rect())
+                  panel.background=theme_rect(),
+                  legend.key=theme_blank())
   p <- ggplot(plotdata) + gg.opts
-  p <- p + labs(fill="CV",x=xlab,y=ylab)
-  p <- p+geom_tile(aes(x=x, y=y, fill=cell.cv, width=width, height=height))
+  p <- p + geom_tile(aes(x=x, y=y, fill=cell.cv, width=width, height=height))
   p <- p + coord_equal()
   p <- p + scale_fill_gradientn(colours=heat_hcl(length(breaks)-1),
                                 limits=limits,
@@ -159,13 +164,25 @@ plot.dsm.var<-function(object, poly=NULL, ..., limits=NULL, breaks=NULL,
                                 rescaler = function(x, ...) x, oob = identity,
                                 breaks=legend.breaks)
 
-
   if(!is.null(poly)){
     p <- p+geom_path(aes(x=x, y=y),data=poly)
   }
 
-  print(p)
+  if(observations){
+    p <- p + geom_line(aes(x=x, y=y,group=Transect.Label),
+                        data=object$dsm.object$data)
+    p <- p + geom_point(aes(x, y, size=size), data=object$dsm.object$ddf$data, 
+                        colour="blue",alpha=I(0.7))
+    p <- p + labs(fill="CV",x=xlab,y=ylab, size="Counts")
+  }else{
+    p <- p + labs(fill="CV",x=xlab,y=ylab)
+  }
 
-  invisible()
-
+  if(plot){
+    # plot!
+    print(p)
+    invisible()
+  }else{
+    return(p)
+  }
 }
