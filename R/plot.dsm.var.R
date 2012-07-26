@@ -22,7 +22,8 @@
 # plot transect lines
 # covariates in the detection function
 
-plot.dsm.var<-function(object, poly=NULL, ..., limits=NULL,xlab="x",ylab="y"){
+plot.dsm.var<-function(object, poly=NULL, ..., limits=NULL, breaks=NULL,
+                       legend.breaks=NULL, xlab="x", ylab="y"){
 
   # if we did used the random effects trick, collapse everything down
   if(!object$bootstrap){
@@ -134,6 +135,13 @@ plot.dsm.var<-function(object, poly=NULL, ..., limits=NULL,xlab="x",ylab="y"){
     limits <- c(min(cell.cv),max(cell.cv))
   }
 
+  if(is.null(breaks)){
+    breaks <- seq(min(cell.cv),max(cell.cv),len=20)
+  }
+  if(is.null(legend.breaks)){
+    legend.breaks <- breaks
+  }
+
   # put all the data together
   plotdata<-cbind(object$pred.data,cell.cv)
 
@@ -145,8 +153,12 @@ plot.dsm.var<-function(object, poly=NULL, ..., limits=NULL,xlab="x",ylab="y"){
   p <- p + labs(fill="CV",x=xlab,y=ylab)
   p <- p+geom_tile(aes(x=x, y=y, fill=cell.cv, width=width, height=height))
   p <- p + coord_equal()
-  p <- p + scale_fill_gradientn(colours=heat_hcl(200),
-                                limits=limits)
+  p <- p + scale_fill_gradientn(colours=heat_hcl(length(breaks)-1),
+                                limits=limits,
+                                values=breaks,
+                                rescaler = function(x, ...) x, oob = identity,
+                                breaks=legend.breaks)
+
 
   if(!is.null(poly)){
     p <- p+geom_path(aes(x=x, y=y),data=poly)
