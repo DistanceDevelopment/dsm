@@ -44,17 +44,26 @@ generate.ds.uncertainty<-function(ds.object){
         is.null(ds.object$ds$aux$ddfobj$adjustment$parameters)){
     
       dists<-abs(rnorm(n.ds.samples,mean=0,sd=exp(pars$scale)))
-    
+
     # otherwise we need to do some rejection sampling
     }else{
 
+      # since rejection sampling is time consuming, generate lots of
+      # samples at once, we re-scale the number by the inverse of the 
+      # ratio accepted. The first time over, let's make that 10x
+      n.mult <- 10
+
+      width <- ds.object$ds$aux$width
+
       while(n.samps < n.ds.samples){
     
+        # how many samples should we take?      
+        this.n.samps <- n.mult*(n.ds.samples-n.samps)
+
         # generate some new distances
-        new.dists<-data.frame(distance=runif(n.ds.samples-n.samps)*
-                                          ds.object$ds$aux$width,
-                              detected=rep(1,n.ds.samples-n.samps),
-                              object=1:(n.ds.samples-n.samps))
+        new.dists<-data.frame(distance=runif(this.n.samps,0,width),
+                              detected=rep(1,this.n.samps),
+                              object=1:(this.n.samps))
 
         # need to call out to mrds to get the data and model objects
         # into the correct format
@@ -64,22 +73,36 @@ generate.ds.uncertainty<-function(ds.object){
                             ds.object$meta.data,pars)
     
         # generate acceptance probability
-        U<-runif(n.ds.samples-n.samps)
+        U <- runif(this.n.samps)
     
-        # do the rejection...
-        # (evaluate the -log(L) then backtransform per-observation)
-        # ONLY line transect at the moment!!
-        inout <- exp(-mrds:::flnl(ds.object$par,ddfobj,
-                      misc.options=list(width=ds.object$ds$aux$width,
-                                        int.range=ds.object$ds$aux$int.range,
-                                        showit=FALSE, doeachint=TRUE,
-                                        point=ds.object$ds$aux$point,
-                                        integral.numeric=TRUE))) > U
-        dists<-c(dists,new.dists$distance[inout])
+        ### do the rejection...
+        ### (evaluate the -log(L) then backtransform per-observation)
+        ### ONLY line transect at the moment!!
+        ##inout <- U < exp(-mrds:::flpt.lnl(ds.object$par,ddfobj,
+        ##              misc.options=list(width=width,
+        ##                                int.range=ds.object$ds$aux$int.range,
+        ##                                showit=FALSE, doeachint=TRUE,
+        ##                                point=ds.object$ds$aux$point,
+        ##                                integral.numeric=TRUE)))
+
+        inout <- U <= mrds:::detfct(new.dists$distance,ddfobj,
+                                             standardize=FALSE, width=width)
+
+        dists <- c(dists,new.dists$distance[inout])
     
-        n.samps<-length(dists)
+        n.samps <- length(dists)
+
+        # how many did we accept?
+        #cat("accepted",sum(inout),"/",this.n.samps,"\n")
+  
+        # update the number of extra samples we make by inverting the ratio
+        # of accepted to generated this round
+        n.mult <- ceiling(1/(sum(inout)/this.n.samps))
+
       }
     }
+
+
     # make sure that we got the right number
     dists<-dists[1:n.ds.samples]
     dists<-data.frame(distance=dists,
@@ -91,17 +114,19 @@ generate.ds.uncertainty<-function(ds.object){
     ddf.call$data <- dists
     ddf.call$meta.data <- ds.object$meta.data
     ddf.fitted <- try(eval(ddf.call))
-
+    
+    # if it all went well, then set dud.df to FALSE and quit the loop
     if(all(class(ddf.fitted)!="try-error")){
       dud.df <- FALSE
+    }else{
+    # otherwise forget everything and start again
+      n.samps<-0
+      dists<-c()
     }
-
   }
-
 
   # return the offset
   # in the future this could be the offset from a MCDS model too
   #return(rep(fitted(ddf.fitted,compute=TRUE,esw=TRUE)[1],length(N.round)))
   return(fitted(ddf.fitted,compute=TRUE,esw=TRUE)[1])
-
 }

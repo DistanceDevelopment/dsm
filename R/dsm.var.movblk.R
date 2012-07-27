@@ -74,7 +74,11 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
   # this replaces call to -----> resids.when.missing(dsm.object$result)
   # need to do something about non-log links
   ######################################
-  obs <- dsm.object$result$data$N
+  if(dsm.object$model.spec$response %in% c("indiv.den","group.den")){
+    obs <- dsm.object$result$data$D
+  }else{
+    obs <- dsm.object$result$data$N
+  }
   obs[dsm.object$result$na.action]<-NA
   fit.vals <- rep(NA,length(obs))
   fit.vals[!is.na(obs)]<-fitted(dsm.object$result)
@@ -94,6 +98,8 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
   if(bar){
     pb <- txtProgressBar(min=0,max=n.boot,style=3)
   }
+
+  off.set.save<-off.set
 
   # Start bootstrapping
   for(i in 1:n.boot){
@@ -127,19 +133,22 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
 
       # call out to generate some ds data, and fit a model to that data,
       # asumming that the detection function model is correct
-      seed <- get(".Random.seed",envir=.GlobalEnv) # messes with the seed...
+      #seed <- get(".Random.seed",envir=.GlobalEnv) # messes with the seed...
       new.p<-generate.ds.uncertainty(dsm.object$ddf)
-      assign(".Random.seed",seed,envir=.GlobalEnv) # recover the seed
+      #assign(".Random.seed",seed,envir=.GlobalEnv) # recover the seed
+
+#cat("old=",old.p," new=",new.p,"\n")
 
       this.offset<-new.p*(exp(dsm.object$result$offset)/old.p)
 
-      fit <- fitted(dsm.object$result)/exp(dsm.object$result$offset)*this.offset
+      fit <- (fitted(dsm.object$result)/exp(dsm.object$result$offset))*
+                                    this.offset
 
       # replace the offset in the model 
       bs.samp$off.set<-log(this.offset)
 
       # replace the offset in the prediction grid
-      off.set<-new.p*(off.set/old.p)
+      off.set<-new.p*(off.set.save/old.p)
     }else{
     # if we're not doing detection function uncertainty
       fit <- fitted(dsm.object$result)
@@ -188,8 +197,7 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
       #  populate dataframe with machine formula components for each cell
       vector.cell.abundances <- dsm.predict.bs 
       short.var$sumx <- short.var$sumx + vector.cell.abundances
-      short.var$sumx.sq <- short.var$sumx.sq + 
-                           (vector.cell.abundances * vector.cell.abundances)
+      short.var$sumx.sq <- short.var$sumx.sq + vector.cell.abundances^2
       study.area.total[i] <- sum(vector.cell.abundances, na.rm=TRUE)
 
       # if we supplied bs.file, then write detailed, per replicate
