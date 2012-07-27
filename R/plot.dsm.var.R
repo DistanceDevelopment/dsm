@@ -94,7 +94,7 @@ plot.dsm.var<-function(object, poly=NULL, limits=NULL, breaks=NULL,
       bs.save <- bs.save[trim.ind,]
 
       # calculate the variance
-      cell.se <- sqrt(apply(bs.save,2,var))
+      cell.se <- apply(bs.save,2,sd)
 #      cell.se <- colSums(bs.save^2)/(n-1) - ((colSums(bs.save)/n)^2)*(n/(n-1))
 #      cell.se <- sqrt(cell.se)
       cell.cv <- cell.se/mod.pred
