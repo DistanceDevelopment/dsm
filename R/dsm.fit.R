@@ -112,9 +112,9 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
   if(all(obsdata[,cluster.name]==1)){
     groups <- FALSE 
   }
-  # If response is "group" then we are estimating the group
-  # abundance rather than individual abundance! 
-  if(response=="group"){
+  # If response is "group"/"group.den" then we are estimating the group
+  # abundance/density rather than individual abundance/density! 
+  if(response %in% c("group","group.den")){
     obsdata[,cluster.name][obsdata[,cluster.name]>0] <- 1
   }
 
@@ -126,7 +126,6 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
   ### what kind of data are we working with?
   #  - did the user supply phat?
   #  - are there covariates in the detection function?
-#  #  - are the data in groups?
   mcds<-TRUE
   if(!is.null(phat)){
     fitted.p<-phat
@@ -143,10 +142,13 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
     }
   }    
 
+
   # Aggregate response values of the sightings over segments
   # for the density models
   if(response %in% c("indiv.den","group.den")){
     if(groups){
+# remove the segments with 0 observations
+obsdata <- obsdata[obsdata$object %in% as.numeric(names(fitted.p)),]
       responsedata <- aggregate(obsdata[,cluster.name]/fitted.p,
                                 list(obsdata[,segnum.name]), sum)
     }else{
@@ -173,6 +175,8 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
   }else if(mcds){
   # group abundance with covariates
   # individual abundance with covariates
+# remove the segments with 0 observations
+obsdata <- obsdata[obsdata$object %in% as.numeric(names(fitted.p)),]
     responsedata <- aggregate(obsdata[,cluster.name]/fitted.p,
                               list(obsdata[,segnum.name]), sum)
     off.set<-"area"
