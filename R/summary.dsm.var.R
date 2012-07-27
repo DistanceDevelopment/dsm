@@ -8,12 +8,14 @@
 #' 
 #' @param object a \code{dsm.var} object
 #' @param alpha alpha level for confidence intervals
+#' @param boxplot.coef the value of \code{coef} used to calculate the outliers
+#'        see \code{\link{boxplot}}.
 #' @param \dots unused arguments for S3 compatibility
 #' @return a summary object
 #' 
 #' @author David L. Miller
 #'
-summary.dsm.var<-function(object, alpha=0.05, ...){
+summary.dsm.var<-function(object, alpha=0.05, boxplot.coef=1.5, ...){
 
   # storage
   sinfo<-list()
@@ -50,15 +52,19 @@ summary.dsm.var<-function(object, alpha=0.05, ...){
       # find the cv squared of the p
       cvp.sq <- (ddf.summary$average.p.se/
                  ddf.summary$average.p)^2
+      # save that
+      sinfo$detfct.cv <- sqrt(cvp.sq)
 
-      # cv squared of the Ns from the bootstrap
-      cvNbs.sq <- (sqrt(trim.var(bootstrap.abund[is.finite(bootstrap.abund)]))/
-                   sinfo$pred.est)^2
 
       # save the s.e. of N from bootstrap
-      trimmed.variance <- trim.var(bootstrap.abund[
-                                          is.finite(bootstrap.abund)])
+      trimmed.variance <- trim.var(bootstrap.abund[is.finite(bootstrap.abund)],
+                                   boxplot.coef=boxplot.coef)
       sinfo$N.bs.se <- sqrt(trimmed.variance)
+
+      # cv squared of the Ns from the bootstrap
+      cvNbs.sq <- (sinfo$N.bs.se/sinfo$pred.est)^2
+      # save that
+      sinfo$bootstrap.cv <- sqrt(cvNbs.sq)
 
       # cv of N
       cvN <- sqrt(cvp.sq+cvNbs.sq)
@@ -71,8 +77,8 @@ summary.dsm.var<-function(object, alpha=0.05, ...){
       # if we used detection function uncertainty
 
       # variance of the bootstrap abundances is the variance
-      trimmed.variance <- trim.var(bootstrap.abund[
-                                          is.finite(bootstrap.abund)])
+      trimmed.variance <- trim.var(bootstrap.abund[is.finite(bootstrap.abund)],
+                                   boxplot.coef=boxplot.coef)
 
       sinfo$var <- trimmed.variance
       sinfo$se <- sqrt(trimmed.variance)
@@ -83,6 +89,7 @@ summary.dsm.var<-function(object, alpha=0.05, ...){
     ### general bootstrap stuff
 
     # how many duds did we have?
+    sinfo$boxplot.coef <- boxplot.coef
     sinfo$trim.prop <- attr(trimmed.variance, "trim.prop")
     sinfo$trim.ind <- attr(trimmed.variance, "trim.ind")
     sinfo$boot.outliers <- attr(trimmed.variance, "outliers")
@@ -96,8 +103,6 @@ summary.dsm.var<-function(object, alpha=0.05, ...){
     sinfo$quantiles <- quantile(bootstrap.abund[sinfo$trim.ind], 
                                 c(alpha, 0.5, 1-alpha),na.rm=TRUE)
     attr(sinfo$quantiles,"names")[2] <- "Median"
-
-
     
 
   }else if(object$bootstrap==FALSE){

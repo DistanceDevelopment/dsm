@@ -8,14 +8,16 @@
 #' 
 #' @param untrimmed.bootstraps (usually the \code{$study.area.total} element
 #'        of a returned \code{dsm} bootstrap object.
+#' @param boxplot.coef the value of \code{coef} used to calculate the outliers
+#'        see \code{\link{boxplot}}.
 #'
 #' @return trimmed variance
 #'
 #' @export
 #'
 #' @author Louise Burt
-trim.var<-function(untrimmed.bootstraps){
-  outliers <- boxplot.stats(untrimmed.bootstraps, coef=1.5)$out
+trim.var<-function(untrimmed.bootstraps,boxplot.coef=1.5){
+  outliers <- boxplot.stats(untrimmed.bootstraps, coef=boxplot.coef)$out
   bootstrap.abund <-untrimmed.bootstraps[!(untrimmed.bootstraps %in% outliers)]
 
   ret <- var(bootstrap.abund)
@@ -24,6 +26,7 @@ trim.var<-function(untrimmed.bootstraps){
   attr(ret,"untrimn") <- length(untrimmed.bootstraps)
   attr(ret,"outliers") <- length(outliers) 
   attr(ret,"trim.ind") <- !(untrimmed.bootstraps %in% outliers)
+  attr(ret,"boxplot.coef") <- boxplot.coef
 
   return(ret)
 }
