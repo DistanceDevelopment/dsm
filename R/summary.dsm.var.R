@@ -1,4 +1,4 @@
-#' Summarize the varianc of a density surface model
+#' Summarize the variance of a density surface model
 #'
 #' Gives a brief summary of a fitted \code{dsm} variance object. 
 #'
@@ -10,25 +10,29 @@
 #' @param alpha alpha level for confidence intervals
 #' @param boxplot.coef the value of \code{coef} used to calculate the outliers
 #'        see \code{\link{boxplot}}.
+#' @param bootstrap.subregions list of vectors of logicals or indices for 
+#'        subregions for which variances need to be calculated (only for
+#'        bootstraps (see \code{\link{dsm.var.prop}} for how to use subregions
+#'        with variance propagation).
 #' @param \dots unused arguments for S3 compatibility
 #' @return a summary object
-#' 
+#'  
+#' @seealso dsm.var.movblk dsm.var.prop
 #' @author David L. Miller
 #'
-summary.dsm.var<-function(object, alpha=0.05, boxplot.coef=1.5, ...){
+summary.dsm.var<-function(object, alpha=0.05, boxplot.coef=1.5, 
+                  bootstrap.subregions=NULL,...){
 
   # storage
   sinfo<-list()
 
   if(object$bootstrap){
     # grab the predicted values
-    mod1.pred <- dsm.predict(object$dsm.object,
-                             newdata=object$pred.data,
-                             off=object$off.set)
-    sinfo$pred.est <- sum(mod1.pred,na.rm=TRUE)
-
-    #  short.var=short.var
-    #  study.area.total=study.area.total
+    #mod1.pred <- dsm.predict(object$dsm.object,
+    #                         newdata=object$pred.data,
+    #                         off=object$off.set)
+    #sinfo$pred.est <- sum(mod1.pred,na.rm=TRUE)
+    sinfo$pred.est <- object$study.area.total[1]
 
     sinfo$block.size <- object$block.size 
     sinfo$n.boot <- object$n.boot
@@ -97,12 +101,33 @@ summary.dsm.var<-function(object, alpha=0.05, boxplot.coef=1.5, ...){
     sinfo$boot.finite <- sum(!is.infinite(bootstrap.abund))
     sinfo$boot.NA <- sum(is.na(bootstrap.abund))
     sinfo$boot.NaN <- sum(is.nan(bootstrap.abund))
-    sinfo$boot.usable <- sinfo$boot.finite - sinfo$boot.outliers 
+    sinfo$boot.usable <- sinfo$boot.finite - (sinfo$boot.outliers + 
+                         sinfo$boot.infinite + sinfo$boot.NA + sinfo$boot.NaN)
 
     # grab the %ile c.i.s at alpha, 1-alpha and also median
     sinfo$quantiles <- quantile(bootstrap.abund[sinfo$trim.ind], 
                                 c(alpha, 0.5, 1-alpha),na.rm=TRUE)
     attr(sinfo$quantiles,"names")[2] <- "Median"
+
+
+    ### subregions...
+    if(!is.null(bootstrap.subregions)){
+
+      subregions <- list()
+
+      i<-1
+      for(region.ind in bootstrap.subregions){
+
+        this.object <- object
+        this.object$short.var <- NULL
+        this.object$study.area.total <- object$study.area.total[region.ind]
+        this.object$pred.data <- object$pred.data[region.ind,]
+
+        subregions[[i]] <- summary(this.object)
+        i<-i+1
+      }
+      sinfo$subregions<-subregions
+    }
     
 
   }else if(object$bootstrap==FALSE){

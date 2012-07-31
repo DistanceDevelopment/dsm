@@ -32,23 +32,32 @@ print.summary.dsm.var<-function(x,...){
     cat("Usable replicates : ",x$boot.usable,
                               " (",100-(100*x$trim.prop),"%)\n",sep="")
 
-    cat("\nPercentile bootstrap confidence interval and median:\n")
     if(!x$ds.uncertainty){
-      cat("(Spatial model component only.)\n")
+      # delta method asymptotic CI
+      unconditional.cv.square <- x$cv^2 
+      asymp.ci.c.term <- exp(1.96*sqrt(log(1+unconditional.cv.square)))
+      asymp.tot <- c(x$pred.est / asymp.ci.c.term,
+                     x$pred.est,
+                     x$pred.est * asymp.ci.c.term)
+      names(asymp.tot) <- c("5%","Mean","95%")
+   
+      cat("Approximate asymptotic boostrap confidence interval:\n")
+      print(asymp.tot)
+      cat("(Using delta method)\n")
+
+    }else{
+      # DSU percentile CI
+      cat("\nPercentile bootstrap confidence interval and median:\n")
+      print(x$quantiles)
     }
-    print(x$quantiles)
 
 
   }else if(!x$bootstrap){
     cat("Summary of uncertainty in a density surface model calculated\n")
     cat(" by variance propagation.\n")
 
-
-  #model 
-  #deriv
     cat("\nQuantiles of differences between fitted model and variance model\n")
     print(x$saved$model.check)
-
   }
 
   cat("\n\n")
@@ -67,6 +76,17 @@ print.summary.dsm.var<-function(x,...){
     cat("Coefficient of variation       :", round(x$cv,4),"\n")
   }
   cat("\n")
+
+
+  if(!is.null(x$subregions)){
+    i<-1
+    for(subreg in x$subregions){
+      cat("Subregion",i,"\n")
+      print(subreg)
+      cat("\n")
+      i <- i+1
+    }
+  }
 
   invisible()
 }
