@@ -2,12 +2,15 @@
 \alias{trim.var}
 \title{Trimmed variance}
 \usage{
-  trim.var(untrimmed.bootstraps)
+  trim.var(untrimmed.bootstraps, boxplot.coef = 1.5)
 }
 \arguments{
   \item{untrimmed.bootstraps}{(usually the
   \code{$study.area.total} element of a returned \code{dsm}
   bootstrap object.}
+
+  \item{boxplot.coef}{the value of \code{coef} used to
+  calculate the outliers see \code{\link{boxplot}}.}
 }
 \value{
   trimmed variance

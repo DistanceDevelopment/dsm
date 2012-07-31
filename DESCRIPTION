@@ -19,8 +19,6 @@ Date: 2012-04-24
 Depends:
     R (>= 2.10.0),mgcv,mrds,ggplot2,vcd
 Collate:
-    'dsm.aggregate.R'
-    'dsm.bootstrap.R'
     'dsm.fit.R'
     'dsm.check.R'
     'dsm.predict.R'
