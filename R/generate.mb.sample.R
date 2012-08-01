@@ -71,7 +71,7 @@ generate.mb.sample <- function(num.blocks.required, block.size, which.blocks,
     # grab enough residuals for this sample unit
     tran.response <- temp[1:unit.info$num.seg[j]]
     # remove all of the ones we sampled (i.e. if we over sampled
-    # make sure that we get rid of them too
+    # make sure that we get rid of them too)
     temp <- temp[-(1:tb)] 
 
     # store the result
