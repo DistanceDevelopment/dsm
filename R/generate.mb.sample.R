@@ -64,7 +64,6 @@ generate.mb.sample <- function(num.blocks.required, block.size, which.blocks,
 
   temp <- bs.data$log.resids
 
-
   # loop over the sample units
   for (j in 1:n.units) {
     # Get number of segments in the blocks

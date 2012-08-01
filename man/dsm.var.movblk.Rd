@@ -22,12 +22,12 @@
   \item{block.size}{number of segments in each block.}
 
   \item{off.set}{offset to be used in the model, see
-  \code{\link{offsets}}.  Note that this is NOT logged.}
+  \code{\link{offsets}}.  Note that this should NOT be
+  \code{log()}'d.}
 
   \item{ds.uncertainty}{incorporate uncertainty in the
-  detection function?  Note that this doesn't work for
-  covariate models for the detection function at the
-  moment.}
+  detection function? See Details, below. Note that this
+  feature is EXPERIMENTAL at the moment.}
 
   \item{samp.unit.name}{name sampling unit to resample
   (default 'Transect.Label').}
@@ -49,5 +49,22 @@
   moving block bootstrap. Two procedures are implemented,
   one incorporating detection function uncertainty, one
   not.
+}
+\section{Details}{
+  Setting \code{ds.uncertainty=TRUE} will incorporate
+  detection function uncertainty directly into the
+  bootstrap. This is done by generating observations from
+  the fitted detection function and then re-fitting a new
+  detection function (of the same form), then calculating a
+  new effective strip width. Rejection sampling is used to
+  generate the observations (except in the half-normal
+  case) so the procedure can be rather slow. Note that this
+  is currently not supported with covariates in the
+  detection function.
+
+  Setting \code{ds.uncertainty=FALSE} will incorporate
+  detection function uncertainty using the delta method.
+  This assumes that the detection function and the spatial
+  model are INDEPENDENT. This is probably not reasonable.
 }
 

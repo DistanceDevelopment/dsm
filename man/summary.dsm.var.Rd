@@ -3,7 +3,7 @@
 \title{Summarize the variance of a density surface model}
 \usage{
   \method{summary}{dsm.var} (object, alpha = 0.05,
-    boxplot.coef = 1.5, bootstrap.subregions, ...)
+    boxplot.coef = 1.5, bootstrap.subregions = NULL, ...)
 }
 \arguments{
   \item{object}{a \code{dsm.var} object}
