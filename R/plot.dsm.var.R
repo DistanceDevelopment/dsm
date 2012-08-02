@@ -17,18 +17,19 @@
 #' @param ylab label for the \code{y} axis
 #' @param observations should observations be plotted?
 #' @param plot actually plot the map, or just return a \code{ggplot2} object?
+#' @param boxplot.coef control trimming (as in \code{summary.dsm.var}), only
+#'        has an effect if the bootstrap file was saved. 
 #' @param \dots any arguments that can usually be passed to a 
 #' @return a plot 
 #' 
 #' @author David L. Miller
 #'
 ### TODO
-# plot transect lines
 # covariates in the detection function
 
 plot.dsm.var<-function(object, poly=NULL, limits=NULL, breaks=NULL,
                        legend.breaks=NULL, xlab="x", ylab="y", 
-                       observations=TRUE, plot=TRUE, ...){
+                       observations=TRUE, plot=TRUE, boxplot.coef=1.5, ...){
 
   # if we did used the random effects trick, collapse everything down
   if(!object$bootstrap){
@@ -87,7 +88,7 @@ plot.dsm.var<-function(object, poly=NULL, limits=NULL, breaks=NULL,
       #cell.cv <- cell.se/mod.pred
 
       # calculate the overall trimmed variance
-      tv <- trim.var(object$study.area.total) 
+      tv <- trim.var(object$study.area.total,boxplot.coef=boxplot.coef) 
       # there is an attribute that is an indicator of which to keep
       trim.ind <- attr(tv,"trim.ind")
       # keep those
