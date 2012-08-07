@@ -189,14 +189,12 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
 
       # call out to generate some ds data, and fit a model to that data,
       # asumming that the detection function model is correct
-      #seed <- get(".Random.seed",envir=.GlobalEnv) # messes with the seed...
       new.p<-generate.ds.uncertainty(dsm.object$ddf)
-      #assign(".Random.seed",seed,envir=.GlobalEnv) # recover the seed
 
-#cat("old=",old.p," new=",new.p,"\n")
-
+      # calculate the new offset
       this.offset<-new.p*(exp(dsm.object$result$offset)/old.p)
 
+      # calculate the fitted values with the new offset
       fit <- (fitted(dsm.object$result)/exp(dsm.object$result$offset))*
                                     this.offset
 
@@ -214,6 +212,8 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
       stop(paste("Missing values detected in survey covariates,",
                  " cannot be used with moving block"))
     }
+
+    # calculate the new fitted values
     bs.samp$N <- fit*exp(bs.resids)  
 
     ## Fit model to dsm bootstrap sample
