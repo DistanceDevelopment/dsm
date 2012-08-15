@@ -49,6 +49,9 @@
 dsm.var.prop<-function(dsm.obj, pred.data,off.set, 
     seglen.varname='Effort', type.pred="response") {
 
+  pred.data.save<-pred.data
+  off.set.save<-off.set
+
   # make sure if one of pred.data and off.set is not a list we break
   # if we didn't have a list, then put them in a list so everything works
   if(is.data.frame(pred.data) & is.vector(off.set)){
@@ -62,8 +65,6 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
     }
   }
 
-  pred.data.save<-pred.data
-  off.set.save<-off.set
 
   # pull out the ddf object
   ddf.obj <- dsm.obj$ddf
@@ -128,9 +129,10 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
   model.check<-summary(fitted(fit.with.pen) - fitted(gam.obj))
 
   cft <- coef(fit.with.pen)
-  preddo <- numeric(length(pred.data))
+  #preddo <- numeric(length(pred.data))
+  preddo <- list(length(pred.data))
 
-  names(preddo) <- names(pred.data) # if any
+  #names(preddo) <- names(pred.data) # if any
   dpred.db <- matrix(0, length(pred.data), length(cft))
   
   # depending on whether we have response or link scale predictions...
@@ -160,8 +162,15 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
     lpmat <- predict( fit.with.pen, newdata=pred.data[[ ipg]], type='lpmatrix')
     lppred <- lpmat %**% cft
 
-    preddo[[ipg]] <- off.set[[ipg]] %**% tmfn(lppred)
-    dpred.db[ipg,] <- off.set[[ipg]] %**% (dtmfn(lppred)*lpmat)
+    # if the offset is just one number then repeat it enough times 
+    if(length(off.set[[ipg]])==1){
+      this.off.set <- rep(off.set[[ipg]],nrow(pred.data[[ipg]]))
+    }else{
+      this.off.set <- off.set[[ipg]]
+    }
+
+    preddo[[ipg]] <-  this.off.set %**% tmfn(lppred)
+    dpred.db[ipg,] <- this.off.set %**% (dtmfn(lppred)*lpmat)
   } 
 
   # "'vpred' is the covariance of all the summary-things." - MVB  

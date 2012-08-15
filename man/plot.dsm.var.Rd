@@ -5,7 +5,7 @@
   \method{plot}{dsm.var} (object, poly = NULL,
     limits = NULL, breaks = NULL, legend.breaks = NULL,
     xlab = "x", ylab = "y", observations = TRUE,
-    plot = TRUE, ...)
+    plot = TRUE, boxplot.coef = 1.5, ...)
 }
 \arguments{
   \item{object}{a \code{dsm.var} object}
@@ -28,6 +28,10 @@
 
   \item{plot}{actually plot the map, or just return a
   \code{ggplot2} object?}
+
+  \item{boxplot.coef}{control trimming (as in
+  \code{summary.dsm.var}), only has an effect if the
+  bootstrap file was saved.}
 
   \item{\dots}{any arguments that can usually be passed to
   a}

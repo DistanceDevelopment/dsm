@@ -112,31 +112,35 @@ summary.dsm.var<-function(object, alpha=0.05, boxplot.coef=1.5,
 
     ### subregions...
     if(!is.null(bootstrap.subregions)){
+      # to do the subregions, we just recurse back into this routine
+      # each time we just restrict the data to those specified by
+      # the corresponding entry in bootstrap.subregions
 
       subregions <- list()
-
       i<-1
-      for(region.ind in bootstrap.subregions){
 
+      for(region.ind in bootstrap.subregions){
+        # setup the subregion object
         this.object <- object
         this.object$short.var <- NULL
         this.object$study.area.total <- object$study.area.total[region.ind]
         this.object$pred.data <- object$pred.data[region.ind,]
 
+        # summarise and store region i
         subregions[[i]] <- summary(this.object)
         i<-i+1
       }
       sinfo$subregions<-subregions
     }
-    
 
   }else if(object$bootstrap==FALSE){
-    # varprop stuff
+  ### varprop and "Bayesian" stuff
+    sinfo$varprop <- !is.null(object$deriv)
     sinfo$saved<-object
     sinfo$bootstrap <- object$bootstrap
 
     # what if we had multiple areas (ie this is from a CV plot?)
-    if(all(dim(object$pred.var)==1,1)){
+    if(all(dim(as.matrix(object$pred.var))==1)){
       sinfo$se <- sqrt(object$pred.var)
     }else{
       # re run the variance calculation, putting everything together
@@ -149,25 +153,35 @@ summary.dsm.var<-function(object, alpha=0.05, boxplot.coef=1.5,
       object$pred.data <- pd
       object$off.set <- as.vector(off)
 
-      # grab the predicted values
-      mod1.pred <- dsm.predict(object$dsm.object,
-                               newdata=object$pred.data,
-                               off=object$off.set)
-      sinfo$pred.est <- sum(mod1.pred,na.rm=TRUE)
-
       var.prop <- dsm.var.prop(object$dsm.obj, object$pred.data, object$off.set,
                                object$seglen.varname, object$type.pred)
 
-      
       sinfo$se <- sqrt(var.prop$pred.var)
-
     }
+    # grab the predicted values
+    mod1.pred <- dsm.predict(object$dsm.object,
+                             newdata=object$pred.data,
+                             off=object$off.set)
+    sinfo$pred.est <- sum(mod1.pred,na.rm=TRUE)
 
-    sinfo$cv <- sinfo$se/sinfo$pred.est
+    # if we're using variance propagation, the CV is fine
+    if(sinfo$varprop){
+      # calculate the CV
+      sinfo$cv <- sinfo$se/sinfo$pred.est
+    }else{
+    # if we're just using the GAM variance, then we need to combine using
+    # the delta method
+      ddf.object<-object$dsm.object$ddf
+      ddf.summary<-summary(ddf.object)
+      cvp.sq <- (ddf.summary$average.p.se/
+                 ddf.summary$average.p)^2
+      sinfo$detfct.cv <- sqrt(cvp.sq)
+      sinfo$gam.cv <- sinfo$se/sinfo$pred.est
+
+      sinfo$cv <- sqrt(cvp.sq+sinfo$gam.cv^2)
+    }
   }
 
   class(sinfo) <- "summary.dsm.var"
-
   return(sinfo)
-
 }

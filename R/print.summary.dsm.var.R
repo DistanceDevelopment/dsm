@@ -30,7 +30,7 @@ print.summary.dsm.var<-function(x,...){
     cat("NAs               :",x$boot.NA,"\n")       
     cat("NaNs              :",x$boot.NaN,"\n")      
     cat("Usable replicates : ",x$boot.usable,
-                              " (",100-(100*x$trim.prop),"%)\n",sep="")
+                              " (",100*(1-x$trim.prop),"%)\n",sep="")
 
     if(!x$ds.uncertainty){
       # delta method asymptotic CI
@@ -41,7 +41,7 @@ print.summary.dsm.var<-function(x,...){
                      x$pred.est * asymp.ci.c.term)
       names(asymp.tot) <- c("5%","Mean","95%")
    
-      cat("Approximate asymptotic boostrap confidence interval:\n")
+      cat("Approximate asymptotic bootstrap confidence interval:\n")
       print(asymp.tot)
       cat("(Using delta method)\n")
 
@@ -54,10 +54,29 @@ print.summary.dsm.var<-function(x,...){
 
   }else if(!x$bootstrap){
     cat("Summary of uncertainty in a density surface model calculated\n")
-    cat(" by variance propagation.\n")
+    if(x$varprop){
+      cat(" by variance propagation.\n")
+      cat("\nQuantiles of differences between fitted model and variance model\n")
+      print(x$saved$model.check)
+    }else{
+      cat(" analytically for GAM, with delta method\n")
 
-    cat("\nQuantiles of differences between fitted model and variance model\n")
-    print(x$saved$model.check)
+    }
+
+    cat("\n")
+
+    # delta method asymptotic CI
+    unconditional.cv.square <- x$cv^2 
+    asymp.ci.c.term <- exp(1.96*sqrt(log(1+unconditional.cv.square)))
+    asymp.tot <- c(x$pred.est / asymp.ci.c.term,
+                   x$pred.est,
+                   x$pred.est * asymp.ci.c.term)
+    names(asymp.tot) <- c("5%","Mean","95%")
+   
+    cat("Approximate asymptotic confidence interval:\n")
+    print(asymp.tot)
+    cat("(Using delta method)\n")
+
   }
 
   cat("\n\n")
@@ -73,7 +92,13 @@ print.summary.dsm.var<-function(x,...){
       cat("Coefficient of variation       :", round(x$cv,4),"\n")
     }
   }else{
-    cat("Coefficient of variation       :", round(x$cv,4),"\n")
+    if(x$varprop){
+      cat("Coefficient of variation       :", round(x$cv,4),"\n")
+    }else{
+      cat("CV of detection function       :",x$detfct.cv,"\n")
+      cat("CV from GAM                    :",x$gam.cv,"\n")
+      cat("Total coefficient of variation :", round(x$cv,4),"\n")
+    }
   }
   cat("\n")
 
