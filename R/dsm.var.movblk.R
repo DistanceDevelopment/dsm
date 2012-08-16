@@ -9,13 +9,13 @@
 #'        the correct columns for other environmental covariates. It also MUST
 #'        have a column called \code{cell.area} which gives the area for each
 #'        prediction cell 
-#' @param n.boot number of bootstrap resamples.
+#' @param n.boot number of bootstrap resamples.
 #' @param block.size number of segments in each block.
 #' @param off.set offset to be used in the model, see \code{\link{offsets}}.
 #'        Note that this should NOT be \code{log()}'d.
 #' @param ds.uncertainty incorporate uncertainty in the detection function? See
 #'        Details, below. Note that this feature is EXPERIMENTAL at the moment.
-#' @param samp.unit.name name sampling unit to resample (default 
+#' @param samp.unit.name name sampling unit to resample (default 
 #'        'Transect.Label').
 #' @param progress.file path to a file to be used (usually by Distance) to 
 #'        generate a progress bar (default \code{NULL} -- no file written).
