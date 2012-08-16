@@ -30,7 +30,7 @@ summary.dsm.var<-function(object, alpha=0.05, boxplot.coef=1.5,
     # grab the predicted values
     #mod1.pred <- dsm.predict(object$dsm.object,
     #                         newdata=object$pred.data,
-    #                         off=object$off.set)
+    #                         off.set=object$off.set)
     #sinfo$pred.est <- sum(mod1.pred,na.rm=TRUE)
     sinfo$pred.est <- object$study.area.total[1]
 
@@ -161,7 +161,7 @@ summary.dsm.var<-function(object, alpha=0.05, boxplot.coef=1.5,
     # grab the predicted values
     mod1.pred <- dsm.predict(object$dsm.object,
                              newdata=object$pred.data,
-                             off=object$off.set)
+                             off.set=object$off.set)
     sinfo$pred.est <- sum(mod1.pred,na.rm=TRUE)
 
     # if we're using variance propagation, the CV is fine

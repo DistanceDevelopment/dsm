@@ -34,8 +34,7 @@
   more information (default 30).}
 
   \item{vario.max}{maximum distance for the variogram;
-  points further than this distance apart will be ignored,
-  see \code{\link{variog}} (default 100).}
+  points further than this distance apart will be ignored.}
 
   \item{...}{other arguments to be passed to
   \code{\link{qq.gam}}.}

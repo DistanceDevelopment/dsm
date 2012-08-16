@@ -26,6 +26,6 @@
 }
 \description{
   Not usually used on its own, called from within
-  \code{\link{dsm.var.movblk()}}.
+  \code{\link{dsm.var.movblk}}.
 }
 

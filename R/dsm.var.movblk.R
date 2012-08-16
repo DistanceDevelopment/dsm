@@ -4,7 +4,7 @@
 #' bootstrap. Two procedures are implemented, one incorporating detection
 #' function uncertainty, one not.
 #'
-#' @param dsm.object object returned from \code{\link{dsm.fit()}}.
+#' @param dsm.object object returned from \code{\link{dsm.fit}}.
 #' @param pred.data a \code{data.frame} that holds prediction points, must have
 #'        the correct columns for other environmental covariates. It also MUST
 #'        have a column called \code{cell.area} which gives the area for each
@@ -137,7 +137,7 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
 
   dsm.predict.bs <- try(dsm.predict(dsm.object,
                                     newdata=pred.data,
-                                    off=off.set))
+                                    off.set=off.set))
   if(all(class(dsm.predict.bs)=="try-error")){
     dsm.predict.bs <- rep(NA,length(short.var$sumx))
   }
@@ -244,7 +244,7 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
       # Do prediction using newly fitted dsm model created from bootstrap sample
       dsm.predict.bs <- try(dsm.predict(dsm.bs.model,
                                         newdata=pred.data,
-                                        off=off.set))
+                                        off.set=off.set))
       if(all(class(dsm.predict.bs)=="try-error")){
         dsm.predict.bs <- rep(NA,length(fit))
       }

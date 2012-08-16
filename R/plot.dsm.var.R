@@ -7,7 +7,7 @@
 #' @method plot dsm.var
 #' @aliases plot.dsm.var
 #' 
-#' @param object a \code{dsm.var} object
+#' @param x a \code{dsm.var} object
 #' @param poly a \code{list} or \code{data.frame} with columns \code{x} and 
 #'        \code{y}, which gives the coordinates of a polygon to draw.
 #' @param limits limits for the fill colours
@@ -27,9 +27,11 @@
 ### TODO
 # covariates in the detection function
 
-plot.dsm.var<-function(object, poly=NULL, limits=NULL, breaks=NULL,
+plot.dsm.var<-function(x, poly=NULL, limits=NULL, breaks=NULL,
                        legend.breaks=NULL, xlab="x", ylab="y", 
                        observations=TRUE, plot=TRUE, boxplot.coef=1.5, ...){
+
+  object <- x
 
   # if we did used the random effects trick, collapse everything down
   if(!object$bootstrap){
@@ -50,7 +52,7 @@ plot.dsm.var<-function(object, poly=NULL, limits=NULL, breaks=NULL,
   # estimate from prediction
   mod.pred <- dsm.predict(object$dsm.object,
                           newdata=object$pred.data,
-                          off=object$off.set)
+                          off.set=object$off.set)
 
   if(object$bootstrap){
 
@@ -76,7 +78,7 @@ plot.dsm.var<-function(object, poly=NULL, limits=NULL, breaks=NULL,
       # if we did save each replicate...
 
       # load the data
-      bs.save <- read.csv(object$bs.file,head=FALSE)
+      bs.save <- read.csv(object$bs.file,header=FALSE)
 
       # first col is just the ids
       bs.save <- bs.save[,-1]

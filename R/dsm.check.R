@@ -17,7 +17,7 @@
 #' @param gam.k complexity of the \code{\link{gam}} to be fitted to the 
 #' residuals, see \code{\link{choose.k}} for more information (default 30).
 #' @param vario.max maximum distance for the variogram; points further than 
-#' this distance apart will be ignored, see \code{\link{variog}} (default 100).
+#' this distance apart will be ignored.
 #' @param ... other arguments to be passed to \code{\link{qq.gam}}.
 
 #' @return a plot!

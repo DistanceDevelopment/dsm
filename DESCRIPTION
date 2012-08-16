@@ -1,7 +1,7 @@
 Package: dsm
 Maintainer: David L. Miller <dave@ninepointeightone.net>,
     Eric Rexstad <ericr@mcs.st-and.ac.uk>
-License: GPL version 2 or later
+License: GPL (>= 2)
 Title: Density surface modelling (dsm) of distance sampling data
 LazyLoad: yes
 Author: Eric Rexstad, Louise Burt, David L. Miller

@@ -64,6 +64,9 @@ resulting from object-specific detection probabilities}
 
   \item{convert.units}{value to alter length to width for
   calculation of the offset.}
+
+  \item{\dots}{anything else to be passed straight to
+  \code{\link{gam}}.}
 }
 \value{
   a list, consisting of: \tabular{ll}{\code{result} \tab

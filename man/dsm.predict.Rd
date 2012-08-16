@@ -2,7 +2,7 @@
 \alias{dsm.predict}
 \title{Produce estimated abundance at each cell in the prediction grid}
 \usage{
-  dsm.predict(model, newdata = NULL, off = NULL)
+  dsm.predict(model, newdata = NULL, off.set = NULL)
 }
 \arguments{
   \item{model}{fitted model object (created by a call to
