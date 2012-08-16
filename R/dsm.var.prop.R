@@ -44,7 +44,7 @@
 #'                      }
 #' @author Mark V. Bravington, Sharon L. Hedley. Bugs added by David L. Miller.
 #' @references 
-#' Williams, R., Hedley, S.L., Branch, T.A., Bravington, M.V., Zerbini, A.N. and Findlay, K.P. (2011). Chilean Blue Whales as a Case Study to Illustrate Methods to Estimate Abundance and Evaluate Conservation Status of Rare Species. Conservation Biology 25(3), 526â€“535.
+#' Williams, R., Hedley, S.L., Branch, T.A., Bravington, M.V., Zerbini, A.N. and Findlay, K.P. (2011). Chilean Blue Whales as a Case Study to Illustrate Methods to Estimate Abundance and Evaluate Conservation Status of Rare Species. Conservation Biology 25(3), 526-“535.
 #' @export
 dsm.var.prop<-function(dsm.obj, pred.data,off.set, 
     seglen.varname='Effort', type.pred="response") {
