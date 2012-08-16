@@ -1,6 +1,7 @@
 export(dsm.check)
 export(dsm.fit)
 export(dsm.predict)
+export(dsm.var.gam)
 export(dsm.var.movblk)
 export(dsm.var.prop)
 export(generate.ds.uncertainty)
