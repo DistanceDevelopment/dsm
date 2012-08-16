@@ -171,6 +171,14 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
 
     preddo[[ipg]] <-  this.off.set %**% tmfn(lppred)
     dpred.db[ipg,] <- this.off.set %**% (dtmfn(lppred)*lpmat)
+    # explanation of the above line and why we find this derivative
+    # BTW in 'varpred', there is a decoy option 'vmethod' which at the 
+    # moment has to be '"delta"', for how to deal with nonlinearity in the 
+    # "link" of 'fitobj'. Could be done by simulation instead, and that would 
+    # be more accurate (if you did enough). However, in my limited experience:
+    # once you've got a CV so big that the delta-method doesn't work, then 
+    # your estimate is officially Crap and there is not much point in 
+    # expending extra effort to work out exactly how Crap!
   } 
 
   # "'vpred' is the covariance of all the summary-things." - MVB  
