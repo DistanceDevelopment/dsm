@@ -46,6 +46,7 @@
 #'   \code{eval(paste())}.
 #' @param convert.units value to alter length to width for calculation 
 #'   of the offset.
+#' @param \dots anything else to be passed straight to \code{\link{gam}}.
 #' @return a list, consisting of:
 #'   \tabular{ll}{\code{result} \tab object produced by the \code{gam} or
 #'                  \code{glm} call.\cr
@@ -288,6 +289,9 @@ obsdata <- obsdata[obsdata$object %in% as.numeric(names(fitted.p)),]
                   gsub("knot ([0-9]+) is in boundary cell of solution grid",
                                "\\1",warning.mess))
 
+        # roughly, how much wiggling should happen?
+        runif.scale <- min(c(diff(knots[,1]),diff(knots[,2]),1e-6))
+
         # wiggle them
         for(i in problem.knots){
            this.knot<-knots[i,]
@@ -329,11 +333,11 @@ obsdata <- obsdata[obsdata$object %in% as.numeric(names(fitted.p)),]
        # density is response.
        if(is.null(wghts)){
          b<-gam(formula,family=family.and.link,data=dat,
-                control=gam.control(keepData=TRUE),weights=NULL, gamma=1.4)
+                control=gam.control(keepData=TRUE),weights=NULL, gamma=1.4,...)
        }else{
          b<-gam(formula, family=family.and.link, data=dat,
                 control=gam.control(keepData=TRUE),
-                weights=eval(parse(text=wghts)),gamma=1.4)
+                weights=eval(parse(text=wghts)),gamma=1.4,...)
        }
      }
 

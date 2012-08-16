@@ -20,7 +20,7 @@
   David L. Miller
 }
 \seealso{
-  \code{\link{summary.ds.var}}
+  \code{\link{summary.dsm.var}}
 }
 \keyword{utility}
 

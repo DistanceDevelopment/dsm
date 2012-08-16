@@ -2,13 +2,13 @@
 \alias{plot.dsm.var}
 \title{Create plots of abundance uncertainty}
 \usage{
-  \method{plot}{dsm.var} (object, poly = NULL,
-    limits = NULL, breaks = NULL, legend.breaks = NULL,
-    xlab = "x", ylab = "y", observations = TRUE,
-    plot = TRUE, boxplot.coef = 1.5, ...)
+  \method{plot}{dsm.var} (x, poly = NULL, limits = NULL,
+    breaks = NULL, legend.breaks = NULL, xlab = "x",
+    ylab = "y", observations = TRUE, plot = TRUE,
+    boxplot.coef = 1.5, ...)
 }
 \arguments{
-  \item{object}{a \code{dsm.var} object}
+  \item{x}{a \code{dsm.var} object}
 
   \item{poly}{a \code{list} or \code{data.frame} with
   columns \code{x} and \code{y}, which gives the

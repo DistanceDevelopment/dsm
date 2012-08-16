@@ -40,8 +40,10 @@
 #' @export
 #   Functions used:  predict.gam() from package mgcv
 
-dsm.predict<-function(model, newdata=NULL, off=NULL){#, 
+dsm.predict<-function(model, newdata=NULL, off.set=NULL){#, 
 #                      silent=FALSE){
+
+  off <- off.set
 
   # do we have a dsm object or a gam?
   if("dsm" %in% class(model)){

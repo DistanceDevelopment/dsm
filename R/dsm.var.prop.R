@@ -109,7 +109,7 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
   dmat.name <- '.D1'
   names.to.avoid <- unique( c( all.names( formo), names( fo2data)))
   while( dmat.name %in% names.to.avoid){
-    dmat.name <- '.' %&% dmat.name
+    dmat.name <- paste('.',dmat.name,sep="")
   }
   fo2data[[ dmat.name]] <- firstD 
   formo[[3]] <- call( '+', formo[[3]], as.symbol(dmat.name))
@@ -254,8 +254,8 @@ numderiv<-function (f, x0, eps = 1e-04, TWICE. = TRUE, param.name = NULL,
             x <- x %*% y
         else {
             if ((length(x) != 1) && (length(y) != 1))
-                stop("lengths of x (" %&% length(x) %&% ") and y (" %&%
-                  length(y) %&% ") are incompatible")
+                stop(paste("lengths of x (",length(x),") and y (",
+                  length(y),") are incompatible",sep=""))
             else x <- x * y
         }
     }

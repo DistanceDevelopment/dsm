@@ -1,7 +1,7 @@
 #' Generate a vector of residuals to be mapped back onto the data
 #'
 #' Not usually used on its own, called from within 
-#' \code{\link{dsm.var.movblk()}}.
+#' \code{\link{dsm.var.movblk}}.
 #'
 #' @param  num.blocks.required number of blocks that we need.
 #' @param  block.size number of segments per block.

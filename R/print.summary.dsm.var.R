@@ -9,7 +9,7 @@
 #' @param \dots unspecified and unused arguments for S3 consistency
 #' @return NULL
 #' @author David L. Miller
-#' @seealso \code{\link{summary.ds.var}}
+#' @seealso \code{\link{summary.dsm.var}}
 #' @keywords utility
 print.summary.dsm.var<-function(x,...){
 
