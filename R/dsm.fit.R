@@ -15,8 +15,6 @@
 #' @param response response type to be modelled; choices are:
 #'   \tabular{ll}{\code{indiv} \tab - estimate individual abundance\cr
 #'                \code{group} \tab - estimate group counts abundance\cr
-#                \code{indiv.est} \tab - estimate individual abundance\cr
-#                \code{group.est} \tab - estimated group abundance\cr
 #'                \code{indiv.den} \tab individual density per segment\cr
 #'                \code{group.den} \tab group density per segment\cr}
 #' @param formula formula for the surface. This should be a
