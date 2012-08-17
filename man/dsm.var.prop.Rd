@@ -69,6 +69,6 @@
   M.V., Zerbini, A.N. and Findlay, K.P. (2011). Chilean
   Blue Whales as a Case Study to Illustrate Methods to
   Estimate Abundance and Evaluate Conservation Status of
-  Rare Species. Conservation Biology 25(3), 526-“535.
+  Rare Species. Conservation Biology 25(3), 526-535.
 }
 
