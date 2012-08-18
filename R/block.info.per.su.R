@@ -5,7 +5,7 @@
 #'
 #' @param block.size number of segments per block
 #' @param data data used to build the model
-#' @param name.su names of the (unique) sampling units (ie. transects)
+#' @param name.su names of the sampling units (ie. transects)
 #'
 #' @return a \code{data.frame} with the following columns
 #'    \tabular{ll}{name        \tab the sample unit name (e.g. transect 

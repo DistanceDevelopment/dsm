@@ -9,7 +9,7 @@
 
   \item{data}{data used to build the model}
 
-  \item{name.su}{names of the (unique) sampling units (ie.
+  \item{name.su}{names of the sampling units (ie.
   transects)}
 }
 \value{
