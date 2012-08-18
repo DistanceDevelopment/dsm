@@ -69,7 +69,7 @@ generate.ds.uncertainty<-function(ds.object){
         # into the correct format
         xmat <- mrds:::process.data(new.dists,ds.object$meta.data,
                                     check=FALSE)$xmat
-        ddfobj <- mrds:::create.ddfobj(ds.object$call$dsmodel,xmat,
+        ddfobj <- mrds:::create.ddfobj(as.formula(ds.object$dsmodel),xmat,
                             ds.object$meta.data,pars)
     
         # generate acceptance probability
@@ -113,6 +113,7 @@ generate.ds.uncertainty<-function(ds.object){
     ddf.call <- ds.object$call
     ddf.call$data <- dists
     ddf.call$meta.data <- ds.object$meta.data
+    ddf.call$dsmodel <- as.formula(ds.object$dsmodel)
     ddf.fitted <- try(eval(ddf.call))
     
     # if it all went well, then set dud.df to FALSE and quit the loop
