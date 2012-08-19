@@ -74,13 +74,15 @@ dsm.check<-function(dsm.obj,type=c("deviance","pearson","response"),
     lines(nd,pred,col="grey")
   }
 
-  ### fit to residuals -- check for residual spatial variation
-  new.dat<-data.frame(x=model$data$x,
-                      y=model$data$y,
-                      z=resids)
-  b<-gam(z~s(x,y,k=gam.k)-1,data=new.dat)
-  vis.gam(b,plot.type="contour",main="Fit to residuals",
-          asp=1,view=c("x","y"),type="response") 
+  if(all(c("x","y")%in%names(model$data))){
+    ### fit to residuals -- check for residual spatial variation
+    new.dat<-data.frame(x=model$data$x,
+                        y=model$data$y,
+                        z=resids)
+    b<-gam(z~s(x,y,k=gam.k)-1,data=new.dat)
+    vis.gam(b,plot.type="contour",main="Fit to residuals",
+            asp=1,view=c("x","y"),type="response") 
+  }
 
 
   ### variogram
@@ -97,7 +99,7 @@ dsm.check<-function(dsm.obj,type=c("deviance","pearson","response"),
                            resids = resids[ind])
 
     # create a column of the just number of the segment within the transect
-    this.dat$Sample.Number <- as.numeric(sub("\\d+-","",
+    this.dat$Sample.Number <- as.numeric(sub(".*-(\\d+)","\\1",
                                          as.character(this.dat$Sample.Label)))
     # sort the data.frame by that
     this.dat <- this.dat[order(this.dat$Sample.Number),]
