@@ -5,7 +5,7 @@
   \method{plot}{dsm.var} (x, poly = NULL, limits = NULL,
     breaks = NULL, legend.breaks = NULL, xlab = "x",
     ylab = "y", observations = TRUE, plot = TRUE,
-    boxplot.coef = 1.5, ...)
+    boxplot.coef = 1.5, x.name = "x", y.name = "y", ...)
 }
 \arguments{
   \item{x}{a \code{dsm.var} object}
@@ -32,6 +32,10 @@
   \item{boxplot.coef}{control trimming (as in
   \code{summary.dsm.var}), only has an effect if the
   bootstrap file was saved.}
+
+  \item{x.name}{name of the variable to plot as the x axis}
+
+  \item{y.name}{name of the variable to plot as the y axis}
 
   \item{\dots}{any arguments that can usually be passed to
   a}

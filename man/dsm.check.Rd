@@ -5,7 +5,8 @@
   dsm.check(dsm.obj,
     type = c("deviance", "pearson", "response"), rep = 0,
     level = 0.9, rl.col = 2, rep.col = "gray80",
-    loess = TRUE, gam.k = 30, vario.max = 100, ...)
+    loess = TRUE, gam.k = 30, vario.max = 100,
+    resid.x = "x", resid.y = "y", ...)
 }
 \arguments{
   \item{dsm.obj}{object resulting from a call to
@@ -35,6 +36,12 @@
 
   \item{vario.max}{maximum distance for the variogram;
   points further than this distance apart will be ignored.}
+
+  \item{resid.x}{name of the variable to be used as "x" in
+  the fitting to the residuals}
+
+  \item{resid.y}{name of the variable to be used as "y" in
+  the fitting to the residuals}
 
   \item{...}{other arguments to be passed to
   \code{\link{qq.gam}}.}

@@ -18,6 +18,10 @@
 #' residuals, see \code{\link{choose.k}} for more information (default 30).
 #' @param vario.max maximum distance for the variogram; points further than 
 #' this distance apart will be ignored.
+#' @param resid.x name of the variable to be used as "x" in the fitting 
+#'    to the residuals
+#' @param resid.y name of the variable to be used as "y" in the fitting 
+#'    to the residuals
 #' @param ... other arguments to be passed to \code{\link{qq.gam}}.
 
 #' @return a plot!
@@ -40,7 +44,8 @@ dsm.check<-function(dsm.obj,type=c("deviance","pearson","response"),
           ## arguments passed to qq.gam() {w/o warnings !}:
           rep=0, level=.9, rl.col=2, rep.col="gray80", loess=TRUE, 
           # What is k for the gam?
-          gam.k=30, vario.max=100,...){
+          gam.k=30, vario.max=100,
+          resid.x="x", resid.y="y",...){
 
   # TODO
   # better way of selecting k? -- uniquecombs()?
@@ -78,15 +83,13 @@ dsm.check<-function(dsm.obj,type=c("deviance","pearson","response"),
     lines(nd,pred,col="grey")
   }
 
-  if(all(c("x","y")%in%names(model$data))){
-    ### fit to residuals -- check for residual spatial variation
-    new.dat<-data.frame(x=model$data$x,
-                        y=model$data$y,
-                        z=resids)
-    b<-gam(z~s(x,y,k=gam.k)-1,data=new.dat)
-    vis.gam(b,plot.type="contour",main="Fit to residuals",
-            asp=1,view=c("x","y"),type="response") 
-  }
+  ### fit to residuals -- check for residual spatial variation
+  new.dat<-data.frame(x=model$data[[resid.x]],
+                      y=model$data[[resid.y]],
+                      z=resids)
+  b<-gam(z~s(x,y,k=gam.k)-1,data=new.dat)
+  vis.gam(b,plot.type="contour",main="Fit to residuals",
+          asp=1,view=c("x","y"),type="response") 
 
 
   ### variogram

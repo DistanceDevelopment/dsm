@@ -19,6 +19,8 @@
 #' @param plot actually plot the map, or just return a \code{ggplot2} object?
 #' @param boxplot.coef control trimming (as in \code{summary.dsm.var}), only
 #'        has an effect if the bootstrap file was saved. 
+#' @param x.name name of the variable to plot as the x axis
+#' @param y.name name of the variable to plot as the y axis
 #' @param \dots any arguments that can usually be passed to a 
 #' @return a plot 
 #' 
@@ -29,9 +31,11 @@
 
 plot.dsm.var<-function(x, poly=NULL, limits=NULL, breaks=NULL,
                        legend.breaks=NULL, xlab="x", ylab="y", 
-                       observations=TRUE, plot=TRUE, boxplot.coef=1.5, ...){
+                       observations=TRUE, plot=TRUE, boxplot.coef=1.5, 
+                       x.name="x", y.name="y",...){
 
   object <- x
+  rm(x)
 
   # if we did used the random effects trick, collapse everything down
   if(!object$bootstrap){
@@ -45,8 +49,8 @@ plot.dsm.var<-function(x, poly=NULL, limits=NULL, breaks=NULL,
     object$off.set <- as.vector(off)
   }
 
-  if(!all(c("x","y","width","height") %in% names(object$pred.data))){
-      stop("No spatial data to create plot, need columns 'x' and 'y' in prediction data")
+  if(!all(c("width","height") %in% names(object$pred.data))){
+      stop("No spatial data to create plot, need columns 'width' and 'height' in prediction data")
   }
 
   # estimate from prediction
@@ -98,8 +102,6 @@ plot.dsm.var<-function(x, poly=NULL, limits=NULL, breaks=NULL,
 
       # calculate the variance
       cell.se <- apply(bs.save,2,sd)
-#      cell.se <- colSums(bs.save^2)/(n-1) - ((colSums(bs.save)/n)^2)*(n/(n-1))
-#      cell.se <- sqrt(cell.se)
       cell.cv <- cell.se/mod.pred
 
       rm(bs.save)
@@ -153,6 +155,11 @@ plot.dsm.var<-function(x, poly=NULL, limits=NULL, breaks=NULL,
   # put all the data together
   plotdata<-cbind(object$pred.data,cell.cv)
 
+  # what are the names of the variables to be plotted on the x and y
+  # axis? Rename!
+  plotdata$x <- plotdata[[x.name]]
+  plotdata$y <- plotdata[[y.name]]
+
   # build the plot
   gg.opts <- opts(panel.grid.major=theme_blank(),
                   panel.grid.minor=theme_blank(),
@@ -168,10 +175,17 @@ plot.dsm.var<-function(x, poly=NULL, limits=NULL, breaks=NULL,
                                 breaks=legend.breaks)
 
   if(!is.null(poly)){
+    poly$x <- poly[[x.name]]
+    poly$y <- poly[[y.name]]
     p <- p+geom_path(aes(x=x, y=y),data=poly)
   }
 
   if(observations){
+    object$dsm.object$data$x <- object$dsm.object$data[[x.name]]
+    object$dsm.object$data$y <- object$dsm.object$data[[y.name]]
+    object$dsm.object$ddf$data$x <- object$dsm.object$ddf$data[[x.name]]
+    object$dsm.object$ddf$data$y <- object$dsm.object$ddf$data[[y.name]]
+    
     p <- p + geom_line(aes(x=x, y=y,group=Transect.Label),
                         data=object$dsm.object$data)
     p <- p + geom_point(aes(x, y, size=size), data=object$dsm.object$ddf$data, 
