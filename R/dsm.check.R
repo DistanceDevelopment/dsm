@@ -21,6 +21,10 @@
 #' @param ... other arguments to be passed to \code{\link{qq.gam}}.
 
 #' @return a plot!
+
+#' @section Details The autocorrelogram expects that segments are named as 
+#'  "<something>-<number>".
+
 #' @author David L. Miller
 #' @export
 #
