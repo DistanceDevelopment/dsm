@@ -214,7 +214,11 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
     }
 
     # calculate the new fitted values
-    bs.samp$N <- fit*exp(bs.resids)  
+    if(dsm.object$model.spec$response %in% c("indiv.den","group.den")){
+      bs.samp$D <- fit*exp(bs.resids)  
+    }else{
+      bs.samp$N <- fit*exp(bs.resids)  
+    }
 
     ## Fit model to dsm bootstrap sample
 
