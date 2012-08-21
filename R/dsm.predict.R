@@ -45,10 +45,10 @@ dsm.predict<-function(model, newdata=NULL, off.set=NULL){
 
     # apply the link function
     linkfn <- gam.model$family$linkfun
-    off <- linkfn(off)
+    off.set <- linkfn(off.set)
 
     # Append cell size of prediction grid to prediction grid  
-    prediction.grid <- data.frame(newdata, off.set=off)
+    prediction.grid <- data.frame(newdata, off.set=off.set)
   }
 
   # actually do the predict call

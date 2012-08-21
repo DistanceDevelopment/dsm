@@ -54,8 +54,9 @@
   scale-location plot (optionally with LOESS line), fit to
   the residuals and empirical variogram.
 }
-\section{Details The autocorrelogram expects that segments are named as
- "<something>-<number>".}{
+\section{Details
+ The autocorrelogram expects that segments are named as
+"<something>-<number>".}{
 
 }
 \author{

@@ -26,8 +26,9 @@
 
 #' @return a plot!
 
-#' @section Details The autocorrelogram expects that segments are named as 
-#'  "<something>-<number>".
+#' @section Details 
+#'  The autocorrelogram expects that segments are named as 
+#' "<something>-<number>".
 
 #' @author David L. Miller
 #' @export

@@ -14,8 +14,9 @@
   to variable names used in fitting the GAM.}
 
   \item{off.set}{offset for the cells in the prediction
-  grid (\code{newdata}).  NB this should NOT be logged, it
-  gets logged below.}
+  grid (\code{newdata}).  NB this should NOT have the link
+  function applied already, this happens below. (For
+  example, it should _not_ be logged).}
 }
 \value{
   array of predicted values.

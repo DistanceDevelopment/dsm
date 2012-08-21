@@ -117,9 +117,6 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
     obsdata[,cluster.name][obsdata[,cluster.name]>0] <- 1
   }
 
-  # how many segments had observations?
-  model.spec$n.segs.withdata <- sum(obsdata[,cluster.name]>0)
-  model.spec$n.segs <- nrow(obsdata)
 
 
   ### what kind of data are we working with?
@@ -350,6 +347,10 @@ obsdata <- obsdata[obsdata$object %in% as.numeric(names(fitted.p)),]
                                 weights=eval(parse(text=wghts)),gamma=1.4)
     }
   }
+
+  # how many segments had observations?
+  model.spec$n.segs.withdata <- sum(responsedata$N>0)
+  model.spec$n.segs <- nrow(segdata)
 
   # save which model we fit (GAM or GLM)
   model.spec$model <- toupper(model.defn$fn)
