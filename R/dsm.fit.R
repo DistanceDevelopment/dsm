@@ -39,11 +39,13 @@
 #'                   Internal knots for the soap film smoother.}
 #' @param obsdata observation data, see \code{\link{dsm-data}}. 
 #' @param segdata segment data, see \code{\link{dsm-data}}.
-#' @param wghts weights, directly passed to \code{gam} or \code{glm}.
+#' @param weights vector of weights, directly passed to \code{gam} or 
+#'   \code{glm}. There must be one for each row in \code{segdata}.
 #' @param link link function, merged with \code{family} via 
 #'   \code{eval(paste())}.
 #' @param convert.units value to alter length to width for calculation 
-#'   of the offset.
+#'   of the offset. (Can be useful if only one side of the transect is being
+#'   observed sometimes -- e.g. aerial surveys when there is glare.)
 #' @param \dots anything else to be passed straight to \code{\link{gam}}.
 #' @return a list, consisting of:
 #'   \tabular{ll}{\code{result} \tab object produced by the \code{gam} or
@@ -67,9 +69,6 @@
 #' @export 
 # @keywords
 # @examples
-dsm.fit <- function(ddfobject, phat=NULL, response, formula,
-                    model.defn=list(fn="gam",family="quasipoisson"), obsdata,
-                    segdata, wghts=NULL, link='log',convert.units=1,...)
 
 # History:
 # This function has its orgins as perform.gam.fromddf (found in a txt 
@@ -83,8 +82,9 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
 # Jan 2012, Dave Miller started updating and turning into a proper
 #           R library.
 #
-{
-
+dsm.fit <- function(ddfobject, phat=NULL, response, formula,
+                    model.defn=list(fn="gam",family="quasipoisson"), obsdata,
+                    segdata, weights=NULL, link='log',convert.units=1,...){
   # list to hold various options...
   # this is mainly to pass back to summary() for convenience
   model.spec<-list()
@@ -138,13 +138,17 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
     }
   }    
 
+  # remove the segments with 0 observations
+  obsdata <- obsdata[obsdata$object %in% as.numeric(names(fitted.p)),]
+  if(!is.null(weights)){
+    weights <- weights[obsdata$object %in% as.numeric(names(fitted.p)),]
+  }
 
   # Aggregate response values of the sightings over segments
   # for the density models
   if(response %in% c("indiv.den","group.den")){
     if(groups){
-# remove the segments with 0 observations
-obsdata <- obsdata[obsdata$object %in% as.numeric(names(fitted.p)),]
+
       responsedata <- aggregate(obsdata[,cluster.name]/fitted.p,
                                 list(obsdata[,segnum.name]), sum)
     }else{
@@ -171,8 +175,7 @@ obsdata <- obsdata[obsdata$object %in% as.numeric(names(fitted.p)),]
   }else if(mcds){
   # group abundance with covariates
   # individual abundance with covariates
-# remove the segments with 0 observations
-obsdata <- obsdata[obsdata$object %in% as.numeric(names(fitted.p)),]
+
     responsedata <- aggregate(obsdata[,cluster.name]/fitted.p,
                               list(obsdata[,segnum.name]), sum)
     off.set<-"area"
@@ -195,7 +198,7 @@ obsdata <- obsdata[obsdata$object %in% as.numeric(names(fitted.p)),]
 
   # when density is response, offset should be 1.
   dat$off.set<-switch(off.set,
-                      eff.area=2*dat[,seglength.name]*ddfobject$meta.data$width*fitted.p,
+                      ff.area=2*dat[,seglength.name]*ddfobject$meta.data$width*fitted.p,
                       area=2*dat[,seglength.name]*ddfobject$meta.data$width,
                       none=1)
 
@@ -244,10 +247,6 @@ obsdata <- obsdata[obsdata$object %in% as.numeric(names(fitted.p)),]
                           "(link='", link, "')", sep="")))
   }
 
-  if (!is.null(wghts)){
-    wghts<-paste("dat$", wghts, sep="")
-  }
-
   
   if(toupper(model.defn$fn)=="GAM"){
     # if we are doing soap film smoothing, we need make sure that we
@@ -262,15 +261,9 @@ obsdata <- obsdata[obsdata$object %in% as.numeric(names(fitted.p)),]
       bnd<-model.defn$bnd
       knots<-model.defn$knots
   
-      if(is.null(wghts)){
-        b<-try(gam(formula,family=family.and.link,data=dat,
-               control=gam.control(keepData=TRUE),
-               weights=NULL, gamma=1.4,knots=knots,...))
-      }else{
-        b<-try(gam(formula, family=family.and.link, data=dat,
-               control=gam.control(keepData=TRUE),knots=knots,
-               weights=eval(parse(text=wghts)),gamma=1.4,...))
-      }
+      b<-try(gam(formula, family=family.and.link, data=dat,
+             control=gam.control(keepData=TRUE),knots=knots,
+             weights=weights,gamma=1.4,...))
 
       # loop until the knots are okay but not more than 5 times
       max.wiggles<-1
@@ -298,18 +291,11 @@ obsdata <- obsdata[obsdata$object %in% as.numeric(names(fitted.p)),]
            knots[i,]<-this.knot
         }
 
-        # refit the model
-        if(is.null(wghts)){
-           b<-try(gam(formula,family=family.and.link,data=dat,
-                  control=gam.control(keepData=TRUE),knots=knots,
-                  weights=NULL, gamma=1.4,...))
-        }else{
-           b<-try(gam(formula, family=family.and.link, data=dat,
-                  control=gam.control(keepData=TRUE),knots=knots,
-                  weights=eval(parse(text=wghts)),gamma=1.4,...))
-        }
+        b<-try(gam(formula, family=family.and.link, data=dat,
+               control=gam.control(keepData=TRUE),knots=knots,
+               weights=weights,gamma=1.4,...))
 
-         max.wiggles<-max.wiggles+1
+        max.wiggles<-max.wiggles+1
       }
 
       # if we had too many wiggles above
@@ -326,26 +312,16 @@ obsdata <- obsdata[obsdata$object %in% as.numeric(names(fitted.p)),]
        # Fit model  hardwiring gamma=1.4 per Wood (2006:254) who cites 
        # Kim and Gu(2004) for overfitting weights should be 'area' when 
        # density is response.
-       if(is.null(wghts)){
-         b<-gam(formula,family=family.and.link,data=dat,
-                control=gam.control(keepData=TRUE),weights=NULL, gamma=1.4,...)
-       }else{
-         b<-gam(formula, family=family.and.link, data=dat,
-                control=gam.control(keepData=TRUE),
-                weights=eval(parse(text=wghts)),gamma=1.4,...)
-       }
+       b<-gam(formula, family=family.and.link, data=dat,
+              control=gam.control(keepData=TRUE),
+              weights=weights,gamma=1.4,...)
      }
 
 
   }else{
     # GLM case
-    if(is.null(wghts)){
-       b<-glm(formula,family=family.and.link,data=dat,control=glm.control(),
-                                  weights=NULL,gamma=1.4)
-    }else{
-       b<-glm(formula,family=family.and.link,data=dat,control=glm.control(),
-                                weights=eval(parse(text=wghts)),gamma=1.4)
-    }
+    b<-glm(formula,family=family.and.link,data=dat,control=glm.control(),
+           weights=weights,gamma=1.4)
   }
 
   # how many segments had observations?
