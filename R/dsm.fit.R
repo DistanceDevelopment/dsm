@@ -44,8 +44,7 @@
 #' @param link link function, merged with \code{family} via 
 #'   \code{eval(paste())}.
 #' @param convert.units value to alter length to width for calculation 
-#'   of the offset. (Can be useful if only one side of the transect is being
-#'   observed sometimes -- e.g. aerial surveys when there is glare.)
+#'   of the offset. 
 #' @param \dots anything else to be passed straight to \code{\link{gam}}.
 #' @return a list, consisting of:
 #'   \tabular{ll}{\code{result} \tab object produced by the \code{gam} or
@@ -117,8 +116,6 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
     obsdata[,cluster.name][obsdata[,cluster.name]>0] <- 1
   }
 
-
-
   ### what kind of data are we working with?
   #  - did the user supply phat?
   #  - are there covariates in the detection function?
@@ -132,6 +129,11 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
     }
   }else{
     fitted.p<-ddfobject$fitted
+  
+    # what were the object identifiers from ddf?
+    ddf.names <- names(fitted.p)
+
+    # if we have a model with no covariates then we just pick the 1 value we need
     if(ddfobject$ds$aux$ddfobj$scale$formula == "~1"){
       mcds <- FALSE
       fitted.p <- unique(fitted.p)
@@ -139,9 +141,9 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
   }    
 
   # remove the segments with 0 observations
-  obsdata <- obsdata[obsdata$object %in% as.numeric(names(fitted.p)),]
+  obsdata <- obsdata[obsdata$object %in% ddf.names,]
   if(!is.null(weights)){
-    weights <- weights[obsdata$object %in% as.numeric(names(fitted.p)),]
+    weights <- weights[obsdata$object %in% ddf.names,]
   }
 
   # Aggregate response values of the sightings over segments
@@ -190,16 +192,28 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
   # occur due to 0 sightings
   dat<-merge(segdata,responsedata,by=segnum.name,all.x=T)
   dat$N[is.na(dat$N)]<-0
+
+  # calculate the "width" of the transect first, make sure we get it right
+  # if we are doing left truncation
+  width <- ddfobject$meta.data$width
+  if(!is.null(ddfobject$meta.data$left)){
+    width <- width - ddfobject$meta.data$left
+  }
+
   # With density, we need to transform response variable to a density 
   # by dividing by area    
   if (off.set=="none"){
-    dat$D<-dat$N/(2*dat[,seglength.name]*ddfobject$meta.data$width)#*convert.units)
+    dat$D<-dat$N/(2*dat[,seglength.name]*width)
   }
 
-  # when density is response, offset should be 1.
+  # calculate the offset
+  #   area we just calculate the area
+  #   effective area multiply by p
+  #   when density is response, offset should be 1.
+
   dat$off.set<-switch(off.set,
-                      ff.area=2*dat[,seglength.name]*ddfobject$meta.data$width*fitted.p,
-                      area=2*dat[,seglength.name]*ddfobject$meta.data$width,
+                      eff.area=2*dat[,seglength.name]*width*fitted.p,
+                      area=2*dat[,seglength.name]*width,
                       none=1)
 
   # Altered 2 Feb 06 to use final argument passed into function 
