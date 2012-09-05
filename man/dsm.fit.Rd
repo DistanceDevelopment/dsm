@@ -5,7 +5,7 @@ resulting from object-specific detection probabilities}
 \usage{
   dsm.fit(ddfobject, phat = NULL, response, formula,
     model.defn = list(fn = "gam", family = "quasipoisson"),
-    obsdata, segdata, wghts = NULL, link = "log",
+    obsdata, segdata, weights = NULL, link = "log",
     convert.units = 1, ...)
 }
 \arguments{
@@ -56,8 +56,9 @@ resulting from object-specific detection probabilities}
 
   \item{segdata}{segment data, see \code{\link{dsm-data}}.}
 
-  \item{wghts}{weights, directly passed to \code{gam} or
-  \code{glm}.}
+  \item{weights}{vector of weights, directly passed to
+  \code{gam} or \code{glm}. Must have the same length as
+  \code{segdata}.}
 
   \item{link}{link function, merged with \code{family} via
   \code{eval(paste())}.}

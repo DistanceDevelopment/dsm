@@ -40,7 +40,7 @@
 #' @param obsdata observation data, see \code{\link{dsm-data}}. 
 #' @param segdata segment data, see \code{\link{dsm-data}}.
 #' @param weights vector of weights, directly passed to \code{gam} or 
-#'   \code{glm}. There must be one for each row in \code{segdata}.
+#'   \code{glm}. Must have the same length as \code{segdata}.
 #' @param link link function, merged with \code{family} via 
 #'   \code{eval(paste())}.
 #' @param convert.units value to alter length to width for calculation 
@@ -133,7 +133,8 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
     # what were the object identifiers from ddf?
     ddf.names <- names(fitted.p)
 
-    # if we have a model with no covariates then we just pick the 1 value we need
+    # if we have a model with no covariates then we just pick the 1 value 
+    #  we need
     if(ddfobject$ds$aux$ddfobj$scale$formula == "~1"){
       mcds <- FALSE
       fitted.p <- unique(fitted.p)
@@ -143,14 +144,13 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
   # remove the segments with 0 observations
   obsdata <- obsdata[obsdata$object %in% ddf.names,]
   if(!is.null(weights)){
-    weights <- weights[obsdata$object %in% ddf.names,]
+    weights <- weights[obsdata$object %in% ddf.names]
   }
 
   # Aggregate response values of the sightings over segments
   # for the density models
   if(response %in% c("indiv.den","group.den")){
     if(groups){
-
       responsedata <- aggregate(obsdata[,cluster.name]/fitted.p,
                                 list(obsdata[,segnum.name]), sum)
     }else{
