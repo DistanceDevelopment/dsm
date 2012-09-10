@@ -246,6 +246,13 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
     family.and.link<-eval(parse(text=paste(model.defn$family,
                          "(link='", link, "',p=",model.defn$family.pars$p,")",
                                            sep="")))
+  }else if(model.defn$family=="negbin"){
+    if(is.null(model.defn$family.pars$theta)){
+       stop("You must specify the theta parameter to use the Negative Binomial family! See ?negbin.")
+    }
+    family.and.link<-eval(parse(text=paste(model.defn$family,
+                         "(",model.defn$family.pars$theta,
+                           ", link='", link, "')", sep="")))
   }else if(model.defn$family=="quasi"){
     # specify the variance relationship for quasi
     if(is.null(model.defn$family.pars$variance)){
@@ -261,7 +268,11 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
                           "(link='", link, "')", sep="")))
   }
 
-  
+  # assume GAM  
+  if(is.null(model.defn$fn)){
+    model.defn$fn <- "GAM"
+  }
+
   if(toupper(model.defn$fn)=="GAM"){
     # if we are doing soap film smoothing, we need make sure that we
     # don't mess up the knots
