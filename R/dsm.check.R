@@ -67,7 +67,7 @@ dsm.check<-function(dsm.obj,type=c("deviance","pearson","response"),
 
   ### QQ-plot
   qq.gam(model, rep=rep, level=level, type=type, 
-         rl.col=rl.col, rep.col=rep.col, ...)
+         rl.col=rl.col, rep.col=rep.col, las=2,...)
 
   ### scale-location plot
 #  sl.dat<-data.frame(x=fitted.vals,y=abs(resids))
@@ -76,7 +76,7 @@ dsm.check<-function(dsm.obj,type=c("deviance","pearson","response"),
 #       main="Scale-location plot",
        main="Residuals vs. linear pred.",
 #       ylab="Abs. value of residuals",
-       ylab="Residuals",
+       ylab=paste(type,"residuals"),
 #       xlab="Predicted values",cex=0.3)
        xlab="Linear predictor",cex=0.3)
 
@@ -94,7 +94,7 @@ dsm.check<-function(dsm.obj,type=c("deviance","pearson","response"),
                       z=resids)
   b<-gam(z~s(x,y,k=gam.k)-1,data=new.dat)
   vis.gam(b,plot.type="contour",main="Fit to residuals",
-          asp=1,view=c("x","y"),type="response") 
+          asp=1,view=c("x","y"),type="response",las=2,contour.col="blue") 
 
 
   ### variogram
@@ -128,7 +128,7 @@ dsm.check<-function(dsm.obj,type=c("deviance","pearson","response"),
   acf.fit <- acf(all.dat,plot=FALSE,type="covariance")
 
   plot(acf.fit$lag[,,2][,1], acf.fit$acf[,,2][,2],type="l", 
-       xlab="Lag",ylab="Correlation", main="Autocorrelogram")
+       xlab="Lag",ylab="Correlation", main="Autocorrelogram",las=2)
 
   #plot(all.dat)
 
