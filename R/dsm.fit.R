@@ -125,7 +125,7 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
     # if all the ps are the same, let's assume this is a CDS analysis
     if(length(unique(fitted.p))==1){
       mcds <- FALSE
-      fitted.p <- unique(fitted.p)
+      fitted.p <- as.vector(unique(fitted.p))
     }
   }else{
     fitted.p<-ddfobject$fitted
@@ -137,7 +137,7 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
     #  we need
     if(ddfobject$ds$aux$ddfobj$scale$formula == "~1"){
       mcds <- FALSE
-      fitted.p <- unique(fitted.p)
+      fitted.p <- as.vector(unique(fitted.p))
     }
   }    
 

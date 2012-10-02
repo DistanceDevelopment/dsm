@@ -54,9 +54,10 @@ plot.dsm.var<-function(x, poly=NULL, limits=NULL, breaks=NULL,
   }
 
   # estimate from prediction
-  mod.pred <- dsm.predict(object$dsm.object,
-                          newdata=object$pred.data,
-                          off.set=object$off.set)
+  #mod.pred <- dsm.predict(object$dsm.object,
+  #                        newdata=object$pred.data,
+  #                        off.set=object$off.set)
+  mod.pred <- unlist(object$pred)
 
   if(object$bootstrap){
 
@@ -185,10 +186,10 @@ plot.dsm.var<-function(x, poly=NULL, limits=NULL, breaks=NULL,
     object$dsm.object$data$y <- object$dsm.object$data[[y.name]]
     object$dsm.object$ddf$data$x <- object$dsm.object$ddf$data[[x.name]]
     object$dsm.object$ddf$data$y <- object$dsm.object$ddf$data[[y.name]]
-    
+
     p <- p + geom_line(aes(x=x, y=y,group=Transect.Label),
                         data=object$dsm.object$data)
-    p <- p + geom_point(aes(x, y, size=size), data=object$dsm.object$ddf$data, 
+    p <- p + geom_point(aes(x, y, size=size), data=object$dsm.object$ddf$data,
                         colour="blue",alpha=I(0.7))
     p <- p + labs(fill="CV",x=xlab,y=ylab, size="Counts")
   }else{

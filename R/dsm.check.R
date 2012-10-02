@@ -73,12 +73,12 @@ dsm.check<-function(dsm.obj,type=c("deviance","pearson","response"),
 #  sl.dat<-data.frame(x=fitted.vals,y=abs(resids))
   sl.dat<-data.frame(x=predict(model),y=resids)
   plot(sl.dat,las=1,
-#       main="Scale-location plot",
-       main="Residuals vs. linear pred.",
-#       ylab="Abs. value of residuals",
-       ylab=paste(type,"residuals"),
-#       xlab="Predicted values",cex=0.3)
-       xlab="Linear predictor",cex=0.3)
+       main="Scale-location plot",
+#       main="Residuals vs. linear pred.",
+       ylab="Abs. value of residuals",
+#       ylab=paste(type,"residuals"),
+       xlab="Predicted values",cex=0.3)
+#       xlab="Linear predictor",cex=0.3)
 
   if(loess){
     # loess fit..
