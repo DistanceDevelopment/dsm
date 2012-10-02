@@ -5,7 +5,7 @@
 #' variogram.
 #'
 #' @param dsm.obj object resulting from a call to \code{\link{dsm.fit}}.
-#' @param type the type of residuals to use for all of the plots.         
+#' @param type the type of residuals to use for all of the plots.
 
 #' @param rep argument to be passed to \code{\link{qq.gam}} (default 0).
 #' @param level argument to be passed to \code{\link{qq.gam}} (default 0.9).
@@ -71,20 +71,20 @@ dsm.check<-function(dsm.obj,type=c("deviance","pearson","response"),
 
   ### scale-location plot
 #  sl.dat<-data.frame(x=fitted.vals,y=abs(resids))
-  sl.dat<-data.frame(x=predict(model),y=resids)
+  sl.dat<-data.frame(x=predict(model,type="response"),y=resids)
   plot(sl.dat,las=1,
        main="Scale-location plot",
 #       main="Residuals vs. linear pred.",
-       ylab="Abs. value of residuals",
-#       ylab=paste(type,"residuals"),
-       xlab="Predicted values",cex=0.3)
+#       ylab="Abs. value of residuals",
+       ylab=paste(type,"residuals"),
+       xlab="Predicted values",cex=0.5)
 #       xlab="Linear predictor",cex=0.3)
 
   if(loess){
     # loess fit..
     loe<-loess(y~x,data=sl.dat)
     nd<-seq(min(sl.dat$x,na.rm=T),max(sl.dat$x,na.rm=T))
-    pred<-predict(loe,newdata=nd,by=0.01) 
+    pred<-predict(loe,newdata=nd,by=0.01)
     lines(nd,pred,col="grey")
   }
 
