@@ -4,14 +4,9 @@
 #' Function constructs and then invokes a call to \code{gam()} and
 #' returns the result of the fitting of the density surface model.
 #' 
-#' @param ddfobject result from call to \code{\link{ddf}}; might be usurpt by
-#'   the \code{phat} argument below.
+#' @param ddfobject result from call to \code{\link{ddf}}.
 #'   If \code{ddfobject} is set to \code{NULL} when strip transects 
 #'   are analyzed
-#' @param phat if present, represents estimated detection probabilities 
-#'   for each object present in the project database. This breaks the 
-#'   obligation that detection functions for use in \code{dsm} need come
-#'   from \code{mrds}. 
 #' @param response response type to be modelled; choices are:
 #'   \tabular{ll}{\code{indiv} \tab - estimate individual abundance\cr
 #'                \code{group} \tab - estimate group counts abundance\cr
@@ -81,7 +76,7 @@
 # Jan 2012, Dave Miller started updating and turning into a proper
 #           R library.
 #
-dsm.fit <- function(ddfobject, phat=NULL, response, formula,
+dsm.fit <- function(ddfobject, response, formula,
                     model.defn=list(fn="gam",family="quasipoisson"), obsdata,
                     segdata, weights=NULL, link='log',convert.units=1,...){
   # list to hold various options...
@@ -117,29 +112,19 @@ dsm.fit <- function(ddfobject, phat=NULL, response, formula,
   }
 
   ### what kind of data are we working with?
-  #  - did the user supply phat?
   #  - are there covariates in the detection function?
   mcds<-TRUE
-  if(!is.null(phat)){
-    fitted.p<-phat
-    # if all the ps are the same, let's assume this is a CDS analysis
-    if(length(unique(fitted.p))==1){
-      mcds <- FALSE
-      fitted.p <- as.vector(unique(fitted.p))
-    }
-  }else{
-    fitted.p<-ddfobject$fitted
-  
-    # what were the object identifiers from ddf?
-    ddf.names <- names(fitted.p)
+  fitted.p<-ddfobject$fitted
 
-    # if we have a model with no covariates then we just pick the 1 value 
-    #  we need
-    if(ddfobject$ds$aux$ddfobj$scale$formula == "~1"){
-      mcds <- FALSE
-      fitted.p <- as.vector(unique(fitted.p))
-    }
-  }    
+  # what were the object identifiers from ddf?
+  ddf.names <- names(fitted.p)
+
+  # if we have a model with no covariates then we just pick the 1 value 
+  #  we need
+  if(ddfobject$ds$aux$ddfobj$scale$formula == "~1"){
+    mcds <- FALSE
+    fitted.p <- as.vector(unique(fitted.p))
+  }
 
   # remove the segments with 0 observations
   obsdata <- obsdata[obsdata$object %in% ddf.names,]

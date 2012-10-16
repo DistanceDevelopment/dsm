@@ -3,22 +3,15 @@
 \title{Fits a GAM to segment-specific estimates of abundance
 resulting from object-specific detection probabilities}
 \usage{
-  dsm.fit(ddfobject, phat = NULL, response, formula,
+  dsm.fit(ddfobject, response, formula,
     model.defn = list(fn = "gam", family = "quasipoisson"),
     obsdata, segdata, weights = NULL, link = "log",
     convert.units = 1, ...)
 }
 \arguments{
-  \item{ddfobject}{result from call to \code{\link{ddf}};
-  might be usurpt by the \code{phat} argument below.  If
-  \code{ddfobject} is set to \code{NULL} when strip
+  \item{ddfobject}{result from call to \code{\link{ddf}}.
+  If \code{ddfobject} is set to \code{NULL} when strip
   transects are analyzed}
-
-  \item{phat}{if present, represents estimated detection
-  probabilities for each object present in the project
-  database. This breaks the obligation that detection
-  functions for use in \code{dsm} need come from
-  \code{mrds}.}
 
   \item{response}{response type to be modelled; choices
   are: \tabular{ll}{\code{indiv} \tab - estimate individual
