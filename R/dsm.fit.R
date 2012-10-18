@@ -114,7 +114,7 @@ dsm.fit <- function(ddfobject, response, formula,
   ### what kind of data are we working with?
   #  - are there covariates in the detection function?
   mcds<-TRUE
-  fitted.p<-ddfobject$fitted
+  fitted.p <- fitted(ddfobject)
 
   # what were the object identifiers from ddf?
   ddf.names <- names(fitted.p)
