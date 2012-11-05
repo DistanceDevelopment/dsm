@@ -85,7 +85,7 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
     # set the parameters to be p
     ipo <- tweakParams(ddf.obj, p)
     # calculate the offset
-    ret <- log(2 *unique(predict(ipo, esw=TRUE, compute=TRUE)$fitted)*
+    ret <- log(2*as.vector(unique(predict(ipo,esw=TRUE, compute=TRUE)$fitted))*
             fo2data[[seglen.varname]])
     return(ret)
   }
