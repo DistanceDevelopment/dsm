@@ -43,10 +43,10 @@
 #'                        offset\cr.
 #'                      }
 #' @author Mark V. Bravington, Sharon L. Hedley. Bugs added by David L. Miller.
-#' @references 
+#' @references
 #' Williams, R., Hedley, S.L., Branch, T.A., Bravington, M.V., Zerbini, A.N. and Findlay, K.P. (2011). Chilean Blue Whales as a Case Study to Illustrate Methods to Estimate Abundance and Evaluate Conservation Status of Rare Species. Conservation Biology 25(3), 526-535.
 #' @export
-dsm.var.prop<-function(dsm.obj, pred.data,off.set, 
+dsm.var.prop<-function(dsm.obj, pred.data,off.set,
     seglen.varname='Effort', type.pred="response") {
 
   pred.data.save<-pred.data
@@ -64,7 +64,6 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
       stop("pred.data and off.set don't have the same number of elements")
     }
   }
-
 
   # pull out the ddf object
   ddf.obj <- dsm.obj$ddf
@@ -86,22 +85,22 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
     # set the parameters to be p
     ipo <- tweakParams(ddf.obj, p)
     # calculate the offset
-    ret <- log(2 *unique(predict(ipo, esw=TRUE, compute=TRUE)$fitted)* 
+    ret <- log(2 *unique(predict(ipo, esw=TRUE, compute=TRUE)$fitted)*
             fo2data[[seglen.varname]])
     return(ret)
   }
 
   # pull out the data and the call
-  callo <- gam.obj$call  
+  callo <- gam.obj$call
   fo2data <- dsm.obj$data
 
   # find the derivatives
   p0 <- tweakParams(ddf.obj) # returns the parameters to numderiv
   firstD <- numderiv( funco, p0)
-  
+
   # if the derivatives were zero, throw an error
   if(all(firstD==0)){
-    stop('Doffset/Dpars==0... really??!!') 
+    stop('Doffset/Dpars==0... really??!!')
   }
 
   # now construct the extra term...
@@ -111,15 +110,15 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
   while( dmat.name %in% names.to.avoid){
     dmat.name <- paste('.',dmat.name,sep="")
   }
-  fo2data[[ dmat.name]] <- firstD 
+  fo2data[[ dmat.name]] <- firstD
   formo[[3]] <- call( '+', formo[[3]], as.symbol(dmat.name))
   # put it all together
   paraterm<-list(list(ddf.obj$hess))
   names(paraterm) <- dmat.name
-  callo$formula <- formo 
+  callo$formula <- formo
   callo$family<-gam.obj$family
   callo$paraPen <- c(callo$paraPen, paraterm)
-  callo$data <- fo2data 
+  callo$data <- fo2data
 
   # run the model
   fit.with.pen <- eval(callo, parent.frame())
@@ -134,12 +133,12 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
 
   #names(preddo) <- names(pred.data) # if any
   dpred.db <- matrix(0, length(pred.data), length(cft))
-  
+
   # depending on whether we have response or link scale predictions...
   if(type.pred=="response"){
       tmfn <- gam.obj$family$linkinv
       dtmfn <- function(eta){sapply(eta, numderiv, f=tmfn)}
-  }else if(type.pred=="link"){ 
+  }else if(type.pred=="link"){
       tmfn <- identity
       dtmfn <- function(eta){1}
   }
@@ -148,8 +147,8 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
   for( ipg in seq_along(pred.data)) {
     # if we have a single paramter model (e.g. half-normal) need to be careful
     if(is.matrix(firstD)){
-      pred.data[[ipg]][[dmat.name]] <- matrix(0, 
-                                              nrow(pred.data[[ipg]]), 
+      pred.data[[ipg]][[dmat.name]] <- matrix(0,
+                                              nrow(pred.data[[ipg]]),
                                               ncol(firstD))
     }else{
       pred.data[[ipg]][[dmat.name]] <- rep(0, nrow(pred.data[[ipg]]))
@@ -172,19 +171,19 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
     preddo[[ipg]] <-  this.off.set %**% tmfn(lppred)
     dpred.db[ipg,] <- this.off.set %**% (dtmfn(lppred)*lpmat)
     # explanation of the above line and why we find this derivative
-    # BTW in 'varpred', there is a decoy option 'vmethod' which at the 
-    # moment has to be '"delta"', for how to deal with nonlinearity in the 
-    # "link" of 'fitobj'. Could be done by simulation instead, and that would 
-    # be more accurate (if you did enough). However, in my limited experience:
-    # once you've got a CV so big that the delta-method doesn't work, then 
-    # your estimate is officially Crap and there is not much point in 
+    # BTW in 'varpred', there is a decoy option 'vmethod' which at the
+    # moment has to be '"delta"', for how to deal with nonlinearity in the
+    # "link" of 'fitobj'. Could be done by simulation instead, and that would
+    # be more accurate (if you did enough). However, in my limited experience:
+    # once you've got a CV so big that the delta-method doesn't work, then
+    # your estimate is officially Crap and there is not much point in
     # expending extra effort to work out exactly how Crap!
-  } 
+  }
 
-  # "'vpred' is the covariance of all the summary-things." - MVB  
+  # "'vpred' is the covariance of all the summary-things." - MVB
   # so we want the diagonals if length(pred.data)>1
-  # A B A^tr 
-  vpred <- dpred.db %**% tcrossprod(vcov(fit.with.pen), dpred.db) 
+  # A B A^tr
+  vpred <- dpred.db %**% tcrossprod(vcov(fit.with.pen), dpred.db)
 
   result <- list(pred.var = vpred,
                  bootstrap = FALSE,
@@ -195,7 +194,7 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
                  dsm.object = dsm.obj,
                  model.check = model.check,
                  deriv = firstD,
-                 seglen.varname=seglen.varname, 
+                 seglen.varname=seglen.varname,
                  type.pred=type.pred
                 )
 
@@ -207,8 +206,8 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
 ####### this is all utility stuff below here, taken from Mark's packages
 
 # from Mark Bravington's handy2
-numderiv<-function (f, x0, eps = 1e-04, TWICE. = TRUE, param.name = NULL, 
-    ..., SIMPLIFY = TRUE) 
+numderiv<-function (f, x0, eps = 1e-04, TWICE. = TRUE, param.name = NULL,
+    ..., SIMPLIFY = TRUE)
 {
     if (is.null(param.name)) 
         ff <- function(x, ...) f(x, ...)
@@ -221,12 +220,12 @@ numderiv<-function (f, x0, eps = 1e-04, TWICE. = TRUE, param.name = NULL,
     n <- length(x0)
     m <- matrix(0, length(f0), n)
     for (i in 1:n) {
-        this.eps <- eps * if (x0[i] == 0) 
+        this.eps <- eps * if (x0[i] == 0)
             1
         else x0[i]
         m[, i] <- (ff(x0 + this.eps * (1:n == i), ...) - f0)/this.eps
     }
-    if (!is.null(dim(f0))) 
+    if (!is.null(dim(f0)))
         dim(m) <- c(dim(f0), n)
     if (TWICE.) {
         mc <- match.call()
@@ -234,7 +233,7 @@ numderiv<-function (f, x0, eps = 1e-04, TWICE. = TRUE, param.name = NULL,
         mc$TWICE. <- FALSE
         m <- 0.5 * (m + eval(mc, sys.frame(sys.parent())))
     }
-    if (any(dim(m) == length(m)) && SIMPLIFY) 
+    if (any(dim(m) == length(m)) && SIMPLIFY)
         m <- c(m)
     return(m)
 }
