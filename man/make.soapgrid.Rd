@@ -1,8 +1,8 @@
-\name{make_soap_grid}
-\alias{make_soap_grid}
+\name{make.soapgrid}
+\alias{make.soapgrid}
 \title{Create a knot grid for the internal part of a soap film smoother.}
 \usage{
-  make_soap_grid(bnd, n.grid)
+  make.soapgrid(bnd, n.grid)
 }
 \arguments{
   \item{bnd}{list with elements \code{x} and \code{y} which
