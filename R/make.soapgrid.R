@@ -5,19 +5,19 @@
 #'
 #' @param bnd list with elements \code{x} and \code{y} which give the locations
 #'        of the boundary vertices. The first and last elements should be the
-#'        same. 
+#'        same.
 #' @param n.grid either one number giving the number of points along the 
 #'        \code{x} and \code{y} axes that should be used to create the grid, or
 #'        a vector giving the number in the \code{x} direction, then \code{y}
 #'        direction.
 #'
 #' @return a list with elements \code{x} and \code{y}, containing the knot 
-#'         locations. 
+#'         locations.
 #'
 #' @author David L Miller
 #' @export
 #'
-make_soap_grid<-function(bnd,n.grid){
+make.soapgrid<-function(bnd,n.grid){
   # set the grid size, if the input is a 2-vec then it is m and n
   if(length(n.grid)==2){
      m<-n.grid[1]
@@ -38,7 +38,7 @@ make_soap_grid<-function(bnd,n.grid){
 
   # which bits of the grid were inSide?
   onoff<-inSide(bnd,ng$x,ng$y)
-  
+
   # remove the outside ones
   ng<-ng[onoff,]
 

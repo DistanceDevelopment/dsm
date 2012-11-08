@@ -33,12 +33,11 @@ NULL
 #'
 #' \code{segdata} - the segment data frame must have the following columns:
 #'  \tabular{ll}{
-#'    \code{x} \tab centreline of the transect (i.e. "across the transect")\cr
-#'    \code{y} \tab centre in the direction of the transect\cr
 #'    \code{Effort} \tab the effort (in terms of length of the segment)\cr
 #'    \code{Transect.Label} \tab identifier for this transect\cr
 #'    \code{Sample.Label} \tab identifier for the segment (unique!)\cr
-#'    \code{???} \tab any other environmental covariates that are required}
+#'    \code{???} \tab environmental covariates, for example \code{x} and 
+#'          \code{y}}
 #'
 #' @name dsm-data
 NULL

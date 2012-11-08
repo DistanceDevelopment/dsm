@@ -71,7 +71,7 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
   ## add the detection function object into the gam/gamm/glm object
   fit$ddf <- ddf.obj
 
-  class(fit) <- c("gam", "glm", "lm", "dsm")
+  class(fit) <- c("dsm",class(fit))
 
   ## return the model
   return(fit)
