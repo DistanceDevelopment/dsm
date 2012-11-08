@@ -12,6 +12,8 @@
 #'                \code{off.set}.
 #'                The link function is applied to the offset inside this 
 #'                function.
+#' @param type what scale should the results be on. The default is 
+#'             \code{"response"} and is almost always what you want.
 #' @param \dots any other arguments passed to \code{\link{predict.gam}} or
 #'              \code{\link{predict.glm}}.
 #' @return predicted values on the response scale (density/abundance).
@@ -21,8 +23,12 @@
 #' @aliases predict.dsm
 #'
 #' @author David L. Miller
-predict.dsm <- function(object, newdata, off.set=NULL, ...){
+predict.dsm <- function(object, newdata=NULL, off.set=NULL,
+                        type="response",...){
 
+  if(is.null(newdata)){
+    newdata <- object$data
+  }
 
   if(is.null(newdata$off.set)){
     newdata$off.set <- off.set
@@ -36,7 +42,7 @@ predict.dsm <- function(object, newdata, off.set=NULL, ...){
   class(object) <- class(object)[class(object)!="dsm"]
 
   # actually do the predict call
-  result<-predict(object, newdata, type="response",...)
+  result<-predict(object, newdata, type=type,...)
 
   return(result)
 }

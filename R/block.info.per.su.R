@@ -17,7 +17,7 @@
 #'                 num.req     \tab number of blocks needed for the unit\cr
 #'                }
 block.info.per.su <- function(block.size,data,name.su){
-  unit <- NULL   
+  unit <- NULL
   unit$name <- name.su
   num.su <- length(name.su)
   for (i in 1:num.su) {
@@ -31,7 +31,7 @@ block.info.per.su <- function(block.size,data,name.su){
     }else{
       unit$num.block[i] <- unit$num.seg[i]
     }
-    
+
     # the starting block is the last start block, plus the number of segments
     # in that last block, unless it's 1, of course
     if(i == 1){
@@ -42,13 +42,13 @@ block.info.per.su <- function(block.size,data,name.su){
   }
   unit$end.block <- cumsum(unit$num.block)
 
-  # Get number of blocks required for each sampling unit  -- 
+  # Get number of blocks required for each sampling unit  --
   #  samp units different sizes so need to get more observations than required 
   unit$num.req <- ceiling(unit$num.seg/block.size)
   unit$num.req[unit$num.req==0] <- 1
 
   # make a data.frame()
   unit <- data.frame(unit)
-  
+
   return(unit)
 }

@@ -49,6 +49,9 @@
 dsm.var.prop<-function(dsm.obj, pred.data,off.set,
     seglen.varname='Effort', type.pred="response") {
 
+  # strip dsm class so we can use gam methods
+  class(dsm.obj) <- class(dsm.obj)[class(dsm.obj)!="dsm"]
+
   pred.data.save<-pred.data
   off.set.save<-off.set
 
@@ -67,8 +70,6 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
 
   # pull out the ddf object
   ddf.obj <- dsm.obj$ddf
-  # and the gam
-  gam.obj <- dsm.obj$result
 
   # this function changes the parameters in the ddf object
   tweakParams <- function(object, params) {
@@ -91,7 +92,7 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
   }
 
   # pull out the data and the call
-  callo <- gam.obj$call
+  callo <- dsm.obj$call
   fo2data <- dsm.obj$data
 
   # find the derivatives
@@ -104,7 +105,7 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
   }
 
   # now construct the extra term...
-  formo <- gam.obj$formula
+  formo <- dsm.obj$formula
   dmat.name <- '.D1'
   names.to.avoid <- unique( c( all.names( formo), names( fo2data)))
   while( dmat.name %in% names.to.avoid){
@@ -116,27 +117,27 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
   paraterm<-list(list(ddf.obj$hess))
   names(paraterm) <- dmat.name
   callo$formula <- formo
-  callo$family<-gam.obj$family
+  callo$family <- dsm.obj$family
   callo$paraPen <- c(callo$paraPen, paraterm)
   callo$data <- fo2data
 
   # run the model
-  fit.with.pen <- eval(callo, parent.frame())
+  #fit.with.pen <- eval(callo, parent.frame())
+  fit.with.pen <- with(dsm.obj,eval(callo))
+  # strip dsm class so we can use gam methods
+  class(fit.with.pen) <- class(fit.with.pen)[class(fit.with.pen)!="dsm"]
 
   # Diagnostic from Mark
-  # check that the fitted model isn't too different, used in summary()
-  model.check<-summary(fitted(fit.with.pen) - fitted(gam.obj))
+  # check that the fitted model isn't too different, used in summary()
+  model.check <- summary(fitted(fit.with.pen) - fitted(dsm.obj))
 
   cft <- coef(fit.with.pen)
-  #preddo <- numeric(length(pred.data))
   preddo <- list(length(pred.data))
-
-  #names(preddo) <- names(pred.data) # if any
   dpred.db <- matrix(0, length(pred.data), length(cft))
 
   # depending on whether we have response or link scale predictions...
   if(type.pred=="response"){
-      tmfn <- gam.obj$family$linkinv
+      tmfn <- dsm.obj$family$linkinv
       dtmfn <- function(eta){sapply(eta, numderiv, f=tmfn)}
   }else if(type.pred=="link"){
       tmfn <- identity
@@ -158,7 +159,7 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
     # set the offset to be zero here so we can use lp
     pred.data[[ipg]]$off.set<-rep(0,nrow(pred.data[[ipg]]))
 
-    lpmat <- predict( fit.with.pen, newdata=pred.data[[ ipg]], type='lpmatrix')
+    lpmat <- predict(fit.with.pen, newdata=pred.data[[ ipg]], type='lpmatrix')
     lppred <- lpmat %**% cft
 
     # if the offset is just one number then repeat it enough times 

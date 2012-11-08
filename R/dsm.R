@@ -12,30 +12,33 @@
 #' @param observation.data observation data, see \code{\link{dsm-data}}.
 #' @param engine which model should be used for the DSM (\code{\link{glm}}/
 #'   \code{\link{gam}}/code{\link{gamm}}).
-#' @param convert.units value to alter length to width for calculation·
-#'   of the offset.·
+#' @param convert.units value to alter length to width for calculation
+#'   of the offset.
 #' @param family response distribution (popular choices include
 #'   \code{\link{quasipoisson}}, \code{\link{Tweedie}} and \code{\link{negbin}}.
 #' @param \dots anything else to be passed straight to \code{\link{gam}}.
-#' @param group should group abundance/density be modelled rather than 
+#' @param group should group abundance/density be modelled rather than
 #'  individual abundance/density? This effectively sets the \code{size} column
 #'  in \code{observation.data} to be 1.
+#' @param control the usual \code{control} argument for a \code{gam},
+#'  \code{keepData} must be \code{TRUE} or variance estimation will not work.
 #' @return a \code{\link{glm}}/\code{\link{gam}}/code{\link{gamm}} object, with
 #'  an additional element, \code{ddf} which holds the detection function object.
 #' @param gamma parameter to \code{gam()} set to a value of 1.4 (from advice in
 #   Wood (2006)) such that the \code{gam()} is inclined to not 'overfit.'.
 #'
 #' @author David L. Miller
-# @seealso·
+# @seealso
 #' @references Hedley, S. and S. T. Buckland. 2004. Spatial models for line transect sampling. JABES 9:181-199.
 #'
 #' Wood, S.N. 2006. Generalized Additive Models: An Introduction with R. CRC/Chapman & Hall.
-#' @export·
+#' @export
 # @keywords
 # @examples
 dsm <- function(formula, ddf.obj, segment.data, observation.data,
                 engine="gam", convert.units=1,
-                family=quasipoisson(link="log"), group=FALSE, gamma=1.4,...){
+                family=quasipoisson(link="log"), group=FALSE, gamma=1.4, 
+                control=list(keepData=TRUE), ...){
 
 
   ## check the formula
@@ -59,7 +62,8 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
 
   ## run the engine
   if(engine == "gam"){
-    fit <- gam(formula,family=family, data=dat, gamma=gamma,...)
+    fit <- gam(formula,family=family, data=dat, gamma=gamma, 
+               control=control, ...)
   }else if(engine == "gamm"){
     fit <- gamm(formula,family=family, data=dat, ...)
   }else if(engine == "glm"){

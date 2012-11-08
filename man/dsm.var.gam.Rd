@@ -2,7 +2,7 @@
 \alias{dsm.var.gam}
 \title{Variance estimation via Bayesian results}
 \usage{
-  dsm.var.gam(dsm.obj, pred.data, off.set,
+  dsm.var.gam(dsm.obj, pred.data, off.set = NULL,
     seglen.varname = "Effort", type.pred = "response")
 }
 \arguments{

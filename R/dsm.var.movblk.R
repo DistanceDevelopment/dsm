@@ -49,7 +49,7 @@
 #  * non-log link functions
 
 # this used to be called param.movblk.variance
-dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size, 
+dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
                            off.set, ds.uncertainty=FALSE,
                            samp.unit.name='Transect.Label',
                            progress.file=NULL, bs.file=NULL,bar=TRUE){
@@ -65,42 +65,34 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
 
   # Initialize storage
   study.area.total <- numeric(n.boot)
-  short.var <- data.frame(sumx=rep(0,nrow(pred.data)), 
+  short.var <- data.frame(sumx=rep(0,nrow(pred.data)),
                           sumx.sq=rep(0,nrow(pred.data)))
 
   # save the original off.set that was supplied
   original.offset<-off.set
 
   # Sort out sampling unit for dsm object
-  dsm.object$result$data$sampling.unit <- 
-                        dsm.object$result$data[[samp.unit.name]]
+  dsm.object$data$sampling.unit <- dsm.object$data[[samp.unit.name]]
 
   # Following line removes any transect into which missing data was 
   # detected by the call to gam and recorded in '$na.action'
-  # Consequence of this step should be that no sampling unit (transect)
+  # Consequence of this step should be that no sampling unit (transect)
   # can become part of the bootstrap when any segment has missing data.
-  name.sampling.unit <- unique(dsm.object$result$data$sampling.unit)
+  name.sampling.unit <- unique(dsm.object$data$sampling.unit)
   num.sampling.unit <- length(name.sampling.unit)
 
   # Get residuals 
-  # this replaces call to -----> resids.when.missing(dsm.object$result)
-  # need to do something about non-log links
-  ######################################
-  if(dsm.object$model.spec$response %in% c("indiv.den","group.den")){
-    obs <- dsm.object$result$data$D
-  }else{
-    obs <- dsm.object$result$data$N
-  }
-  obs[dsm.object$result$na.action]<-NA
+  obs <- dsm.object$data[[as.character(dsm.object$formula)[2]]]
+  #obs[dsm.object$result$na.action]<-NA
   fit.vals <- rep(NA,length(obs))
-  fit.vals[!is.na(obs)]<-fitted(dsm.object$result)
+  fit.vals[!is.na(obs)] <- fitted(dsm.object)
   # plus 0.001 (arbitrary) to avoid logging zero   
-  dsm.object$result$data$log.resids <- log(obs+0.001) - log(fit.vals+0.001)
-  ######################################
+  #dsm.object$result$data$log.resids <- log(obs+0.001) - log(fit.vals+0.001)
+  dsm.object$data$log.resids <- dsm.object$family$linkfun(obs)
 
   # Sort out blocks for each sampling unit
   block.info <- block.info.per.su(block.size=block.size,
-                                  data=dsm.object$result$data,
+                                  data=dsm.object$data,
                                   name.su=name.sampling.unit)
   tot.num.blocks <- sum(block.info$num.block)
   num.blocks.required <- sum(block.info$num.req)
@@ -135,16 +127,16 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
     }
   }
 
-  dsm.predict.bs <- try(dsm.predict(dsm.object,
-                                    newdata=pred.data,
-                                    off.set=off.set))
+  dsm.predict.bs <- try(predict(dsm.object,
+                                newdata=pred.data,
+                                off.set=off.set))
   if(all(class(dsm.predict.bs)=="try-error")){
     dsm.predict.bs <- rep(NA,length(short.var$sumx))
   }
 
   # Don't save all cell values for all reps, rather, 
   #  populate dataframe with machine formula components for each cell
-  vector.cell.abundances <- dsm.predict.bs 
+  vector.cell.abundances <- dsm.predict.bs
   short.var$sumx <- short.var$sumx + vector.cell.abundances
   short.var$sumx.sq <- short.var$sumx.sq + vector.cell.abundances^2
   study.area.total[1] <- sum(vector.cell.abundances, na.rm=TRUE)
@@ -168,14 +160,14 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
     }
 
     bs.blocks <- sample(block.vector, num.blocks.required, replace=TRUE)
-    bs.resids <- generate.mb.sample(num.blocks.required, block.size, 
-                                    bs.blocks, dsm.object$result$data, 
+    bs.resids <- generate.mb.sample(num.blocks.required, block.size,
+                                    bs.blocks, dsm.object$data,
                                     block.info, num.sampling.unit)
 
     # Back transform to get bootstrap observations
-    bs.samp <- dsm.object$result$data
+    bs.samp <- dsm.object$data
 
-    # if we are incirporating detection function uncertainty, then 
+    # if we are incirporating detection function uncertainty, then
     # need to resample the distances
     if(ds.uncertainty){
 
@@ -189,23 +181,23 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
 
       # call out to generate some ds data, and fit a model to that data,
       # asumming that the detection function model is correct
-      new.p<-generate.ds.uncertainty(dsm.object$ddf)
+      new.p <- generate.ds.uncertainty(dsm.object$ddf)
 
       # calculate the new offset
-      this.offset<-new.p*(exp(dsm.object$result$offset)/old.p)
+      this.offset <- new.p*(exp(dsm.object$data$off.set)/old.p)
 
       # calculate the fitted values with the new offset
-      fit <- (fitted(dsm.object$result)/exp(dsm.object$result$offset))*
+      fit <- (fitted(dsm.object$result)/exp(dsm.object$data$off.set))*
                                     this.offset
 
       # replace the offset in the model 
-      bs.samp$off.set<-log(this.offset)
+      bs.samp$off.set <- log(this.offset)
 
       # replace the offset in the prediction grid
-      off.set<-new.p*(off.set.save/old.p)
+      off.set <- new.p*(off.set.save/old.p)
     }else{
     # if we're not doing detection function uncertainty
-      fit <- fitted(dsm.object$result)
+      fit <- fitted(dsm.object)
     }
 
     if(sum(is.na(fit)) > 0 ){
@@ -214,48 +206,44 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
     }
 
     # calculate the new fitted values
-    if(dsm.object$model.spec$response %in% c("indiv.den","group.den")){
-      bs.samp$D <- fit*exp(bs.resids)  
-    }else{
-      bs.samp$N <- fit*exp(bs.resids)  
-    }
+    bs.samp[[as.character(dsm.object$formula)[2]]] <- fit*exp(bs.resids)
 
     ## Fit model to dsm bootstrap sample
 
     # Reconstruct dsm model fitting command -- this is a call to gam()
-    gam.call<-dsm.object$result$call
-    gam.call$formula<-dsm.object$result$formula
-    gam.call$family<-dsm.object$result$family
-    # if bnd or knots were used... 
-    if(!is.null(gam.call$knots)){
-      gam.call$knots <- dsm.object$model.spec$knots
-    }
-    if(!is.null(gam.call$bnd)){
-      gam.call$bnd <- dsm.object$model.spec$bnd
-    }
+    gam.call <- dsm.obj$call
+    gam.call$formula <- dsm.obj$formula
+    gam.call$family <- dsm.obj$family
+    gam.call$data <- bs.data
 
-    # put the bootstrap data into the gam call
-    gam.call$data<-bs.samp
-    
+    # run the model
+    fit.with.pen <- eval(gam.call, parent.frame())
+
+    #gam.call<-dsm.object$result$call
+    #gam.call$formula<-dsm.object$result$formula
+    #gam.call$family<-dsm.object$result$family
+
+    ## put the bootstrap data into the gam call
+    #gam.call$data<-bs.samp
+
     # Handle chaos in gam fitting caused by pathological bootstrap resample
-    dsm.bs.model <- try(eval(gam.call)) 
+    dsm.bs.model <- try(eval(gam.call),parent.frame())
 
     if(all(class(dsm.bs.model)!="try-error")){
 
-      dsm.bs.model<-list(result=dsm.bs.model)
-      class(dsm.bs.model)<-"dsm"
+      class(dsm.bs.model) <- c("dsm",class(dsm.bs.model))
 
       # Do prediction using newly fitted dsm model created from bootstrap sample
-      dsm.predict.bs <- try(dsm.predict(dsm.bs.model,
-                                        newdata=pred.data,
-                                        off.set=off.set))
+      dsm.predict.bs <- try(predict(dsm.bs.model,
+                                    newdata=pred.data,
+                                    off.set=off.set))
       if(all(class(dsm.predict.bs)=="try-error")){
         dsm.predict.bs <- rep(NA,length(fit))
       }
 
-      # Don't save all cell values for all reps, rather, 
+      # Don't save all cell values for all reps, rather,
       #  populate dataframe with machine formula components for each cell
-      vector.cell.abundances <- dsm.predict.bs 
+      vector.cell.abundances <- dsm.predict.bs
       short.var$sumx <- short.var$sumx + vector.cell.abundances
       short.var$sumx.sq <- short.var$sumx.sq + vector.cell.abundances^2
       study.area.total[i] <- sum(vector.cell.abundances, na.rm=TRUE)
@@ -272,15 +260,14 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
     if(bar){
       setTxtProgressBar(pb, i)
     }
-
   }
 
-  result <- list(short.var=short.var, 
+  result <- list(short.var=short.var,
                  study.area.total=study.area.total,
                  ds.uncertainty=ds.uncertainty,
                  bootstrap=TRUE,
                  pred.data=pred.data,
-                 n.boot=n.boot, 
+                 n.boot=n.boot,
                  off.set=original.offset,
                  block.size=block.size,
                  bs.file=bs.file,
@@ -293,6 +280,5 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
   if(bar){
     cat("\n")
   }
-
   return(result)
 }

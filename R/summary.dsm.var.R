@@ -5,7 +5,7 @@
 #' @S3method summary dsm.var
 #' @method summary dsm.var
 #' @aliases summary.dsm.var
-#' 
+#'
 #' @param object a \code{dsm.var} object
 #' @param alpha alpha level for confidence intervals
 #' @param boxplot.coef the value of \code{coef} used to calculate the outliers
@@ -16,7 +16,7 @@
 #'        with variance propagation).
 #' @param \dots unused arguments for S3 compatibility
 #' @return a summary object
-#'  
+#'
 #' @seealso dsm.var.movblk dsm.var.prop
 #' @author David L. Miller
 #'
@@ -34,14 +34,13 @@ summary.dsm.var<-function(object, alpha=0.05, boxplot.coef=1.5,
     #sinfo$pred.est <- sum(mod1.pred,na.rm=TRUE)
     sinfo$pred.est <- object$study.area.total[1]
 
-    sinfo$block.size <- object$block.size 
+    sinfo$block.size <- object$block.size
     sinfo$n.boot <- object$n.boot
     sinfo$bootstrap <- TRUE
     sinfo$ds.uncertainty <- object$ds.uncertainty
 
     # bootstrap abundances
     bootstrap.abund <- object$study.area.total
-
 
     # delta method, if necessary
     if(!object$ds.uncertainty){
@@ -58,7 +57,6 @@ summary.dsm.var<-function(object, alpha=0.05, boxplot.coef=1.5,
                  ddf.summary$average.p)^2
       # save that
       sinfo$detfct.cv <- sqrt(cvp.sq)
-
 
       # save the s.e. of N from bootstrap
       trimmed.variance <- trim.var(bootstrap.abund[is.finite(bootstrap.abund)],
@@ -159,9 +157,11 @@ summary.dsm.var<-function(object, alpha=0.05, boxplot.coef=1.5,
       sinfo$se <- sqrt(var.prop$pred.var)
     }
     # grab the predicted values
-    mod1.pred <- dsm.predict(object$dsm.object,
-                             newdata=object$pred.data,
-                             off.set=object$off.set)
+    dsm.obj <- object$dsm.obj
+    class(dsm.obj) <- c("dsm",class(dsm.obj))
+    mod1.pred <- predict(dsm.obj,
+                         newdata=object$pred.data,
+                         off.set=object$off.set)
     sinfo$pred.est <- sum(mod1.pred,na.rm=TRUE)
 
     # if we're using variance propagation, the CV is fine

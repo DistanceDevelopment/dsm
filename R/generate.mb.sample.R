@@ -6,7 +6,7 @@
 #' @param  num.blocks.required number of blocks that we need.
 #' @param  block.size number of segments per block.
 #' @param  which.blocks which blocks should be sampled.
-#' @param  dsm.data the \code{$data} element of the result of a call to 
+#' @param  dsm.data the \code{$data} element of the result of a call to
 #'         \code{dsm.fit}.
 #' @param  unit.info result of calling \code{\link{block.info.per.su}}.
 #' @param  n.units number of sampling units.
@@ -14,7 +14,7 @@
 #' @return vector of log-residuals
 #'
 #' @export
-generate.mb.sample <- function(num.blocks.required, block.size, which.blocks, 
+generate.mb.sample <- function(num.blocks.required, block.size, which.blocks,
                                 dsm.data, unit.info, n.units){
 
   bs <- NULL
@@ -25,7 +25,7 @@ generate.mb.sample <- function(num.blocks.required, block.size, which.blocks,
   bs.data <- c()
 
   for(i in 1:num.blocks.required){
-    ## find the sampling unit that the block is in 
+    ## find the sampling unit that the block is in
 
     # is the block a start or end point for sampling unit?
     j<-which(bs$block[i] == unit.info$start.block)
@@ -58,9 +58,9 @@ generate.mb.sample <- function(num.blocks.required, block.size, which.blocks,
     # append this to the data
     bs.data <- rbind(bs.data, x.block)
   }
-    
+
   # Now need to map this onto data vector so same length 
-  # (ie chopping off unwanted bits of blocks)
+  # (ie chopping off unwanted bits of blocks)
 
   temp <- bs.data$log.resids
 
@@ -72,10 +72,10 @@ generate.mb.sample <- function(num.blocks.required, block.size, which.blocks,
     tran.response <- temp[1:unit.info$num.seg[j]]
     # remove all of the ones we sampled (i.e. if we over sampled
     # make sure that we get rid of them too)
-    temp <- temp[-(1:tb)] 
+    temp <- temp[-(1:tb)]
 
     # store the result
-    bs.response <- c(bs.response,tran.response) 
-  } 
+    bs.response <- c(bs.response,tran.response)
+  }
   return(bs.response)
 }

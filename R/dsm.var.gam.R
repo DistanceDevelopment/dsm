@@ -13,7 +13,7 @@
 #' @param off.set a a vector or list of vectors with as many elements as there 
 #'        are in \code{pred.data}. Each vector is as long as the number of
 #'        rows in the corresponding element of \code{pred.data}. These give
-#'        the area associated with each prediction point. 
+#'        the area associated with each prediction point.
 #' @param seglen.varname name for the column which holds the segment length 
 #'        (default value "Effort"). 
 #' @param type.pred should the predictions be on the "response" or "link" scale?
@@ -32,14 +32,11 @@
 #' @author David L. Miller.
 # @references 
 #' @export
-
-### TODO
-# write it!
-# references
-
-
-dsm.var.gam<-function(dsm.obj, pred.data,off.set, 
+dsm.var.gam<-function(dsm.obj, pred.data,off.set=NULL,
     seglen.varname='Effort', type.pred="response") {
+
+  # strip dsm class so we can use gam methods
+  class(dsm.obj) <- class(dsm.obj)[class(dsm.obj)!="dsm"]
 
   pred.data.save<-pred.data
   off.set.save<-off.set
@@ -57,33 +54,30 @@ dsm.var.gam<-function(dsm.obj, pred.data,off.set,
     }
   }
 
-  # and the gam
-  gam.obj <- dsm.obj$result
-
   # run the model
-  fit.with.pen <- gam.obj
+  fit.with.pen <- dsm.obj
 
-  cft <- coef(fit.with.pen)
 
-  dpred.db <- matrix(0, length(pred.data), length(cft))
-  
   # depending on whether we have response or link scale predictions...
   if(type.pred=="response"){
-      tmfn <- gam.obj$family$linkinv
+      tmfn <- dsm.obj$family$linkinv
       dtmfn <- function(eta){sapply(eta, numderiv, f=tmfn)}
-  }else if(type.pred=="link"){ 
+  }else if(type.pred=="link"){
       tmfn <- identity
       dtmfn <- function(eta){1}
   }
 
-  # loop over the prediction grids
-  for( ipg in seq_along(pred.data)) {
+  # grab the coefficients
+  cft <- coef(fit.with.pen)
+  dpred.db <- matrix(0, length(pred.data), length(cft))
 
+  # loop over the prediction grids
+  for(ipg in seq_along(pred.data)){
     ### fancy lp matrix stuff
     # set the offset to be zero here so we can use lp
     pred.data[[ipg]]$off.set<-rep(0,nrow(pred.data[[ipg]]))
 
-    lpmat <- predict( fit.with.pen, newdata=pred.data[[ ipg]], type='lpmatrix')
+    lpmat <- predict(fit.with.pen, newdata=pred.data[[ ipg]], type='lpmatrix')
     lppred <- lpmat %**% cft
 
     # if the offset is just one number then repeat it enough times 
@@ -94,12 +88,12 @@ dsm.var.gam<-function(dsm.obj, pred.data,off.set,
     }
 
     dpred.db[ipg,] <- this.off.set %**% (dtmfn(lppred)*lpmat)
-  } 
+  }
 
-  # "'vpred' is the covariance of all the summary-things." - MVB  
+  # "'vpred' is the covariance of all the summary-things." - MVB
   # so we want the diagonals if length(pred.data)>1
-  # A B A^tr 
-  vpred <- dpred.db %**% tcrossprod(vcov(fit.with.pen), dpred.db) 
+  # A B A^tr
+  vpred <- dpred.db %**% tcrossprod(vcov(fit.with.pen), dpred.db)
 
   result <- list(pred.var = vpred,
                  bootstrap = FALSE,
@@ -107,7 +101,7 @@ dsm.var.gam<-function(dsm.obj, pred.data,off.set,
                  off.set = off.set.save,
                  model = fit.with.pen,
                  dsm.object = dsm.obj,
-                 seglen.varname=seglen.varname, 
+                 seglen.varname=seglen.varname,
                  type.pred=type.pred
                 )
 

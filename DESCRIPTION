@@ -13,16 +13,17 @@ Description: This library implements density surface modelling of line
     Hedley, S.L., S.T. Buckland and D.L. Borchers.  2004. "Spatial
     distance sampling methods" pp 48-70 in Advanced Distance Sampling,
     Buckland, S.T. et al. (eds). Oxford University Press.
-Version: 1.2
+Version: 2.0
 URL: http://github.com/dill/dsm
-Date: 2012-08-17
+Date: 2012-11-08
 Depends:
-    R (>= 2.10.0),mgcv,mrds,ggplot2,vcd
+    R (>= 2.10.0),
+    mgcv (>= 1.7),
+    mrds,ggplot2,vcd
 Collate:
-    'dsm.fit.R'
-    'dsm.check.R'
-    'dsm.predict.R'
-    'makesoapgrid.R'
+    'dsm.R'
+    'predict.dsm.R'
+    'make.soapgrid.R'
     'zzz.R'
     'dsm.var.movblk.R'
     'dsm.var.prop.R'
@@ -33,11 +34,12 @@ Collate:
     'dsm-package.R'
     'latlong2km.R'
     'ddf.model.description.R'
-    'print.summary.dsm.R'
-    'summary.dsm.R'
     'print.summary.dsm.var.R'
     'summary.dsm.var.R'
     'print.dsm.R'
     'print.dsm.var.R'
     'plot.dsm.var.R'
     'dsm.var.gam.R'
+    'make.data.R'
+    'summary.dsm.R'
+    'plot.dsm.R'
