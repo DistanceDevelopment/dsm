@@ -12,7 +12,7 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
   # truncation value picked up from metadata contained within ddfobject
   # No truncation for strip transects
   if (!is.null(ddfobject)){
-     obsdata<-obsdata[obsdata[,distance.name]<=ddfobject$meta.data$width,]
+     obsdata <- obsdata[obsdata[,distance.name]<=ddfobject$meta.data$width,]
   }
 
   # Estimating group abundance/density
@@ -40,11 +40,11 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
                                 list(obsdata[,segnum.name]), sum)
     off.set <- "none"
   }else if(response %in% c("N","abundance")){
-    responsedata <- aggregate(obsdata[,cluster.name]/fitted.p,
+    responsedata <- aggregate(obsdata[,cluster.name],
                               list(obsdata[,segnum.name]), sum)
     off.set <- "eff.area"
   }else if(response %in% c("Nhat","abundance.est")){
-    responsedata <- aggregate(obsdata[,cluster.name],
+    responsedata <- aggregate(obsdata[,cluster.name]/fitted.p,
                               list(obsdata[,segnum.name]), sum)
     off.set<-"area"
   }

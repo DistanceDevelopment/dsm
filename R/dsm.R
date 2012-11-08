@@ -37,7 +37,7 @@
 # @examples
 dsm <- function(formula, ddf.obj, segment.data, observation.data,
                 engine="gam", convert.units=1,
-                family=quasipoisson(link="log"), group=FALSE, gamma=1.4, 
+                family=quasipoisson(link="log"), group=FALSE, gamma=1.4,
                 control=list(keepData=TRUE), ...){
 
 
@@ -62,7 +62,7 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
 
   ## run the engine
   if(engine == "gam"){
-    fit <- gam(formula,family=family, data=dat, gamma=gamma, 
+    fit <- gam(formula,family=family, data=dat, gamma=gamma,
                control=control, ...)
   }else if(engine == "gamm"){
     fit <- gamm(formula,family=family, data=dat, ...)
