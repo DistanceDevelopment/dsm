@@ -1,5 +1,5 @@
 make.data <- function(response, ddfobject, segdata, obsdata, group,
-                      convert.units){
+                      convert.units, availability){
 
   # probably want to do something smart here...
   seglength.name<-'Effort'
@@ -32,19 +32,19 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
 
   ## Aggregate response values of the sightings over segments
   if(response %in% c("D","density")){
-      responsedata <- aggregate(obsdata[,cluster.name],
+      responsedata <- aggregate(obsdata[,cluster.name]/availability,
                                 list(obsdata[,segnum.name]), sum) 
     off.set <- "none"
   }else if(response %in% c("Dhat","density.est")){
-      responsedata <- aggregate(obsdata[,cluster.name]/fitted.p,
+      responsedata <- aggregate(obsdata[,cluster.name]/(fitted.p*availability),
                                 list(obsdata[,segnum.name]), sum)
     off.set <- "none"
   }else if(response %in% c("N","abundance")){
-    responsedata <- aggregate(obsdata[,cluster.name],
+    responsedata <- aggregate(obsdata[,cluster.name]/availability,
                               list(obsdata[,segnum.name]), sum)
     off.set <- "eff.area"
   }else if(response %in% c("Nhat","abundance.est")){
-    responsedata <- aggregate(obsdata[,cluster.name]/fitted.p,
+    responsedata <- aggregate(obsdata[,cluster.name]/(fitted.p*availability),
                               list(obsdata[,segnum.name]), sum)
     off.set<-"area"
   }

@@ -22,6 +22,10 @@
 #'  in \code{observation.data} to be 1.
 #' @param control the usual \code{control} argument for a \code{gam},
 #'  \code{keepData} must be \code{TRUE} or variance estimation will not work.
+#' @param availability an availability bias used to scale the counts/estimated 
+#'        counts by. If we have \code{N} animals in a segment, then 
+#'        \code{N/availability} will be entered into the model. Uncertainty in
+#'        the availability is not handled at present.
 #' @return a \code{\link{glm}}/\code{\link{gam}}/code{\link{gamm}} object, with
 #'  an additional element, \code{ddf} which holds the detection function object.
 #' @param gamma parameter to \code{gam()} set to a value of 1.4 (from advice in
@@ -38,7 +42,7 @@
 dsm <- function(formula, ddf.obj, segment.data, observation.data,
                 engine="gam", convert.units=1,
                 family=quasipoisson(link="log"), group=FALSE, gamma=1.4,
-                control=list(keepData=TRUE), ...){
+                control=list(keepData=TRUE), availability=1,...){
 
 
   ## check the formula
@@ -58,14 +62,23 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
 
   ## build the data
   dat <- make.data(response, ddf.obj, segment.data, observation.data,
-                   group, convert.units)
+                   group, convert.units, availability)
+
+  # handler to suppress the "matrix not positive definite message...
+  # from: http://romainfrancois.blog.free.fr/index.php?post/2009/05/20/Disable-specific-warnings
+  h <- function(w){
+    if(any(grepl("matrix not positive definite",w))){
+      invokeRestart("muffleWarning")
+    }
+  }
 
   ## run the engine
   if(engine == "gam"){
-    fit <- gam(formula,family=family, data=dat, gamma=gamma,
-               control=control, ...)
+    fit <- withCallingHandlers(gam(formula,family=family, data=dat, gamma=gamma,
+               control=control, ...), warning = h)
   }else if(engine == "gamm"){
-    fit <- gamm(formula,family=family, data=dat, ...)
+    fit <- withCallingHandlers(gamm(formula,family=family, data=dat,
+                gamma=gamma,control=control, ...), warning = h)
   }else if(engine == "glm"){
     fit <- glm(formula,family=family, data=dat, ...)
   }else{
