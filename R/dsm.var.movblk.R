@@ -211,23 +211,16 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
     ## Fit model to dsm bootstrap sample
 
     # Reconstruct dsm model fitting command -- this is a call to gam()
-    gam.call <- dsm.obj$call
-    gam.call$formula <- dsm.obj$formula
-    gam.call$family <- dsm.obj$family
-    gam.call$data <- bs.data
-
-    # run the model
-    fit.with.pen <- eval(gam.call, parent.frame())
-
-    #gam.call<-dsm.object$result$call
-    #gam.call$formula<-dsm.object$result$formula
-    #gam.call$family<-dsm.object$result$family
+    gam.call <- dsm.object$call
+    gam.call$formula <- dsm.object$formula
+    gam.call$family <- dsm.object$family
 
     ## put the bootstrap data into the gam call
-    #gam.call$data<-bs.samp
+    gam.call$data<-bs.samp
 
     # Handle chaos in gam fitting caused by pathological bootstrap resample
-    dsm.bs.model <- try(eval(gam.call),parent.frame())
+    #dsm.bs.model <- try(eval(gam.call),parent.frame())
+    dsm.bs.model <- try(with(dsm.object,eval(gam.call)))
 
     if(all(class(dsm.bs.model)!="try-error")){
 

@@ -25,10 +25,10 @@ print.summary.dsm.var<-function(x,...){
 
     cat("Boxplot coeff     :",x$boxplot.coef,"\n")
     cat("Replicates        :",x$n.boot,"\n")
-    cat("Outliers          :",x$boot.outliers,"\n") 
-    cat("Infinites         :",x$boot.infinite,"\n") 
-    cat("NAs               :",x$boot.NA,"\n")       
-    cat("NaNs              :",x$boot.NaN,"\n")      
+    cat("Outliers          :",x$boot.outliers,"\n")
+    cat("Infinites         :",x$boot.infinite,"\n")
+    cat("NAs               :",x$boot.NA,"\n")
+    cat("NaNs              :",x$boot.NaN,"\n")
     cat("Usable replicates : ",x$boot.usable,
                               " (",100*(1-x$trim.prop),"%)\n",sep="")
 
@@ -40,7 +40,7 @@ print.summary.dsm.var<-function(x,...){
                      x$pred.est,
                      x$pred.est * asymp.ci.c.term)
       names(asymp.tot) <- c("5%","Mean","95%")
-   
+
       cat("Approximate asymptotic bootstrap confidence interval:\n")
       print(asymp.tot)
       cat("(Using delta method)\n")
@@ -66,13 +66,13 @@ print.summary.dsm.var<-function(x,...){
     cat("\n")
 
     # delta method asymptotic CI
-    unconditional.cv.square <- x$cv^2 
+    unconditional.cv.square <- x$cv^2
     asymp.ci.c.term <- exp(1.96*sqrt(log(1+unconditional.cv.square)))
     asymp.tot <- c(x$pred.est / asymp.ci.c.term,
                    x$pred.est,
                    x$pred.est * asymp.ci.c.term)
     names(asymp.tot) <- c("5%","Mean","95%")
-   
+
     cat("Approximate asymptotic confidence interval:\n")
     print(asymp.tot)
     cat("(Using delta method)\n")

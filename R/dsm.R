@@ -76,9 +76,11 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
   if(engine == "gam"){
     fit <- withCallingHandlers(gam(formula,family=family, data=dat, gamma=gamma,
                control=control, ...), warning = h)
+    fit$gamma <- gamma
   }else if(engine == "gamm"){
     fit <- withCallingHandlers(gamm(formula,family=family, data=dat,
                 gamma=gamma,control=control, ...), warning = h)
+    fit$gamma <- gamma
   }else if(engine == "glm"){
     fit <- glm(formula,family=family, data=dat, ...)
   }else{
