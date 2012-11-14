@@ -122,8 +122,8 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
   callo$data <- fo2data
 
   # run the model
-  #fit.with.pen <- eval(callo, parent.frame())
-  fit.with.pen <- with(dsm.obj,eval(callo))
+  fit.with.pen <- with(dsm.obj,withCallingHandlers(eval(callo),
+                                       warning=matrixnotposdef.handler))
   # strip dsm class so we can use gam methods
   class(fit.with.pen) <- class(fit.with.pen)[class(fit.with.pen)!="dsm"]
 
@@ -137,15 +137,15 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
 
   # depending on whether we have response or link scale predictions...
   if(type.pred=="response"){
-      tmfn <- dsm.obj$family$linkinv
-      dtmfn <- function(eta){sapply(eta, numderiv, f=tmfn)}
+    tmfn <- dsm.obj$family$linkinv
+    dtmfn <- function(eta){sapply(eta, numderiv, f=tmfn)}
   }else if(type.pred=="link"){
-      tmfn <- identity
-      dtmfn <- function(eta){1}
+    tmfn <- identity
+    dtmfn <- function(eta){1}
   }
 
   # loop over the prediction grids
-  for( ipg in seq_along(pred.data)) {
+  for(ipg in seq_along(pred.data)){
     # if we have a single paramter model (e.g. half-normal) need to be careful
     if(is.matrix(firstD)){
       pred.data[[ipg]][[dmat.name]] <- matrix(0,

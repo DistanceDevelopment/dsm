@@ -64,22 +64,15 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
   dat <- make.data(response, ddf.obj, segment.data, observation.data,
                    group, convert.units, availability)
 
-  # handler to suppress the "matrix not positive definite message...
-  # from: http://romainfrancois.blog.free.fr/index.php?post/2009/05/20/Disable-specific-warnings
-  h <- function(w){
-    if(any(grepl("matrix not positive definite",w))){
-      invokeRestart("muffleWarning")
-    }
-  }
-
   ## run the engine
   if(engine == "gam"){
     fit <- withCallingHandlers(gam(formula,family=family, data=dat, gamma=gamma,
-               control=control, ...), warning = h)
+               control=control, ...), warning = matrixnotposdef.handler)
     fit$gamma <- gamma
   }else if(engine == "gamm"){
     fit <- withCallingHandlers(gamm(formula,family=family, data=dat,
-                gamma=gamma,control=control, ...), warning = h)
+                                    gamma=gamma,control=control, ...),
+                               warning = matrixnotposdef.handler)
     fit$gamma <- gamma
   }else if(engine == "glm"){
     fit <- glm(formula,family=family, data=dat, ...)

@@ -29,8 +29,7 @@
 #'                      \code{model}\tab the fitted model with the extra term\cr
 #'                      \code{dsm.object} \tab the original model, as above
 #'                      }
-#' @author David L. Miller.
-# @references 
+#' @author David L. Miller
 #' @export
 dsm.var.gam<-function(dsm.obj, pred.data,off.set=NULL,
     seglen.varname='Effort', type.pred="response") {
@@ -54,9 +53,7 @@ dsm.var.gam<-function(dsm.obj, pred.data,off.set=NULL,
     }
   }
 
-  # run the model
   fit.with.pen <- dsm.obj
-
 
   # depending on whether we have response or link scale predictions...
   if(type.pred=="response"){

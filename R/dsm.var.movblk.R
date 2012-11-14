@@ -46,7 +46,6 @@
 #  * new sampler doesn't do covariates at the moment
 #  * is the sample size correct?
 #  * should we be calculating the offset in here?
-#  * non-log link functions
 
 # this used to be called param.movblk.variance
 dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
@@ -58,8 +57,6 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
   # function uncertainty
   if(ds.uncertainty &
      dsm.object$ddf$ds$aux$ddfobj$scale$formula != "~1"){
-#          dsm.object$model.spec$response=="indiv.est"|
-#          dsm.object$model.spec$response=="group.est")){
     stop("Detection function uncertainty with covariates is not supported")
   }
 
@@ -83,11 +80,8 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
 
   # Get residuals 
   obs <- dsm.object$data[[as.character(dsm.object$formula)[2]]]
-  #obs[dsm.object$result$na.action]<-NA
   fit.vals <- rep(NA,length(obs))
   fit.vals[!is.na(obs)] <- fitted(dsm.object)
-  # plus 0.001 (arbitrary) to avoid logging zero   
-  #dsm.object$result$data$log.resids <- log(obs+0.001) - log(fit.vals+0.001)
   dsm.object$data$log.resids <- dsm.object$family$linkfun(obs)
 
   # Sort out blocks for each sampling unit
@@ -147,7 +141,8 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
                 sep=",",col.names=FALSE)
   }
 
-  off.set.save<-off.set
+  # save the offset
+  off.set.save <- off.set
 
   # Start bootstrapping
   for(i in 2:n.boot){
@@ -219,8 +214,8 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
     gam.call$data<-bs.samp
 
     # Handle chaos in gam fitting caused by pathological bootstrap resample
-    #dsm.bs.model <- try(eval(gam.call),parent.frame())
-    dsm.bs.model <- try(with(dsm.object,eval(gam.call)))
+    dsm.bs.model <- try(with(dsm.object,withCallingHandlers(eval(gam.call),
+                                           warning = matrixnotposdef.handler)))
 
     if(all(class(dsm.bs.model)!="try-error")){
 

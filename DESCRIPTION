@@ -43,3 +43,4 @@ Collate:
     'make.data.R'
     'summary.dsm.R'
     'plot.dsm.R'
+    'matrixnotposdef.handler.R'
