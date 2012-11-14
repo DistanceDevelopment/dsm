@@ -6,7 +6,8 @@ or density.}
   dsm(formula, ddf.obj, segment.data, observation.data,
     engine = "gam", convert.units = 1,
     family = quasipoisson(link = "log"), group = FALSE,
-    gamma = 1.4, control = list(keepData = TRUE), ...)
+    gamma = 1.4, control = list(keepData = TRUE),
+    availability = 1, ...)
 }
 \arguments{
   \item{formula}{formula for the surface. This should be a
@@ -46,6 +47,12 @@ or density.}
   \item{control}{the usual \code{control} argument for a
   \code{gam}, \code{keepData} must be \code{TRUE} or
   variance estimation will not work.}
+
+  \item{availability}{an availability bias used to scale
+  the counts/estimated counts by. If we have \code{N}
+  animals in a segment, then \code{N/availability} will be
+  entered into the model. Uncertainty in the availability
+  is not handled at present.}
 
   \item{gamma}{parameter to \code{gam()} set to a value of
   1.4 (from advice in}

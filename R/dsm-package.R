@@ -14,16 +14,17 @@ NULL
 #'
 #' @name offsets
 #'
-NULL 
+NULL
 
 
 #' Data format for DSM
 #'
-#' Two data frame must be provided to \code{\link{dsm.fit}}. They are referred
-#' to as \code{obsdata} and \code{segdata} (for observation and segment data,
-#' respectively.
+#' Two data frame must be provided to \code{\link{dsm}}. They are referred
+#' to as \code{observation.data} and \code{segment.data} (for observation 
+#' and segment data, respectively.
 #'
-#' \code{obsdata} - the observation data frame must have the following columns:
+#' \code{observation.data} - the observation data frame must have the 
+#' following columns:
 #' \tabular{ll}{\code{object} \tab unique object identifier \cr
 #'    \code{Sample.Label} \tab the identifier for the segment that the 
 #'      observation occurred in \cr
@@ -31,7 +32,7 @@ NULL
 #'      individuals) \cr
 #'    \code{distance} \tab perpendicular/radial distance to observation}
 #'
-#' \code{segdata} - the segment data frame must have the following columns:
+#' \code{segment.data} - the segment data frame must have the following columns:
 #'  \tabular{ll}{
 #'    \code{Effort} \tab the effort (in terms of length of the segment)\cr
 #'    \code{Transect.Label} \tab identifier for this transect\cr

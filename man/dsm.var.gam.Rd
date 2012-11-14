@@ -46,6 +46,6 @@
   between the two variance components
 }
 \author{
-  David L. Miller.
+  David L. Miller
 }
 
