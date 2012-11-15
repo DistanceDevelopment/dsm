@@ -50,7 +50,7 @@ NULL
 #' groups of dolphins The group size was recorded, as well as the Beaufort
 #' sea state at the time of the observation. Coordinates for each observation
 #' and bathymetry data were also available as covariates for the analysis. A 
-#' complete example analysis is provided as an online appendix.
+#' complete example analysis is provided at \url{https://github.com/dill/dsm/wiki/mexico-analysis}.
 #'
 #' @name mexdolphins
 #' @docType data

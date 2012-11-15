@@ -48,7 +48,8 @@ $ survey.area:'data.frame':  45 obs. of  2 variables:
   the time of the observation. Coordinates for each
   observation and bathymetry data were also available as
   covariates for the analysis. A complete example analysis
-  is provided as an online appendix.
+  is provided at
+  \url{https://github.com/dill/dsm/wiki/mexico-analysis}.
 }
 \keyword{datasets}
 
