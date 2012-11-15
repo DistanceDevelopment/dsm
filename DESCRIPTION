@@ -21,7 +21,7 @@ Depends:
     mgcv (>= 1.7),
     mrds,ggplot2
 Suggests:
-    Distance
+    Distance, maptools
 Collate:
     'dsm.R'
     'predict.dsm.R'
