@@ -23,7 +23,7 @@ generate.ds.uncertainty<-function(ds.object){
   # how many samples do we have so far?
   n.samps<-0
   dists<-c()
-  
+
   # create an object to hold the parameters
   pars<-list()
   pars$scale<-ds.object$ds$aux$ddfobj$scale$parameters
@@ -33,7 +33,7 @@ generate.ds.uncertainty<-function(ds.object){
   if(!is.null(ds.object$ds$aux$ddfobj$adjustment$parameters)){
     pars$adjustment<-ds.object$ds$aux$ddfobj$adjustment$parameters
   }
-  
+
   # make sure that a model gets fitted
   dud.df<-TRUE
 
@@ -42,7 +42,7 @@ generate.ds.uncertainty<-function(ds.object){
     # directly simulate...
     if(ds.object$ds$aux$ddfobj$type=="hn" &
         is.null(ds.object$ds$aux$ddfobj$adjustment$parameters)){
-    
+
       dists<-abs(rnorm(n.ds.samples,mean=0,sd=exp(pars$scale)))
 
     # otherwise we need to do some rejection sampling
@@ -56,8 +56,8 @@ generate.ds.uncertainty<-function(ds.object){
       width <- ds.object$ds$aux$width
 
       while(n.samps < n.ds.samples){
-    
-        # how many samples should we take?      
+
+        # how many samples should we take?
         this.n.samps <- n.mult*(n.ds.samples-n.samps)
 
         # generate some new distances
@@ -71,12 +71,12 @@ generate.ds.uncertainty<-function(ds.object){
                                     check=FALSE)$xmat
         ddfobj <- mrds:::create.ddfobj(as.formula(ds.object$dsmodel),xmat,
                             ds.object$meta.data,pars)
-    
+
         # generate acceptance probability
         U <- runif(this.n.samps)
-    
+
         ### do the rejection...
-        ### (evaluate the -log(L) then backtransform per-observation)
+        ### (evaluate the -log(L) then backtransform per-observation)
         ### ONLY line transect at the moment!!
         ##inout <- U < exp(-mrds:::flpt.lnl(ds.object$par,ddfobj,
         ##              misc.options=list(width=width,
@@ -89,12 +89,12 @@ generate.ds.uncertainty<-function(ds.object){
                                              standardize=FALSE, width=width)
 
         dists <- c(dists,new.dists$distance[inout])
-    
+
         n.samps <- length(dists)
 
         # how many did we accept?
         #cat("accepted",sum(inout),"/",this.n.samps,"\n")
-  
+
         # update the number of extra samples we make by inverting the ratio
         # of accepted to generated this round
         n.mult <- ceiling(1/(sum(inout)/this.n.samps))
@@ -114,8 +114,8 @@ generate.ds.uncertainty<-function(ds.object){
     ddf.call$data <- dists
     ddf.call$meta.data <- ds.object$meta.data
     ddf.call$dsmodel <- as.formula(ds.object$dsmodel)
-    ddf.fitted <- try(eval(ddf.call))
-    
+    ddf.fitted <- try(with(ds.object,eval(ddf.call)))
+
     # if it all went well, then set dud.df to FALSE and quit the loop
     if(all(class(ddf.fitted)!="try-error")){
       dud.df <- FALSE

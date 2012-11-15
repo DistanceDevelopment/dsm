@@ -182,7 +182,7 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
       this.offset <- new.p*(exp(dsm.object$data$off.set)/old.p)
 
       # calculate the fitted values with the new offset
-      fit <- (fitted(dsm.object$result)/exp(dsm.object$data$off.set))*
+      fit <- (fitted(dsm.object)/exp(dsm.object$data$off.set))*
                                     this.offset
 
       # replace the offset in the model 
