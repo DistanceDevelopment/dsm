@@ -19,7 +19,9 @@ Date: 2012-11-08
 Depends:
     R (>= 2.10.0),
     mgcv (>= 1.7),
-    mrds,ggplot2,vcd
+    mrds,ggplot2
+Suggests:
+    Distance
 Collate:
     'dsm.R'
     'predict.dsm.R'

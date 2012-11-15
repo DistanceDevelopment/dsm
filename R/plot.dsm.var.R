@@ -18,11 +18,24 @@
 #' @param observations should observations be plotted?
 #' @param plot actually plot the map, or just return a \code{ggplot2} object?
 #' @param boxplot.coef control trimming (as in \code{summary.dsm.var}), only
-#'        has an effect if the bootstrap file was saved. 
-#' @param x.name name of the variable to plot as the x axis
-#' @param y.name name of the variable to plot as the y axis
-#' @param \dots any arguments that can usually be passed to a 
+#'        has an effect if the bootstrap file was saved.
+#' @param x.name name of the variable to plot as the x axis.
+#' @param y.name name of the variable to plot as the y axis.
+#' @param gg.grad optional \code{\link{ggplot}} gradient object.
+#' @param \dots any other arguments
 #' @return a plot 
+#'
+#' @section Details:
+#'
+#'  In order to get plotting to work with \code{\link{dsm.var.prop}} and
+#'  \code{\link{dsm.var.gam}}, one must first format the data correctly since
+#'  these functions are designed to compute very general summaries. One summary
+#'  is calculated for each element of the list \code{pred} supplied to
+#'  \code{dsm.var.prop} and \code{dsm.var.gam}.
+#'
+#'  For a plot of uncertainty over a prediction grid, \code{pred} (a
+#'  \code{data.frame}), say, we can create the correct format by simply using
+#'  \code{pred.new <- splot(pred,1:nrow(pred))}.
 #' 
 #' @author David L. Miller
 #'
@@ -32,10 +45,16 @@
 plot.dsm.var<-function(x, poly=NULL, limits=NULL, breaks=NULL,
                        legend.breaks=NULL, xlab="x", ylab="y", 
                        observations=TRUE, plot=TRUE, boxplot.coef=1.5, 
-                       x.name="x", y.name="y",...){
+                       x.name="x", y.name="y", gg.grad=NULL, ...){
 
+  # I am exactly this lazy, sorry
   object <- x
   rm(x)
+
+  # if the data isn't formatted correctly...
+  if(length(object$pred)==1){
+    stop("Looks like you're calling plot on a whole area summary, see ?plot.dsm.var for how to format your data correctly for plotting")
+  }
 
   # if we did used the random effects trick, collapse everything down
   if(!object$bootstrap){
@@ -53,10 +72,7 @@ plot.dsm.var<-function(x, poly=NULL, limits=NULL, breaks=NULL,
       stop("No spatial data to create plot, need columns 'width' and 'height' in prediction data")
   }
 
-  # estimate from prediction
-  #mod.pred <- dsm.predict(object$dsm.object,
-  #                        newdata=object$pred.data,
-  #                        off.set=object$off.set)
+  # predictions on the grid, from dsm.var.*
   mod.pred <- unlist(object$pred)
 
   if(object$bootstrap){
@@ -127,8 +143,6 @@ plot.dsm.var<-function(x, poly=NULL, limits=NULL, breaks=NULL,
       cell.cv <- sqrt(cvp.sq+cell.cv.sq)
     }
 
-
-
   }else if(object$bootstrap==FALSE){
     # varprop stuff
     # pull out the standard errors
@@ -147,7 +161,10 @@ plot.dsm.var<-function(x, poly=NULL, limits=NULL, breaks=NULL,
   }
 
   if(is.null(breaks)){
-    breaks <- seq(min(cell.cv),max(cell.cv),len=20)
+    breaks <- quantile(cell.cv)
+    names(breaks) <- NULL
+    #breaks <- seq(min(cell.cv),max(cell.cv),len=5)
+    breaks <- round(breaks,2)
   }
   if(is.null(legend.breaks)){
     legend.breaks <- breaks
@@ -162,18 +179,22 @@ plot.dsm.var<-function(x, poly=NULL, limits=NULL, breaks=NULL,
   plotdata$y <- plotdata[[y.name]]
 
   # build the plot
-  gg.opts <- opts(panel.grid.major=theme_blank(),
-                  panel.grid.minor=theme_blank(),
-                  panel.background=theme_rect(),
-                  legend.key=theme_blank())
+  gg.opts <- theme(panel.grid.major=element_blank(),
+                  panel.grid.minor=element_blank(),
+                  panel.background=element_blank(),
+                  legend.key=element_blank())
   p <- ggplot(plotdata) + gg.opts
   p <- p + geom_tile(aes(x=x, y=y, fill=cell.cv, width=width, height=height))
   p <- p + coord_equal()
-  p <- p + scale_fill_gradientn(colours=heat_hcl(length(breaks)-1),
-                                limits=limits,
-                                values=breaks,
-                                rescaler = function(x, ...) x, oob = identity,
-                                breaks=legend.breaks)
+
+  if(is.null(gg.grad)){
+    p <- p + scale_fill_gradient(low="white", high="black",
+                                 limits=limits,
+                                 rescaler = function(x, ...) x, oob = identity,
+                                 breaks=legend.breaks)
+  }else{
+    p <- p + gg.grad
+  }
 
   if(!is.null(poly)){
     poly$x <- poly[[x.name]]
