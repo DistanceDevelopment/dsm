@@ -19,9 +19,8 @@ Date: 2012-11-08
 Depends:
     R (>= 2.10.0),
     mgcv (>= 1.7),
-    mrds,ggplot2
+    mrds,ggplot2,Distance
 Suggests:
-    Distance,
     maptools
 Collate:
     'dsm.R'

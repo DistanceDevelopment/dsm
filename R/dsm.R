@@ -7,7 +7,7 @@
 #' @param formula formula for the surface. This should be a
 #'   valid \code{\link{glm}}/\code{\link{gam}}/code{\link{gamm}} formula.
 #' @param ddf.obj result from call to \code{\link{ddf}} or \code{\link{ds}}.
-#'   If \code{ddf.obj} is \code{NULL} then strip transects are assumed.
+#   If \code{ddf.obj} is \code{NULL} then strip transects are assumed.
 #' @param segment.data segment data, see \code{\link{dsm-data}}.
 #' @param observation.data observation data, see \code{\link{dsm-data}}.
 #' @param engine which model should be used for the DSM (\code{\link{glm}}/
@@ -38,12 +38,45 @@
 #' Wood, S.N. 2006. Generalized Additive Models: An Introduction with R. CRC/Chapman & Hall.
 #' @export
 # @keywords
-# @examples
+#'
+#' @examples
+#'
+#' library(Distance)
+#' library(dsm)
+#'
+#' # load the Gulf of Mexico dolphin data (see ?mexdolphins)
+#' data(mexdolphins)
+#'
+#' # fit a detection function and look at the summary
+#' hr.model <- ds(mexdolphins$distdata, max(mexdolphins$distdata$distance), key = "hr", adjustment = NULL)
+#' summary(hr.model)
+#'
+#' # fit a simple smooth of x and y
+#' mod1<-dsm(N~s(x,y), hr.model, mexdolphins$segdata, mexdolphins$obsdata)
+#' summary(mod1)
+#'
+#' # create an offset (in metres)
+#' # each prediction cell is 444km2
+#' off.set <- 444*1000*1000
+#'
+#' # predict over a grid
+#' mod1.pred <- predict(mod1, mexdolphins$preddata, off.set)
+#'
+#' # calculate the predicted abundance over the grid
+#' sum(mod1.pred)
+#'
+#' # plot the smooth
+#' plot(mod1)
 dsm <- function(formula, ddf.obj, segment.data, observation.data,
                 engine="gam", convert.units=1,
                 family=quasipoisson(link="log"), group=FALSE, gamma=1.4,
                 control=list(keepData=TRUE), availability=1,...){
 
+  # if we have a model fitted using Distance, then just pull out the
+  # ddf component
+  if(all(class(ddf.obj)=="dsmodel")){
+    ddf.obj <- ddf.obj$ddf
+  }
 
   ## check the formula
   response <- as.character(formula)[2]

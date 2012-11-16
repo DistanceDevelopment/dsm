@@ -7,7 +7,7 @@
 }
 \arguments{
   \item{dsm.obj}{an object returned from running
-  \code{\link{dsm.fit}}.}
+  \code{\link{dsm}}.}
 
   \item{pred.data}{either: a single prediction grid or list
   of prediction grids. Each grid should be a

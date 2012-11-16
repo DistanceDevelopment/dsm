@@ -9,7 +9,7 @@
 }
 \arguments{
   \item{dsm.object}{object returned from
-  \code{\link{dsm.fit}}.}
+  \code{\link{dsm}}.}
 
   \item{pred.data}{a \code{data.frame} that holds
   prediction points, must have the correct columns for

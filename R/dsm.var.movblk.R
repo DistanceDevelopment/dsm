@@ -4,7 +4,7 @@
 #' bootstrap. Two procedures are implemented, one incorporating detection
 #' function uncertainty, one not.
 #'
-#' @param dsm.object object returned from \code{\link{dsm.fit}}.
+#' @param dsm.object object returned from \code{\link{dsm}}.
 #' @param pred.data a \code{data.frame} that holds prediction points, must have
 #'        the correct columns for other environmental covariates. It also MUST
 #'        have a column called \code{cell.area} which gives the area for each

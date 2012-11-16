@@ -6,12 +6,12 @@
     off.set = NULL, type = "response", ...)
 }
 \arguments{
-  \item{object:}{a fitted \code{\link{dsm}} object as
+  \item{object}{a fitted \code{\link{dsm}} object as
   produced by \code{gam()}.}
 
   \item{newdata}{spatially referenced covariates e.g.  sea
   temperature, depth, distance to shore, etc.  Note
-  covariates in this dataframe must have names *identical*·
+  covariates in this dataframe must have names *identical*
   to variable names used in fitting the GAM.}
 
   \item{off.set}{area of each of the cells in the

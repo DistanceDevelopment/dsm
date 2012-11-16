@@ -16,8 +16,7 @@ or density.}
   formula.}
 
   \item{ddf.obj}{result from call to \code{\link{ddf}} or
-  \code{\link{ds}}.  If \code{ddf.obj} is \code{NULL} then
-  strip transects are assumed.}
+  \code{\link{ds}}.}
 
   \item{segment.data}{segment data, see
   \code{\link{dsm-data}}.}
@@ -65,6 +64,34 @@ or density.}
 \description{
   Given a detection function analysis, construct a density
   surface model (DSM) based on environmental covariates.
+}
+\examples{
+library(Distance)
+library(dsm)
+
+# load the Gulf of Mexico dolphin data (see ?mexdolphins)
+data(mexdolphins)
+
+# fit a detection function and look at the summary
+hr.model <- ds(mexdolphins$distdata, max(mexdolphins$distdata$distance), key = "hr", adjustment = NULL)
+summary(hr.model)
+
+# fit a simple smooth of x and y
+mod1<-dsm(N~s(x,y), hr.model, mexdolphins$segdata, mexdolphins$obsdata)
+summary(mod1)
+
+# create an offset (in metres)
+# each prediction cell is 444km2
+off.set <- 444*1000*1000
+
+# predict over a grid
+mod1.pred <- predict(mod1, mexdolphins$preddata, off.set)
+
+# calculate the predicted abundance over the grid
+sum(mod1.pred)
+
+# plot the smooth
+plot(mod1)
 }
 \author{
   David L. Miller

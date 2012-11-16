@@ -14,7 +14,7 @@
 #' 
 #' Based on (much more general) code from Mark Bravington and Sharon Hedley.
 #'
-#' @param dsm.obj an object returned from running \code{\link{dsm.fit}}.
+#' @param dsm.obj an object returned from running \code{\link{dsm}}.
 #' @param pred.data either: a single prediction grid or list of prediction 
 #'        grids. Each grid should be a \code{data.frame} with the same 
 #'        columns as the original data.
