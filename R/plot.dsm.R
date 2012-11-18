@@ -15,5 +15,5 @@
 #'
 plot.dsm<-function(x,...){
   class(x) <- class(x)[class(x)!="dsm"]
-  return(plot(x))
+  return(plot(x,...))
 }
