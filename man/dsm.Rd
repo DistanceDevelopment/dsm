@@ -54,10 +54,11 @@ or density.}
   is not handled at present.}
 
   \item{gamma}{parameter to \code{gam()} set to a value of
-  1.4 (from advice in}
+  1.4 (from advice in Wood (2006)) such that the
+  \code{gam()} is inclined to not 'overfit.'.}
 }
 \value{
-  a \code{\link{glm}}/\code{\link{gam}}/code{\link{gamm}}
+  a \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}}
   object, with an additional element, \code{ddf} which
   holds the detection function object.
 }

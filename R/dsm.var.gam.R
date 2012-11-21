@@ -6,6 +6,9 @@
 #' NB. We include uncertainty in the detection function using the delta method
 #'   so INDEPENDENCE is still assumed between the two variance components
 #'
+#' This is based on \code{\link{dsm.var.prop}} by Mark Bravington and Sharon 
+#'  Hedley.
+#'
 #' @param dsm.obj an object returned from running \code{\link{dsm}}.
 #' @param pred.data either: a single prediction grid or list of prediction 
 #'        grids. Each grid should be a \code{data.frame} with the same 

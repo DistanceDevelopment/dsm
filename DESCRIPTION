@@ -1,10 +1,10 @@
 Package: dsm
-Maintainer: David L. Miller <dave@ninepointeightone.net>,
-    Eric Rexstad <ericr@mcs.st-and.ac.uk>
+Maintainer: David L. Miller <dave@ninepointeightone.net>
 License: GPL (>= 2)
 Title: Density surface modelling (dsm) of distance sampling data
 LazyLoad: yes
-Author: Eric Rexstad, Louise Burt, David L. Miller
+Author: David L. Miller, Eric Rexstad, Louise Burt, Mark V. Bravington,
+    Sharon Hedley.
 Description: This library implements density surface modelling of line
     transect data, based on the methods of Hedley et al. (2004). Some
     recent developments in the literature have also be incorporated.
@@ -15,7 +15,7 @@ Description: This library implements density surface modelling of line
     Buckland, S.T. et al. (eds). Oxford University Press.
 Version: 2.0
 URL: http://github.com/dill/dsm
-Date: 2012-11-08
+Date: 2012-11-20
 Depends:
     R (>= 2.10.0),
     mgcv (>= 1.7),

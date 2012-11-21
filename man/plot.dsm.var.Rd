@@ -13,7 +13,8 @@
 
   \item{poly}{a \code{list} or \code{data.frame} with
   columns \code{x} and \code{y}, which gives the
-  coordinates of a polygon to draw.}
+  coordinates of a polygon to draw. It may also optionally
+  have a column \code{group}, if there are many polygons.}
 
   \item{limits}{limits for the fill colours}
 
@@ -69,5 +70,8 @@
 }
 \author{
   David L. Miller
+}
+\seealso{
+  dsm.var.prop, dsm.var.gam, dsm.var.movblk
 }
 

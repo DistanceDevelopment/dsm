@@ -60,6 +60,34 @@
   Based on (much more general) code from Mark Bravington
   and Sharon Hedley.
 }
+\examples{
+library(Distance)
+ library(dsm)
+
+ # load the Gulf of Mexico dolphin data (see ?mexdolphins)
+ data(mexdolphins)
+
+ # fit a detection function and look at the summary
+ hr.model <- ds(mexdolphins$distdata, max(mexdolphins$distdata$distance), key = "hr", adjustment = NULL)
+ summary(hr.model)
+
+ # fit a simple smooth of x and y
+ mod1 <- dsm(N~s(x,y), hr.model, mexdolphins$segdata, mexdolphins$obsdata)
+
+ # Calculate the offset...
+ off.set <- 444*1000*1000
+
+ # Calculate the variance
+ mod1.var <- dsm.var.prop(mod1, mexdolphins$pred, off.set)
+
+ # summary over the whole area in mexdolphins$pred
+
+ # Plot a map of the CV
+ #   need to format the prediction data with split
+ mod1.var.map <- dsm.var.prop(mod1,
+                 split(mexdolphins$pred,1:nrow(mexdolphins$pred)), off.set)
+ plot(mod1.var.map)
+}
 \author{
   Mark V. Bravington, Sharon L. Hedley. Bugs added by David
   L. Miller.

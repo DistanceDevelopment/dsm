@@ -26,10 +26,10 @@
 #'        counts by. If we have \code{N} animals in a segment, then 
 #'        \code{N/availability} will be entered into the model. Uncertainty in
 #'        the availability is not handled at present.
-#' @return a \code{\link{glm}}/\code{\link{gam}}/code{\link{gamm}} object, with
+#' @return a \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}} object, with
 #'  an additional element, \code{ddf} which holds the detection function object.
 #' @param gamma parameter to \code{gam()} set to a value of 1.4 (from advice in
-#   Wood (2006)) such that the \code{gam()} is inclined to not 'overfit.'.
+#'   Wood (2006)) such that the \code{gam()} is inclined to not 'overfit.'.
 #'
 #' @author David L. Miller
 # @seealso
@@ -37,7 +37,6 @@
 #'
 #' Wood, S.N. 2006. Generalized Additive Models: An Introduction with R. CRC/Chapman & Hall.
 #' @export
-# @keywords
 #'
 #' @examples
 #'

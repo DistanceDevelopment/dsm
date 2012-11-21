@@ -6,10 +6,12 @@
 #' @S3method plot dsm.var
 #' @method plot dsm.var
 #' @aliases plot.dsm.var
-#' 
+#'
 #' @param x a \code{dsm.var} object
 #' @param poly a \code{list} or \code{data.frame} with columns \code{x} and 
-#'        \code{y}, which gives the coordinates of a polygon to draw.
+#'        \code{y}, which gives the coordinates of a polygon to draw. It may
+#'        also optionally have a column \code{group}, if there are many 
+#'        polygons.
 #' @param limits limits for the fill colours
 #' @param breaks breaks for the colour fill
 #' @param legend.breaks breaks as they should be displayed
@@ -23,7 +25,7 @@
 #' @param y.name name of the variable to plot as the y axis.
 #' @param gg.grad optional \code{\link{ggplot}} gradient object.
 #' @param \dots any other arguments
-#' @return a plot 
+#' @return a plot
 #'
 #' @section Details:
 #'
@@ -36,15 +38,16 @@
 #'  For a plot of uncertainty over a prediction grid, \code{pred} (a
 #'  \code{data.frame}), say, we can create the correct format by simply using
 #'  \code{pred.new <- splot(pred,1:nrow(pred))}.
-#' 
+#'
+#' @seealso dsm.var.prop, dsm.var.gam, dsm.var.movblk
+#'
 #' @author David L. Miller
 #'
 ### TODO
 # covariates in the detection function
-
 plot.dsm.var<-function(x, poly=NULL, limits=NULL, breaks=NULL,
-                       legend.breaks=NULL, xlab="x", ylab="y", 
-                       observations=TRUE, plot=TRUE, boxplot.coef=1.5, 
+                       legend.breaks=NULL, xlab="x", ylab="y",
+                       observations=TRUE, plot=TRUE, boxplot.coef=1.5,
                        x.name="x", y.name="y", gg.grad=NULL, ...){
 
   # I am exactly this lazy, sorry
@@ -76,11 +79,6 @@ plot.dsm.var<-function(x, poly=NULL, limits=NULL, breaks=NULL,
   mod.pred <- unlist(object$pred)
 
   if(object$bootstrap){
-
-    #sinfo$block.size <- object$block.size 
-    #sinfo$n.boot <- object$n.boot
-    #sinfo$bootstrap <- TRUE
-    #sinfo$ds.uncertainty <- object$ds.uncertainty
 
     # if we didn't save each bootstrap replicate
     if(is.null(object$bs.file)){
@@ -188,10 +186,13 @@ plot.dsm.var<-function(x, poly=NULL, limits=NULL, breaks=NULL,
   p <- p + coord_equal()
 
   if(is.null(gg.grad)){
-    p <- p + scale_fill_gradient(low="white", high="black",
-                                 limits=limits,
-                                 rescaler = function(x, ...) x, oob = identity,
-                                 breaks=legend.breaks)
+    p <- p + scale_fill_gradient(low="white", high="black")
+
+    # old gradient stuff
+    #p <- p + scale_fill_gradient(low="white", high="black",
+    #                             limits=limits,
+    #                             rescaler = function(x, ...) x, oob = identity,
+    #                             breaks=legend.breaks)
   }else{
     p <- p + gg.grad
   }
@@ -199,7 +200,11 @@ plot.dsm.var<-function(x, poly=NULL, limits=NULL, breaks=NULL,
   if(!is.null(poly)){
     poly$x <- poly[[x.name]]
     poly$y <- poly[[y.name]]
-    p <- p+geom_path(aes(x=x, y=y),data=poly)
+    if(!is.null(poly$group)){
+      p <- p+geom_path(aes(x=x, y=y,group=group),data=poly)
+    }else{
+      p <- p+geom_path(aes(x=x, y=y),data=poly)
+    }
   }
 
   if(observations){

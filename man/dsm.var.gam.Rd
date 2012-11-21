@@ -44,6 +44,9 @@
   NB. We include uncertainty in the detection function
   using the delta method so INDEPENDENCE is still assumed
   between the two variance components
+
+  This is based on \code{\link{dsm.var.prop}} by Mark
+  Bravington and Sharon Hedley.
 }
 \author{
   David L. Miller

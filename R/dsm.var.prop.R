@@ -46,6 +46,35 @@
 #' @references
 #' Williams, R., Hedley, S.L., Branch, T.A., Bravington, M.V., Zerbini, A.N. and Findlay, K.P. (2011). Chilean Blue Whales as a Case Study to Illustrate Methods to Estimate Abundance and Evaluate Conservation Status of Rare Species. Conservation Biology 25(3), 526-535.
 #' @export
+#'
+#' @examples
+#'  library(Distance)
+#'  library(dsm)
+#'
+#'  # load the Gulf of Mexico dolphin data (see ?mexdolphins)
+#'  data(mexdolphins)
+#'
+#'  # fit a detection function and look at the summary
+#'  hr.model <- ds(mexdolphins$distdata, max(mexdolphins$distdata$distance), key = "hr", adjustment = NULL)
+#'  summary(hr.model)
+#'
+#'  # fit a simple smooth of x and y
+#'  mod1 <- dsm(N~s(x,y), hr.model, mexdolphins$segdata, mexdolphins$obsdata)
+#'
+#'  # Calculate the offset...
+#'  off.set <- 444*1000*1000
+#'
+#'  # Calculate the variance
+#'  mod1.var <- dsm.var.prop(mod1, mexdolphins$pred, off.set)
+#'
+#'  # summary over the whole area in mexdolphins$pred
+#'
+#'  # Plot a map of the CV
+#'  #   need to format the prediction data with split
+#'  mod1.var.map <- dsm.var.prop(mod1,
+#'                  split(mexdolphins$pred,1:nrow(mexdolphins$pred)), off.set)
+#'  plot(mod1.var.map)
+#'
 dsm.var.prop<-function(dsm.obj, pred.data,off.set,
     seglen.varname='Effort', type.pred="response") {
 
@@ -54,6 +83,15 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
 
   pred.data.save<-pred.data
   off.set.save<-off.set
+
+  # if all the offsets are the same then we can jsut supply 1 and rep it
+  if(length(off.set)==1){
+    if(is.null(nrow(pred.data))){
+      off.set <- as.list(rep(off.set,length(pred.data)))
+    }else{
+      off.set <- rep(off.set,nrow(pred.data))
+    }
+  }
 
   # make sure if one of pred.data and off.set is not a list we break
   # if we didn't have a list, then put them in a list so everything works
@@ -190,7 +228,7 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
                  bootstrap = FALSE,
                  pred.data = pred.data.save,
                  pred = preddo,
-                 off.set = off.set.save,
+                 off.set = off.set,
                  model = fit.with.pen,
                  dsm.object = dsm.obj,
                  model.check = model.check,

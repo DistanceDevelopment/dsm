@@ -67,4 +67,30 @@
   This assumes that the detection function and the spatial
   model are INDEPENDENT. This is probably not reasonable.
 }
+\examples{
+\dontrun{
+library(Distance)
+library(dsm)
+
+# load the Gulf of Mexico dolphin data (see ?mexdolphins)
+data(mexdolphins)
+
+# fit a detection function and look at the summary
+hr.model <- ds(mexdolphins$distdata, max(mexdolphins$distdata$distance), key = "hr", adjustment = NULL)
+summary(hr.model)
+
+# fit a simple smooth of x and y
+mod1<-dsm(N~s(x,y), hr.model, mexdolphins$segdata, mexdolphins$obsdata)
+summary(mod1)
+
+# create an offset (in metres)
+# each prediction cell is 444km2
+off.set <- 444*1000*1000
+
+# calculate the variance by 500 moving block bootstraps
+mod1.movblk <- dsm.var.movblk(mod1, mexdolphins$preddata, n.boot = 500,
+   block.size = 3, samp.unit.name = "Transect.Label", off.set = off.set,
+   bar = TRUE, bs.file = "mexico-bs.csv", ds.uncertainty = TRUE)
+}
+}
 
