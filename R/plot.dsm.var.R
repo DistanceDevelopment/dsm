@@ -62,13 +62,10 @@ plot.dsm.var<-function(x, poly=NULL, limits=NULL, breaks=NULL,
   # if we did used the random effects trick, collapse everything down
   if(!object$bootstrap){
     pd<-c()
-    off<-c()
     for(i in 1:length(object$pred.data)){
       pd<-rbind(pd,object$pred.data[[i]])
-      off<-rbind(off,object$off.set[[i]])
     }
     object$pred.data <- pd
-    object$off.set <- as.vector(off)
   }
 
   if(!all(c("width","height") %in% names(object$pred.data))){
