@@ -32,11 +32,11 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
 
   ## Aggregate response values of the sightings over segments
   if(response %in% c("D","density")){
-      responsedata <- aggregate(obsdata[,cluster.name]/availability,
+    responsedata <- aggregate(obsdata[,cluster.name]/availability,
                                 list(obsdata[,segnum.name]), sum) 
     off.set <- "none"
   }else if(response %in% c("Dhat","density.est")){
-      responsedata <- aggregate(obsdata[,cluster.name]/(fitted.p*availability),
+    responsedata <- aggregate(obsdata[,cluster.name]/(fitted.p*availability),
                                 list(obsdata[,segnum.name]), sum)
     off.set <- "none"
   }else if(response %in% c("N","abundance")){
@@ -47,6 +47,12 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
     responsedata <- aggregate(obsdata[,cluster.name]/(fitted.p*availability),
                               list(obsdata[,segnum.name]), sum)
     off.set<-"area"
+  }else if(response == "presence"){
+    responsedata <- aggregate(obsdata[,cluster.name],
+                                list(obsdata[,segnum.name]), sum)
+    responsedata$x[responsedata$x>0] <- 1
+    responsedata$x[responsedata$x<1] <- 0
+    off.set <- "none"
   }
 
   # name the response data columns

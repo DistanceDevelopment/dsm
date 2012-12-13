@@ -157,12 +157,16 @@ summary.dsm.var<-function(object, alpha=0.05, boxplot.coef=1.5,
       sinfo$se <- sqrt(var.prop$pred.var)
     }
     # grab the predicted values
-    dsm.obj <- object$dsm.obj
-    class(dsm.obj) <- c("dsm",class(dsm.obj))
-    mod1.pred <- predict(dsm.obj,
-                         newdata=object$pred.data,
-                         off.set=object$off.set)
-    sinfo$pred.est <- sum(mod1.pred,na.rm=TRUE)
+    if(length(object$pred)>1 | length(object$pred)==0){
+      dsm.obj <- object$dsm.obj
+      class(dsm.obj) <- c("dsm",class(dsm.obj))
+      mod1.pred <- predict(dsm.obj,
+                           newdata=object$pred.data,
+                           off.set=object$off.set)
+      sinfo$pred.est <- sum(mod1.pred,na.rm=TRUE)
+    }else{
+      sinfo$pred.est <- object$pred[[1]]
+    }
 
     # if we're using variance propagation, the CV is fine
     if(sinfo$varprop){

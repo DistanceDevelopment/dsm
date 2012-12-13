@@ -4,8 +4,16 @@
 #' Given a detection function analysis, construct a density surface model (DSM)
 #' based on environmental covariates.
 #'
+#' The response can be one of the following:
+#' \tabular{ll}{
+#'              \code{N}, \code{abundance} \tab count in each segment\cr
+#'              \code{Nhat}, \code{abundance.est} \tab estimated abundance per segment, estimation is via a Horvitz-Thompson estimator. This should be used when there are covariates in the detection function.\cr
+#'              \code{presence} \tab interpret the data as presence/absence\cr
+#'              \code{D}, \code{density} \tab density per segment\cr
+#'  }
+#'
 #' @param formula formula for the surface. This should be a
-#'   valid \code{\link{glm}}/\code{\link{gam}}/code{\link{gamm}} formula.
+#'   valid \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}} formula.
 #' @param ddf.obj result from call to \code{\link{ddf}} or \code{\link{ds}}.
 #   If \code{ddf.obj} is \code{NULL} then strip transects are assumed.
 #' @param segment.data segment data, see \code{\link{dsm-data}}.
@@ -26,10 +34,10 @@
 #'        counts by. If we have \code{N} animals in a segment, then 
 #'        \code{N/availability} will be entered into the model. Uncertainty in
 #'        the availability is not handled at present.
-#' @return a \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}} object, with
-#'  an additional element, \code{ddf} which holds the detection function object.
 #' @param gamma parameter to \code{gam()} set to a value of 1.4 (from advice in
 #'   Wood (2006)) such that the \code{gam()} is inclined to not 'overfit.'.
+#' @return a \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}} object, with
+#'  an additional element, \code{ddf} which holds the detection function object.
 #'
 #' @author David L. Miller
 # @seealso
@@ -79,7 +87,9 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
 
   ## check the formula
   response <- as.character(formula)[2]
-  possible.responses <- c("D","density","N","Nhat","abundance","abundance.est")
+  possible.responses <- c("D","density",
+                          "N","Nhat","abundance","abundance.est",
+                          "presence")
   if(!(response %in% possible.responses)){
     stop(paste("Model must be one of:",
                paste(possible.responses,collapse=", ")))
@@ -102,6 +112,8 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
                control=control, ...), warning = matrixnotposdef.handler)
     fit$gamma <- gamma
   }else if(engine == "gamm"){
+    # unsupported
+    control$keepData <- NULL
     fit <- withCallingHandlers(gamm(formula,family=family, data=dat,
                                     gamma=gamma,control=control, ...),
                                warning = matrixnotposdef.handler)
