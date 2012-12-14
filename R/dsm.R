@@ -97,7 +97,7 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
 
 
   # if we are not modelling density, then add in the offset
-  if(!(response %in% c("D","density"))){
+  if(!(response %in% c("D","density","presence"))){
     formula <- as.formula(paste(c(as.character(formula)[c(2,1,3)],
                                 "+ offset(off.set)"),collapse=""))
   }
