@@ -33,7 +33,8 @@ or density.}
 
   \item{family}{response distribution (popular choices
   include \code{\link{quasipoisson}}, \code{\link{Tweedie}}
-  and \code{\link{negbin}}.}
+  and \code{\link{negbin}}. Defaults to
+  \code{quasipossion}.}
 
   \item{\dots}{anything else to be passed straight to
   \code{\link{gam}}.}
@@ -74,8 +75,9 @@ or density.}
   Horvitz-Thompson estimator. This should be used when
   there are covariates in the detection function.\cr
   \code{presence} \tab interpret the data as
-  presence/absence\cr \code{D}, \code{density} \tab density
-  per segment\cr }
+  presence/absence (reember to change the \code{family}
+  argument to \code{binomial()}\cr \code{D}, \code{density}
+  \tab density per segment\cr }
 }
 \examples{
 library(Distance)

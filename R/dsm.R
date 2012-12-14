@@ -8,7 +8,7 @@
 #' \tabular{ll}{
 #'              \code{N}, \code{abundance} \tab count in each segment\cr
 #'              \code{Nhat}, \code{abundance.est} \tab estimated abundance per segment, estimation is via a Horvitz-Thompson estimator. This should be used when there are covariates in the detection function.\cr
-#'              \code{presence} \tab interpret the data as presence/absence\cr
+#'              \code{presence} \tab interpret the data as presence/absence (reember to change the \code{family} argument to \code{binomial()}\cr
 #'              \code{D}, \code{density} \tab density per segment\cr
 #'  }
 #'
@@ -22,23 +22,13 @@
 #'   \code{\link{gam}}/code{\link{gamm}}).
 #' @param convert.units value to alter length to width for calculation
 #'   of the offset.
-#' @param family response distribution (popular choices include
-#'   \code{\link{quasipoisson}}, \code{\link{Tweedie}} and \code{\link{negbin}}.
+#' @param family response distribution (popular choices include \code{\link{quasipoisson}}, \code{\link{Tweedie}} and \code{\link{negbin}}. Defaults to \code{quasipossion}.
 #' @param \dots anything else to be passed straight to \code{\link{gam}}.
-#' @param group should group abundance/density be modelled rather than
-#'  individual abundance/density? This effectively sets the \code{size} column
-#'  in \code{observation.data} to be 1.
-#' @param control the usual \code{control} argument for a \code{gam},
-#'  \code{keepData} must be \code{TRUE} or variance estimation will not work.
-#' @param availability an availability bias used to scale the counts/estimated 
-#'        counts by. If we have \code{N} animals in a segment, then 
-#'        \code{N/availability} will be entered into the model. Uncertainty in
-#'        the availability is not handled at present.
-#' @param gamma parameter to \code{gam()} set to a value of 1.4 (from advice in
-#'   Wood (2006)) such that the \code{gam()} is inclined to not 'overfit.'.
-#' @return a \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}} object, with
-#'  an additional element, \code{ddf} which holds the detection function object.
-#'
+#' @param group should group abundance/density be modelled rather than individual abundance/density? This effectively sets the \code{size} column in \code{observation.data} to be 1.
+#' @param control the usual \code{control} argument for a \code{gam}, \code{keepData} must be \code{TRUE} or variance estimation will not work.
+#' @param availability an availability bias used to scale the counts/estimated  counts by. If we have \code{N} animals in a segment, then \code{N/availability} will be entered into the model. Uncertainty in the availability is not handled at present.
+#' @param gamma parameter to \code{gam()} set to a value of 1.4 (from advice in Wood (2006)) such that the \code{gam()} is inclined to not 'overfit.'.
+#' @return a \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}} object, with an additional element, \code{ddf} which holds the detection function object.
 #' @author David L. Miller
 # @seealso
 #' @references Hedley, S. and S. T. Buckland. 2004. Spatial models for line transect sampling. JABES 9:181-199.
