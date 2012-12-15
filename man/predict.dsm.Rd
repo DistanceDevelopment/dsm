@@ -7,7 +7,7 @@
 }
 \arguments{
   \item{object}{a fitted \code{\link{dsm}} object as
-  produced by \code{gam()}.}
+  produced by \code{dsm()}.}
 
   \item{newdata}{spatially referenced covariates e.g.  sea
   temperature, depth, distance to shore, etc.  Note

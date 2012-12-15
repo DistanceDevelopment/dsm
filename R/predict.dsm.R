@@ -2,7 +2,7 @@
 #'
 #' Make predictions outside (or inside) the covered area.
 #'
-#' @param object a fitted \code{\link{dsm}} object as produced by \code{gam()}.
+#' @param object a fitted \code{\link{dsm}} object as produced by \code{dsm()}.
 #' @param newdata spatially referenced covariates e.g.
 #'                sea temperature, depth, distance to shore, etc.
 #'                Note covariates in this dataframe must have names *identical*
