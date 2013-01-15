@@ -115,7 +115,11 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
   }
 
   ## add the detection function object into the gam/gamm/glm object
-  fit$ddf <- ddf.obj
+  if(engine == "gamm"){
+    fit$gam$ddf <- ddf.obj
+  }else{
+    fit$ddf <- ddf.obj
+  }
 
   class(fit) <- c("dsm",class(fit))
 

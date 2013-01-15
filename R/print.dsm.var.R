@@ -14,27 +14,29 @@
 #' @keywords utility
 print.dsm.var<-function(x,...){
 
-  if(x$bootstrap){
-    cat("Result of bootstrap uncertainty estimate\n")
+  print(summary(x))
 
-    if(!x$ds.uncertainty){
-      cat("Detection function uncertainty incorporated using the delta method.\n\n")
-
-    }else{
-      cat("Detection function uncertainty incorporated into boostrap.\n\n")
-    }
-
-    cat("Replicates        :",x$n.boot,"\n")
-    #cat("Usable replicates : ",x$boot.usable,
-    #                          " (",100-(100*x$trim.prop),"%)\n",sep="")
-
-  }else if(!x$bootstrap){
-    cat("Summary of uncertainty in a density surface model calculated\n")
-    cat(" by variance propagation.\n")
-
-  }
-
-  cat("\n")
-
-  invisible()
+#  if(x$bootstrap){
+#    cat("Result of bootstrap uncertainty estimate\n")
+#
+#    if(!x$ds.uncertainty){
+#      cat("Detection function uncertainty incorporated using the delta method.\n\n")
+#
+#    }else{
+#      cat("Detection function uncertainty incorporated into boostrap.\n\n")
+#    }
+#
+#    cat("Replicates        :",x$n.boot,"\n")
+#    #cat("Usable replicates : ",x$boot.usable,
+#    #                          " (",100-(100*x$trim.prop),"%)\n",sep="")
+#
+#  }else if(!x$bootstrap){
+#    cat("Summary of uncertainty in a density surface model calculated\n")
+#    cat(" by variance propagation.\n")
+#
+#  }
+#
+#  cat("\n")
+#
+#  invisible()
 }

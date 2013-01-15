@@ -16,6 +16,11 @@ print.dsm<-function(x,...){
 
   # the code here is chopped together from mgcv and mrds
 
+  # if we fit a gamm then we should just grab teh gam bit for this
+  if("gamm" %in% class(x)){
+    x<-x$gam
+  }
+
   ### General information
 
   cat("\nDensity surface model\n")
