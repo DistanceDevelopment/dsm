@@ -26,16 +26,12 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
   # remove the segments with 0 observations
   obsdata <- obsdata[obsdata$object %in% names(fitted.p),]
 
-  if(response %in% c("D","density","N","abundance")){
+  if(response %in% c("N","abundance")){
     fitted.p <- unique(fitted.p)
   }
 
   ## Aggregate response values of the sightings over segments
   if(response %in% c("D","density")){
-    responsedata <- aggregate(obsdata[,cluster.name]/availability,
-                                list(obsdata[,segnum.name]), sum) 
-    off.set <- "none"
-  }else if(response %in% c("Dhat","density.est")){
     responsedata <- aggregate(obsdata[,cluster.name]/(fitted.p*availability),
                                 list(obsdata[,segnum.name]), sum)
     off.set <- "none"
@@ -72,13 +68,13 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
   }
 
   # calculate the density (count/area)
-  if(response %in% c("D","density")){
+  if(response %in% c("D","density","Dhat","density.est")){
     dat[,response] <- dat[,response]/(2*dat[,seglength.name]*width)
   }else{
     # calculate the offset
     #   area we just calculate the area
     #   effective area multiply by p
-    #   when density is response, offset should be 1.
+    #   when density is response, offset should be 1 (and is ignored anyway)
 
     dat$off.set <- switch(off.set,
                           eff.area=2*dat[,seglength.name]*width*fitted.p,

@@ -30,13 +30,16 @@ predict.dsm <- function(object, newdata=NULL, off.set=NULL,
     newdata <- object$data
   }
 
-  if(is.null(newdata$off.set)){
-    newdata$off.set <- off.set
-  }
+  # if we don't have a density model, then set the offset
+  if(!(c(object$formula[[2]]) %in% c("D","presence","density"))){
+    if(is.null(newdata$off.set)){
+      newdata$off.set <- off.set
+    }
 
-  # apply the link function
-  linkfn <- object$family$linkfun
-  newdata$off.set <- linkfn(newdata$off.set)
+    # apply the link function
+    linkfn <- object$family$linkfun
+    newdata$off.set <- linkfn(newdata$off.set)
+  }
 
   # remove the dsm class
   class(object) <- class(object)[class(object)!="dsm"]
