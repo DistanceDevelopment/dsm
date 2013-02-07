@@ -10,6 +10,9 @@ Description: This library implements density surface modelling of line
     recent developments in the literature have also be incorporated.
     Outputs are point and interval estimates of population abundance
     and density.
+    Please note that this version of dsm WILL NOT work with the Windows
+    package DISTANCE. For a version that works with DISTANCE, please go
+    to https://github.com/lenthomas/dsm-distance-6.1.
     Hedley, S.L., S.T. Buckland and D.L. Borchers.  2004. "Spatial
     distance sampling methods" pp 48-70 in Advanced Distance Sampling,
     Buckland, S.T. et al. (eds). Oxford University Press.
