@@ -1,7 +1,7 @@
 Package: dsm
-Maintainer: David L. Miller <dave@ninepointeightone.net>
+Maintainer: David Lawrence Miller <dave@ninepointeightone.net>
 License: GPL (>= 2)
-Title: Density surface modelling (dsm) of distance sampling data
+Title: Density surface modelling of distance sampling data
 LazyLoad: yes
 Author: David L. Miller, Eric Rexstad, Louise Burt, Mark V. Bravington,
     Sharon Hedley.
@@ -13,12 +13,12 @@ Description: This library implements density surface modelling of line
     Please note that this version of dsm WILL NOT work with the Windows
     package DISTANCE. For a version that works with DISTANCE, please go
     to https://github.com/lenthomas/dsm-distance-6.1.
-    Hedley, S.L., S.T. Buckland and D.L. Borchers.  2004. "Spatial
+    Hedley, S.L. and S.T. Buckland.  2004. "Spatial
     distance sampling methods" pp 48-70 in Advanced Distance Sampling,
     Buckland, S.T. et al. (eds). Oxford University Press.
-Version: 2.0
+Version: 2.0.1
 URL: http://github.com/dill/dsm
-Date: 2012-11-20
+Date: 2013-02-20
 Depends:
     R (>= 2.10.0),
     mgcv (>= 1.7),
