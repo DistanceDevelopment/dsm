@@ -114,6 +114,11 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
     stop("engine must be one of 'gam', 'gamm' or 'glm'")
   }
 
+  ## save knots
+  if("knots" %in% names(match.call())){
+    fit$knots <- get(as.character(match.call()$knots))
+  }
+
   ## add the detection function object into the gam/gamm/glm object
   if(engine == "gamm"){
     fit$gam$ddf <- ddf.obj

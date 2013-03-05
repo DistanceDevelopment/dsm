@@ -158,6 +158,7 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
   callo$family <- dsm.obj$family
   callo$paraPen <- c(callo$paraPen, paraterm)
   callo$data <- fo2data
+  callo$knots <- dsm.obj$knots
 
   # run the model
   fit.with.pen <- with(dsm.obj,withCallingHandlers(eval(callo),
