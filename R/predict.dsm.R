@@ -26,6 +26,10 @@
 predict.dsm <- function(object, newdata=NULL, off.set=NULL,
                         type="response",...){
 
+  if("gamm" %in% class(object)){
+    object <- object$gam
+  }
+
   if(is.null(newdata)){
     newdata <- object$data
   }
