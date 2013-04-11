@@ -37,6 +37,9 @@ predict.dsm <- function(object, newdata=NULL, off.set=NULL,
   # if we don't have a density model, then set the offset
   if(!(c(object$formula[[2]]) %in% c("D","presence","density"))){
     if(is.null(newdata$off.set)){
+      if(is.null(off.set)){
+        stop("You must supply off.set in data or as an argument.")
+      }
       newdata$off.set <- off.set
     }
 
