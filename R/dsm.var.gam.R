@@ -40,6 +40,12 @@ dsm.var.gam<-function(dsm.obj, pred.data,off.set=NULL,
   # strip dsm class so we can use gam methods
   class(dsm.obj) <- class(dsm.obj)[class(dsm.obj)!="dsm"]
 
+  # if we have a gamm, then just pull out the gam object
+  if(any(class(dsm.obj)=="gamm")){
+    dsm.obj <- dsm.obj$gam
+    is.gamm <- TRUE
+  }
+
   pred.data.save<-pred.data
   off.set.save<-off.set
 
@@ -97,6 +103,7 @@ dsm.var.gam<-function(dsm.obj, pred.data,off.set=NULL,
 
   result <- list(pred.var = vpred,
                  bootstrap = FALSE,
+                 var.prop = FALSE,
                  pred.data = pred.data.save,
                  off.set = off.set.save,
                  model = fit.with.pen,

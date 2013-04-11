@@ -78,8 +78,16 @@
 dsm.var.prop<-function(dsm.obj, pred.data,off.set,
     seglen.varname='Effort', type.pred="response") {
 
+  is.gamm <- FALSE
+  # if we have a gamm, then just pull out the gam object
+  if(any(class(dsm.obj)=="gamm")){
+    dsm.obj <- dsm.obj$gam
+    is.gamm <- TRUE
+  }
+
   # strip dsm class so we can use gam methods
   class(dsm.obj) <- class(dsm.obj)[class(dsm.obj)!="dsm"]
+
 
   pred.data.save<-pred.data
   off.set.save<-off.set
@@ -129,8 +137,7 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
     return(ret)
   }
 
-  # pull out the data and the call
-  callo <- dsm.obj$call
+  # pull out the data
   fo2data <- dsm.obj$data
 
   # find the derivatives
@@ -154,15 +161,28 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
   # put it all together
   paraterm<-list(list(ddf.obj$hess))
   names(paraterm) <- dmat.name
+
+
+  # pull out the call
+  if(!is.gamm){
+    callo <- dsm.obj$call
+  }else{
+    callo <- eval(dsm.obj$gamm.call.list)
+  }
+
   callo$formula <- formo
   callo$family <- dsm.obj$family
   callo$paraPen <- c(callo$paraPen, paraterm)
   callo$data <- fo2data
   callo$knots <- dsm.obj$knots
 
-  # run the model
-  fit.with.pen <- with(dsm.obj,withCallingHandlers(eval(callo),
-                                       warning=matrixnotposdef.handler))
+  ## run the model
+  if(!is.gamm){
+    fit.with.pen <- with(dsm.obj,withCallingHandlers(eval(callo),
+                                         warning=matrixnotposdef.handler))
+  }else{
+    fit.with.pen <- do.call("gamm",callo)
+  }
   # strip dsm class so we can use gam methods
   class(fit.with.pen) <- class(fit.with.pen)[class(fit.with.pen)!="dsm"]
 
@@ -227,6 +247,7 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
 
   result <- list(pred.var = vpred,
                  bootstrap = FALSE,
+                 var.prop = TRUE,
                  pred.data = pred.data.save,
                  pred = preddo,
                  off.set = off.set,

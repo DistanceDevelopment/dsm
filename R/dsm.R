@@ -100,14 +100,12 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
   if(engine == "gam"){
     fit <- withCallingHandlers(gam(formula,family=family, data=dat, gamma=gamma,
                control=control, ...), warning = matrixnotposdef.handler)
-    fit$gamma <- gamma
   }else if(engine == "gamm"){
     # unsupported
     control$keepData <- NULL
     fit <- withCallingHandlers(gamm(formula,family=family, data=dat,
                                     gamma=gamma,control=control, ...),
                                warning = matrixnotposdef.handler)
-    fit$gamma <- gamma
   }else if(engine == "glm"){
     fit <- glm(formula,family=family, data=dat, ...)
   }else{
@@ -123,8 +121,18 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
   if(engine == "gamm"){
     fit$gam$ddf <- ddf.obj
     fit$gam$data <- dat
+    fit$gam$gamma <- gamma
+    # yucky way to get dsm.var/dsm.var.prop to work because gamm()
+    #  doesn't store the call()
+    fit$gam$gamm.call.list <- substitute(list(...))
+    fit$gam$gamm.call.list$formula <- formula
+    fit$gam$gamm.call.list$family <- family
+    fit$gam$gamm.call.list$data <- dat
+    fit$gam$gamm.call.list$gamma <- gamma
+    fit$gam$gamm.call.list$control <- control
   }else{
     fit$ddf <- ddf.obj
+    fit$gamma <- gamma
   }
 
   class(fit) <- c("dsm",class(fit))
