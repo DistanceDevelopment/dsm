@@ -16,9 +16,11 @@ print.dsm<-function(x,...){
 
   # the code here is chopped together from mgcv and mrds
 
-  # if we fit a gamm then we should just grab teh gam bit for this
+  # if we fit a gamm then we should just grab the gam bit for this
+  # but note that a gamm was used!
   if("gamm" %in% class(x)){
     x<-x$gam
+    gamm <- TRUE
   }
 
   ### General information
@@ -32,6 +34,14 @@ print.dsm<-function(x,...){
 
   cat("\nFormula: ",as.character(x$formula)[2],"~",
                     as.character(x$formula)[-c(1,2)],"\n")
+  cat("\n")
+
+  if(gamm){
+    cat("Fitting engine: gamm\n")
+  }else{
+    cat("Fitting engine: gam\n")
+  }
+
   cat("\n")
 
   invisible()
