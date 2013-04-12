@@ -7,7 +7,7 @@ or density.}
     engine = "gam", convert.units = 1,
     family = quasipoisson(link = "log"), group = FALSE,
     gamma = 1.4, control = list(keepData = TRUE),
-    availability = 1, ...)
+    availability = 1, strip.width = NULL, ...)
 }
 \arguments{
   \item{formula}{formula for the surface. This should be a
@@ -16,7 +16,8 @@ or density.}
   formula.}
 
   \item{ddf.obj}{result from call to \code{\link{ddf}} or
-  \code{\link{ds}}.}
+  \code{\link{ds}}.  If \code{ddf.obj} is \code{NULL} then
+  strip transects are assumed.}
 
   \item{segment.data}{segment data, see
   \code{\link{dsm-data}}.}
@@ -57,6 +58,11 @@ or density.}
   \item{gamma}{parameter to \code{gam()} set to a value of
   1.4 (from advice in Wood (2006)) such that the
   \code{gam()} is inclined to not 'overfit.'.}
+
+  \item{strip.width}{if \code{ddf.obj}, above, is
+  \code{NULL}, then this is where the strip width is
+  specified. Note that this is the total width, i.e. right
+  truncation minus left truncation.}
 }
 \value{
   a \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}}

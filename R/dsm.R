@@ -15,7 +15,7 @@
 #' @param formula formula for the surface. This should be a
 #'   valid \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}} formula.
 #' @param ddf.obj result from call to \code{\link{ddf}} or \code{\link{ds}}.
-#   If \code{ddf.obj} is \code{NULL} then strip transects are assumed.
+#'   If \code{ddf.obj} is \code{NULL} then strip transects are assumed.
 #' @param segment.data segment data, see \code{\link{dsm-data}}.
 #' @param observation.data observation data, see \code{\link{dsm-data}}.
 #' @param engine which model should be used for the DSM (\code{\link{glm}}/
@@ -28,6 +28,7 @@
 #' @param control the usual \code{control} argument for a \code{gam}, \code{keepData} must be \code{TRUE} or variance estimation will not work.
 #' @param availability an availability bias used to scale the counts/estimated  counts by. If we have \code{N} animals in a segment, then \code{N/availability} will be entered into the model. Uncertainty in the availability is not handled at present.
 #' @param gamma parameter to \code{gam()} set to a value of 1.4 (from advice in Wood (2006)) such that the \code{gam()} is inclined to not 'overfit.'.
+#' @param strip.width if \code{ddf.obj}, above, is \code{NULL}, then this is where the strip width is specified. Note that this is the total width, i.e. right truncation minus left truncation.
 #' @return a \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}} object, with an additional element, \code{ddf} which holds the detection function object.
 #' @author David L. Miller
 # @seealso
@@ -67,12 +68,15 @@
 dsm <- function(formula, ddf.obj, segment.data, observation.data,
                 engine="gam", convert.units=1,
                 family=quasipoisson(link="log"), group=FALSE, gamma=1.4,
-                control=list(keepData=TRUE), availability=1,...){
+                control=list(keepData=TRUE), availability=1, strip.width=NULL,
+                ...){
 
   # if we have a model fitted using Distance, then just pull out the
   # ddf component
-  if(all(class(ddf.obj)=="dsmodel")){
-    ddf.obj <- ddf.obj$ddf
+  if(!is.null(ddf.obj)){
+    if(all(class(ddf.obj)=="dsmodel")){
+      ddf.obj <- ddf.obj$ddf
+    }
   }
 
   ## check the formula
@@ -94,7 +98,7 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
 
   ## build the data
   dat <- make.data(response, ddf.obj, segment.data, observation.data,
-                   group, convert.units, availability)
+                   group, convert.units, availability, strip.width)
 
   ## run the engine
   if(engine == "gam"){

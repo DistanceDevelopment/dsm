@@ -1,12 +1,11 @@
 make.data <- function(response, ddfobject, segdata, obsdata, group,
-                      convert.units, availability){
+                      convert.units, availability, strip.width){
 
   # probably want to do something smart here...
   seglength.name<-'Effort'
   segnum.name<-'Sample.Label'
   distance.name<-'distance'
   cluster.name<-'size'
-  sightnum.name<-'object'
 
   # Truncate observations made at distances greater than the truncation width;
   # truncation value picked up from metadata contained within ddfobject
@@ -20,12 +19,23 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
     obsdata[,cluster.name][obsdata[,cluster.name]>0] <- 1
   }
 
-  # grab the probabilities of detection
-  fitted.p <- fitted(ddfobject)
+  # if we fitted a detection function
+  if (!is.null(ddfobject)){
+    # grab the probabilities of detection
+    fitted.p <- fitted(ddfobject)
 
-  # remove the segments with 0 observations
-  obsdata <- obsdata[obsdata$object %in% names(fitted.p),]
+    # remove observations which were not in the detection function
+    obsdata <- obsdata[obsdata$object %in% names(fitted.p),]
+  }else{
+    # strip transects
+    fitted.p <- 1
+    if(is.null(strip.width)){
+      stop("You must specify strip.width for strip transects!")
+    }
+  }
 
+  # if the ps are all the same (count model) then just grab the 1 unique
+  # value
   if(response %in% c("N","abundance")){
     fitted.p <- unique(fitted.p)
   }
@@ -62,9 +72,18 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
 
   # calculate the "width" of the transect first, make sure we get it right
   # if we are doing left truncation
-  width <- ddfobject$meta.data$width
-  if(!is.null(ddfobject$meta.data$left)){
-    width <- width - ddfobject$meta.data$left
+
+  # pull this from the detection function
+  if (!is.null(ddfobject)){
+    width <- ddfobject$meta.data$width
+    if(!is.null(ddfobject$meta.data$left)){
+      width <- width - ddfobject$meta.data$left
+    }
+  }else{
+    # or use strip.width if we have strip transects
+    width <- strip.width
+    # note we have to reset off.set to "area" here
+    off.set <- "area"
   }
 
   # calculate the density (count/area)
