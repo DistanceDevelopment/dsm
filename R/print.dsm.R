@@ -18,6 +18,7 @@ print.dsm<-function(x,...){
 
   # if we fit a gamm then we should just grab the gam bit for this
   # but note that a gamm was used!
+  gamm <- FALSE
   if("gamm" %in% class(x)){
     x<-x$gam
     gamm <- TRUE
