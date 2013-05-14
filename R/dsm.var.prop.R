@@ -199,8 +199,11 @@ callo$random <- rand.list
       firstD <- firstD*sqrt.D
 
       # add the extra random effect term to the formula
-      formo <- paste(formo," + s(",dmat.name,",bs=\"re\")",collapse="")
+#      formo <- paste(formo," + s(",dmat.name,",bs=\"re\")",collapse="")
+rand.list <- list()
+rand.list[[dmat.name]]<-pdMat(form=~1)
       fo2data[[ dmat.name]] <- firstD
+callo$random <- rand.list
     }
 
     # make the formula a formula
