@@ -51,3 +51,4 @@ Collate:
     'summary.dsm.R'
     'plot.dsm.R'
     'matrixnotposdef.handler.R'
+    'dsm.cor.R'

@@ -1,3 +1,4 @@
+export(dsm.cor)
 export(dsm.var.gam)
 export(dsm.var.movblk)
 export(dsm.var.prop)

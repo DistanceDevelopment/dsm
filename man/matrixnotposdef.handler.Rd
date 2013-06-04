@@ -9,7 +9,8 @@
 }
 \value{
   not a warning if the warning was "matrix not positive
-  definite"
+  definite" or "the matrix is either rank-deficient or
+  indefinite"
 }
 \description{
   Internal function to suppress an annoying warnings from
