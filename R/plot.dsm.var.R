@@ -37,7 +37,7 @@
 #'
 #'  For a plot of uncertainty over a prediction grid, \code{pred} (a
 #'  \code{data.frame}), say, we can create the correct format by simply using
-#'  \code{pred.new <- splot(pred,1:nrow(pred))}.
+#'  \code{pred.new <- split(pred,1:nrow(pred))}.
 #'
 #' @seealso dsm.var.prop, dsm.var.gam, dsm.var.movblk
 #'
