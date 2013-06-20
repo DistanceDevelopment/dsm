@@ -1,0 +1,7 @@
+dsm news!
+
+# 2.0.5
+
+  * started NEWS file
+  * fixed bug where dsm.var.gam() didn't return predictions so plotting the result would fail
+  * silly typo in docs
