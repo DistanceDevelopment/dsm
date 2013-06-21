@@ -105,6 +105,14 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
     fit <- withCallingHandlers(gam(formula,family=family, data=dat, gamma=gamma,
                control=control, ...), warning = matrixnotposdef.handler)
   }else if(engine == "gamm"){
+    # warn if using an old version of mgcv
+    mgcv.version <- as.numeric(strsplit(as.character(packageVersion("mgcv")),
+                                        "\\.")[[1]])
+    if(mgcv.version[1]<1 | (mgcv.version[2]<7 |
+                            (mgcv.version[2]==7 & mgcv.version[3]<24))){
+      message("You are using mgcv version < 1.7-24, please update to at least 1.7-24 to avoid fitting problems.")
+    }
+
     # unsupported
     control$keepData <- NULL
     fit <- withCallingHandlers(gamm(formula,family=family, data=dat,

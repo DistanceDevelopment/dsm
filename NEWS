@@ -5,3 +5,5 @@ dsm news!
   * started NEWS file
   * fixed bug where dsm.var.gam() didn't return predictions so plotting the result would fail
   * silly typo in docs
+  * check if we're using mgcv version >= 1.7-24 for GAMM fitting and warn if not
+
