@@ -40,6 +40,12 @@
   correlations nicely, other things are up to you but you
   can get the function to return the data (by assigning the
   result to an object).
+
+  If there are NA values in the residuals then the
+  correlogram will not be calculated. This usually occurs
+  due to NA values in the covariates (so the smoother will
+  not have fitted values there). Code like
+  `any(is.na(dsm.obj$data))` might be helpful.
 }
 \examples{
 library(Distance)

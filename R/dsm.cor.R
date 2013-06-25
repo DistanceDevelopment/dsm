@@ -14,6 +14,8 @@
 #'
 #' @section Details: Note we assume that \code{Sample.Label} is in order within each transect, so sort data beforehand. The current iteration of this function will only plot correlations nicely, other things are up to you but you can get the function to return the data (by assigning the result to an object).
 #'
+#' If there are NA values in the residuals then the correlogram will not be calculated. This usually occurs due to NA values in the covariates (so the smoother will not have fitted values there). Code like `any(is.na(dsm.obj$data))` might be helpful.
+#'
 #' @examples
 #'
 #'  library(Distance)
@@ -58,6 +60,12 @@ dsm.cor <- function(dsm.obj,Transect.Label="Transect.Label",max.lag=10, resid.ty
 
     ind <- tr.labs == this.tr.lab
     these.resids <- resids[ind]
+
+    # if there are NAs then something has gone wrong
+    if(any(is.na(these.resids))){
+      stop(paste0("There are NAs in residuals. Correlogram cannot be computed.",
+                  "\nNB this is usually due to NA covariate values."))
+    }
 
     # over all the lags
     for(lag in 1:max.lag){
