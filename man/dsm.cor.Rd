@@ -5,7 +5,7 @@
   dsm.cor(dsm.obj, Transect.Label = "Transect.Label",
     max.lag = 10,
     resid.type = c("deviance", "pearson", "scaled.pearson", "working", "response"),
-    fun = cor)
+    fun = cor, ylim = c(0, 1))
 }
 \arguments{
   \item{dsm.obj}{a fitted dsm object.}
@@ -23,6 +23,8 @@
   arguments.}
 
   \item{max.lag}{maximum lag to calulate at.}
+
+  \item{ylim}{user defined limits in y direction.}
 }
 \value{
   a plot or a vector of \code{fun} applied at the lags.

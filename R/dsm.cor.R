@@ -8,6 +8,7 @@
 #' @param resid.type the type of residuals used, see \code{\link{residuals.gam}}.
 #' @param fun the function to use, by default \code{\link{cor}}, must take two column vectors as arguments.
 #' @param max.lag maximum lag to calulate at.
+#' @param ylim user defined limits in y direction.
 #'
 #' @return a plot or a vector of \code{fun} applied at the lags.
 #'
@@ -27,7 +28,7 @@
 #'
 #' @author David L. Miller
 #' @export
-dsm.cor <- function(dsm.obj,Transect.Label="Transect.Label",max.lag=10, resid.type = c("deviance", "pearson","scaled.pearson","working", "response"),fun=cor){
+dsm.cor <- function(dsm.obj,Transect.Label="Transect.Label",max.lag=10, resid.type = c("deviance", "pearson","scaled.pearson","working", "response"),fun=cor,ylim=c(0,1)){
 
   # pull the data out
   dat <- dsm.obj$data
@@ -81,7 +82,7 @@ dsm.cor <- function(dsm.obj,Transect.Label="Transect.Label",max.lag=10, resid.ty
 
   # assume cor for now...
   plot(x=c(0,as.numeric(names(lag.list))),
-       y=c(1,unlist(cors)),
+       y=c(1,unlist(cors)),ylim=ylim,
        xlab="Lag",ylab="Correlation",type="n",axes=FALSE)
   axis(1,at=c(0,as.numeric(names(lag.list))))
   axis(2)
