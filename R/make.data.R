@@ -27,9 +27,9 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
     # remove observations which were not in the detection function
     obsdata <- obsdata[obsdata$object %in% names(fitted.p),]
   }else{
-    # strip transects
+    # strip transects or presence/absence data
     fitted.p <- 1
-    if(is.null(strip.width)){
+    if(is.null(strip.width) & (response != "presence")){
       stop("You must specify strip.width for strip transects!")
     }
   }
@@ -82,8 +82,12 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
   }else{
     # or use strip.width if we have strip transects
     width <- strip.width
-    # note we have to reset off.set to "area" here
-    off.set <- "area"
+    # note we have to reset off.set
+    if(response == "presence"){
+      off.set <- "none"
+    }else{
+      off.set <- "area"
+    }
   }
 
   # calculate the density (count/area)
