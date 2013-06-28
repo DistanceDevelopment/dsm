@@ -1,7 +1,7 @@
 #' Print summary of density surface model variance object
-#' 
+#'
 #' See \code{\link{summary.dsm.var}} for information.
-#' 
+#'
 #' @S3method print summary.dsm.var
 #' @aliases print.summary.dsm.var
 #' @method print summary.dsm.var
@@ -79,7 +79,7 @@ print.summary.dsm.var<-function(x,...){
 
   }
 
-  cat("\n\n")
+  cat("\n")
   cat("Point estimate                 :", x$pred.est,"\n")
   cat("Standard error                 :", x$se,"\n")
   # print the individual CVs if we used the delta method
