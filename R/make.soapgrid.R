@@ -38,7 +38,7 @@ make.soapgrid<-function(bnd,n.grid){
 
   # which bits of the grid were inSide?
   x <- ng$x; y <- ng$y
-  onoff<-inSide(bnd,x,y)
+  onoff<-inSide(as.list(bnd),x,y)
 
   # remove the outside ones
   ng<-ng[onoff,]
