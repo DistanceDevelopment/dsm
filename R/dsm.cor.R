@@ -32,6 +32,11 @@
 #' @export
 dsm.cor <- function(dsm.obj,Transect.Label="Transect.Label",max.lag=10, resid.type = c("deviance", "pearson","scaled.pearson","working", "response"),fun=cor,ylim=c(0,1)){
 
+  # only deal with the gam object
+  if("gamm" %in% class(dsm.obj)){
+    dsm.obj <- dsm.obj$gam
+  }
+
   # pull the data out
   dat <- dsm.obj$data
 
