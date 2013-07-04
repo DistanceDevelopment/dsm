@@ -1,5 +1,12 @@
 dsm news!
 
+# 2.0.6
+
+  * removed warning about if() comparison length in make.soapgrid need to pass bnd as a list()
+  * dsm.cor now handles gamm objects
+  * dsm.cor allows one to check residual autocorrelation in your models
+  * presence/absence data now no longer needs a dummy detection function object
+
 # 2.0.5
 
   * started NEWS file
