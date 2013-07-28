@@ -173,8 +173,9 @@ summary.dsm.var<-function(object, alpha=0.05, boxplot.coef=1.5,
       sinfo$pred.est <- object$pred[[1]]
     }
 
-    # if we're using variance propagation, the CV is fine
-    if(sinfo$varprop){
+    # if we're using variance propagation or there is no detection
+    # function, then the CV is fine
+    if(sinfo$varprop | is.null(object$dsm.object$ddf)){
       # calculate the CV
       sinfo$cv <- sinfo$se/sinfo$pred.est
     }else{
