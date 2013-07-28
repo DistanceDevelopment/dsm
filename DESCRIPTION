@@ -15,12 +15,15 @@ Description: This library implements density surface modelling of line
     to https://github.com/lenthomas/dsm-distance-6.1.
     For the latest version of dsm, please use the github version at the URL
     listed below.
+    Miller, D. L., M. L. Burt, E. Rexstad and L. Thomas. 2013. Spatial
+    models for distance sampling data: recent developments and future
+    directions. Methods in Ecology and Evolution
     Hedley, S.L.,  S.T. Buckland and D.L. Borchers. 2004. "Spatial
     distance sampling methods" pp 48-70 in Advanced Distance Sampling,
     Buckland, S.T. et al. (eds). Oxford University Press.
-Version: 2.1.0
+Version: 2.1.1
 URL: http://github.com/dill/dsm
-Date: 2013-07-04
+Date: 2013-07-26
 Depends:
     R (>= 2.10.0),
     mgcv (>= 1.7),
