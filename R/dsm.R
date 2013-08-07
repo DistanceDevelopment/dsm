@@ -12,27 +12,25 @@
 #'              \code{D}, \code{density} \tab density per segment\cr
 #'  }
 #'
-#' @param formula formula for the surface. This should be a
-#'   valid \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}} formula.
-#' @param ddf.obj result from call to \code{\link{ddf}} or \code{\link{ds}}.
-#'   If \code{ddf.obj} is \code{NULL} then strip transects are assumed.
+#' @param formula formula for the surface. This should be a valid \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}} formula. See "Details", below, for how to define the response.
+#' @param ddf.obj result from call to \code{\link{ddf}} or \code{\link{ds}}. If \code{ddf.obj} is \code{NULL} then strip transects are assumed.
 #' @param segment.data segment data, see \code{\link{dsm-data}}.
 #' @param observation.data observation data, see \code{\link{dsm-data}}.
-#' @param engine which model should be used for the DSM (\code{\link{glm}}/
-#'   \code{\link{gam}}/code{\link{gamm}}).
-#' @param convert.units value to alter length to width for calculation
-#'   of the offset.
+#' @param engine which model should be used for the DSM (\code{\link{glm}}/\code{\link{gam}}/code{\link{gamm}}).
+#' @param convert.units value to alter length to width for calculation of the offset.
 #' @param family response distribution (popular choices include \code{\link{quasipoisson}}, \code{\link{Tweedie}} and \code{\link{negbin}}. Defaults to \code{quasipossion}.
-#' @param \dots anything else to be passed straight to \code{\link{gam}}.
 #' @param group should group abundance/density be modelled rather than individual abundance/density? This effectively sets the \code{size} column in \code{observation.data} to be 1.
 #' @param control the usual \code{control} argument for a \code{gam}, \code{keepData} must be \code{TRUE} or variance estimation will not work.
 #' @param availability an availability bias used to scale the counts/estimated  counts by. If we have \code{N} animals in a segment, then \code{N/availability} will be entered into the model. Uncertainty in the availability is not handled at present.
 #' @param gamma parameter to \code{gam()} set to a value of 1.4 (from advice in Wood (2006)) such that the \code{gam()} is inclined to not 'overfit.'.
 #' @param strip.width if \code{ddf.obj}, above, is \code{NULL}, then this is where the strip width is specified. Note that this is the total width, i.e. right truncation minus left truncation.
+#' @param \dots anything else to be passed straight to \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}}.
 #' @return a \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}} object, with an additional element, \code{ddf} which holds the detection function object.
 #' @author David L. Miller
 # @seealso
 #' @references Hedley, S. and S. T. Buckland. 2004. Spatial models for line transect sampling. JABES 9:181-199.
+#'
+#' Miller, DL, ML Burt, EA Rexstad and L Thomas (2013). Spatial models for distance sampling data: recent developments and future directions. Methods in Ecology and Evolution. (http://dill.github.io/papers/dsm-paper.pdf)
 #'
 #' Wood, S.N. 2006. Generalized Additive Models: An Introduction with R. CRC/Chapman & Hall.
 #' @export

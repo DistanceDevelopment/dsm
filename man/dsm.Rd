@@ -13,10 +13,11 @@ or density.}
   \item{formula}{formula for the surface. This should be a
   valid
   \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}}
-  formula.}
+  formula. See "Details", below, for how to define the
+  response.}
 
   \item{ddf.obj}{result from call to \code{\link{ddf}} or
-  \code{\link{ds}}.  If \code{ddf.obj} is \code{NULL} then
+  \code{\link{ds}}. If \code{ddf.obj} is \code{NULL} then
   strip transects are assumed.}
 
   \item{segment.data}{segment data, see
@@ -26,8 +27,7 @@ or density.}
   \code{\link{dsm-data}}.}
 
   \item{engine}{which model should be used for the DSM
-  (\code{\link{glm}}/
-  \code{\link{gam}}/code{\link{gamm}}).}
+  (\code{\link{glm}}/\code{\link{gam}}/code{\link{gamm}}).}
 
   \item{convert.units}{value to alter length to width for
   calculation of the offset.}
@@ -36,9 +36,6 @@ or density.}
   include \code{\link{quasipoisson}}, \code{\link{Tweedie}}
   and \code{\link{negbin}}. Defaults to
   \code{quasipossion}.}
-
-  \item{\dots}{anything else to be passed straight to
-  \code{\link{gam}}.}
 
   \item{group}{should group abundance/density be modelled
   rather than individual abundance/density? This
@@ -63,6 +60,9 @@ or density.}
   \code{NULL}, then this is where the strip width is
   specified. Note that this is the total width, i.e. right
   truncation minus left truncation.}
+
+  \item{\dots}{anything else to be passed straight to
+  \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}}.}
 }
 \value{
   a \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}}
@@ -119,6 +119,12 @@ plot(mod1)
 \references{
   Hedley, S. and S. T. Buckland. 2004. Spatial models for
   line transect sampling. JABES 9:181-199.
+
+  Miller, DL, ML Burt, EA Rexstad and L Thomas (2013).
+  Spatial models for distance sampling data: recent
+  developments and future directions. Methods in Ecology
+  and Evolution.
+  (http://dill.github.io/papers/dsm-paper.pdf)
 
   Wood, S.N. 2006. Generalized Additive Models: An
   Introduction with R. CRC/Chapman & Hall.
