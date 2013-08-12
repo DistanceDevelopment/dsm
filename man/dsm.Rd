@@ -7,7 +7,8 @@ or density.}
     engine = "gam", convert.units = 1,
     family = quasipoisson(link = "log"), group = FALSE,
     gamma = 1.4, control = list(keepData = TRUE),
-    availability = 1, strip.width = NULL, ...)
+    availability = 1, strip.width = NULL,
+    segment.area = NULL, ...)
 }
 \arguments{
   \item{formula}{formula for the surface. This should be a
@@ -29,8 +30,9 @@ or density.}
   \item{engine}{which model should be used for the DSM
   (\code{\link{glm}}/\code{\link{gam}}/code{\link{gamm}}).}
 
-  \item{convert.units}{value to alter length to width for
-  calculation of the offset.}
+  \item{convert.units}{value to alter length or width for
+  calculation of the offset, applied to `segment.area` if
+  used.}
 
   \item{family}{response distribution (popular choices
   include \code{\link{quasipoisson}}, \code{\link{Tweedie}}
@@ -60,6 +62,15 @@ or density.}
   \code{NULL}, then this is where the strip width is
   specified. Note that this is the total width, i.e. right
   truncation minus left truncation.}
+
+  \item{segment.area}{if `NULL` (default) segment areas
+  will be calculated by multiplying the `Effort` column in
+  `segment.data` by the truncation distance for the
+  `ddf.obj` or by `strip.width`. Alternatively a vector of
+  segment areas can be provided (which must be the same
+  length as there are rows in `segment.data` or a character
+  string giving the name of a column in `segment.data`
+  which contains the areas.}
 
   \item{\dots}{anything else to be passed straight to
   \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}}.}

@@ -27,7 +27,7 @@ Date: 2013-07-26
 Depends:
     R (>= 2.10.0),
     mgcv (>= 1.7),
-    mrds,ggplot2,Distance
+    mrds,ggplot2,Distance,testthat
 Suggests:
     maptools
 Collate:
@@ -55,3 +55,4 @@ Collate:
     'plot.dsm.R'
     'matrixnotposdef.handler.R'
     'dsm.cor.R'
+    'check.cols.R'

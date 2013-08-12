@@ -78,7 +78,7 @@ library(Distance)
  hr.model <- ds(mexdolphins$distdata, max(mexdolphins$distdata$distance), key = "hr", adjustment = NULL)
  mod1<-dsm(N~s(x,y), hr.model, mexdolphins$segdata, mexdolphins$obsdata)
 
- dsm.cor(mod1,resid.type="d",max.lag=9)
+ dsm.cor(mod1,resid.type="d",max.lag=9,Segment.Label="Sample.Label")
 }
 \author{
   David L. Miller
