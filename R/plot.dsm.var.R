@@ -180,7 +180,7 @@ plot.dsm.var<-function(x, poly=NULL, limits=NULL, breaks=NULL,
                   legend.key=element_blank())
   p <- ggplot(plotdata) + gg.opts
   p <- p + geom_tile(aes(x=x, y=y, fill=cell.cv, width=width, height=height))
-  p <- p + coord_equal()
+  p <- p + coord_cartesian()
 
   if(is.null(gg.grad)){
     p <- p + scale_fill_gradient(low="white", high="black")
