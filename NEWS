@@ -1,5 +1,10 @@
 dsm news!
 
+# 2.1.2
+  * updates to dsm.cor
+  * more unified plotting
+  * variance estimation tweaks for non-dsm models
+
 # 2.0.6
 
   * removed warning about if() comparison length in make.soapgrid need to pass bnd as a list()
