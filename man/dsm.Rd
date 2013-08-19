@@ -104,7 +104,8 @@ library(dsm)
 data(mexdolphins)
 
 # fit a detection function and look at the summary
-hr.model <- ds(mexdolphins$distdata, max(mexdolphins$distdata$distance), key = "hr", adjustment = NULL)
+hr.model <- ds(mexdolphins$distdata, max(mexdolphins$distdata$distance),
+               key = "hr", adjustment = NULL)
 summary(hr.model)
 
 # fit a simple smooth of x and y

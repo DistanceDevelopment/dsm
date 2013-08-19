@@ -1,6 +1,7 @@
 library(testthat)
 library(dsm)
 
-test_package("dsm")
+# uncomment for tests
+#test_package("dsm")
 
 

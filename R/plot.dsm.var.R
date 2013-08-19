@@ -179,7 +179,7 @@ plot.dsm.var<-function(x, poly=NULL, limits=NULL, breaks=NULL,
                   panel.background=element_blank(),
                   legend.key=element_blank())
   p <- ggplot(plotdata) + gg.opts
-  p <- p + geom_tile(aes(x=x, y=y, fill=cell.cv, width=width, height=height))
+  p <- p + geom_tile(aes_string(x="x", y="y", fill="cell.cv", width="width", height="height"))
   p <- p + coord_cartesian()
 
   if(is.null(gg.grad)){
@@ -198,9 +198,9 @@ plot.dsm.var<-function(x, poly=NULL, limits=NULL, breaks=NULL,
     poly$x <- poly[[x.name]]
     poly$y <- poly[[y.name]]
     if(!is.null(poly$group)){
-      p <- p+geom_path(aes(x=x, y=y,group=group),data=poly)
+      p <- p+geom_path(aes_string(x="x", y="y", group="group"),data=poly)
     }else{
-      p <- p+geom_path(aes(x=x, y=y),data=poly)
+      p <- p+geom_path(aes_string(x="x", y="y"),data=poly)
     }
   }
 
@@ -210,9 +210,9 @@ plot.dsm.var<-function(x, poly=NULL, limits=NULL, breaks=NULL,
     object$dsm.object$ddf$data$x <- object$dsm.object$ddf$data[[x.name]]
     object$dsm.object$ddf$data$y <- object$dsm.object$ddf$data[[y.name]]
 
-    p <- p + geom_line(aes(x=x, y=y,group=Transect.Label),
+    p <- p + geom_line(aes_string(x="x", y="y",group="Transect.Label"),
                         data=object$dsm.object$data)
-    p <- p + geom_point(aes(x, y, size=size), data=object$dsm.object$ddf$data,
+    p <- p + geom_point(aes_string(x="x", y="y", size="size"), data=object$dsm.object$ddf$data,
                         colour="blue",alpha=I(0.7))
     p <- p + labs(fill="CV",x=xlab,y=ylab, size="Counts")
   }else{
