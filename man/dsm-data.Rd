@@ -20,9 +20,8 @@
   \code{segment.data} - the segment data frame must have
   the following columns: \tabular{ll}{ \code{Effort} \tab
   the effort (in terms of length of the segment)\cr
-  \code{Transect.Label} \tab identifier for this
-  transect\cr \code{Sample.Label} \tab identifier for the
-  segment (unique!)\cr \code{???} \tab environmental
-  covariates, for example \code{x} and \code{y}}
+  \code{Sample.Label} \tab identifier for the segment
+  (unique!)\cr \code{???} \tab environmental covariates,
+  for example \code{x} and \code{y}}
 }
 

@@ -1,6 +1,13 @@
 #' Check column names exist
 #'
 #' Internal function to check that supplied `data.frames` have the correct columns.
+#' @param ddf.obj a ddf object from `mrds`
+#' @param segment.data segment data as defined in \code{\link{dsm}}
+#' @param observation.data observation data as defined in \code{\link{dsm}}
+#' @param strip.width strip width if strip transects are being used
+#' @param segment.area area of segments
+#' @return nothing, but throws an error if something went wrong
+#' @author David Lawrence Miller
 
 check.cols <- function(ddf.obj, segment.data, observation.data, strip.width,
                        segment.area){
