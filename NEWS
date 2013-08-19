@@ -1,5 +1,9 @@
 dsm news!
 
+# 2.1.3
+  * CRAN-compatibility fixes
+
+
 # 2.1.2
   * updates to dsm.cor
   * more unified plotting
