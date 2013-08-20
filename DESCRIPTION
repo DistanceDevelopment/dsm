@@ -26,10 +26,9 @@ URL: http://github.com/dill/dsm
 Date: 2013-08-19
 Depends:
     R (>= 2.10.0),
-    mgcv (>= 1.7),nlme,
-    mrds,ggplot2,Distance,testthat
+    mgcv (>= 1.7),nlme,ggplot2,mrds
 Suggests:
-    maptools
+    maptools,Distance
 Collate:
     'dsm.R'
     'predict.dsm.R'

@@ -48,6 +48,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #'  library(Distance)
 #'  library(dsm)
 #'
@@ -75,6 +76,7 @@
 #'  mod1.var.map <- dsm.var.prop(mod1,
 #'                  split(mexdolphins$pred,1:nrow(mexdolphins$pred)), off.set)
 #'  plot(mod1.var.map)
+#' }
 #'
 dsm.var.prop<-function(dsm.obj, pred.data,off.set,
     seglen.varname='Effort', type.pred="response") {

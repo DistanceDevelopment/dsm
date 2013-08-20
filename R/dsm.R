@@ -13,7 +13,7 @@
 #'  }
 #'
 #' @param formula formula for the surface. This should be a valid \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}} formula. See "Details", below, for how to define the response.
-#' @param ddf.obj result from call to \code{\link{ddf}} or \code{\link{ds}}. If \code{ddf.obj} is \code{NULL} then strip transects are assumed.
+#' @param ddf.obj result from call to \code{\link{ddf}} or \code{\link[Distance]{ds}}. If \code{ddf.obj} is \code{NULL} then strip transects are assumed.
 #' @param segment.data segment data, see \code{\link{dsm-data}}.
 #' @param observation.data observation data, see \code{\link{dsm-data}}.
 #' @param engine which model should be used for the DSM (\code{\link{glm}}/\code{\link{gam}}/code{\link{gamm}}).

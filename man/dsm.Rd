@@ -18,8 +18,8 @@ or density.}
   response.}
 
   \item{ddf.obj}{result from call to \code{\link{ddf}} or
-  \code{\link{ds}}. If \code{ddf.obj} is \code{NULL} then
-  strip transects are assumed.}
+  \code{\link[Distance]{ds}}. If \code{ddf.obj} is
+  \code{NULL} then strip transects are assumed.}
 
   \item{segment.data}{segment data, see
   \code{\link{dsm-data}}.}

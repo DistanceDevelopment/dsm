@@ -61,7 +61,8 @@
   and Sharon Hedley.
 }
 \examples{
-library(Distance)
+\dontrun{
+ library(Distance)
  library(dsm)
 
  # load the Gulf of Mexico dolphin data (see ?mexdolphins)
@@ -88,6 +89,7 @@ library(Distance)
  mod1.var.map <- dsm.var.prop(mod1,
                  split(mexdolphins$pred,1:nrow(mexdolphins$pred)), off.set)
  plot(mod1.var.map)
+}
 }
 \author{
   Mark V. Bravington, Sharon L. Hedley. Bugs added by David
