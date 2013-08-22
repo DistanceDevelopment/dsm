@@ -44,12 +44,16 @@ NULL
 
 #' Pan-tropical spotted dolphins
 #'
-#' Data from a combination of several shipboard surveys conducted on
+#' Data from a combination of several NOAA shipboard surveys conducted on
 #' pan-tropical spotted dolphins in the Gulf of Mexico. 47 observations of
 #' groups of dolphins The group size was recorded, as well as the Beaufort
 #' sea state at the time of the observation. Coordinates for each observation
 #' and bathymetry data were also available as covariates for the analysis. A 
 #' complete example analysis is provided at \url{https://github.com/dill/dsm/wiki/mexico-analysis}.
+#'
+#' @references Halpin, P.N., A.J. Read, E. Fujioka, B.D. Best, B. Donnelly, L.J. Hazen, C. Kot, K. Urian, E. LaBrecque, A. Dimatteo, J. Cleary, C. Good, L.B. Crowder, and K.D. Hyrenbach. 2009. OBIS-SEAMAP: The world data center for marine mammal, sea bird, and sea turtle distributions. Oceanography 22(2):104–115 
+#'
+#' NOAA Southeast Fisheries Science Center. 1996. Report of a Cetacean Survey of Oceanic and Selected Continental Shelf Waters of the Northern Gulf of Mexico aboard NOAA Ship Oregon II (Cruise 220)
 #'
 #' @name mexdolphins
 #' @docType data
