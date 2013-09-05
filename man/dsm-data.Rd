@@ -2,10 +2,10 @@
 \alias{dsm-data}
 \title{Data format for DSM}
 \description{
-  Two data frame must be provided to \code{\link{dsm}}.
-  They are referred to as \code{observation.data} and
-  \code{segment.data} (for observation and segment data,
-  respectively.
+  Two \code{data.frame}s must be provided to
+  \code{\link{dsm}}. They are referred to as
+  \code{observation.data} and \code{segment.data} (for
+  observation and segment data, respectively).
 }
 \details{
   \code{observation.data} - the observation data frame must

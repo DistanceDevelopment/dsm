@@ -6,26 +6,29 @@
 #'
 #' The response can be one of the following:
 #' \tabular{ll}{
-#'              \code{N}, \code{abundance} \tab count in each segment\cr
-#'              \code{Nhat}, \code{abundance.est} \tab estimated abundance per segment, estimation is via a Horvitz-Thompson estimator. This should be used when there are covariates in the detection function.\cr
-#'              \code{presence} \tab interpret the data as presence/absence (reember to change the \code{family} argument to \code{binomial()}\cr
-#'              \code{D}, \code{density} \tab density per segment\cr
+#'        \code{N}, \code{abundance} \tab count in each segment\cr
+#'        \code{Nhat}, \code{abundance.est} \tab estimated abundance per segment, estimation is via a Horvitz-Thompson estimator. This should be used when there are covariates in the detection function.\cr
+#'        \code{presence} \tab interpret the data as presence/absence (reember to change the \code{family} argument to \code{binomial()}\cr
+#'        \code{D}, \code{density} \tab density per segment\cr
 #'  }
+#'
+#' For large models, \code{engine="bam"} with \code{method="fREML"} may be useful. Models specified for \code{bam} should be as \code{gam}. READ \code{\link{bam}} before using this option, it is considered EXPERIMENTAL at the moment. In particular note that the default basis choice (thin plate regression splines) will be slow and that in general fitting is less stable than when using \code{gam}. For negative binomial response, theta must be specified when using \code{bam}.
+#'
 #'
 #' @param formula formula for the surface. This should be a valid \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}} formula. See "Details", below, for how to define the response.
 #' @param ddf.obj result from call to \code{\link{ddf}} or \code{\link[Distance]{ds}}. If \code{ddf.obj} is \code{NULL} then strip transects are assumed.
 #' @param segment.data segment data, see \code{\link{dsm-data}}.
 #' @param observation.data observation data, see \code{\link{dsm-data}}.
-#' @param engine which model should be used for the DSM (\code{\link{glm}}/\code{\link{gam}}/code{\link{gamm}}).
+#' @param engine which fitting engine should be used for the DSM (\code{\link{glm}}/\code{\link{gam}}/code{\link{gamm}}/\code{\link{bam}}).
 #' @param convert.units value to alter length or width for calculation of the offset, applied to `segment.area` if used.
 #' @param family response distribution (popular choices include \code{\link{quasipoisson}}, \code{\link{Tweedie}} and \code{\link{negbin}}. Defaults to \code{quasipossion}.
 #' @param group should group abundance/density be modelled rather than individual abundance/density? This effectively sets the \code{size} column in \code{observation.data} to be 1.
-#' @param control the usual \code{control} argument for a \code{gam}, \code{keepData} must be \code{TRUE} or variance estimation will not work.
+#' @param control the usual \code{control} argument for a \code{gam}, \code{keepData} must be \code{TRUE} for variance estimation to work.
 #' @param availability an availability bias used to scale the counts/estimated  counts by. If we have \code{N} animals in a segment, then \code{N/availability} will be entered into the model. Uncertainty in the availability is not handled at present.
-#' @param gamma parameter to \code{gam()} set to a value of 1.4 (from advice in Wood (2006)) such that the \code{gam()} is inclined to not 'overfit.'.
+#' @param gamma parameter to \code{gam()} set to a value of 1.4 (from advice in Wood (2006)) such that the \code{gam()} is inclined to not 'overfit'.
 #' @param strip.width if \code{ddf.obj}, above, is \code{NULL}, then this is where the strip width is specified. Note that this is the total width, i.e. right truncation minus left truncation.
-#' @param segment.area if `NULL` (default) segment areas will be calculated by multiplying the `Effort` column in `segment.data` by the truncation distance for the `ddf.obj` or by `strip.width`. Alternatively a vector of segment areas can be provided (which must be the same length as there are rows in `segment.data` or a character string giving the name of a column in `segment.data` which contains the areas.
-#' @param \dots anything else to be passed straight to \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}}.
+#' @param segment.area if `NULL` (default) segment areas will be calculated by multiplying the `Effort` column in `segment.data` by the truncation distance for the `ddf.obj` or by `strip.width`. Alternatively a vector of segment areas can be provided (which must be the same length as the number of rows in `segment.data`) or a character string giving the name of a column in `segment.data` which contains the areas.
+#' @param \dots anything else to be passed straight to \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}}/\code{\link{bam}}.
 #' @return a \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}} object, with an additional element, \code{ddf} which holds the detection function object.
 #' @author David L. Miller
 # @seealso
@@ -110,6 +113,9 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
   if(engine == "gam"){
     fit <- withCallingHandlers(gam(formula,family=family, data=dat, gamma=gamma,
                control=control, ...), warning = matrixnotposdef.handler)
+  }else if(engine == "bam"){
+    fit <- withCallingHandlers(bam(formula,family=family, data=dat, gamma=gamma,
+               control=control, ...), warning = matrixnotposdef.handler)
   }else if(engine == "gamm"){
     # warn if using an old version of mgcv
     mgcv.version <- as.numeric(strsplit(as.character(packageVersion("mgcv")),
@@ -127,7 +133,7 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
   }else if(engine == "glm"){
     fit <- glm(formula,family=family, data=dat, ...)
   }else{
-    stop("engine must be one of 'gam', 'gamm' or 'glm'")
+    stop("engine must be one of 'gam', 'gamm', 'bam' or 'glm'")
   }
 
   ## save knots

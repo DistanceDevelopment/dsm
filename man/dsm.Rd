@@ -27,8 +27,9 @@ or density.}
   \item{observation.data}{observation data, see
   \code{\link{dsm-data}}.}
 
-  \item{engine}{which model should be used for the DSM
-  (\code{\link{glm}}/\code{\link{gam}}/code{\link{gamm}}).}
+  \item{engine}{which fitting engine should be used for the
+  DSM
+  (\code{\link{glm}}/\code{\link{gam}}/code{\link{gamm}}/\code{\link{bam}}).}
 
   \item{convert.units}{value to alter length or width for
   calculation of the offset, applied to `segment.area` if
@@ -45,8 +46,8 @@ or density.}
   \code{observation.data} to be 1.}
 
   \item{control}{the usual \code{control} argument for a
-  \code{gam}, \code{keepData} must be \code{TRUE} or
-  variance estimation will not work.}
+  \code{gam}, \code{keepData} must be \code{TRUE} for
+  variance estimation to work.}
 
   \item{availability}{an availability bias used to scale
   the counts/estimated counts by. If we have \code{N}
@@ -56,7 +57,7 @@ or density.}
 
   \item{gamma}{parameter to \code{gam()} set to a value of
   1.4 (from advice in Wood (2006)) such that the
-  \code{gam()} is inclined to not 'overfit.'.}
+  \code{gam()} is inclined to not 'overfit'.}
 
   \item{strip.width}{if \code{ddf.obj}, above, is
   \code{NULL}, then this is where the strip width is
@@ -68,12 +69,12 @@ or density.}
   `segment.data` by the truncation distance for the
   `ddf.obj` or by `strip.width`. Alternatively a vector of
   segment areas can be provided (which must be the same
-  length as there are rows in `segment.data` or a character
-  string giving the name of a column in `segment.data`
-  which contains the areas.}
+  length as the number of rows in `segment.data`) or a
+  character string giving the name of a column in
+  `segment.data` which contains the areas.}
 
   \item{\dots}{anything else to be passed straight to
-  \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}}.}
+  \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}}/\code{\link{bam}}.}
 }
 \value{
   a \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}}
@@ -95,6 +96,16 @@ or density.}
   presence/absence (reember to change the \code{family}
   argument to \code{binomial()}\cr \code{D}, \code{density}
   \tab density per segment\cr }
+
+  For large models, \code{engine="bam"} with
+  \code{method="fREML"} may be useful. Models specified for
+  \code{bam} should be as \code{gam}. READ
+  \code{\link{bam}} before using this option, it is
+  considered EXPERIMENTAL at the moment. In particular note
+  that the default basis choice (thin plate regression
+  splines) will be slow and that in general fitting is less
+  stable than when using \code{gam}. For negative binomial
+  response, theta must be specified when using \code{bam}.
 }
 \examples{
 library(Distance)
