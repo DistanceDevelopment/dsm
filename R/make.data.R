@@ -7,11 +7,13 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
   distance.name<-'distance'
   cluster.name<-'size'
 
-  # Truncate observations made at distances greater than the truncation width;
-  # truncation value picked up from metadata contained within ddfobject
-  # No truncation for strip transects
-  if (!is.null(ddfobject)){
-     obsdata <- obsdata[obsdata[,distance.name]<=ddfobject$meta.data$width,]
+  # Check that observations are between left and right truncation
+  # warning only!
+  # No truncation check for strip transects
+  if(!is.null(ddfobject) & !is.null(obsdata[[distance.name]])){
+    if(obsdata[,distance.name]>ddfobject$meta.data$width){
+      warning("Some observations are outside of detection function truncation!")
+    }
   }
 
   # Estimating group abundance/density

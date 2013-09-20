@@ -24,7 +24,8 @@
 }
 \description{
   Internal function to check that supplied `data.frames`
-  have the correct columns.
+  have the correct columns and checks that sample labels
+  are all unique.
 }
 \author{
   David Lawrence Miller
