@@ -1,25 +1,10 @@
-.onAttach<-function(library,pkgname)
-{
+.onAttach<-function(...){
+  if (!interactive()) return()
   # this now conforms with new R conventions
   # uses packageStartupMessage which can then be
   # surpressed
-  dsm.version()
-}
+  version <- utils::packageVersion("dsm")
 
-# taken from mgcv
-dsm.version <- function(){ 
-  library(help=dsm)$info[[1]] -> linfo
-
-  version <- linfo[pmatch("Version",linfo)]
-  built <- linfo[pmatch("Built",linfo)]
-
-  um <- strsplit(version," ")[[1]]
-  version <- um[nchar(um)>0][2]
-
-  um <- strsplit(built,"R")[[1]]
-  built <- um[nchar(um)>0][2]
-
-  hello <- paste("This is dsm ",version,"\nBuilt: R",built,sep="")
+  hello <- return(paste0("This is dsm ",version,"\n"))
   packageStartupMessage(hello)
 }
-
