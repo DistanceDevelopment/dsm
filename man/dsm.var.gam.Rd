@@ -41,10 +41,6 @@
   to obtain uncertainty estimates. See Wood (2006).
 }
 \details{
-  NB. We include uncertainty in the detection function
-  using the delta method so INDEPENDENCE is still assumed
-  between the two variance components
-
   This is based on \code{\link{dsm.var.prop}} by Mark
   Bravington and Sharon Hedley.
 }
