@@ -11,8 +11,8 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
   # warning only!
   # No truncation check for strip transects
   if(!is.null(ddfobject) & !is.null(obsdata[[distance.name]])){
-    if(obsdata[,distance.name]>ddfobject$meta.data$width){
-      warning("Some observations are outside of detection function truncation!")
+    if(any(obsdata[,distance.name]>ddfobject$meta.data$width)){
+      stop("Some observations are outside of detection function truncation!")
     }
   }
 
