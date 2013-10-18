@@ -1,5 +1,8 @@
 dsm news!
 
+# 2.1.4
+ * check that all observed distances are within width will now throw an error
+
 # 2.1.3
   * CRAN-compatibility fixes
 
