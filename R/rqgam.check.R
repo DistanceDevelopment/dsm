@@ -5,8 +5,10 @@
 #' these need to be done using \code{\link{gam.check}}.
 #'
 #' @param gam.obj a \code{gam}, \code{glm} or \code{dsm} object.
+#' @param ... arguments passed on to all plotting function
+#' @return just plots!
 #'
-#' @author Natalie Kelly, bugs added by Dave Miller
+#' @author Based on code provided by Natalie Kelly, bugs added by Dave Miller
 #' @export
 #'
 #' @examples

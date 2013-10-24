@@ -19,7 +19,7 @@
 #' @param ddf.obj result from call to \code{\link{ddf}} or \code{\link[Distance]{ds}}. If \code{ddf.obj} is \code{NULL} then strip transects are assumed.
 #' @param segment.data segment data, see \code{\link{dsm-data}}.
 #' @param observation.data observation data, see \code{\link{dsm-data}}.
-#' @param engine which fitting engine should be used for the DSM (\code{\link{glm}}/\code{\link{gam}}/code{\link{gamm}}/\code{\link{bam}}).
+#' @param engine which fitting engine should be used for the DSM (\code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}}/\code{\link{bam}}).
 #' @param convert.units value to alter length or width for calculation of the offset, applied to `segment.area` if used.
 #' @param family response distribution (popular choices include \code{\link{quasipoisson}}, \code{\link{Tweedie}} and \code{\link{negbin}}. Defaults to \code{quasipossion}.
 #' @param group should group abundance/density be modelled rather than individual abundance/density? This effectively sets the \code{size} column in \code{observation.data} to be 1.

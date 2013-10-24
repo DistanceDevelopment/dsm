@@ -29,7 +29,7 @@ or density.}
 
   \item{engine}{which fitting engine should be used for the
   DSM
-  (\code{\link{glm}}/\code{\link{gam}}/code{\link{gamm}}/\code{\link{bam}}).}
+  (\code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}}/\code{\link{bam}}).}
 
   \item{convert.units}{value to alter length or width for
   calculation of the offset, applied to `segment.area` if

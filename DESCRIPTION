@@ -55,3 +55,4 @@ Collate:
     'matrixnotposdef.handler.R'
     'dsm.cor.R'
     'check.cols.R'
+    'rqgam.check.R'
