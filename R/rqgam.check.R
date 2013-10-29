@@ -59,7 +59,6 @@ rqgam.check<-function(gam.obj,...){
 
   ## Response vs. Fitted Values
   plot(fitted(gam.obj), gam.obj$y,
-       xlim=range(c(fitted(gam.obj), gam.obj$y)),
        main="Response vs. Fitted Values",
        xlab="Fitted Values", ylab="Response",...)
   #lines(lowess(gam.obj$fitted.values, gam.obj$model[,1]), col = 2)
