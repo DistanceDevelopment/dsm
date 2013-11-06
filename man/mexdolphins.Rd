@@ -57,7 +57,7 @@ $ survey.area:'data.frame':  45 obs. of  2 variables:
   Dimatteo, J. Cleary, C. Good, L.B. Crowder, and K.D.
   Hyrenbach. 2009. OBIS-SEAMAP: The world data center for
   marine mammal, sea bird, and sea turtle distributions.
-  Oceanography 22(2):104–115
+  Oceanography 22(2):104-115
 
   NOAA Southeast Fisheries Science Center. 1996. Report of
   a Cetacean Survey of Oceanic and Selected Continental
