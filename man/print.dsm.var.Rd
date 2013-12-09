@@ -2,7 +2,7 @@
 \alias{print.dsm.var}
 \title{Print a description of a density surface model variance object}
 \usage{
-  \method{print}{dsm.var} (x, ...)
+\method{print}{dsm.var}(x, ...)
 }
 \arguments{
   \item{x}{a \code{dsm} variance object}
@@ -11,17 +11,17 @@
   consistency}
 }
 \value{
-  NULL
+NULL
 }
 \description{
-  This method only provides a short summary, use the
-  \code{\link{summary.dsm.var}} method for information.
+This method only provides a short summary, use the
+\code{\link{summary.dsm.var}} method for information.
 }
 \author{
-  David L. Miller
+David L. Miller
 }
 \seealso{
-  \code{\link{summary.dsm.var}}
+\code{\link{summary.dsm.var}}
 }
 \keyword{utility}
 

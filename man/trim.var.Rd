@@ -2,7 +2,7 @@
 \alias{trim.var}
 \title{Trimmed variance}
 \usage{
-  trim.var(untrimmed.bootstraps, boxplot.coef = 1.5)
+trim.var(untrimmed.bootstraps, boxplot.coef = 1.5)
 }
 \arguments{
   \item{untrimmed.bootstraps}{(usually the
@@ -13,18 +13,18 @@
   calculate the outliers see \code{\link{boxplot}}.}
 }
 \value{
-  trimmed variance
+trimmed variance
 }
 \description{
-  Trim the variance estimates from the bootstrap. This is
-  defined as the percentage defined as amount necessary to
-  bring median and trimmed mean within 8% of each other
-  these are defined as 'outliers'.
+Trim the variance estimates from the bootstrap. This is
+defined as the percentage defined as amount necessary to
+bring median and trimmed mean within 8% of each other these
+are defined as 'outliers'.
 }
 \details{
-  Code originally by Louise Burt.
+Code originally by Louise Burt.
 }
 \author{
-  Louise Burt
+Louise Burt
 }
 

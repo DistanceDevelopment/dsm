@@ -2,11 +2,10 @@
 \alias{plot.dsm.var}
 \title{Create plots of abundance uncertainty}
 \usage{
-  \method{plot}{dsm.var} (x, poly = NULL, limits = NULL,
-    breaks = NULL, legend.breaks = NULL, xlab = "x",
-    ylab = "y", observations = TRUE, plot = TRUE,
-    boxplot.coef = 1.5, x.name = "x", y.name = "y",
-    gg.grad = NULL, ...)
+\method{plot}{dsm.var}(x, poly = NULL, limits = NULL, breaks = NULL,
+  legend.breaks = NULL, xlab = "x", ylab = "y", observations = TRUE,
+  plot = TRUE, boxplot.coef = 1.5, x.name = "x", y.name = "y",
+  gg.grad = NULL, ...)
 }
 \arguments{
   \item{x}{a \code{dsm.var} object}
@@ -47,12 +46,11 @@
   \item{\dots}{any other arguments}
 }
 \value{
-  a plot
+a plot
 }
 \description{
-  Note that the prediction data set must have \code{x} and
-  \code{y} columns even if these were not used in the
-  model.
+Note that the prediction data set must have \code{x} and
+\code{y} columns even if these were not used in the model.
 }
 \section{Details}{
   In order to get plotting to work with
@@ -69,9 +67,9 @@
   split(pred,1:nrow(pred))}.
 }
 \author{
-  David L. Miller
+David L. Miller
 }
 \seealso{
-  dsm.var.prop, dsm.var.gam, dsm.var.movblk
+dsm.var.prop, dsm.var.gam, dsm.var.movblk
 }
 

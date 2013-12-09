@@ -2,7 +2,7 @@
 \alias{plot.dsm}
 \title{Plot a density surface model.}
 \usage{
-  \method{plot}{dsm} (x, ...)
+\method{plot}{dsm}(x, ...)
 }
 \arguments{
   \item{x}{a \code{dsm} object}
@@ -11,15 +11,15 @@
   \code{\link{plot.gam}}.}
 }
 \value{
-  a plot!
+a plot!
 }
 \description{
-  See \code{\link{plot.gam}}.
+See \code{\link{plot.gam}}.
 }
 \author{
-  David L. Miller
+David L. Miller
 }
 \seealso{
-  dsm plot.gam
+dsm plot.gam
 }
 

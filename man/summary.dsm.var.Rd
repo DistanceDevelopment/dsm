@@ -2,8 +2,8 @@
 \alias{summary.dsm.var}
 \title{Summarize the variance of a density surface model}
 \usage{
-  \method{summary}{dsm.var} (object, alpha = 0.05,
-    boxplot.coef = 1.5, bootstrap.subregions = NULL, ...)
+\method{summary}{dsm.var}(object, alpha = 0.05, boxplot.coef = 1.5,
+  bootstrap.subregions = NULL, ...)
 }
 \arguments{
   \item{object}{a \code{dsm.var} object}
@@ -22,16 +22,16 @@
   \item{\dots}{unused arguments for S3 compatibility}
 }
 \value{
-  a summary object
+a summary object
 }
 \description{
-  Gives a brief summary of a fitted \code{dsm} variance
-  object.
+Gives a brief summary of a fitted \code{dsm} variance
+object.
 }
 \author{
-  David L. Miller
+David L. Miller
 }
 \seealso{
-  dsm.var.movblk dsm.var.prop
+dsm.var.movblk dsm.var.prop
 }
 

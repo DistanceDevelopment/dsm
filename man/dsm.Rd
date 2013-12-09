@@ -3,12 +3,10 @@
 \title{Fit a density surface model to segment-specific estimates of abundance
 or density.}
 \usage{
-  dsm(formula, ddf.obj, segment.data, observation.data,
-    engine = "gam", convert.units = 1,
-    family = quasipoisson(link = "log"), group = FALSE,
-    gamma = 1.4, control = list(keepData = TRUE),
-    availability = 1, strip.width = NULL,
-    segment.area = NULL, ...)
+dsm(formula, ddf.obj, segment.data, observation.data, engine = "gam",
+  convert.units = 1, family = quasipoisson(link = "log"), group = FALSE,
+  gamma = 1.4, control = list(keepData = TRUE), availability = 1,
+  strip.width = NULL, segment.area = NULL, ...)
 }
 \arguments{
   \item{formula}{formula for the surface. This should be a
@@ -37,7 +35,7 @@ or density.}
 
   \item{family}{response distribution (popular choices
   include \code{\link{quasipoisson}}, \code{\link{Tweedie}}
-  and \code{\link{negbin}}. Defaults to
+  and \code{\link{negbin}}). Defaults to
   \code{quasipossion}.}
 
   \item{group}{should group abundance/density be modelled
@@ -57,7 +55,9 @@ or density.}
 
   \item{gamma}{parameter to \code{gam()} set to a value of
   1.4 (from advice in Wood (2006)) such that the
-  \code{gam()} is inclined to not 'overfit'.}
+  \code{gam()} is inclined to not 'overfit' when GCV is
+  used to select the smoothing parameter (ignored for REML,
+  see \code{link{gam}} for further details).}
 
   \item{strip.width}{if \code{ddf.obj}, above, is
   \code{NULL}, then this is where the strip width is
@@ -77,35 +77,35 @@ or density.}
   \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}}/\code{\link{bam}}.}
 }
 \value{
-  a \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}}
-  object, with an additional element, \code{ddf} which
-  holds the detection function object.
+a \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}}
+object, with an additional element, \code{ddf} which holds
+the detection function object.
 }
 \description{
-  Given a detection function analysis, construct a density
-  surface model (DSM) based on environmental covariates.
+Given a detection function analysis, construct a density
+surface model (DSM) based on environmental covariates.
 }
 \details{
-  The response can be one of the following: \tabular{ll}{
-  \code{N}, \code{abundance} \tab count in each segment\cr
-  \code{Nhat}, \code{abundance.est} \tab estimated
-  abundance per segment, estimation is via a
-  Horvitz-Thompson estimator. This should be used when
-  there are covariates in the detection function.\cr
-  \code{presence} \tab interpret the data as
-  presence/absence (reember to change the \code{family}
-  argument to \code{binomial()}\cr \code{D}, \code{density}
-  \tab density per segment\cr }
+The response (LHS of `formula`) can be one of the
+following: \tabular{ll}{ \code{N}, \code{abundance} \tab
+count in each segment\cr \code{Nhat}, \code{abundance.est}
+\tab estimated abundance per segment, estimation is via a
+Horvitz-Thompson estimator. This should be used when there
+are covariates in the detection function.\cr
+\code{presence} \tab interpret the data as presence/absence
+(remember to change the \code{family} argument to
+\code{binomial()})\cr \code{D}, \code{density} \tab density
+per segment\cr }
 
-  For large models, \code{engine="bam"} with
-  \code{method="fREML"} may be useful. Models specified for
-  \code{bam} should be as \code{gam}. READ
-  \code{\link{bam}} before using this option, it is
-  considered EXPERIMENTAL at the moment. In particular note
-  that the default basis choice (thin plate regression
-  splines) will be slow and that in general fitting is less
-  stable than when using \code{gam}. For negative binomial
-  response, theta must be specified when using \code{bam}.
+For large models, \code{engine="bam"} with
+\code{method="fREML"} may be useful. Models specified for
+\code{bam} should be as \code{gam}. READ \code{\link{bam}}
+before using this option, it is considered EXPERIMENTAL at
+the moment. In particular note that the default basis
+choice (thin plate regression splines) will be slow and
+that in general fitting is less stable than when using
+\code{gam}. For negative binomial response, theta must be
+specified when using \code{bam}.
 }
 \examples{
 library(Distance)
@@ -137,19 +137,18 @@ sum(mod1.pred)
 plot(mod1)
 }
 \author{
-  David L. Miller
+David L. Miller
 }
 \references{
-  Hedley, S. and S. T. Buckland. 2004. Spatial models for
-  line transect sampling. JABES 9:181-199.
+Hedley, S. and S. T. Buckland. 2004. Spatial models for
+line transect sampling. JABES 9:181-199.
 
-  Miller, DL, ML Burt, EA Rexstad and L Thomas (2013).
-  Spatial models for distance sampling data: recent
-  developments and future directions. Methods in Ecology
-  and Evolution.
-  (http://dill.github.io/papers/dsm-paper.pdf)
+Miller, DL, ML Burt, EA Rexstad and L Thomas (2013).
+Spatial models for distance sampling data: recent
+developments and future directions. Methods in Ecology and
+Evolution. (http://dill.github.io/papers/dsm-paper.pdf)
 
-  Wood, S.N. 2006. Generalized Additive Models: An
-  Introduction with R. CRC/Chapman & Hall.
+Wood, S.N. 2006. Generalized Additive Models: An
+Introduction with R. CRC/Chapman & Hall.
 }
 

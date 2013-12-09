@@ -2,8 +2,8 @@
 \alias{dsm.var.gam}
 \title{Variance estimation via Bayesian results}
 \usage{
-  dsm.var.gam(dsm.obj, pred.data, off.set = NULL,
-    seglen.varname = "Effort", type.pred = "response")
+dsm.var.gam(dsm.obj, pred.data, off.set = NULL, seglen.varname = "Effort",
+  type.pred = "response")
 }
 \arguments{
   \item{dsm.obj}{an object returned from running
@@ -27,24 +27,24 @@
   "response" or "link" scale?  (default "response").}
 }
 \value{
-  a list with elements \tabular{ll}{\code{model} \tab the
-  fitted model object\cr \code{pred.var} \tab covariances
-  of the regions given in \code{pred.data}. Diagonal
-  elements are the variances in order\cr \code{bootstrap}
-  \tab logical, always \code{FALSE}\cr \code{pred.data}
-  \tab as above\cr \code{off.set} \tab as above\cr
-  \code{model}\tab the fitted model with the extra term\cr
-  \code{dsm.object} \tab the original model, as above }
+a list with elements \tabular{ll}{\code{model} \tab the
+fitted model object\cr \code{pred.var} \tab covariances of
+the regions given in \code{pred.data}. Diagonal elements
+are the variances in order\cr \code{bootstrap} \tab
+logical, always \code{FALSE}\cr \code{pred.data} \tab as
+above\cr \code{off.set} \tab as above\cr \code{model}\tab
+the fitted model with the extra term\cr \code{dsm.object}
+\tab the original model, as above }
 }
 \description{
-  Use results from the Bayesian interpretation of the GAM
-  to obtain uncertainty estimates. See Wood (2006).
+Use results from the Bayesian interpretation of the GAM to
+obtain uncertainty estimates. See Wood (2006).
 }
 \details{
-  This is based on \code{\link{dsm.var.prop}} by Mark
-  Bravington and Sharon Hedley.
+This is based on \code{\link{dsm.var.prop}} by Mark
+Bravington and Sharon Hedley.
 }
 \author{
-  David L. Miller
+David L. Miller
 }
 

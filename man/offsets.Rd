@@ -2,6 +2,6 @@
 \alias{offsets}
 \title{Offsets}
 \description{
-  This will be documentation on calculating offsets.
+This will be documentation on calculating offsets.
 }
 

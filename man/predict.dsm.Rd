@@ -2,8 +2,8 @@
 \alias{predict.dsm}
 \title{Predict from a fitted density surface model}
 \usage{
-  \method{predict}{dsm} (object, newdata = NULL,
-    off.set = NULL, type = "response", ...)
+\method{predict}{dsm}(object, newdata = NULL, off.set = NULL,
+  type = "response", ...)
 }
 \arguments{
   \item{object}{a fitted \code{\link{dsm}} object as
@@ -27,13 +27,12 @@
   \code{\link{predict.gam}} or \code{\link{predict.glm}}.}
 }
 \value{
-  predicted values on the response scale
-  (density/abundance).
+predicted values on the response scale (density/abundance).
 }
 \description{
-  Make predictions outside (or inside) the covered area.
+Make predictions outside (or inside) the covered area.
 }
 \author{
-  David L. Miller
+David L. Miller
 }
 

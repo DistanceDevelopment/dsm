@@ -2,7 +2,7 @@
 \alias{rqgam.check}
 \title{Randomised quantile residuals check plots for GAMs/DSMs}
 \usage{
-  rqgam.check(gam.obj, ...)
+rqgam.check(gam.obj, ...)
 }
 \arguments{
   \item{gam.obj}{a \code{gam}, \code{glm} or \code{dsm}
@@ -11,13 +11,13 @@
   \item{...}{arguments passed on to all plotting function}
 }
 \value{
-  just plots!
+just plots!
 }
 \description{
-  Function operates as \code{\link{gam.check}} but using
-  randomised quantile residuals, a la Dunn and Smyth
-  (1996). Checks of \code{k} are not computed, these need
-  to be done using \code{\link{gam.check}}.
+Function operates as \code{\link{gam.check}} but using
+randomised quantile residuals, a la Dunn and Smyth (1996).
+Checks of \code{k} are not computed, these need to be done
+using \code{\link{gam.check}}.
 }
 \examples{
 library(Distance)
@@ -35,7 +35,7 @@ mod1<-dsm(N~s(x,y), hr.model, mexdolphins$segdata, mexdolphins$obsdata)
 rqgam.check(mod1)
 }
 \author{
-  Based on code provided by Natalie Kelly, bugs added by
-  Dave Miller
+Based on code provided by Natalie Kelly, bugs added by Dave
+Miller
 }
 

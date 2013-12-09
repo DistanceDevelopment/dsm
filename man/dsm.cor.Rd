@@ -2,10 +2,10 @@
 \alias{dsm.cor}
 \title{Check for autocorrelation in residuals}
 \usage{
-  dsm.cor(dsm.obj, Transect.Label = "Transect.Label",
-    Segment.Label = "Segment.Label", max.lag = 10,
-    resid.type = "scaled.pearson", fun = cor,
-    ylim = c(0, 1), subset = "all", ...)
+dsm.cor(dsm.obj, Transect.Label = "Transect.Label",
+  Segment.Label = "Segment.Label", max.lag = 10,
+  resid.type = "scaled.pearson", fun = cor, ylim = c(0, 1),
+  subset = "all", ...)
 }
 \arguments{
   \item{dsm.obj}{a fitted dsm object.}
@@ -40,11 +40,11 @@
   \item{...}{other options to pass to \code{plot}.}
 }
 \value{
-  a plot or a vector of \code{fun} applied at the lags.
+a plot or a vector of \code{fun} applied at the lags.
 }
 \description{
-  Once a DSM has been fitted to data, this function can be
-  used to check for autocorrelation in the residuals.
+Once a DSM has been fitted to data, this function can be
+used to check for autocorrelation in the residuals.
 }
 \section{Details}{
   Within each \code{Transect.Label}, segments will be
@@ -82,6 +82,6 @@ library(Distance)
  dsm.cor(mod1,resid.type="d",max.lag=9,Segment.Label="Sample.Label")
 }
 \author{
-  David L. Miller
+David L. Miller
 }
 

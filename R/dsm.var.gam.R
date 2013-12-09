@@ -84,7 +84,7 @@ dsm.var.gam<-function(dsm.obj, pred.data,off.set=NULL,
     lpmat <- predict(fit.with.pen, newdata=pred.data[[ ipg]], type='lpmatrix')
     lppred <- lpmat %**% cft
 
-    # if the offset is just one number then repeat it enough times 
+    # if the offset is just one number then repeat it enough times
     if(length(off.set[[ipg]])==1){
       this.off.set <- rep(off.set[[ipg]],nrow(pred.data[[ipg]]))
     }else{

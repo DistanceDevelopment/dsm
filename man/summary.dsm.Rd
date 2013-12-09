@@ -2,7 +2,7 @@
 \alias{summary.dsm}
 \title{Summarize a fitted density surface model}
 \usage{
-  \method{summary}{dsm} (object, ...)
+\method{summary}{dsm}(object, ...)
 }
 \arguments{
   \item{object}{a \code{dsm} object}
@@ -11,15 +11,15 @@
   \code{\link{summary.gam}}.}
 }
 \value{
-  a summary object
+a summary object
 }
 \description{
-  Gives a brief summary of a fitted \code{dsm} object.
+Gives a brief summary of a fitted \code{dsm} object.
 }
 \author{
-  David L. Miller
+David L. Miller
 }
 \seealso{
-  dsm
+dsm
 }
 
