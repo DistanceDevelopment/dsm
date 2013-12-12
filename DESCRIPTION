@@ -11,8 +11,9 @@ Description: This library implements density surface modelling of line
     Outputs are point and interval estimates of population abundance
     and density.
     Please note that this version of dsm WILL NOT work with the Windows
-    package DISTANCE. For a version that works with DISTANCE, please go
-    to https://github.com/lenthomas/dsm-distance-6.1.
+    package DISTANCE earlier than version 6.2. For a version that works with
+    DISTANCE 6.1, please go to:
+    https://github.com/DistanceDevelopment/dsm-distance-6.1
     For the latest version of dsm, please use the github version at the URL
     listed below.
     Miller, D. L., M. L. Burt, E. Rexstad and L. Thomas. 2013. Spatial
@@ -25,7 +26,7 @@ Version: 2.1.5
 URL: http://github.com/dill/dsm
 Date: 2013-10-13
 Depends:
-    R (>= 2.10.0),
+    R (>= 2.15.0),
     mgcv (>= 1.7),nlme,ggplot2,mrds
 Suggests:
     maptools,Distance
