@@ -61,8 +61,9 @@ dsm(formula, ddf.obj, segment.data, observation.data, engine = "gam",
 
   \item{strip.width}{if \code{ddf.obj}, above, is
   \code{NULL}, then this is where the strip width is
-  specified. Note that this is the total width, i.e. right
-  truncation minus left truncation.}
+  specified (i.e. for a strip transect survey). This is
+  sometimes (and more correctly) referred to as the
+  half-width, i.e. right truncation minus left truncation.}
 
   \item{segment.area}{if `NULL` (default) segment areas
   will be calculated by multiplying the `Effort` column in
@@ -151,10 +152,12 @@ David L. Miller
 Hedley, S. and S. T. Buckland. 2004. Spatial models for
 line transect sampling. JABES 9:181-199.
 
-Miller, DL, ML Burt, EA Rexstad and L Thomas (2013).
-Spatial models for distance sampling data: recent
+Miller, D. L., Burt, M. L., Rexstad, E. A., Thomas, L.
+(2013), Spatial models for distance sampling data: recent
 developments and future directions. Methods in Ecology and
-Evolution. (http://dill.github.io/papers/dsm-paper.pdf)
+Evolution, 4: 1001–1010. doi: 10.1111/2041-210X.12105 (Open
+Access, available at
+http://onlinelibrary.wiley.com/doi/10.1111/2041-210X.12105/abstract)
 
 Wood, S.N. 2006. Generalized Additive Models: An
 Introduction with R. CRC/Chapman & Hall.
