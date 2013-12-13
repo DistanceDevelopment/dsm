@@ -38,13 +38,13 @@ dsm(formula, ddf.obj, segment.data, observation.data, engine = "gam",
   and \code{\link{negbin}}). Defaults to
   \code{quasipossion}.}
 
-  \item{group}{should group abundance/density be modelled
-  rather than individual abundance/density? This
-  effectively sets the \code{size} column in
-  \code{observation.data} to be 1.}
+  \item{group}{if \code{TRUE} the abundance of groups will
+  be calculated rather than the abundance of individuals.
+  Setting this option to \code{TRUE} is equivalent to
+  setting the size of each group to be 1.}
 
   \item{control}{the usual \code{control} argument for a
-  \code{gam}, \code{keepData} must be \code{TRUE} for
+  \code{gam}; \code{keepData} must be \code{TRUE} for
   variance estimation to work.}
 
   \item{availability}{an availability bias used to scale
@@ -71,7 +71,8 @@ dsm(formula, ddf.obj, segment.data, observation.data, engine = "gam",
   segment areas can be provided (which must be the same
   length as the number of rows in `segment.data`) or a
   character string giving the name of a column in
-  `segment.data` which contains the areas.}
+  `segment.data` which contains the areas. If
+  \code{segment.area} is specified it takes precident.}
 
   \item{\dots}{anything else to be passed straight to
   \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}}/\code{\link{bam}}.}
@@ -82,8 +83,15 @@ object, with an additional element, \code{ddf} which holds
 the detection function object.
 }
 \description{
-Given a detection function analysis, construct a density
-surface model (DSM) based on environmental covariates.
+Fits a density surface model (DSM) to detection adjusted
+counts from a spatially-referenced distance sampling
+analysis. \code{\link{dsm}} takes observations of animals,
+allocates them to segments of line (or strip transects) and
+optionally adjusts the counts based on detectability using
+a supplied detection function model. A generalized additive
+model, generalized mixed model or generalised is then used
+to model these adjusted counts based on a formula involving
+environmental covariates.
 }
 \details{
 The response (LHS of `formula`) can be one of the

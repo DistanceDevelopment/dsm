@@ -1,6 +1,4 @@
 .onAttach<-function(...){
-  if (!interactive()) return()
-  # this now conforms with new R conventions
   # uses packageStartupMessage which can then be
   # surpressed
   version <- utils::packageVersion("dsm")
