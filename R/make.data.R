@@ -63,6 +63,14 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
     off.set <- "none"
   }
 
+  ## warn if any observations were not allocated
+  responsecheck <- aggregate(obsdata[,cluster.name],
+                             list(obsdata[,segnum.name]), sum)
+  if(sum(obsdata[,cluster.name]) != sum(responsecheck[,2])){
+    message(paste0("Some observations were not allocated to segments!\n",
+                   "Check that Sample.Labels match"))
+  }
+
   # name the response data columns
   names(responsedata)<-c(segnum.name,response)
 
