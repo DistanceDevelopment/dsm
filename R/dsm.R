@@ -11,13 +11,13 @@
 #'
 #' The response (LHS of `formula`) can be one of the following:
 #' \tabular{ll}{
-#'   \code{N}, \code{abundance} \tab count in each segment\cr
+#'   \code{n}, \code{count}, \code{N}, \code{abundance} \tab count in each segment\cr
 #'   \code{Nhat}, \code{abundance.est} \tab estimated abundance per segment, estimation is via a Horvitz-Thompson estimator. This should be used when there are covariates in the detection function.\cr
 #'   \code{presence} \tab interpret the data as presence/absence (remember to change the \code{family} argument to \code{binomial()})\cr
-#'   \code{D}, \code{density} \tab density per segment\cr
+#'   \code{D}, \code{density}, \code{Dhat}, \code{density.est} \tab density per segment\cr
 #'  }
 #'
-#' For large models, \code{engine="bam"} with \code{method="fREML"} may be useful. Models specified for \code{bam} should be as \code{gam}. READ \code{\link{bam}} before using this option, it is considered EXPERIMENTAL at the moment. In particular note that the default basis choice (thin plate regression splines) will be slow and that in general fitting is less stable than when using \code{gam}. For negative binomial response, theta must be specified when using \code{bam}.
+#' For large models, \code{engine="bam"} with \code{method="fREML"} may be useful. Models specified for \code{bam} should be as \code{gam}. READ \code{\link{bam}} before using this option; this option is considered EXPERIMENTAL at the moment. In particular note that the default basis choice (thin plate regression splines) will be slow and that in general fitting is less stable than when using \code{gam}. For negative binomial response, theta must be specified when using \code{bam}.
 #'
 #'
 #' @param formula formula for the surface. This should be a valid \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}} formula. See "Details", below, for how to define the response.
@@ -89,8 +89,9 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
 
   ## check the formula
   response <- as.character(formula)[2]
-  possible.responses <- c("D","density",
-                          "N","Nhat","abundance","abundance.est",
+  possible.responses <- c("D","density","Dhat","density.est",
+                          "N","abundance","count","n",
+                          "Nhat","abundance.est",
                           "presence")
   if(!(response %in% possible.responses)){
     stop(paste("Model must be one of:",
@@ -99,7 +100,7 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
 
 
   # if we are not modelling density, then add in the offset
-  if(!(response %in% c("D","density","presence"))){
+  if(!(response %in% c("D","density","Dhat","density.est","presence"))){
     formula <- as.formula(paste(c(as.character(formula)[c(2,1,3)],
                                 "+ offset(off.set)"),collapse=""))
   }

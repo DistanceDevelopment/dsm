@@ -1,5 +1,9 @@
 dsm news!
 
+# 2.2.1
+ * switch over to new testthat spec
+ * added new response variables (Dhat, density.est, count, n), suggestion from Len Thomas
+
 # 2.1.4
  * check that all observed distances are within width will now throw an error
 

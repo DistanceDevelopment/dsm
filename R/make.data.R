@@ -38,16 +38,16 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
 
   # if the ps are all the same (count model) then just grab the 1 unique
   # value
-  if(response %in% c("N","abundance")){
+  if(response %in% c("N","abundance","count","n")){
     fitted.p <- unique(fitted.p)
   }
 
   ## Aggregate response values of the sightings over segments
-  if(response %in% c("D","density")){
+  if(response %in% c("D","density","Dhat","density.est")){
     responsedata <- aggregate(obsdata[,cluster.name]/(fitted.p*availability),
                                 list(obsdata[,segnum.name]), sum)
     off.set <- "none"
-  }else if(response %in% c("N","abundance")){
+  }else if(response %in% c("N","abundance","count","n")){
     responsedata <- aggregate(obsdata[,cluster.name]/availability,
                               list(obsdata[,segnum.name]), sum)
     off.set <- "eff.area"

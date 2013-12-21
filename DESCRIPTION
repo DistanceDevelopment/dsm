@@ -22,9 +22,9 @@ Description: This library implements density surface modelling of line
     Hedley, S.L.,  S.T. Buckland and D.L. Borchers. 2004. "Spatial
     distance sampling methods" pp 48-70 in Advanced Distance Sampling,
     Buckland, S.T. et al. (eds). Oxford University Press.
-Version: 2.1.5
+Version: 2.2.1
 URL: http://github.com/dill/dsm
-Date: 2013-10-13
+Date: 2013-12-21
 Depends:
     R (>= 2.15.0),
     mgcv (>= 1.7),nlme,ggplot2,mrds
