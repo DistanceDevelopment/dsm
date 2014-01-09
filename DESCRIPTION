@@ -27,6 +27,6 @@ URL: http://github.com/dill/dsm
 Date: 2013-12-21
 Depends:
     R (>= 2.15.0),
-    mgcv (>= 1.7),nlme,ggplot2,mrds
+    mgcv (>= 1.7),nlme,ggplot2,mrds,statmod
 Suggests:
     maptools,Distance

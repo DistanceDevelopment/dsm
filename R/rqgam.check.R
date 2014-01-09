@@ -26,9 +26,7 @@
 #' # fit a simple smooth of x and y
 #' mod1<-dsm(N~s(x,y), hr.model, mexdolphins$segdata, mexdolphins$obsdata)
 #' rqgam.check(mod1)
-
 rqgam.check<-function(gam.obj,...){
-  library(statmod)
 
   # for negbin need to set $theta
   if(grepl("Negative Binomial",gam.obj$family$family)){
