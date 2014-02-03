@@ -2,7 +2,8 @@
   # uses packageStartupMessage which can then be
   # surpressed
   version <- utils::packageVersion("dsm")
+  built <- utils::packageDescription("dsm",fields="Built")
 
-  hello <- return(paste0("This is dsm ",version,"\n"))
+  hello <- paste0("This is dsm ",version,"\nBuilt: ",built)
   packageStartupMessage(hello)
 }
