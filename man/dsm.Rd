@@ -107,15 +107,26 @@ argument to \code{binomial()})\cr \code{D}, \code{density},
 \code{Dhat}, \code{density.est} \tab density per segment\cr
 }
 
-For large models, \code{engine="bam"} with
-\code{method="fREML"} may be useful. Models specified for
-\code{bam} should be as \code{gam}. READ \code{\link{bam}}
-before using this option; this option is considered
-EXPERIMENTAL at the moment. In particular note that the
-default basis choice (thin plate regression splines) will
-be slow and that in general fitting is less stable than
-when using \code{gam}. For negative binomial response,
-theta must be specified when using \code{bam}.
+The offset used in the model is dependent on the response:
+\tabular{ll}{ count \tab area of segment multiplied by
+average probability of detection in the segment\cr
+estimated count \tab area of the segment\cr presence \tab
+zero\cr density \tab zero\cr }
+
+In the latter two cases (density and presence estimation)
+observations can be weighted by segment areas via the
+\code{weights=} argument.
+}
+\section{Large models}{
+  For large models, \code{engine="bam"} with
+  \code{method="fREML"} may be useful. Models specified for
+  \code{bam} should be as \code{gam}. READ
+  \code{\link{bam}} before using this option; this option
+  is considered EXPERIMENTAL at the moment. In particular
+  note that the default basis choice (thin plate regression
+  splines) will be slow and that in general fitting is less
+  stable than when using \code{gam}. For negative binomial
+  response, theta must be specified when using \code{bam}.
 }
 \examples{
 library(Distance)
