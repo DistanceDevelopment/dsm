@@ -97,6 +97,9 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
       dat[,response] <- dat[,response]/(segment.area*convert.units)
     }
 
+    # set the segment area in the data
+    dat$segment.area <- segment.area*convert.units
+
   }else{
     # pull this from the detection function
     if (!is.null(ddfobject)){
@@ -132,9 +135,10 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
       dat[,response] <- dat[,response]/(2*dat[,seglength.name]*
                                         width*convert.units)
     }
+
+    # set the segment area in the data
+    dat$segment.area <- 2*dat[,seglength.name]*width*convert.units
   }
-
-
 
   # multiply up by conversion factor
   dat$off.set <- dat$off.set*convert.units

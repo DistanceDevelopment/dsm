@@ -46,14 +46,23 @@ test_that("formula specs",{
 
   ## models for density
   D.gcv <- 1.660703e-07
-  density.D<-dsm(D~s(x,y), hn.model, mexdolphins$segdata, mexdolphins$obsdata)
+  density.D<-dsm(D~s(x,y), hn.model, mexdolphins$segdata, mexdolphins$obsdata,
+                 weights=rep(1,nrow(mexdolphins$segdata)))
   expect_that(density.D$gcv.ubre, equals(D.gcv,tolerance=par.tol))
-  density.density<-dsm(density~s(x,y), hn.model, mexdolphins$segdata, mexdolphins$obsdata)
+
+  density.density<-dsm(density~s(x,y), hn.model, mexdolphins$segdata,
+                       mexdolphins$obsdata,
+                       weights=rep(1,nrow(mexdolphins$segdata)))
   expect_that(density.density$gcv.ubre, equals(D.gcv,tolerance=par.tol))
+
   density.Dhat<-dsm(Dhat~s(x,y), hn.model, mexdolphins$segdata,
-                  mexdolphins$obsdata)
+                    mexdolphins$obsdata,
+                    weights=rep(1,nrow(mexdolphins$segdata)))
   expect_that(density.Dhat$gcv.ubre, equals(D.gcv,tolerance=par.tol))
-  density.density.est<-dsm(density.est~s(x,y), hn.model, mexdolphins$segdata, mexdolphins$obsdata)
+
+  density.density.est<-dsm(density.est~s(x,y), hn.model, mexdolphins$segdata,
+                           mexdolphins$obsdata,
+                           weights=rep(1,nrow(mexdolphins$segdata)))
   expect_that(density.density.est$gcv.ubre, equals(D.gcv,tolerance=par.tol))
 
 

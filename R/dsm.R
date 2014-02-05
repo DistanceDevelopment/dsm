@@ -25,7 +25,7 @@
 #'   density \tab zero\cr
 #'  }
 #'
-#' In the latter two cases (density and presence estimation) observations can be weighted by segment areas via the \code{weights=} argument.
+#' In the latter two cases (density and presence estimation) observations can be weighted by segment areas via the \code{weights=} argument. By default, when density or presence are estimated the weights are set to the segment areas (using \code{segment.area} or by calculating \code{2*width*Effort}).
 #'
 #' @section Large models:
 #'
@@ -44,7 +44,7 @@
 #' @param availability an availability bias used to scale the counts/estimated  counts by. If we have \code{N} animals in a segment, then \code{N/availability} will be entered into the model. Uncertainty in the availability is not handled at present.
 #' @param gamma parameter to \code{gam()} set to a value of 1.4 (from advice in Wood (2006)) such that the \code{gam()} is inclined to not 'overfit' when GCV is used to select the smoothing parameter (ignored for REML, see \code{link{gam}} for further details).
 #' @param strip.width if \code{ddf.obj}, above, is \code{NULL}, then this is where the strip width is specified (i.e. for a strip transect survey). This is sometimes (and more correctly) referred to as the half-width, i.e. right truncation minus left truncation.
-#' @param segment.area if `NULL` (default) segment areas will be calculated by multiplying the `Effort` column in `segment.data` by the truncation distance for the `ddf.obj` or by `strip.width`. Alternatively a vector of segment areas can be provided (which must be the same length as the number of rows in `segment.data`) or a character string giving the name of a column in `segment.data` which contains the areas. If \code{segment.area} is specified it takes precident.
+#' @param segment.area if `NULL` (default) segment areas will be calculated by multiplying the `Effort` column in `segment.data` by the (right minus left) truncation distance for the `ddf.obj` or by `strip.width`. Alternatively a vector of segment areas can be provided (which must be the same length as the number of rows in `segment.data`) or a character string giving the name of a column in `segment.data` which contains the areas. If \code{segment.area} is specified it takes precident.
 #' @param \dots anything else to be passed straight to \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}}/\code{\link{bam}}.
 #' @return a \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}} object, with an additional element, \code{ddf} which holds the detection function object.
 #' @author David L. Miller
@@ -110,13 +110,6 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
                paste(possible.responses,collapse=", ")))
   }
 
-
-  # if we are not modelling density, then add in the offset
-  if(!(response %in% c("D","density","Dhat","density.est","presence"))){
-    formula <- as.formula(paste(c(as.character(formula)[c(2,1,3)],
-                                "+ offset(off.set)"),collapse=""))
-  }
-
   ## check that the necessary columns exist in the data
   # NB this doesn't return anything just throws an error if something
   #    bad happens
@@ -127,14 +120,21 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
                    group, convert.units, availability, strip.width,
                    segment.area)
 
-  ## run the engine
-  if(engine == "gam"){
-    fit <- withCallingHandlers(gam(formula,family=family, data=dat, gamma=gamma,
-               control=control, ...), warning = matrixnotposdef.handler)
-  }else if(engine == "bam"){
-    fit <- withCallingHandlers(bam(formula,family=family, data=dat, gamma=gamma,
-               control=control, ...), warning = matrixnotposdef.handler)
-  }else if(engine == "gamm"){
+  ## if we are not modelling density/presence, then add in the offset
+  ##  to the formula
+  if(!(response %in% c("D","density","Dhat","density.est","presence"))){
+    formula <- as.formula(paste(c(as.character(formula)[c(2,1,3)],
+                                "+ offset(off.set)"),collapse=""))
+  }else{
+    # set the weights if we are doing density or presence estimation
+    if(!("weights" %in% names(match.call()))){
+      weights <- dat$segment.area
+    }
+  }
+
+  # if we're using a gamm engine
+  if(engine == "gamm"){
+
     # warn if using an old version of mgcv
     mgcv.version <- as.numeric(strsplit(as.character(packageVersion("mgcv")),
                                         "\\.")[[1]])
@@ -145,14 +145,31 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
 
     # unsupported
     control$keepData <- NULL
-    fit <- withCallingHandlers(gamm(formula,family=family, data=dat,
-                                    gamma=gamma,control=control, ...),
-                               warning = matrixnotposdef.handler)
-  }else if(engine == "glm"){
-    fit <- glm(formula,family=family, data=dat, ...)
+  }
+
+  ## run the engine
+  if(engine %in% c("gam","bam","glm","gamm")){
+    args <- list(formula = formula,
+                 family  = family,
+                 data    = dat,
+                 gamma   = gamma,
+                 control = control,...)
+
+  # when we have presence or density set the weights
+  if(response %in% c("D","density","Dhat","density.est","presence")){
+    if("weights" %in% names(match.call())){
+      args$weights <- match.call()$weights
+    }else{
+      args$weights <- weights
+    }
+  }
+
+    fit <- withCallingHandlers(do.call(engine,args),
+                               warning=matrixnotposdef.handler)
   }else{
     stop("engine must be one of 'gam', 'gamm', 'bam' or 'glm'")
   }
+
 
   ## save knots
   if("knots" %in% names(match.call())){

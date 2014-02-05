@@ -67,12 +67,12 @@ dsm(formula, ddf.obj, segment.data, observation.data, engine = "gam",
 
   \item{segment.area}{if `NULL` (default) segment areas
   will be calculated by multiplying the `Effort` column in
-  `segment.data` by the truncation distance for the
-  `ddf.obj` or by `strip.width`. Alternatively a vector of
-  segment areas can be provided (which must be the same
-  length as the number of rows in `segment.data`) or a
-  character string giving the name of a column in
-  `segment.data` which contains the areas. If
+  `segment.data` by the (right minus left) truncation
+  distance for the `ddf.obj` or by `strip.width`.
+  Alternatively a vector of segment areas can be provided
+  (which must be the same length as the number of rows in
+  `segment.data`) or a character string giving the name of
+  a column in `segment.data` which contains the areas. If
   \code{segment.area} is specified it takes precident.}
 
   \item{\dots}{anything else to be passed straight to
@@ -115,7 +115,10 @@ zero\cr density \tab zero\cr }
 
 In the latter two cases (density and presence estimation)
 observations can be weighted by segment areas via the
-\code{weights=} argument.
+\code{weights=} argument. By default, when density or
+presence are estimated the weights are set to the segment
+areas (using \code{segment.area} or by calculating
+\code{2*width*Effort}).
 }
 \section{Large models}{
   For large models, \code{engine="bam"} with
