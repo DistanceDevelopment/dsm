@@ -24,6 +24,12 @@ west-east and south-north from axes through
 (\code{lon0},\code{lat0}) using the "spherical law of
 cosines".
 }
+\details{
+WARNING: This is an approximate procedure for converting
+between latitude/ longitude and Northing/Easting. Consider
+using projection conversions available in packages
+\code{sp} and \code{rgdal} for better results.
+}
 \author{
 Simon N. Wood
 }

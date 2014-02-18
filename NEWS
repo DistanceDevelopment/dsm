@@ -3,7 +3,7 @@ dsm news!
 # 2.2.2
  * version number reporting now works (Len Thomas found this bug)
  * more documentation
- * by default density and presence models are now weighted by area
+ * by default density and presence models are now weighted by area of each segment
 
 # 2.2.1
  * switch over to new testthat spec

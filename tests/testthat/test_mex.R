@@ -55,6 +55,10 @@ test_that("Density weighting",{
 
   expect_equal(fitted(mod1.w1),fitted(mod1.w2))
 
+  # scalar input of weights (same as weighting all as 1, or 10)
+  mod1.ws1 <- dsm(D~s(x,y), hn.model, mexdolphins$segdata, mexdolphins$obsdata,
+                weights=1)
 
+  expect_equal(fitted(mod1.ws1),fitted(mod1.w2))
 
 })

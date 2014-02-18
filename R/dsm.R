@@ -25,7 +25,7 @@
 #'   density \tab zero\cr
 #'  }
 #'
-#' In the latter two cases (density and presence estimation) observations can be weighted by segment areas via the \code{weights=} argument. By default, when density or presence are estimated the weights are set to the segment areas (using \code{segment.area} or by calculating \code{2*width*Effort}).
+#' In the latter two cases (density and presence estimation) observations can be weighted by segment areas via the \code{weights=} argument. By default (\code{weights=NULL}), when density or presence are estimated the weights are set to the segment areas (using \code{segment.area} or by calculating \code{2*}(strip width)\code{*Effort}) Alternatively \code{weights=1} will set the weights to all be equal.  A third alternative is to pass in a vector of length equal to the number of segments, containing appropriate weights.
 #'
 #' @section Large models:
 #'
@@ -45,6 +45,7 @@
 #' @param gamma parameter to \code{gam()} set to a value of 1.4 (from advice in Wood (2006)) such that the \code{gam()} is inclined to not 'overfit' when GCV is used to select the smoothing parameter (ignored for REML, see \code{link{gam}} for further details).
 #' @param strip.width if \code{ddf.obj}, above, is \code{NULL}, then this is where the strip width is specified (i.e. for a strip transect survey). This is sometimes (and more correctly) referred to as the half-width, i.e. right truncation minus left truncation.
 #' @param segment.area if `NULL` (default) segment areas will be calculated by multiplying the `Effort` column in `segment.data` by the (right minus left) truncation distance for the `ddf.obj` or by `strip.width`. Alternatively a vector of segment areas can be provided (which must be the same length as the number of rows in `segment.data`) or a character string giving the name of a column in `segment.data` which contains the areas. If \code{segment.area} is specified it takes precident.
+#' @param weights weights for each observation used in model fitting. The default, \code{weights=NULL}, weights each observation by its area (see Details). Setting a scalar value (e.g. \code{weights=1}) all observations are equally weighted.
 #' @param \dots anything else to be passed straight to \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}}/\code{\link{bam}}.
 #' @return a \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}} object, with an additional element, \code{ddf} which holds the detection function object.
 #' @author David L. Miller
@@ -89,7 +90,7 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
                 engine="gam", convert.units=1,
                 family=quasipoisson(link="log"), group=FALSE, gamma=1.4,
                 control=list(keepData=TRUE), availability=1, strip.width=NULL,
-                segment.area=NULL,...){
+                segment.area=NULL,weights=NULL,...){
 
   # if we have a model fitted using Distance, then just pull out the
   # ddf component
@@ -127,8 +128,10 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
                                 "+ offset(off.set)"),collapse=""))
   }else{
     # set the weights if we are doing density or presence estimation
-    if(!("weights" %in% names(match.call()))){
+    if(is.null(weights)){
       weights <- dat$segment.area
+    }else if(length(weights)==1){
+      weights <- rep(1,nrow(dat))
     }
   }
 
@@ -153,16 +156,8 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
                  family  = family,
                  data    = dat,
                  gamma   = gamma,
+                 weights = weights,
                  control = control,...)
-
-  # when we have presence or density set the weights
-  if(response %in% c("D","density","Dhat","density.est","presence")){
-    if("weights" %in% names(match.call())){
-      args$weights <- match.call()$weights
-    }else{
-      args$weights <- weights
-    }
-  }
 
     fit <- withCallingHandlers(do.call(engine,args),
                                warning=matrixnotposdef.handler)

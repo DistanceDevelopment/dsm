@@ -6,7 +6,7 @@ or density.}
 dsm(formula, ddf.obj, segment.data, observation.data, engine = "gam",
   convert.units = 1, family = quasipoisson(link = "log"), group = FALSE,
   gamma = 1.4, control = list(keepData = TRUE), availability = 1,
-  strip.width = NULL, segment.area = NULL, ...)
+  strip.width = NULL, segment.area = NULL, weights = NULL, ...)
 }
 \arguments{
   \item{formula}{formula for the surface. This should be a
@@ -75,6 +75,12 @@ dsm(formula, ddf.obj, segment.data, observation.data, engine = "gam",
   a column in `segment.data` which contains the areas. If
   \code{segment.area} is specified it takes precident.}
 
+  \item{weights}{weights for each observation used in model
+  fitting. The default, \code{weights=NULL}, weights each
+  observation by its area (see Details). Setting a scalar
+  value (e.g. \code{weights=1}) all observations are
+  equally weighted.}
+
   \item{\dots}{anything else to be passed straight to
   \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}}/\code{\link{bam}}.}
 }
@@ -115,10 +121,14 @@ zero\cr density \tab zero\cr }
 
 In the latter two cases (density and presence estimation)
 observations can be weighted by segment areas via the
-\code{weights=} argument. By default, when density or
-presence are estimated the weights are set to the segment
-areas (using \code{segment.area} or by calculating
-\code{2*width*Effort}).
+\code{weights=} argument. By default (\code{weights=NULL}),
+when density or presence are estimated the weights are set
+to the segment areas (using \code{segment.area} or by
+calculating \code{2*}(strip width)\code{*Effort})
+Alternatively \code{weights=1} will set the weights to all
+be equal.  A third alternative is to pass in a vector of
+length equal to the number of segments, containing
+appropriate weights.
 }
 \section{Large models}{
   For large models, \code{engine="bam"} with

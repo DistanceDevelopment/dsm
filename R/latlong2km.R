@@ -4,6 +4,10 @@
 #' south-north from axes through (\code{lon0},\code{lat0}) using the 
 #' "spherical law of cosines".
 #'
+#' WARNING: This is an approximate procedure for converting between latitude/
+#' longitude and Northing/Easting. Consider using projection conversions
+#' available in packages \code{sp} and \code{rgdal} for better results.
+#'
 #' @param lon longitude
 #' @param lat latitude
 #' @param lon0 longitude reference point (defaults to mean longitude)
