@@ -1,5 +1,8 @@
 dsm news!
 
+# 2.2.3
+ * moving block boostrap was using observed abundances as the residuals and therefore gave wrong answers (Eric Rexstad found this bug)
+
 # 2.2.2
  * version number reporting now works (Len Thomas found this bug)
  * more documentation
@@ -15,21 +18,18 @@ dsm news!
 # 2.1.3
   * CRAN-compatibility fixes
 
-
 # 2.1.2
   * updates to dsm.cor
   * more unified plotting
   * variance estimation tweaks for non-dsm models
 
 # 2.0.6
-
   * removed warning about if() comparison length in make.soapgrid need to pass bnd as a list()
   * dsm.cor now handles gamm objects
   * dsm.cor allows one to check residual autocorrelation in your models
   * presence/absence data now no longer needs a dummy detection function object
 
 # 2.0.5
-
   * started NEWS file
   * fixed bug where dsm.var.gam() didn't return predictions so plotting the result would fail
   * silly typo in docs

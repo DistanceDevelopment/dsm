@@ -10,9 +10,6 @@
   \item{\dots}{unspecified and unused arguments for S3
   consistency}
 }
-\value{
-NULL
-}
 \description{
 This method only provides a short summary, use the
 \code{\link{summary.dsm.var}} method for information.

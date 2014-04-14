@@ -11,8 +11,9 @@ context("Mexico pantropical dolphin data")
 data(mexdolphins)
 
 # fit a detection function and look at the summary
-hn.model <- ds(mexdolphins$distdata, max(mexdolphins$distdata$distance),
-               adjustment = NULL)
+hn.model <- suppressMessages(ds(mexdolphins$distdata,
+                                max(mexdolphins$distdata$distance),
+                                adjustment = NULL))
 
 test_that("Do we get the same results?",{
 

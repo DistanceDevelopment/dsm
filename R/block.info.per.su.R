@@ -17,9 +17,10 @@
 #'                 num.req     \tab number of blocks needed for the unit\cr
 #'                }
 block.info.per.su <- function(block.size,data,name.su){
-  unit <- NULL
-  unit$name <- name.su
+
+  unit <- data.frame(name=name.su)
   num.su <- length(name.su)
+
   for (i in 1:num.su) {
     unit$num.seg[i] <- length(
                      data$sampling.unit[data$sampling.unit == unit$name[i]])
@@ -46,9 +47,6 @@ block.info.per.su <- function(block.size,data,name.su){
   #  samp units different sizes so need to get more observations than required 
   unit$num.req <- ceiling(unit$num.seg/block.size)
   unit$num.req[unit$num.req==0] <- 1
-
-  # make a data.frame()
-  unit <- data.frame(unit)
 
   return(unit)
 }

@@ -10,9 +10,6 @@
   \item{\dots}{unspecified and unused arguments for S3
   consistency}
 }
-\value{
-NULL
-}
 \description{
 This method just gives a short description of the fitted
 model. Use the \code{\link{summary.dsm}} method for more

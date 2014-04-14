@@ -1,13 +1,11 @@
-#' Generate a vector of residuals to be mapped back onto the data
+#' Moving block bootstrap sampler
 #'
-#' Not usually used on its own, called from within 
-#' \code{\link{dsm.var.movblk}}.
+#' Not usually used on its own, called from within \code{\link{dsm.var.movblk}}.
 #'
 #' @param  num.blocks.required number of blocks that we need.
 #' @param  block.size number of segments per block.
 #' @param  which.blocks which blocks should be sampled.
-#' @param  dsm.data the \code{$data} element of the result of a call to
-#'         \code{dsm.fit}.
+#' @param  dsm.data the \code{$data} element of the result of a call to \code{dsm}.
 #' @param  unit.info result of calling \code{\link{block.info.per.su}}.
 #' @param  n.units number of sampling units.
 #'
@@ -17,25 +15,24 @@
 generate.mb.sample <- function(num.blocks.required, block.size, which.blocks,
                                 dsm.data, unit.info, n.units){
 
-  bs <- NULL
-  bs$block <- which.blocks
-  bs <- data.frame(bs)
+  #bs <- NULL
+  #bs$block <- which.blocks
+  bs <- data.frame(block=which.blocks)
   # storage
   bs.response <- c()
   bs.data <- c()
 
   for(i in 1:num.blocks.required){
     ## find the sampling unit that the block is in
-
     # is the block a start or end point for sampling unit?
-    j<-which(bs$block[i] == unit.info$start.block)
+    j <- which(bs$block[i] == unit.info$start.block)
     if(length(j)==0){
-      j<-which(bs$block[i] == unit.info$end.block)
+      j <- which(bs$block[i] == unit.info$end.block)
     }
     # if not a start or end, then where is it?
     if(length(j)==0){
-      find.block<-c(unit.info$start.block,bs$block[i])
-      j<-which(sort(find.block)==bs$block[i])-1
+      find.block <- c(unit.info$start.block,bs$block[i])
+      j <- which(sort(find.block)==bs$block[i])-1
     }
 
     bs$unit.name[i] <- as.character(unit.info$name[j])
@@ -59,7 +56,7 @@ generate.mb.sample <- function(num.blocks.required, block.size, which.blocks,
     bs.data <- rbind(bs.data, x.block)
   }
 
-  # Now need to map this onto data vector so same length 
+  # Now need to map this onto data vector of the same length
   # (ie chopping off unwanted bits of blocks)
 
   temp <- bs.data$log.resids

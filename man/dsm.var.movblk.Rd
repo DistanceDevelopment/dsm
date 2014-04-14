@@ -21,7 +21,7 @@ dsm.var.movblk(dsm.object, pred.data, n.boot, block.size, off.set,
   \item{block.size}{number of segments in each block.}
 
   \item{off.set}{offset to be used in the model, see
-  \code{\link{offsets}}.  Note that this should NOT be
+  \code{\link{offsets}} Note that this should NOT be
   \code{log()}'d.}
 
   \item{ds.uncertainty}{incorporate uncertainty in the
