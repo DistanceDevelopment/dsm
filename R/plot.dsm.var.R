@@ -42,6 +42,7 @@
 #' @seealso dsm.var.prop, dsm.var.gam, dsm.var.movblk
 #'
 #' @author David L. Miller
+#' @import ggplot2
 #'
 ### TODO
 # covariates in the detection function

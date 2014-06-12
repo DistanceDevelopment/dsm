@@ -4,6 +4,7 @@
 #'
 #'
 #' @name dsm-package
+#' @import mgcv nlme mrds
 #'
 NULL
 

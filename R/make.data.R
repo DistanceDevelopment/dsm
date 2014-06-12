@@ -8,11 +8,11 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
   cluster.name<-'size'
 
   # Check that observations are between left and right truncation
-  # warning only!
+  # warning only -- observations are excluded below
   # No truncation check for strip transects
   if(!is.null(ddfobject) & !is.null(obsdata[[distance.name]])){
     if(any(obsdata[,distance.name]>ddfobject$meta.data$width)){
-      stop("Some observations are outside of detection function truncation!")
+      warning("Some observations are outside of detection function truncation!")
     }
   }
 

@@ -1,5 +1,8 @@
 dsm news!
 
+# 2.2.4
+ * changed stop() to warning() when data not in the detection function are included in the observation data frame, as they are automatically excluded later, bug found by Eric Rexstad and Anna Cucknell
+
 # 2.2.3
  * moving block boostrap was using observed abundances as the residuals and therefore gave wrong answers (Eric Rexstad found this bug)
 
