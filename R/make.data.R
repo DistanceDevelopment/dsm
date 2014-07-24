@@ -120,6 +120,13 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
       }
     }
 
+    # check that none of the Effort values are zero
+    if(any(dat[,seglength.name]==0)){
+      stop(paste0("Effort values for segments: ",
+                  paste(which(dat[,seglength.name]==0),collapse=", "),
+                  " are 0."))
+    }
+
     # calculate the offset
     #   area we just calculate the area
     #   effective area multiply by p

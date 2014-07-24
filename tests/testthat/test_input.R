@@ -65,5 +65,10 @@ test_that("formula specs",{
                            weights=rep(1,nrow(mexdolphins$segdata)))
   expect_that(density.density.est$gcv.ubre, equals(D.gcv,tolerance=par.tol))
 
+  # check that Effort is not zero
+  mex_zero_effort <- mexdolphins$segdata
+  mex_zero_effort$Effort[c(1,5,10)] <- 0
+  expect_error(dsm(abundance.est~s(x,y), hn.model, mex_zero_effort,
+                           mexdolphins$obsdata))
 
 })
