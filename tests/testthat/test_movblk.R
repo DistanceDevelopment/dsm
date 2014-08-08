@@ -2,8 +2,8 @@ library(dsm)
 library(Distance)
 library(testthat)
 
-lnl.tol<-1e-4
-par.tol<-1e-6
+cv.tol<-1e-5
+N.tol<-1e-4
 
 
 set.seed(1123)
@@ -28,12 +28,12 @@ mod1.movblk <- dsm.var.movblk(mod1, mexdolphins$preddata, n.boot = 2,
 test_that("mexdolphins - bootstrap results for s(x,y)",{
 
   expect_that(mod1.movblk$study.area.total,
-              equals(c(37141.16, 20659.74),tol=par.tol))
+              equals(c(37141.16, 20659.74),tol=N.tol))
 
   expect_that(summary(mod1.movblk)$cv[1],
-              equals(0.338609,tol=par.tol))
+              equals(0.33859918,tol=cv.tol))
 
   expect_that(summary(mod1.movblk)$bootstrap.cv[1],
-              equals(0.3137792,tol=par.tol))
+              equals(0.31377924,tol=cv.tol))
 })
 
