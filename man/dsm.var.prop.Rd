@@ -56,6 +56,8 @@ the paper in the references below.
 Many prediction grids can be supplied by supplying a list of
 \code{data.frame}s to the function.
 
+Note that this routine is only useful if a detection function has been used in the DSM.
+
 Based on (much more general) code from Mark Bravington and Sharon Hedley.
 }
 \examples{

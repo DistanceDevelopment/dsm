@@ -1,5 +1,8 @@
 dsm news!
 
+# 2.2.5
+ * dsm.var.prop will now throw an error if there is no detection function in the dsm that it's trying to calculate the variance for (thanks to Adrián Schiavini for finding this)
+
 # 2.2.4
  * changed stop() to warning() when data not in the detection function are included in the observation data frame, as they are automatically excluded later, bug found by Eric Rexstad and Anna Cucknell
 

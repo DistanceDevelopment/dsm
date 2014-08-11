@@ -11,7 +11,9 @@
 #'
 #' Many prediction grids can be supplied by supplying a list of 
 #' \code{data.frame}s to the function.
-#' 
+#'
+#' Note that this routine is only useful if a detection function has been used in the DSM.
+#'
 #' Based on (much more general) code from Mark Bravington and Sharon Hedley.
 #'
 #' @param dsm.obj an object returned from running \code{\link{dsm}}.
@@ -119,6 +121,12 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
 
   # pull out the ddf object
   ddf.obj <- dsm.obj$ddf
+
+  # if there is no ddf object, then we should stop!
+  # thanks to Adrian Schiavini for spotting this
+  if(is.null(ddf.obj)){
+    stop("No detection function in this analysis, use dsm.var.gam")
+  }
 
   # this function changes the parameters in the ddf object
   tweakParams <- function(object, params) {
