@@ -60,13 +60,13 @@ plot.dsm.var<-function(x, poly=NULL, limits=NULL, breaks=NULL,
     stop("Looks like you're calling plot on a whole area summary, see ?plot.dsm.var for how to format your data correctly for plotting")
   }
 
-  # if we did used the random effects trick, collapse everything down
+  # if we used GAM intervals (via dsm.var.prop or dsm.var.gam)
   if(!object$bootstrap){
-    pd<-c()
-    for(i in 1:length(object$pred.data)){
-      pd<-rbind(pd,object$pred.data[[i]])
-    }
-    object$pred.data <- pd
+    cnames <- names(object$pred.data[[1]])
+    object$pred.data <- data.frame(matrix(unlist(object$pred.data),
+                                          nrow=length(object$pred.data),
+                                          byrow=T))
+    names(object$pred.data) <- cnames
   }
 
   if(!all(c("width","height") %in% names(object$pred.data))){
@@ -205,19 +205,33 @@ plot.dsm.var<-function(x, poly=NULL, limits=NULL, breaks=NULL,
     }
   }
 
+  # add some labels
+  p <- p + labs(fill="CV",x=xlab,y=ylab)
+
   if(observations){
     object$dsm.object$data$x <- object$dsm.object$data[[x.name]]
     object$dsm.object$data$y <- object$dsm.object$data[[y.name]]
-    object$dsm.object$ddf$data$x <- object$dsm.object$ddf$data[[x.name]]
-    object$dsm.object$ddf$data$y <- object$dsm.object$ddf$data[[y.name]]
 
+    # plot the transect lines
     p <- p + geom_line(aes_string(x="x", y="y",group="Transect.Label"),
                         data=object$dsm.object$data)
-    p <- p + geom_point(aes_string(x="x", y="y", size="size"), data=object$dsm.object$ddf$data,
-                        colour="blue",alpha=I(0.7))
-    p <- p + labs(fill="CV",x=xlab,y=ylab, size="Counts")
-  }else{
-    p <- p + labs(fill="CV",x=xlab,y=ylab)
+
+    # if there is a dection function associated with the current analysis
+    if(!is.null(object$dsm.object$ddf)){
+      object$dsm.object$ddf$data$x <- object$dsm.object$ddf$data[[x.name]]
+      object$dsm.object$ddf$data$y <- object$dsm.object$ddf$data[[y.name]]
+      # if there is a size variable in the ddf data, then use it
+      if(!is.null(object$dsm.object$ddf$data$size)){
+        p <- p + geom_point(aes_string(x="x", y="y", size="size"),
+                            data=object$dsm.object$ddf$data,
+                            colour="blue",alpha=I(0.7))
+      }else{
+        p <- p + geom_point(aes_string(x="x", y="y"),
+                            data=object$dsm.object$ddf$data,
+                            colour="blue",alpha=I(0.7))
+      }
+      p <- p + labs(fill="CV",x=xlab,y=ylab, size="Counts")
+    }
   }
 
   if(plot){
