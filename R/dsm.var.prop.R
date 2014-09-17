@@ -23,7 +23,8 @@
 #' @param off.set a a vector or list of vectors with as many elements as there 
 #'        are in \code{pred.data}. Each vector is as long as the number of
 #'        rows in the corresponding element of \code{pred.data}. These give
-#'        the area associated with each prediction point. 
+#'        the area associated with each prediction cell. If a single number is
+#'        supplied it will be replicated for the length of \code{pred.data}.
 #' @param seglen.varname name for the column which holds the segment length 
 #'        (default value "Effort"). 
 #' @param type.pred should the predictions be on the "response" or "link" scale?
@@ -100,7 +101,7 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
   # if all the offsets are the same then we can jsut supply 1 and rep it
   if(length(off.set)==1){
     if(is.null(nrow(pred.data))){
-      off.set <- as.list(rep(off.set,length(pred.data)))
+      off.set <- rep(list(off.set),length(pred.data))
     }else{
       off.set <- rep(off.set,nrow(pred.data))
     }

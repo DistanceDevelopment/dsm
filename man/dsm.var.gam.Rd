@@ -16,7 +16,8 @@ columns as the original data.}
 \item{off.set}{a a vector or list of vectors with as many elements as there
 are in \code{pred.data}. Each vector is as long as the number of
 rows in the corresponding element of \code{pred.data}. These give
-the area associated with each prediction point.}
+the area associated with each prediction cell. If a single number is
+supplied it will be replicated for the length of \code{pred.data}.}
 
 \item{seglen.varname}{name for the column which holds the segment length
 (default value "Effort").}

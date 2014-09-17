@@ -1,5 +1,8 @@
 dsm news!
 
+# 2.2.6
+ * dsm.var.prop and dsm.var.gam now allow you to supply a single number as an offset, then copy it as many times as you need. Thanks to Filipe Dias for suggesting this.
+
 # 2.2.5
  * dsm.var.prop will now throw an error if there is no detection function in the dsm that it's trying to calculate the variance for (thanks to Adrián Schiavini for finding this)
  * variance/CV plotting threw an error when no detection function was supplied but observation=TRUE. Now error is sidestepped (again, thanks to Adrián Schiavini for finding this).
