@@ -8,7 +8,7 @@ rqgam.check(gam.obj, ...)
 \arguments{
 \item{gam.obj}{a \code{gam}, \code{glm} or \code{dsm} object.}
 
-\item{...}{arguments passed on to all plotting function}
+\item{...}{arguments passed on to all plotting functions}
 }
 \value{
 just plots!
@@ -29,8 +29,9 @@ data(mexdolphins)
 hr.model <- ds(mexdolphins$distdata, max(mexdolphins$distdata$distance),
                key = "hr", adjustment = NULL)
 
-# fit a simple smooth of x and y
-mod1<-dsm(N~s(x,y), hr.model, mexdolphins$segdata, mexdolphins$obsdata)
+# fit a simple smooth of x and y with a Tweedie response with estimated
+#  p parameter
+mod1<-dsm(N~s(x,y), hr.model, mexdolphins$segdata, mexdolphins$obsdata, family=tw())
 rqgam.check(mod1)
 }
 \author{
