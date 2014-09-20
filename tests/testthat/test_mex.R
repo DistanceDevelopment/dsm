@@ -63,3 +63,4 @@ test_that("Density weighting",{
   expect_equal(fitted(mod1.ws1),fitted(mod1.w2),tolerance=par.tol)
 
 })
+

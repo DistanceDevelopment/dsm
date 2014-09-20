@@ -5,7 +5,7 @@
 #' these need to be done using \code{\link{gam.check}}.
 #'
 #' @param gam.obj a \code{gam}, \code{glm} or \code{dsm} object.
-#' @param ... arguments passed on to all plotting function
+#' @param ... arguments passed on to all plotting functions
 #' @return just plots!
 #'
 #' @author Based on code provided by Natalie Kelly, bugs added by Dave Miller
@@ -34,12 +34,20 @@ rqgam.check<-function(gam.obj,...){
     gam.obj$theta <- gam.obj$family$getTheta()
   }
 
+
   # layout stuff
   opar <- par(mfrow=c(2,2))
 
   # grab the randomised quantile residuals
   # requires statmod package
-  qres <- qresid(gam.obj)
+
+  # need to do the right thing for mgcv's Tweedie
+  if(grepl("^Tweedie",mod1$family$family)){
+    qres <- qres.tweedie(gam.obj)
+  }else{
+    qres <- qresid(gam.obj)
+  }
+
 
   # values of the linear predictor
   linpred <- napredict(gam.obj$na.action, gam.obj$linear.predictors)
