@@ -4,7 +4,7 @@
 #'
 #' @param object a fitted \code{\link{dsm}} object as produced by \code{dsm()}.
 #' @param newdata spatially referenced covariates e.g. altitude, depth,
-#'  distance to shore, etc. Note covariates in this dataframe must have names
+#'  distance to shore, etc. Covariates in the \code{data.frame} must have names
 #'  *identical* to variable names used in fitting the DSM.
 #' @param off.set area of each of the cells in the prediction grid. Ignored if
 #'  their is already a column in \code{newdata} called \code{off.set}.
@@ -13,10 +13,7 @@
 #'  options (usually not necessary).
 #' @param \dots any other arguments passed to \code{\link{predict.gam}}.
 #' @return predicted values on the response scale (density/abundance).
-#'
-#' @S3method predict dsm
-#' @method predict dsm
-#' @aliases predict.dsm
+#' @export
 #'
 #' @author David L. Miller
 predict.dsm <- function(object, newdata=NULL, off.set=NULL,

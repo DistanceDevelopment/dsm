@@ -2,12 +2,10 @@
 #'
 #' See \code{\link{summary.dsm.var}} for information.
 #'
-#' @S3method print summary.dsm.var
-#' @aliases print.summary.dsm.var
-#' @method print summary.dsm.var
 #' @param x a summary of \code{dsm} variance object
 #' @param \dots unspecified and unused arguments for S3 consistency
 #' @return NULL
+#' @export
 #' @author David L. Miller
 #' @seealso \code{\link{summary.dsm.var}}
 #' @keywords utility

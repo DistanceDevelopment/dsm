@@ -3,8 +3,6 @@
 #' Note that the prediction data set must have \code{x} and \code{y} columns
 #' even if these were not used in the model.
 #'
-#' @S3method plot dsm.var
-#' @method plot dsm.var
 #' @aliases plot.dsm.var
 #'
 #' @param x a \code{dsm.var} object
@@ -26,6 +24,7 @@
 #' @param gg.grad optional \code{\link{ggplot}} gradient object.
 #' @param \dots any other arguments
 #' @return a plot
+#' @export
 #'
 #' @section Details:
 #'

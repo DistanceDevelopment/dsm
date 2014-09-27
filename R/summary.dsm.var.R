@@ -2,8 +2,6 @@
 #'
 #' Gives a brief summary of a fitted \code{dsm} variance object. 
 #'
-#' @S3method summary dsm.var
-#' @method summary dsm.var
 #' @aliases summary.dsm.var
 #'
 #' @param object a \code{dsm.var} object
@@ -16,6 +14,7 @@
 #'        with variance propagation).
 #' @param \dots unused arguments for S3 compatibility
 #' @return a summary object
+#' @export
 #'
 #' @seealso dsm.var.movblk dsm.var.prop
 #' @author David L. Miller

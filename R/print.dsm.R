@@ -3,12 +3,10 @@
 #' This method just gives a short description of the fitted model. Use the
 #' \code{\link{summary.dsm}} method for more information.
 #'
-#' @S3method print dsm
-#' @aliases print.dsm
-#' @method print dsm
 #' @param x a \code{dsm} object
 #' @param \dots unspecified and unused arguments for S3 consistency
 #' @return NULL
+#' @export
 #' @author David L. Miller
 #' @seealso \code{\link{summary.ds}}
 #' @keywords utility

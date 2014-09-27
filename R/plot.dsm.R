@@ -2,13 +2,12 @@
 #'
 #' See \code{\link{plot.gam}}.
 #'
-#' @S3method plot dsm
-#' @method plot dsm
 #' @aliases plot.dsm
 #'
 #' @param x a \code{dsm} object
 #' @param \dots other arguments passed to \code{\link{plot.gam}}.
 #' @return a plot!
+#' @export
 #'
 #' @seealso dsm plot.gam
 #' @author David L. Miller
