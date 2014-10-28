@@ -2,6 +2,7 @@ dsm news!
 
 # 2.2.7
  * Plotting check plots using random quantile residuals (rqgam.check) didn't work for Tweedie or tw family models, now fixed. Thanks to Laura Mannocci and Jason Roberts for pointing this out.
+ * Plotting CV used matrix() to coerce data into a data.frame -- thus converting all elements to the simplest type. Errors ensued. Thanks to Adrian Schiavini for finding this bug!
 
 # 2.2.6
  * dsm.var.prop and dsm.var.gam now allow you to supply a single number as an offset, then copy it as many times as you need. Thanks to Filipe Dias for suggesting this.

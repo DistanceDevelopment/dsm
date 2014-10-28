@@ -62,9 +62,7 @@ plot.dsm.var<-function(x, poly=NULL, limits=NULL, breaks=NULL,
   # if we used GAM intervals (via dsm.var.prop or dsm.var.gam)
   if(!object$bootstrap){
     cnames <- names(object$pred.data[[1]])
-    object$pred.data <- data.frame(matrix(unlist(object$pred.data),
-                                          nrow=length(object$pred.data),
-                                          byrow=T))
+    object$pred.data <- do.call(rbind.data.frame, object$pred.data)
     names(object$pred.data) <- cnames
   }
 
