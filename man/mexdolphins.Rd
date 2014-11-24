@@ -2,7 +2,7 @@
 \docType{data}
 \name{mexdolphins}
 \alias{mexdolphins}
-\title{Pan-tropical spotted dolphins}
+\title{Pan-tropical spotted dolphins in the Gulf of Mexico}
 \format{List of 5
 $ obsdata    :'data.frame':  47 obs. of  5 variables:
  ..$ object      : int [1:47] 45 61 63 85 114 120 146 165 187 214 ...

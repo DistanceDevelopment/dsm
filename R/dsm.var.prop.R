@@ -31,9 +31,8 @@
 #'        (default "response").
 #' @return a list with elements
 #'         \tabular{ll}{\code{model} \tab the fitted model object\cr
-#'                      \code{pred.var} \tab covariances of the regions given
-#'                      in \code{pred.data}. Diagonal elements are the 
-#'                      variances in order\cr
+#'                      \code{pred.var} \tab variance of each region given
+#'                      in \code{pred.data}.\cr
 #'                      \code{bootstrap} \tab logical, always \code{FALSE}\cr
 #'                      \code{pred.data} \tab as above\cr
 #'                      \code{off.set} \tab as above\cr
@@ -94,10 +93,6 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
   # strip dsm class so we can use gam methods
   class(dsm.obj) <- class(dsm.obj)[class(dsm.obj)!="dsm"]
 
-
-  pred.data.save<-pred.data
-  off.set.save<-off.set
-
   # if all the offsets are the same then we can jsut supply 1 and rep it
   if(length(off.set)==1){
     if(is.null(nrow(pred.data))){
@@ -112,8 +107,6 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
   if(is.data.frame(pred.data) & is.vector(off.set)){
     pred.data <- list(pred.data)
     off.set <- list(off.set)
-#    pred.data[[1]] <- pred.data
-#    off.set[[1]] <- off.set
   }else if(is.list(off.set)){
     if(length(pred.data)!=length(off.set)){
       stop("pred.data and off.set don't have the same number of elements")
@@ -250,7 +243,7 @@ callo$random <- rand.list
   # depending on whether we have response or link scale predictions...
   if(type.pred=="response"){
     tmfn <- dsm.obj$family$linkinv
-    dtmfn <- function(eta){sapply(eta, numderiv, f=tmfn)}
+    dtmfn <- function(eta){vapply(eta, numderiv, numeric(1), f=tmfn)}
   }else if(type.pred=="link"){
     tmfn <- identity
     dtmfn <- function(eta){1}
@@ -307,10 +300,14 @@ callo$random <- rand.list
   # A B A^tr
   vpred <- dpred.db %**% tcrossprod(vcov(fit.with.pen), dpred.db)
 
+  if(is.matrix(vpred)){
+    vpred <- diag(vpred)
+  }
+
   result <- list(pred.var = vpred,
                  bootstrap = FALSE,
                  var.prop = TRUE,
-                 pred.data = pred.data.save,
+                 pred.data = pred.data,
                  pred = preddo,
                  off.set = off.set,
                  model = fit.with.pen,

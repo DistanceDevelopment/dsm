@@ -41,7 +41,7 @@ NULL
 #' @name dsm-data
 NULL
 
-#' Pan-tropical spotted dolphins
+#' Pan-tropical spotted dolphins in the Gulf of Mexico
 #'
 #' Data from a combination of several NOAA shipboard surveys conducted on
 #' pan-tropical spotted dolphins in the Gulf of Mexico. 47 observations of

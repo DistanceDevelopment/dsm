@@ -63,12 +63,17 @@ print.summary.dsm.var<-function(x,...){
 
     cat("\n")
 
-    # delta method asymptotic CI
+    ## calculate the CI around the abundance estimate
     unconditional.cv.square <- x$cv^2
     asymp.ci.c.term <- exp(1.96*sqrt(log(1+unconditional.cv.square)))
     asymp.tot <- c(x$pred.est / asymp.ci.c.term,
                    x$pred.est,
                    x$pred.est * asymp.ci.c.term)
+
+#    invlink <- family(mo
+#    asymp.tot <- c(x$pred.est - cdf.val*se,
+#                   x$pred.est,
+#                   x$pred.est + cdf.val*se)
     names(asymp.tot) <- c("5%","Mean","95%")
 
     cat("Approximate asymptotic confidence interval:\n")

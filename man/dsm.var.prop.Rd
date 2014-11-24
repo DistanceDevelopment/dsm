@@ -28,9 +28,8 @@ supplied it will be replicated for the length of \code{pred.data}.}
 \value{
 a list with elements
         \tabular{ll}{\code{model} \tab the fitted model object\cr
-                     \code{pred.var} \tab covariances of the regions given
-                     in \code{pred.data}. Diagonal elements are the
-                     variances in order\cr
+                     \code{pred.var} \tab variance of each region given
+                     in \code{pred.data}.\cr
                      \code{bootstrap} \tab logical, always \code{FALSE}\cr
                      \code{pred.data} \tab as above\cr
                      \code{off.set} \tab as above\cr

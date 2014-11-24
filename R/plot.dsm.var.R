@@ -136,13 +136,13 @@ plot.dsm.var<-function(x, poly=NULL, limits=NULL, breaks=NULL,
       cell.cv <- sqrt(cvp.sq+cell.cv.sq)
     }
 
-  }else if(object$bootstrap==FALSE){
+  }else if(!object$bootstrap){
     # varprop stuff
     # pull out the standard errors
-    if(is.null(dim(object$pred.var))){
-      cell.se <- sqrt(object$pred.var)
-    }else{
+    if(is.matrix(object$pred.var)){
       cell.se <- sqrt(diag(object$pred.var))
+    }else{
+      cell.se <- sqrt(object$pred.var)
     }
 
     cell.cv <- cell.se/mod.pred
@@ -210,8 +210,10 @@ plot.dsm.var<-function(x, poly=NULL, limits=NULL, breaks=NULL,
     object$dsm.object$data$y <- object$dsm.object$data[[y.name]]
 
     # plot the transect lines
-    p <- p + geom_line(aes_string(x="x", y="y",group="Transect.Label"),
-                        data=object$dsm.object$data)
+    if("Transect.Label" %in% names(object$dsm.object$data)){
+      p <- p + geom_line(aes_string(x="x", y="y",group="Transect.Label"),
+                         data=object$dsm.object$data)
+    }
 
     # if there is a dection function associated with the current analysis
     if(!is.null(object$dsm.object$ddf)){
