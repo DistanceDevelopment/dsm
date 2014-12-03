@@ -5,11 +5,10 @@ Title: Density surface modelling of distance sampling data
 LazyLoad: yes
 Author: David L. Miller, Eric Rexstad, Louise Burt, Mark V. Bravington,
     Sharon Hedley.
-Description: This library implements density surface modelling of line
-    transect data, based on the methods of Hedley et al. (2004). Some
-    recent developments in the literature have also be incorporated.
-    Outputs are point and interval estimates of population abundance
-    and density.
+Description: Density surface modelling of line transect data, based on the
+    methods of Hedley et al. (2004). Some recent developments in the literature
+    have also be incorporated. Outputs are point and interval estimates of
+    population abundance and density.
     Please note that this version of dsm WILL NOT work with the Windows
     package DISTANCE earlier than version 6.2. For a version that works with
     DISTANCE 6.1, please go to:
@@ -24,7 +23,7 @@ Description: This library implements density surface modelling of line
     Buckland, S.T. et al. (eds). Oxford University Press.
 Version: 2.2.8
 URL: http://github.com/DistanceDevelopment/dsm
-Date: 2014-11-24
+Date: 2014-12-03
 Depends:
     R (>= 3.0),
     mgcv (>= 1.7),
