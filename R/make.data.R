@@ -28,6 +28,11 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
 
     # remove observations which were not in the detection function
     obsdata <- obsdata[obsdata$object %in% names(fitted.p),]
+    # what if there are no matches? Perhaps this is due to the object
+    # numbers being wrong? (HINT: yes.)
+    if(nrow(obsdata) == 0){
+      stop("No observations in detection function matched those in observation table. Check the \"object\" column.")
+    }
   }else{
     # strip transects or presence/absence data
     fitted.p <- 1
