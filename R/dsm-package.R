@@ -1,6 +1,10 @@
 #' Density surface modelling
 #'
-#' Some blurb will eventually go here.
+#' \code{dsm} implements spatial models for distance sampling data.
+#'
+#' Further information on distance sampling methods and example code is available at \url{http://distancesampling.org/R/}.
+#'
+#' For help with distance sampling and this package, there is a Google Group \url{https://groups.google.com/forum/#!forum/distance-sampling}.
 #'
 #'
 #' @name dsm-package
