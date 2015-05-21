@@ -72,3 +72,34 @@ test_that("formula specs",{
                            mexdolphins$obsdata))
 
 })
+
+test_that("Missing columns cause errors",{
+
+  data(mexdolphins)
+
+  seg <- mexdolphins$segdata
+  obs <- mexdolphins$obsdata
+
+  for(mcov in c("object","Sample.Label","size","distance")){
+    obs_missing <- mexdolphins$obsdata
+    obs_missing[[mcov]] <- NULL
+    expect_error(dsm(N~s(x,y), NULL, seg, obs_missing, segment.area = 8000^2),
+                 paste0("Column(s) \"",mcov,
+                        "\" not found in observation.data."),
+                 fixed=TRUE)
+  }
+
+  for(mcov in c("Effort","Sample.Label")){
+    seg_missing <- seg
+    seg_missing[[mcov]] <- NULL
+    expect_error(dsm(N~s(x,y), NULL, seg_missing, obs, segment.area = 8000^2),
+                 paste0("Column(s) \"",mcov,
+                        "\" not found in segment.data."),
+                 fixed=TRUE)
+  }
+
+
+})
+
+
+

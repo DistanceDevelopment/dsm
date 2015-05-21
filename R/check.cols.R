@@ -18,7 +18,7 @@ check.cols <- function(ddf.obj, segment.data, observation.data, strip.width,
 
   for(i in 1:length(checks)){
     check.res <- checks[[i]] %in% names(get(names(checks)[[i]]))
-    if(!any(check.res)){
+    if(any(!check.res)){
 
       stop(paste0("Column(s) \"",
                   paste(checks[[i]][!check.res],collapse="\", \""),
