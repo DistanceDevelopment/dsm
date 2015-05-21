@@ -3,6 +3,7 @@ dsm news!
 # 2.2.8
  * Speed up and reduced memory usage in variance calculations, thanks to Filipe Dias for asking about this.
  * Better error when no observations are matched to the detection function. Thanks to Ricardo Lima for highlighting this.
+ * Check for missing columns had incorrect logic, now corrected and with tests. Thanks to Julia Migné for spotting this.
 
 # 2.2.7
  * Plotting check plots using random quantile residuals (rqgam.check) didn't work for Tweedie or tw family models, now fixed. Thanks to Laura Mannocci and Jason Roberts for pointing this out.
