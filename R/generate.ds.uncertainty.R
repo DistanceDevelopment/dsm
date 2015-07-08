@@ -14,6 +14,7 @@
 #'       \code{assign(".Random.seed",seed,envir=.GlobalEnv)}
 #' @export
 #' @author David L. Miller
+#' @importFrom stats runif rnorm fitted
 generate.ds.uncertainty<-function(ds.object){
 
   n.ds.samples<-length(

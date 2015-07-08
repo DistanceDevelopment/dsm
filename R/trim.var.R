@@ -14,9 +14,10 @@
 #' @return trimmed variance
 #'
 #' @export
-#'
+#' @importFrom stats var
+#' @importFrom grDevices boxplot.stats
 #' @author Louise Burt
-trim.var<-function(untrimmed.bootstraps,boxplot.coef=1.5){
+trim.var <- function(untrimmed.bootstraps, boxplot.coef=1.5){
   outliers <- boxplot.stats(untrimmed.bootstraps, coef=boxplot.coef)$out
   bootstrap.abund <-untrimmed.bootstraps[!(untrimmed.bootstraps %in% outliers)]
 

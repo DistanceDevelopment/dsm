@@ -11,6 +11,7 @@
 #'
 #' @seealso dsm plot.gam
 #' @author David L. Miller
+#' @importFrom graphics plot
 #'
 plot.dsm<-function(x,...){
   class(x) <- class(x)[class(x)!="dsm"]

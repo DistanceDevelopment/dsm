@@ -21,6 +21,8 @@
 #'
 #' If there are NA values in the residuals then the correlogram will not be calculated. This usually occurs due to NA values in the covariates (so the smoother will not have fitted values there). Code like `any(is.na(dsm.obj$data))` might be helpful.
 #'
+#' @importFrom graphics plot axis box legend lines abline segments
+#' @importFrom stats cor residuals
 #' @examples
 #'
 #'  library(Distance)

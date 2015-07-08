@@ -16,6 +16,7 @@
 #' @export
 #'
 #' @author David L. Miller
+#' @importFrom stats predict
 predict.dsm <- function(object, newdata=NULL, off.set=NULL,
                         type="response",...){
 

@@ -66,12 +66,12 @@
 #' data(mexdolphins)
 #'
 #' # fit a detection function and look at the summary
-#' hr.model <- ds(mexdolphins$distdata, max(mexdolphins$distdata$distance), 
+#' hr.model <- ds(mexdolphins$distdata, max(mexdolphins$distdata$distance),
 #'                key = "hr", adjustment = NULL)
 #' summary(hr.model)
 #'
 #' # fit a simple smooth of x and y
-#' mod1<-dsm(N~s(x,y), hr.model, mexdolphins$segdata, mexdolphins$obsdata)
+#' mod1 <- dsm(N~s(x,y), hr.model, mexdolphins$segdata, mexdolphins$obsdata)
 #' summary(mod1)
 #'
 #' # create an offset (in metres)
@@ -90,7 +90,7 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
                 engine="gam", convert.units=1,
                 family=quasipoisson(link="log"), group=FALSE, gamma=1.4,
                 control=list(keepData=TRUE), availability=1, strip.width=NULL,
-                segment.area=NULL,weights=NULL,...){
+                segment.area=NULL,weights=NULL, ...){
 
   # if we have a model fitted using Distance, then just pull out the
   # ddf component

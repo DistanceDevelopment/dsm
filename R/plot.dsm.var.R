@@ -25,6 +25,8 @@
 #' @param \dots any other arguments
 #' @return a plot
 #' @export
+#' @importFrom utils read.csv
+#' @importFrom stats sd quantile
 #'
 #' @section Details:
 #'

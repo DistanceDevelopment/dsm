@@ -1,3 +1,4 @@
+#' @importFrom stats aggregate
 make.data <- function(response, ddfobject, segdata, obsdata, group,
                       convert.units, availability, strip.width, segment.area){
 

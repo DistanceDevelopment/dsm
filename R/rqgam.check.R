@@ -11,6 +11,8 @@
 #' @author Based on code provided by Natalie Kelly, bugs added by Dave Miller
 #' @export
 #' @import statmod
+#' @importFrom graphics par hist
+#' @importFrom stats napredict fitted qqnorm
 #'
 #' @examples
 #'

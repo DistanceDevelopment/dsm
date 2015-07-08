@@ -38,6 +38,7 @@
 #'  and the spatial model are INDEPENDENT. This is probably not reasonable.
 #'
 #' @export
+#' @importFrom utils write.table setTxtProgressBar txtProgressBar
 #' @examples
 #' \dontrun{
 #' library(Distance)

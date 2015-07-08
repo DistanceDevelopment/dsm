@@ -31,7 +31,6 @@ Depends:
 Imports:
     nlme,
     ggplot2,
-    statmod,
-    tweedie
+    statmod
 Suggests:
     Distance

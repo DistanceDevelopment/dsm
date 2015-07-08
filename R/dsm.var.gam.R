@@ -18,6 +18,7 @@
 #'                      \code{dsm.object} \tab the original model, as above
 #'                      }
 #' @author David L. Miller
+#' @importFrom stats coef vcov
 #' @export
 dsm.var.gam<-function(dsm.obj, pred.data,off.set=NULL,
     seglen.varname='Effort', type.pred="response") {
