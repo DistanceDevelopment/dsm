@@ -21,7 +21,7 @@ Description: Density surface modelling of line transect data, based on the
     Hedley, S.L.,  S.T. Buckland and D.L. Borchers. 2004. "Spatial
     distance sampling methods" pp 48-70 in Advanced Distance Sampling,
     Buckland, S.T. et al. (eds). Oxford University Press.
-Version: 2.2.8
+Version: 2.2.9
 URL: http://github.com/DistanceDevelopment/dsm
 Date: 2015-07-08
 Depends:

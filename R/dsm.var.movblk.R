@@ -80,9 +80,14 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
                            samp.unit.name='Transect.Label',
                            progress.file=NULL, bs.file=NULL,bar=TRUE){
 
+  # check the user didn't ask for DS uncertainty and didn't supply
+  # a detection function
+  if(ds.uncertainty & is.null(dsm.object$ddf)){
+    stop("Cannot incorporate detection function uncertainty with no detection function!")
+  }
   # check the user didn't ask for individual level covars and detection
   # function uncertainty
-  if(ds.uncertainty &
+  if(ds.uncertainty & !is.null(dsm.object$ddf) &&
      dsm.object$ddf$ds$aux$ddfobj$scale$formula != "~1"){
     stop("Cannot incorporate detection function uncertainty with covariates in the detection function")
   }

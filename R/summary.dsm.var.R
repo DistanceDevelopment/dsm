@@ -41,10 +41,28 @@ summary.dsm.var<-function(object, alpha=0.05, boxplot.coef=1.5,
     # bootstrap abundances
     bootstrap.abund <- object$study.area.total
 
-    # delta method, if necessary
-    if(!object$ds.uncertainty){
+    # when we don't need to do the delta method
+    if(is.null(object$dsm.object$ddf) | object$ds.uncertainty){
 
-      ddf.summary<-summary(object$dsm.object$ddf)
+      # if we used detection function uncertainty
+      # or there was no detection function
+
+      # variance of the bootstrap abundances is the variance
+      trimmed.variance <- trim.var(bootstrap.abund[is.finite(bootstrap.abund)],
+                                   boxplot.coef=boxplot.coef)
+
+      sinfo$var <- trimmed.variance
+      sinfo$se <- sqrt(trimmed.variance)
+
+      sinfo$cv <- sinfo$se/sinfo$pred.est
+      # in this case bootstrap and regular CV are the same
+      sinfo$bootstrap.cv <- sinfo$cv
+    }else{
+      # delta method, if necessary
+      #  - if we didn't incorporate detection function uncertainty in bootstrap
+      #  - if there was a detection function
+
+      ddf.summary <- summary(object$dsm.object$ddf)
 
       # average p standard error
       sinfo$average.p.se <- ddf.summary$average.p.se
@@ -73,17 +91,6 @@ summary.dsm.var<-function(object, alpha=0.05, boxplot.coef=1.5,
       # variance (delta method)
       sinfo$var <- (cvN*sinfo$pred.est)^2
       sinfo$se <- sqrt(sinfo$var)
-    }else{
-      # if we used detection function uncertainty
-
-      # variance of the bootstrap abundances is the variance
-      trimmed.variance <- trim.var(bootstrap.abund[is.finite(bootstrap.abund)],
-                                   boxplot.coef=boxplot.coef)
-
-      sinfo$var <- trimmed.variance
-      sinfo$se <- sqrt(trimmed.variance)
-
-      sinfo$cv <- sinfo$se/sinfo$pred.est
     }
 
     ### general bootstrap stuff

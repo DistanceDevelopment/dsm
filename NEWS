@@ -1,5 +1,9 @@
 dsm news!
 
+# 2.2.9
+ * Moving block bootstrap now works when there is no detection function (suggested by Laura Williamson)
+
+
 # 2.2.8
  * Speed up and reduced memory usage in variance calculations, thanks to Filipe Dias for asking about this.
  * Better error when no observations are matched to the detection function. Thanks to Ricardo Lima for highlighting this.

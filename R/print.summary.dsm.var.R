@@ -88,8 +88,8 @@ print.summary.dsm.var<-function(x,...){
   # print the individual CVs if we used the delta method
   if(x$bootstrap){
     if(!x$ds.uncertainty){
-      cat("CV of detection function       :",x$detfct.cv,"\n")
-      cat("CV from bootstrap              :",x$bootstrap.cv,"\n")
+      if(!is.null(x$detfct.cv)) cat("CV of detection function       :",x$detfct.cv,"\n")
+      cat("CV from bootstrap              :", round(x$bootstrap.cv,4),"\n")
       cat("Total coefficient of variation :", round(x$cv,4),"\n")
     }else{
       cat("Coefficient of variation       :", round(x$cv,4),"\n")
@@ -98,8 +98,8 @@ print.summary.dsm.var<-function(x,...){
     if(x$varprop){
       cat("Coefficient of variation       :", round(x$cv,4),"\n")
     }else{
-      cat("CV of detection function       :",x$detfct.cv,"\n")
-      cat("CV from GAM                    :",x$gam.cv,"\n")
+      if(!is.null(x$detfct.cv)) cat("CV of detection function       :",x$detfct.cv,"\n")
+      cat("CV from GAM                    :", round(x$gam.cv,4),"\n")
       cat("Total coefficient of variation :", round(x$cv,4),"\n")
     }
   }
