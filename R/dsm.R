@@ -58,7 +58,6 @@
 #' @export
 #'
 #' @examples
-#'
 #' library(Distance)
 #' library(dsm)
 #'
@@ -90,7 +89,7 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
                 engine="gam", convert.units=1,
                 family=quasipoisson(link="log"), group=FALSE, gamma=1.4,
                 control=list(keepData=TRUE), availability=1, strip.width=NULL,
-                segment.area=NULL,weights=NULL, ...){
+                segment.area=NULL, weights=NULL, ...){
 
   # if we have a model fitted using Distance, then just pull out the
   # ddf component
@@ -102,9 +101,9 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
 
   ## check the formula
   response <- as.character(formula)[2]
-  possible.responses <- c("D","density","Dhat","density.est",
-                          "N","abundance","count","n",
-                          "Nhat","abundance.est",
+  possible.responses <- c("D", "density", "Dhat", "density.est",
+                          "N", "abundance", "count", "n",
+                          "Nhat", "abundance.est",
                           "presence")
   if(!(response %in% possible.responses)){
     stop(paste("Model must be one of:",
@@ -125,13 +124,13 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
   ##  to the formula
   if(!(response %in% c("D","density","Dhat","density.est","presence"))){
     formula <- as.formula(paste(c(as.character(formula)[c(2,1,3)],
-                                "+ offset(off.set)"),collapse=""))
+                                "+ offset(off.set)"), collapse=""))
   }else{
     # set the weights if we are doing density or presence estimation
     if(is.null(weights)){
       weights <- dat$segment.area
     }else if(length(weights)==1){
-      weights <- rep(1,nrow(dat))
+      weights <- rep(1, nrow(dat))
     }
   }
 
@@ -157,9 +156,9 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
                  data    = dat,
                  gamma   = gamma,
                  weights = weights,
-                 control = control,...)
+                 control = control, ...)
 
-    fit <- withCallingHandlers(do.call(engine,args),
+    fit <- withCallingHandlers(do.call(engine, args),
                                warning=matrixnotposdef.handler)
   }else{
     stop("engine must be one of 'gam', 'gamm', 'bam' or 'glm'")
@@ -178,12 +177,11 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
     fit$gam$gamma <- gamma
     # yucky way to get dsm.var/dsm.var.prop to work because gamm()
     #  doesn't store the call()
-    fit$gam$gamm.call.list <- substitute(list(...))
-    fit$gam$gamm.call.list$formula <- formula
-    fit$gam$gamm.call.list$family <- family
-    fit$gam$gamm.call.list$data <- dat
-    fit$gam$gamm.call.list$gamma <- gamma
-    fit$gam$gamm.call.list$control <- control
+    fit$gam$gamm.call.list <- list(formula = formula,
+                                   family  = family,
+                                   data    = dat,
+                                   gamma   = gamma,
+                                   control = control)
   }else{
     fit$ddf <- ddf.obj
     fit$gamma <- gamma
