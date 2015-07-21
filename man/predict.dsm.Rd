@@ -10,16 +10,12 @@
 \arguments{
 \item{object}{a fitted \code{\link{dsm}} object as produced by \code{dsm()}.}
 
-\item{newdata}{spatially referenced covariates e.g. altitude, depth,
-distance to shore, etc. Covariates in the \code{data.frame} must have names
-*identical* to variable names used in fitting the DSM.}
+\item{newdata}{spatially referenced covariates e.g. altitude, depth, distance to shore, etc. Covariates in the \code{data.frame} must have names *identical* to variable names used in fitting the DSM.}
 
-\item{off.set}{area of each of the cells in the prediction grid. Ignored if
-their is already a column in \code{newdata} called \code{off.set}.}
+\item{off.set}{area of each of the cells in the prediction grid. Should be in the same units as the segments/distances given to \code{dsm}. Ignored if there is already a column in \code{newdata} called \code{off.set}.}
 
 \item{type}{what scale should the results be on. The default is
-\code{"response"}, see \code{\link{predict.gam}} for an explanation of other
-options (usually not necessary).}
+\code{"response"}, see \code{\link{predict.gam}} for an explanation of other options (usually not necessary).}
 
 \item{\dots}{any other arguments passed to \code{\link{predict.gam}}.}
 }
@@ -31,5 +27,8 @@ Make predictions outside (or inside) the covered area.
 }
 \author{
 David L. Miller
+}
+\seealso{
+predict.gam dsm.var.gam dsm.var.prop dsm.var.movblk
 }
 

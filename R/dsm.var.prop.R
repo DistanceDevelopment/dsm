@@ -16,19 +16,7 @@
 #'
 #' Based on (much more general) code from Mark Bravington and Sharon Hedley.
 #'
-#' @param dsm.obj an object returned from running \code{\link{dsm}}.
-#' @param pred.data either: a single prediction grid or list of prediction 
-#'        grids. Each grid should be a \code{data.frame} with the same 
-#'        columns as the original data.
-#' @param off.set a a vector or list of vectors with as many elements as there 
-#'        are in \code{pred.data}. Each vector is as long as the number of
-#'        rows in the corresponding element of \code{pred.data}. These give
-#'        the area associated with each prediction cell. If a single number is
-#'        supplied it will be replicated for the length of \code{pred.data}.
-#' @param seglen.varname name for the column which holds the segment length 
-#'        (default value "Effort"). 
-#' @param type.pred should the predictions be on the "response" or "link" scale?
-#'        (default "response").
+#' @inheritParams dsm.var.gam
 #' @return a list with elements
 #'         \tabular{ll}{\code{model} \tab the fitted model object\cr
 #'                      \code{pred.var} \tab variance of each region given
@@ -38,11 +26,8 @@
 #'                      \code{off.set} \tab as above\cr
 #'                      \code{model}\tab the fitted model with the extra term\cr
 #'                      \code{dsm.object} \tab the original model, as above\cr
-#'                      \code{model.check} \tab simple check of subtracting the
-#'                        coefficients of the two models to see if there is a
-#'                        large difference\cr
-#'                      \code{deriv} \tab numerically calculated Hessian of the
-#'                        offset\cr.
+#'                      \code{model.check} \tab simple check of subtracting the coefficients of the two models to see if there is a large difference\cr
+#'                      \code{deriv} \tab numerically calculated Hessian of the offset\cr
 #'                      }
 #' @author Mark V. Bravington, Sharon L. Hedley. Bugs added by David L. Miller.
 #' @references

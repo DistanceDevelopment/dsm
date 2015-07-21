@@ -11,17 +11,13 @@ dsm.var.movblk(dsm.object, pred.data, n.boot, block.size, off.set,
 \arguments{
 \item{dsm.object}{object returned from \code{\link{dsm}}.}
 
-\item{pred.data}{a \code{data.frame} that holds prediction points, must have
-the correct columns for other environmental covariates. It also MUST
-have a column called \code{cell.area} which gives the area for each
-prediction cell}
+\item{pred.data}{either: a single prediction grid or list of prediction grids. Each grid should be a \code{data.frame} with the same columns as the original data.}
 
 \item{n.boot}{number of bootstrap resamples.}
 
 \item{block.size}{number of segments in each block.}
 
-\item{off.set}{offset to be used in the model, see \code{\link{offsets}}
-Note that this should NOT be \code{log()}'d.}
+\item{off.set}{a a vector or list of vectors with as many elements as there are in \code{pred.data}. Each vector is as long as the number of rows in the corresponding element of \code{pred.data}. These give the area associated with each prediction cell. If a single number is supplied it will be replicated for the length of \code{pred.data}.}
 
 \item{ds.uncertainty}{incorporate uncertainty in the detection function? See
 Details, below. Note that this feature is EXPERIMENTAL at the moment.}
