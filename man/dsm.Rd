@@ -21,7 +21,7 @@ dsm(formula, ddf.obj, segment.data, observation.data, engine = "gam",
 
 \item{engine}{which fitting engine should be used for the DSM (\code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}}/\code{\link{bam}}).}
 
-\item{convert.units}{value to alter length or width for calculation of the offset, applied to `segment.area` if used.}
+\item{convert.units}{conversion factor to multiply the area of the segments by. See 'Units' below.}
 
 \item{family}{response distribution (popular choices include \code{\link{quasipoisson}}, \code{\link{Tweedie}} and \code{\link{negbin}}). Defaults to \code{quasipossion}.}
 
@@ -72,6 +72,12 @@ The offset used in the model is dependent on the response:
 
 In the latter two cases (density and presence estimation) observations can be weighted by segment areas via the \code{weights=} argument. By default (\code{weights=NULL}), when density or presence are estimated the weights are set to the segment areas (using \code{segment.area} or by calculating \code{2*}(strip width)\code{*Effort}) Alternatively \code{weights=1} will set the weights to all be equal.  A third alternative is to pass in a vector of length equal to the number of segments, containing appropriate weights.
 }
+\section{Units}{
+
+
+It is often the case that distances are collected in metres and segment lengths are recorded in kilometres. \code{dsm} allows you to provide a conversation factor (\code{convert.units}) to multiply the areas by. For example: if distances are in metres and segment lengths are in kilometres setting \code{convert.units=1000} will lead to the analysis being in metres. Setting \code{convert.units=1/1000} will lead to the analysis being in kilometres. The conversion factor will be applied to `segment.area` if that is specified.
+}
+
 \section{Large models}{
 
 
