@@ -60,6 +60,8 @@
 #'
 #' Wood, S.N. 2006. Generalized Additive Models: An Introduction with R. CRC/Chapman & Hall.
 #' @export
+#' @importFrom stats quasipoisson
+#' @importFrom utils packageVersion
 #'
 #' @examples
 #' library(Distance)
