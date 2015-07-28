@@ -5,22 +5,7 @@ Title: Density Surface Modelling of Distance Sampling Data
 LazyLoad: yes
 Author: David L. Miller, Eric Rexstad, Louise Burt, Mark V. Bravington,
     Sharon Hedley.
-Description: Density surface modelling of line transect data, based on the
-    methods of Hedley et al. (2004). Some recent developments in the literature
-    have also be incorporated. Outputs are point and interval estimates of
-    population abundance and density.
-    Please note that this version of dsm WILL NOT work with the Windows
-    package DISTANCE earlier than version 6.2. For a version that works with
-    DISTANCE 6.1, please go to:
-    https://github.com/DistanceDevelopment/dsm-distance-6.1
-    For the latest version of dsm, please use the github version at the URL
-    listed below.
-    Miller, D. L., M. L. Burt, E. Rexstad and L. Thomas. 2013. Spatial
-    models for distance sampling data: recent developments and future
-    directions. Methods in Ecology and Evolution
-    Hedley, S.L.,  S.T. Buckland and D.L. Borchers. 2004. "Spatial
-    distance sampling methods" pp 48-70 in Advanced Distance Sampling,
-    Buckland, S.T. et al. (eds). Oxford University Press.
+Description: Density surface modelling of line transect data. A Generalized Additive Model-based approach is used to calculate spatially-explicit estimates of animal abundance from distance sampling (also presence/absence and strip transect) data. Several utility functions are provided for model checking, plotting and variance estimation.
 Version: 2.2.9
 URL: http://github.com/DistanceDevelopment/dsm
 Date: 2015-07-08
@@ -33,4 +18,5 @@ Imports:
     ggplot2,
     statmod
 Suggests:
-    Distance
+    Distance,
+    tweedie

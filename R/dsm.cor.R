@@ -24,7 +24,7 @@
 #' @importFrom graphics plot axis box legend lines abline segments
 #' @importFrom stats cor residuals
 #' @examples
-#'
+#' \donttest{
 #'  library(Distance)
 #'  library(dsm)
 #'
@@ -35,7 +35,7 @@
 #'  mod1<-dsm(N~s(x,y), hr.model, mexdolphins$segdata, mexdolphins$obsdata)
 #'
 #'  dsm.cor(mod1,resid.type="d",max.lag=9,Segment.Label="Sample.Label")
-#'
+#'}
 #' @author David L. Miller
 #' @export
 dsm.cor <- function(dsm.obj,Transect.Label="Transect.Label",

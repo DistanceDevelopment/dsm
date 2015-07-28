@@ -20,8 +20,10 @@ residuals, a la Dunn and Smyth (1996). Checks of \code{k} are not computed,
 these need to be done using \code{\link{gam.check}}.
 }
 \examples{
+\donttest{
 library(Distance)
 library(dsm)
+library(tweedie)
 
 # load the Gulf of Mexico dolphin data (see ?mexdolphins)
 data(mexdolphins)
@@ -34,6 +36,7 @@ hr.model <- ds(mexdolphins$distdata, max(mexdolphins$distdata$distance),
 #  p parameter
 mod1<-dsm(N~s(x,y), hr.model, mexdolphins$segdata, mexdolphins$obsdata, family=tw())
 rqgam.check(mod1)
+}
 }
 \author{
 Based on code provided by Natalie Kelly, bugs added by Dave Miller

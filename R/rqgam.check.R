@@ -15,9 +15,10 @@
 #' @importFrom stats napredict fitted qqnorm
 #'
 #' @examples
-#'
+#' \donttest{
 #' library(Distance)
 #' library(dsm)
+#' library(tweedie)
 #'
 #' # load the Gulf of Mexico dolphin data (see ?mexdolphins)
 #' data(mexdolphins)
@@ -30,6 +31,7 @@
 #' #  p parameter
 #' mod1<-dsm(N~s(x,y), hr.model, mexdolphins$segdata, mexdolphins$obsdata, family=tw())
 #' rqgam.check(mod1)
+#' }
 rqgam.check<-function(gam.obj,...){
 
   # layout stuff
