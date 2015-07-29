@@ -27,7 +27,7 @@ test_that("Do we get the same results?",{
   #summary(mod1)
 
 
-  expect_that(mod1$gcv.ubre, equals(42.98519,tolerance=par.tol))
+  expect_that(mod1$gcv.ubre, equals(42.9169051,tolerance=par.tol))
 
 
   expect_that(dsm.cor(mod1,resid.type="d",max.lag=9),

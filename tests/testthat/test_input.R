@@ -16,21 +16,24 @@ test_that("formula specs",{
                  adjustment = NULL)
 
   ## models for count
-  count.gcv <- 42.98519
+  count.gcv <- 42.9169051
   count.N<-dsm(N~s(x,y), hn.model, mexdolphins$segdata, mexdolphins$obsdata)
   expect_that(count.N$gcv.ubre, equals(count.gcv,tolerance=par.tol))
+
   count.n<-dsm(n~s(x,y), hn.model, mexdolphins$segdata, mexdolphins$obsdata)
   expect_that(count.n$gcv.ubre, equals(count.gcv,tolerance=par.tol))
+
   count.count<-dsm(count~s(x,y), hn.model, mexdolphins$segdata,
                    mexdolphins$obsdata)
   expect_that(count.count$gcv.ubre, equals(count.gcv,tolerance=par.tol))
+
   count.abundance<-dsm(abundance~s(x,y), hn.model, mexdolphins$segdata,
                        mexdolphins$obsdata)
   expect_that(count.abundance$gcv.ubre, equals(count.gcv,tolerance=par.tol))
 
 
   ## models for abund.est
-  abund.est.gcv <- 57.40737
+  abund.est.gcv <- 57.3159048
   abund.est.Nhat<-dsm(Nhat~s(x,y), hn.model, mexdolphins$segdata,
                       mexdolphins$obsdata)
   expect_that(abund.est.Nhat$gcv.ubre, equals(abund.est.gcv,tolerance=par.tol))
