@@ -1,5 +1,8 @@
 dsm news!
 
+# 2.2.10
+ * corrected offsets examples in dsm, dsm.var.prop, dsm.var.movblk
+
 # 2.2.9
  * Moving block bootstrap now works when there is no detection function (suggested by Laura Williamson)
  * Mexico dolphin data has had the areas of the prediction grids and segments re-projected. Thanks to Phil Bouchet for pointing out this error. Context: https://groups.google.com/d/msg/distance-sampling/oj1j8mSmnTc/3cOAAJgBw9MJ

@@ -79,12 +79,8 @@
 #' mod1 <- dsm(N~s(x,y), hr.model, mexdolphins$segdata, mexdolphins$obsdata)
 #' summary(mod1)
 #'
-#' # create an offset (in metres)
-#' # each prediction cell is 444km2
-#' off.set <- 444*1000*1000
-#'
 #' # predict over a grid
-#' mod1.pred <- predict(mod1, mexdolphins$preddata, off.set)
+#' mod1.pred <- predict(mod1, mexdolphins$preddata, mexdolphins$preddata$area)
 #'
 #' # calculate the predicted abundance over the grid
 #' sum(mod1.pred)

@@ -70,13 +70,10 @@ summary(hr.model)
 mod1<-dsm(N~s(x,y), hr.model, mexdolphins$segdata, mexdolphins$obsdata)
 summary(mod1)
 
-# create an offset (in metres)
-# each prediction cell is 444km2
-off.set <- 444*1000*1000
-
 # calculate the variance by 500 moving block bootstraps
 mod1.movblk <- dsm.var.movblk(mod1, mexdolphins$preddata, n.boot = 500,
-   block.size = 3, samp.unit.name = "Transect.Label", off.set = off.set,
+   block.size = 3, samp.unit.name = "Transect.Label",
+   off.set = mexdolphins$preddata$area,
    bar = TRUE, bs.file = "mexico-bs.csv", ds.uncertainty = TRUE)
 }
 }
