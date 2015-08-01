@@ -50,18 +50,18 @@
 #'  # fit a simple smooth of x and y
 #'  mod1 <- dsm(N~s(x,y), hr.model, mexdolphins$segdata, mexdolphins$obsdata)
 #'
-#'  # Calculate the offset...
-#'  off.set <- 444*1000*1000
-#'
 #'  # Calculate the variance
-#'  mod1.var <- dsm.var.prop(mod1, mexdolphins$pred, off.set)
+#'  mod1.var <- dsm.var.prop(mod1, mexdolphins$preddata,
+#'                           off.set=mexdolphins$preddata$area)
 #'
-#'  # summary over the whole area in mexdolphins$pred
+#'  # this will give a summary over the whole area in mexdolphins$preddata
 #'
 #'  # Plot a map of the CV
 #'  #   need to format the prediction data with split
 #'  mod1.var.map <- dsm.var.prop(mod1,
-#'                  split(mexdolphins$pred,1:nrow(mexdolphins$pred)), off.set)
+#'                               split(mexdolphins$preddata,
+#'                                     1:nrow(mexdolphins$preddata)),
+#'                               off.set=mexdolphins$preddata$area)
 #'  plot(mod1.var.map)
 #' }
 #'
