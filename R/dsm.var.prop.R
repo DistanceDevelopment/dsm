@@ -43,25 +43,24 @@
 #'  data(mexdolphins)
 #'
 #'  # fit a detection function and look at the summary
-#'  hr.model <- ds(mexdolphins$distdata, max(mexdolphins$distdata$distance),
+#'  hr.model <- ds(distdata, max(distdata$distance),
 #'                 key = "hr", adjustment = NULL)
 #'  summary(hr.model)
 #'
 #'  # fit a simple smooth of x and y
-#'  mod1 <- dsm(N~s(x,y), hr.model, mexdolphins$segdata, mexdolphins$obsdata)
+#'  mod1 <- dsm(N~s(x,y), hr.model, segdata, obsdata)
 #'
 #'  # Calculate the variance
-#'  mod1.var <- dsm.var.prop(mod1, mexdolphins$preddata,
-#'                           off.set=mexdolphins$preddata$area)
+#'  mod1.var <- dsm.var.prop(mod1, preddata, off.set=preddata$area)
 #'
 #'  # this will give a summary over the whole area in mexdolphins$preddata
 #'
 #'  # Plot a map of the CV
 #'  #   need to format the prediction data with split
 #'  mod1.var.map <- dsm.var.prop(mod1,
-#'                               split(mexdolphins$preddata,
-#'                                     1:nrow(mexdolphins$preddata)),
-#'                               off.set=mexdolphins$preddata$area)
+#'                               split(preddata,
+#'                                     1:nrow(preddata)),
+#'                               off.set=preddata$area)
 #'  plot(mod1.var.map)
 #' }
 #'

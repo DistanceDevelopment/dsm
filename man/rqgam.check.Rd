@@ -29,12 +29,12 @@ library(tweedie)
 data(mexdolphins)
 
 # fit a detection function and look at the summary
-hr.model <- ds(mexdolphins$distdata, max(mexdolphins$distdata$distance),
+hr.model <- ds(distdata, max(distdata$distance),
                key = "hr", adjustment = NULL)
 
 # fit a simple smooth of x and y with a Tweedie response with estimated
 #  p parameter
-mod1<-dsm(N~s(x,y), hr.model, mexdolphins$segdata, mexdolphins$obsdata, family=tw())
+mod1<-dsm(N~s(x,y), hr.model, segdata, obsdata, family=tw())
 rqgam.check(mod1)
 }
 }

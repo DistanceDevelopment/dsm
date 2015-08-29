@@ -71,16 +71,16 @@
 #' data(mexdolphins)
 #'
 #' # fit a detection function and look at the summary
-#' hr.model <- ds(mexdolphins$distdata, max(mexdolphins$distdata$distance),
+#' hr.model <- ds(distdata, max(distdata$distance),
 #'                key = "hr", adjustment = NULL)
 #' summary(hr.model)
 #'
 #' # fit a simple smooth of x and y
-#' mod1 <- dsm(N~s(x,y), hr.model, mexdolphins$segdata, mexdolphins$obsdata)
+#' mod1 <- dsm(N~s(x,y), hr.model, segdata, obsdata)
 #' summary(mod1)
 #'
 #' # predict over a grid
-#' mod1.pred <- predict(mod1, mexdolphins$preddata, mexdolphins$preddata$area)
+#' mod1.pred <- predict(mod1, preddata, preddata$area)
 #'
 #' # calculate the predicted abundance over the grid
 #' sum(mod1.pred)

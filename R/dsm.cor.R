@@ -30,9 +30,9 @@
 #'
 #'  data(mexdolphins)
 #'
-#'  hr.model <- ds(mexdolphins$distdata, max(mexdolphins$distdata$distance),
+#'  hr.model <- ds(distdata, max(distdata$distance),
 #'                 key = "hr", adjustment = NULL)
-#'  mod1<-dsm(N~s(x,y), hr.model, mexdolphins$segdata, mexdolphins$obsdata)
+#'  mod1<-dsm(N~s(x,y), hr.model, segdata, obsdata)
 #'
 #'  dsm.cor(mod1,resid.type="d",max.lag=9,Segment.Label="Sample.Label")
 #'}

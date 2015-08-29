@@ -43,18 +43,18 @@
 #' data(mexdolphins)
 #'
 #' # fit a detection function and look at the summary
-#' hr.model <- ds(mexdolphins$distdata, max(mexdolphins$distdata$distance),
+#' hr.model <- ds(distdata, max(distdata$distance),
 #'                key = "hr", adjustment = NULL)
 #' summary(hr.model)
 #'
 #' # fit a simple smooth of x and y
-#' mod1<-dsm(N~s(x,y), hr.model, mexdolphins$segdata, mexdolphins$obsdata)
+#' mod1<-dsm(N~s(x,y), hr.model, segdata, obsdata)
 #' summary(mod1)
 #'
 #' # calculate the variance by 500 moving block bootstraps
-#' mod1.movblk <- dsm.var.movblk(mod1, mexdolphins$preddata, n.boot = 500,
+#' mod1.movblk <- dsm.var.movblk(mod1, preddata, n.boot = 500,
 #'    block.size = 3, samp.unit.name = "Transect.Label",
-#'    off.set = mexdolphins$preddata$area,
+#'    off.set = preddata$area,
 #'    bar = TRUE, bs.file = "mexico-bs.csv", ds.uncertainty = TRUE)
 #' }
 
