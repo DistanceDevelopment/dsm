@@ -4,6 +4,8 @@
 #' residuals, a la Dunn and Smyth (1996). Checks of \code{k} are not computed,
 #' these need to be done using \code{\link{gam.check}}.
 #'
+#' In general plots other than residuals vs. linear predictors should be interpreted with caution. Only works with negative binomial and Tweedie response distributions.
+#'
 #' @param gam.obj a \code{gam}, \code{glm} or \code{dsm} object.
 #' @param ... arguments passed on to all plotting functions
 #' @return just plots!
@@ -59,8 +61,7 @@ rqgam.check<-function(gam.obj,...){
     }
     qres <- qres.nbinom(gam.obj)
   }else{
-    # for everything else
-    qres <- qresid(gam.obj)
+    stop("Only negative binomial and Tweedie response distributions are supported.")
   }
 
   # values of the linear predictor
