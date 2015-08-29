@@ -11,8 +11,8 @@ context("Mexico pantropical dolphin data")
 data(mexdolphins)
 
 # fit a detection function and look at the summary
-hn.model <- suppressMessages(ds(mexdolphins$distdata,
-                                max(mexdolphins$distdata$distance),
+hn.model <- suppressMessages(ds(distdata,
+                                max(distdata$distance),
                                 adjustment = NULL))
 
 test_that("Do we get the same results?",{
@@ -23,7 +23,7 @@ test_that("Do we get the same results?",{
   expect_that(hn.model$ddf$par, equals(ddf.par,tolerance=par.tol))
 
   # fit a simple smooth of x and y
-  mod1<-dsm(N~s(x,y), hn.model, mexdolphins$segdata, mexdolphins$obsdata)
+  mod1<-dsm(N~s(x,y), hn.model, segdata, obsdata)
   #summary(mod1)
 
 
@@ -37,10 +37,10 @@ test_that("Do we get the same results?",{
 test_that("Density weighting",{
 
   # fit density model
-  mod1 <- dsm(D~s(x,y), hn.model, mexdolphins$segdata, mexdolphins$obsdata)
+  mod1 <- dsm(D~s(x,y), hn.model, segdata, obsdata)
 
   # compare when we set the weights
-  mod1.w <- dsm(D~s(x,y), hn.model, mexdolphins$segdata, mexdolphins$obsdata,
+  mod1.w <- dsm(D~s(x,y), hn.model, segdata, obsdata,
                 weights=mod1$data$segment.area)
 
   expect_equal(fitted(mod1),fitted(mod1.w),tolerance=par.tol)
@@ -48,16 +48,16 @@ test_that("Density weighting",{
 
   # setting weights to 1 or another constant
   # compare when we set the weights
-  mod1.w1 <- dsm(D~s(x,y), hn.model, mexdolphins$segdata, mexdolphins$obsdata,
-                weights=rep(1,nrow(mexdolphins$segdata)))
+  mod1.w1 <- dsm(D~s(x,y), hn.model, segdata, obsdata,
+                weights=rep(1,nrow(segdata)))
   # compare when we set the weights
-  mod1.w2 <- dsm(D~s(x,y), hn.model, mexdolphins$segdata, mexdolphins$obsdata,
-                weights=rep(100,nrow(mexdolphins$segdata)))
+  mod1.w2 <- dsm(D~s(x,y), hn.model, segdata, obsdata,
+                weights=rep(100,nrow(segdata)))
 
   expect_equal(fitted(mod1.w1),fitted(mod1.w2),tolerance=par.tol)
 
   # scalar input of weights (same as weighting all as 1, or 10)
-  mod1.ws1 <- dsm(D~s(x,y), hn.model, mexdolphins$segdata, mexdolphins$obsdata,
+  mod1.ws1 <- dsm(D~s(x,y), hn.model, segdata, obsdata,
                 weights=1)
 
   expect_equal(fitted(mod1.ws1),fitted(mod1.w2),tolerance=par.tol)
