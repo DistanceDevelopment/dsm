@@ -1,7 +1,9 @@
 dsm news!
 
 # 2.2.10
- * corrected offsets examples in dsm, dsm.var.prop, dsm.var.movblk
+ * corrected offsets in examples in dsm, dsm.var.prop, dsm.var.movblk
+ * updated mexdolphins data with lat/long reversal in prediction data and non-list storage
+ * stopped use of rqgam.check from being used with non-negbin/Tweedie responses (thanks to Phil Bouchet for highlighting this issue).
 
 # 2.2.9
  * Moving block bootstrap now works when there is no detection function (suggested by Laura Williamson)
