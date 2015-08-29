@@ -117,11 +117,13 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
   }
 
   # function to find the derivatives of the offset
-  funco <- function(p){
+  linkfn <- dsm.obj$family$linkfun
+  funco <- function(p, linkfn){
     # set the parameters to be p
     ipo <- tweakParams(ddf.obj, p)
     # calculate the offset
-    ret <- log(2*as.vector(unique(predict(ipo,esw=TRUE, compute=TRUE)$fitted))*
+    ret <- linkfn(2*as.vector(unique(predict(ipo,esw=TRUE,
+                                             compute=TRUE)$fitted))*
             fo2data[[seglen.varname]])
     return(ret)
   }
@@ -131,7 +133,7 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
 
   # find the derivatives
   p0 <- tweakParams(ddf.obj) # returns the parameters to numderiv
-  firstD <- numderiv( funco, p0)
+  firstD <- numderiv(funco, p0, linkfn=linkfn)
 
   # if the derivatives were zero, throw an error
   if(all(firstD==0)){

@@ -120,7 +120,7 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
   ## build the data
   dat <- make.data(response, ddf.obj, segment.data, observation.data,
                    group, convert.units, availability, strip.width,
-                   segment.area)
+                   segment.area, family)
 
   ## if we are not modelling density/presence, then add in the offset
   ##  to the formula

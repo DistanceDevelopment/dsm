@@ -1,6 +1,7 @@
 #' @importFrom stats aggregate
 make.data <- function(response, ddfobject, segdata, obsdata, group,
-                      convert.units, availability, strip.width, segment.area){
+                      convert.units, availability, strip.width, segment.area,
+                      family){
 
   # probably want to do something smart here...
   seglength.name<-'Effort'
@@ -157,7 +158,7 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
   dat$off.set <- dat$off.set*convert.units
 
   # Set offset as log of area or effective area
-  dat$off.set <- log(dat$off.set)
+  dat$off.set <- family$linkfun(dat$off.set)
 
   return(dat)
 }
