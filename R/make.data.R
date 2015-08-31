@@ -84,14 +84,14 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
   # Next merge the response variable with the segment records and any
   # response variable that is NA should be assigned 0 because these
   # occur due to 0 sightings
-  dat <- merge(segdata,responsedata,by=segnum.name,all.x=T)
-  dat[,response][is.na(dat[,response])] <- 0
+  dat <- merge(segdata, responsedata, by=segnum.name, all.x=TRUE)
+  dat[,response][is.na(dat[, response])] <- 0
 
   if(!is.null(segment.area)){
 
     # pull the column if segment.area is character
     if(is.character(segment.area)){
-      segment.area <- dat[,segment.area]
+      segment.area <- dat[, segment.area]
     }
 
     dat$off.set <- switch(off.set,
@@ -130,7 +130,7 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
     # check that none of the Effort values are zero
     if(any(dat[,seglength.name]==0)){
       stop(paste0("Effort values for segments: ",
-                  paste(which(dat[,seglength.name]==0),collapse=", "),
+                  paste(which(dat[,seglength.name]==0), collapse=", "),
                   " are 0."))
     }
 
