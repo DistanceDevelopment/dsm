@@ -41,6 +41,7 @@
 #'
 #'  # load the Gulf of Mexico dolphin data (see ?mexdolphins)
 #'  data(mexdolphins)
+#'  attach(mexdolphins)
 #'
 #'  # fit a detection function and look at the summary
 #'  hr.model <- ds(distdata, max(distdata$distance),
@@ -62,6 +63,8 @@
 #'                                     1:nrow(preddata)),
 #'                               off.set=preddata$area)
 #'  plot(mod1.var.map)
+#' # detach the data
+#' detach("mexdolphins")
 #' }
 #'
 dsm.var.prop<-function(dsm.obj, pred.data,off.set,

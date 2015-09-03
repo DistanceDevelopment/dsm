@@ -89,6 +89,7 @@ library(dsm)
 
 # load the Gulf of Mexico dolphin data (see ?mexdolphins)
 data(mexdolphins)
+attach(mexdolphins)
 
 # fit a detection function and look at the summary
 hr.model <- ds(distdata, max(distdata$distance),
@@ -107,6 +108,9 @@ sum(mod1.pred)
 
 # plot the smooth
 plot(mod1)
+
+# detach the data
+detach("mexdolphins")
 }
 \author{
 David L. Miller

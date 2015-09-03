@@ -5,11 +5,12 @@ library(testthat)
 par.tol<-1e-5
 
 context("test inputs")
+# load the Gulf of Mexico dolphin data
+data(mexdolphins)
+attach(mexdolphins)
 
 test_that("formula specs",{
 
-  # load the Gulf of Mexico dolphin data
-  data(mexdolphins)
 
   # fit a detection function and look at the summary
   hn.model <- ds(distdata, max(distdata$distance),
@@ -78,8 +79,6 @@ test_that("formula specs",{
 
 test_that("Missing columns cause errors",{
 
-  data(mexdolphins)
-
   seg <- segdata
   obs <- obsdata
 
@@ -106,3 +105,4 @@ test_that("Missing columns cause errors",{
 
 
 
+detach("mexdolphins")

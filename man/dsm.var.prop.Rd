@@ -57,6 +57,7 @@ Based on (much more general) code from Mark Bravington and Sharon Hedley.
 
  # load the Gulf of Mexico dolphin data (see ?mexdolphins)
  data(mexdolphins)
+ attach(mexdolphins)
 
  # fit a detection function and look at the summary
  hr.model <- ds(distdata, max(distdata$distance),
@@ -78,6 +79,8 @@ Based on (much more general) code from Mark Bravington and Sharon Hedley.
                                     1:nrow(preddata)),
                               off.set=preddata$area)
  plot(mod1.var.map)
+# detach the data
+detach("mexdolphins")
 }
 }
 \author{

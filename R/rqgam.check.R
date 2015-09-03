@@ -4,7 +4,7 @@
 #' residuals, a la Dunn and Smyth (1996). Checks of \code{k} are not computed,
 #' these need to be done using \code{\link{gam.check}}.
 #'
-#' In general plots other than residuals vs. linear predictors should be interpreted with caution. Only works with negative binomial and Tweedie response distributions.
+#' In general plots other than residuals vs. linear predictors should be interpreted with caution (for example Q-Q plots and histogram of residuals will look normal by construction -- so there is no model checking information). Only works with negative binomial and Tweedie response distributions.
 #'
 #' @param gam.obj a \code{gam}, \code{glm} or \code{dsm} object.
 #' @param ... arguments passed on to all plotting functions
@@ -24,6 +24,7 @@
 #'
 #' # load the Gulf of Mexico dolphin data (see ?mexdolphins)
 #' data(mexdolphins)
+#' attach(mexdolphins)
 #'
 #' # fit a detection function and look at the summary
 #' hr.model <- ds(distdata, max(distdata$distance),
@@ -33,6 +34,9 @@
 #' #  p parameter
 #' mod1<-dsm(N~s(x,y), hr.model, segdata, obsdata, family=tw())
 #' rqgam.check(mod1)
+#'
+#' # detach the data
+#' detach("mexdolphins")
 #' }
 rqgam.check<-function(gam.obj,...){
 
