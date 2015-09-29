@@ -157,10 +157,11 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
     formo[[3]] <- call( '+', formo[[3]], as.symbol(dmat.name))
 
     # put together the paraPen terms
-    paraterm<-list(list(ddf.obj$hess))
+    paraterm <- list(list(ddf.obj$hess))
     names(paraterm) <- dmat.name
     callo <- dsm.obj$call
-    callo$paraPen <- c(callo$paraPen, paraterm)
+#    callo$paraPen <- c(callo$paraPen, paraterm)
+    paraPen <- c(callo$paraPen, paraterm)
 
     # insert the extra data into the frame
     fo2data[[ dmat.name]] <- firstD
@@ -212,8 +213,10 @@ callo$random <- rand.list
 
   ## run the model
   if(!is.gamm){
-    fit.with.pen <- with(dsm.obj,withCallingHandlers(eval(callo),
-                                         warning=matrixnotposdef.handler))
+    #fit.with.pen <- with(dsm.obj,withCallingHandlers(eval(callo),
+    #                                     warning=matrixnotposdef.handler))
+    fit.with.pen <- update(dsm.obj, formula=formo, paraPen=paraPen,
+                           data=fo2data)
   }else{
     fit.with.pen <- do.call("gamm",callo)
     fit.with.pen <- fit.with.pen$gam

@@ -1,5 +1,8 @@
 dsm news!
 
+# 2.2.11
+ * dsm.var.prop uses update() rather than messing around with eval()
+
 # 2.2.10
  * corrected offsets in examples in dsm, dsm.var.prop, dsm.var.movblk
  * updated mexdolphins data with lat/long reversal in prediction data and non-list storage
