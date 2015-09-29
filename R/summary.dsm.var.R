@@ -189,7 +189,7 @@ summary.dsm.var<-function(object, alpha=0.05, boxplot.coef=1.5,
     }else{
     # if we're just using the GAM variance, then we need to combine using
     # the delta method
-      ddf.summary<-summary(object$dsm.object$ddf)
+      ddf.summary <- summary(object$dsm.object$ddf)
 
       cvp.sq <- (ddf.summary$average.p.se/
                  ddf.summary$average.p)^2
