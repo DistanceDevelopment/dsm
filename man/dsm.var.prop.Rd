@@ -72,13 +72,6 @@ Based on (much more general) code from Mark Bravington and Sharon Hedley.
 
  # this will give a summary over the whole area in mexdolphins$preddata
 
- # Plot a map of the CV
- #   need to format the prediction data with split
- mod1.var.map <- dsm.var.prop(mod1,
-                              split(preddata,
-                                    1:nrow(preddata)),
-                              off.set=preddata$area)
- plot(mod1.var.map)
 # detach the data
 detach("mexdolphins")
 }

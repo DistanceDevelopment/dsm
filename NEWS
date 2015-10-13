@@ -3,6 +3,8 @@ dsm news!
 # 2.2.11
  * dsm.var.prop uses update() rather than messing around with eval()
  * print.summary.dsm.var didn't work for GAM variance when no detection function was specified, now fixed (thanks to Natalia Dellabianca for spotting this)
+ * Removed non-working plot() code in variance examples --  see the Mexico pantropical spotted dolphins for a proper treatment of plotting using projections (http://distancesampling.org/R/vignettes/mexico-analysis.html)
+ * plot.var.gam no longer crashes by default when distance data doesn't have columns "x" and "y"
 
 # 2.2.10
  * corrected offsets in examples in dsm, dsm.var.prop, dsm.var.movblk

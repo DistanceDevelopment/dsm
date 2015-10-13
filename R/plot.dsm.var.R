@@ -218,7 +218,8 @@ plot.dsm.var<-function(x, poly=NULL, limits=NULL, breaks=NULL,
     }
 
     # if there is a dection function associated with the current analysis
-    if(!is.null(object$dsm.object$ddf)){
+    if(!is.null(object$dsm.object$ddf) &
+       all(c("x","y") %in% names(object$dsm.object$ddf$data)) ){
       object$dsm.object$ddf$data$x <- object$dsm.object$ddf$data[[x.name]]
       object$dsm.object$ddf$data$y <- object$dsm.object$ddf$data[[y.name]]
       # if there is a size variable in the ddf data, then use it
