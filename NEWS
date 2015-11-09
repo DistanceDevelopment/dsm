@@ -1,5 +1,8 @@
 dsm news!
 
+# 2.2.12
+ * The alpha argument now works for analytical variance reported using dsm.var.prop and dsm.var.gam print.summary and summary methods. Thanks to Jason Roberts for spotting this issue.
+
 # 2.2.11
  * dsm.var.prop uses update() rather than messing around with eval()
  * print.summary.dsm.var didn't work for GAM variance when no detection function was specified, now fixed (thanks to Natalia Dellabianca for spotting this)

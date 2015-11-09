@@ -9,7 +9,7 @@
 #' @author David L. Miller
 #' @seealso \code{\link{summary.dsm.var}}
 #' @keywords utility
-print.summary.dsm.var<-function(x,...){
+print.summary.dsm.var<-function(x, ...){
 
   if(x$bootstrap){
     cat("Summary of bootstrap uncertainty in a density surface model\n")
@@ -32,16 +32,19 @@ print.summary.dsm.var<-function(x,...){
 
     if(!x$ds.uncertainty){
       # delta method asymptotic CI
-      unconditional.cv.square <- x$cv^2 
-      asymp.ci.c.term <- exp(1.96*sqrt(log(1+unconditional.cv.square)))
+      unconditional.cv.square <- x$cv^2
+      asymp.ci.c.term <- exp(qnorm(1-x$alpha/2) *
+                              sqrt(log(1+unconditional.cv.square)))
       asymp.tot <- c(x$pred.est / asymp.ci.c.term,
                      x$pred.est,
                      x$pred.est * asymp.ci.c.term)
-      names(asymp.tot) <- c("5%","Mean","95%")
+      names(asymp.tot) <- c(paste0(x$alpha*100, "%"),
+                            "Mean",
+                            paste0((1-x$alpha)*100,"%"))
 
       cat("Approximate asymptotic bootstrap confidence interval:\n")
       print(asymp.tot)
-      cat("(Using delta method)\n")
+      cat("(Using log-Normal approximation)\n")
 
     }else{
       # DSU percentile CI
@@ -65,20 +68,19 @@ print.summary.dsm.var<-function(x,...){
 
     ## calculate the CI around the abundance estimate
     unconditional.cv.square <- x$cv^2
-    asymp.ci.c.term <- exp(1.96*sqrt(log(1+unconditional.cv.square)))
+    asymp.ci.c.term <- exp(qnorm(1-x$alpha/2) *
+                           sqrt(log(1+unconditional.cv.square)))
     asymp.tot <- c(x$pred.est / asymp.ci.c.term,
                    x$pred.est,
                    x$pred.est * asymp.ci.c.term)
 
-#    invlink <- family(mo
-#    asymp.tot <- c(x$pred.est - cdf.val*se,
-#                   x$pred.est,
-#                   x$pred.est + cdf.val*se)
-    names(asymp.tot) <- c("5%","Mean","95%")
+    names(asymp.tot) <- c(paste0(x$alpha*100, "%"),
+                          "Mean",
+                          paste0((1-x$alpha)*100,"%"))
 
     cat("Approximate asymptotic confidence interval:\n")
     print(asymp.tot)
-    cat("(Using delta method)\n")
+    cat("(Using log-Normal approximation)\n")
 
   }
 

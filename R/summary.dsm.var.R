@@ -1,6 +1,6 @@
 #' Summarize the variance of a density surface model
 #'
-#' Gives a brief summary of a fitted \code{dsm} variance object. 
+#' Gives a brief summary of a fitted \code{dsm} variance object.
 #'
 #' @aliases summary.dsm.var
 #'
@@ -24,6 +24,8 @@ summary.dsm.var<-function(object, alpha=0.05, boxplot.coef=1.5,
 
   # storage
   sinfo<-list()
+  # save the alpha value for cis
+  sinfo$alpha <- alpha
 
   if(object$bootstrap){
     # grab the predicted values
