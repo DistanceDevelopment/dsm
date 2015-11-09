@@ -80,6 +80,7 @@
 #' mod1 <- dsm(N~s(x,y), hr.model, segdata, obsdata)
 #' summary(mod1)
 #'
+#' \dontrun{
 #' # predict over a grid
 #' mod1.pred <- predict(mod1, preddata, preddata$area)
 #'
@@ -88,7 +89,7 @@
 #'
 #' # plot the smooth
 #' plot(mod1)
-#'
+#'}
 #' # detach the data
 #' detach("mexdolphins")
 dsm <- function(formula, ddf.obj, segment.data, observation.data,
