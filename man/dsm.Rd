@@ -45,13 +45,7 @@ dsm(formula, ddf.obj, segment.data, observation.data, engine = "gam",
 a \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}} object, with an additional element, \code{ddf} which holds the detection function object.
 }
 \description{
-Fits a density surface model (DSM) to detection adjusted counts from a
-spatially-referenced distance sampling analysis. \code{\link{dsm}} takes
-observations of animals, allocates them to segments of line (or strip
-transects) and optionally adjusts the counts based on detectability using a
-supplied detection function model. A generalized additive model, generalized
-mixed model or generalised is then used to model these adjusted counts based
-on a formula involving environmental covariates.
+Fits a density surface model (DSM) to detection adjusted counts from a spatially-referenced distance sampling analysis. \code{\link{dsm}} takes observations of animals, allocates them to segments of line (or strip transects) and optionally adjusts the counts based on detectability using a supplied detection function model. A generalized additive model, generalized mixed model or generalized linear model is then used to model these adjusted counts based on a formula involving environmental covariates.
 }
 \details{
 The response (LHS of `formula`) can be one of the following:

@@ -1,13 +1,7 @@
 #' Fit a density surface model to segment-specific estimates of abundance
 #' or density.
 #'
-#' Fits a density surface model (DSM) to detection adjusted counts from a
-#' spatially-referenced distance sampling analysis. \code{\link{dsm}} takes
-#' observations of animals, allocates them to segments of line (or strip
-#' transects) and optionally adjusts the counts based on detectability using a
-#' supplied detection function model. A generalized additive model, generalized
-#' mixed model or generalised is then used to model these adjusted counts based
-#' on a formula involving environmental covariates.
+#' Fits a density surface model (DSM) to detection adjusted counts from a spatially-referenced distance sampling analysis. \code{\link{dsm}} takes observations of animals, allocates them to segments of line (or strip transects) and optionally adjusts the counts based on detectability using a supplied detection function model. A generalized additive model, generalized mixed model or generalized linear model is then used to model these adjusted counts based on a formula involving environmental covariates.
 #'
 #' The response (LHS of `formula`) can be one of the following:
 #' \tabular{ll}{
