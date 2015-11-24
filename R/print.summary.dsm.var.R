@@ -38,9 +38,9 @@ print.summary.dsm.var<-function(x, ...){
       asymp.tot <- c(x$pred.est / asymp.ci.c.term,
                      x$pred.est,
                      x$pred.est * asymp.ci.c.term)
-      names(asymp.tot) <- c(paste0(x$alpha*100, "%"),
+      names(asymp.tot) <- c(paste0(x$alpha/2*100, "%"),
                             "Mean",
-                            paste0((1-x$alpha)*100,"%"))
+                            paste0((1-x$alpha/2)*100,"%"))
 
       cat("Approximate asymptotic bootstrap confidence interval:\n")
       print(asymp.tot)

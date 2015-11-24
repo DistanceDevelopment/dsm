@@ -5,7 +5,7 @@
 #' @aliases summary.dsm.var
 #'
 #' @param object a \code{dsm.var} object
-#' @param alpha alpha level for confidence intervals
+#' @param alpha alpha level for confidence intervals (default 0.025 to give a 95\% confidence internal)
 #' @param boxplot.coef the value of \code{coef} used to calculate the outliers
 #'        see \code{\link{boxplot}}.
 #' @param bootstrap.subregions list of vectors of logicals or indices for 
@@ -19,7 +19,7 @@
 #' @seealso dsm.var.movblk dsm.var.prop
 #' @author David L. Miller
 #'
-summary.dsm.var<-function(object, alpha=0.05, boxplot.coef=1.5,
+summary.dsm.var<-function(object, alpha=0.025, boxplot.coef=1.5,
                   bootstrap.subregions=NULL,...){
 
   # storage

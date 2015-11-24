@@ -4,13 +4,13 @@
 \alias{summary.dsm.var}
 \title{Summarize the variance of a density surface model}
 \usage{
-\method{summary}{dsm.var}(object, alpha = 0.05, boxplot.coef = 1.5,
+\method{summary}{dsm.var}(object, alpha = 0.025, boxplot.coef = 1.5,
   bootstrap.subregions = NULL, ...)
 }
 \arguments{
 \item{object}{a \code{dsm.var} object}
 
-\item{alpha}{alpha level for confidence intervals}
+\item{alpha}{alpha level for confidence intervals (default 0.025 to give a 95\% confidence internal)}
 
 \item{boxplot.coef}{the value of \code{coef} used to calculate the outliers
 see \code{\link{boxplot}}.}
