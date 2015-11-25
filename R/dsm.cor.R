@@ -1,7 +1,6 @@
 #' Check for autocorrelation in residuals
 #'
-#' Once a DSM has been fitted to data, this function can be used to
-#' check for autocorrelation in the residuals.
+#' Once a DSM has been fitted to data, this function can be used to check for autocorrelation in the residuals.
 #'
 #' @param dsm.obj a fitted dsm object.
 #' @param Transect.Label label for the transect (default: \code{Transect.Label}). Using different labels can be useful when transects are split over geographical features or when transects are surveyed multiple times.
@@ -29,17 +28,19 @@
 #'  library(dsm)
 #'
 #'  data(mexdolphins)
+#'  attach(mexdolphins)
 #'
 #'  hr.model <- ds(distdata, max(distdata$distance),
 #'                 key = "hr", adjustment = NULL)
 #'  mod1<-dsm(N~s(x,y), hr.model, segdata, obsdata)
 #'
 #'  dsm.cor(mod1,resid.type="d",max.lag=9,Segment.Label="Sample.Label")
+#'  detach("mexdolphins")
 #'}
 #' @author David L. Miller
 #' @export
 dsm.cor <- function(dsm.obj,Transect.Label="Transect.Label",
-                    Segment.Label="Segment.Label",max.lag=10, 
+                    Segment.Label="Segment.Label",max.lag=10,
                     resid.type ="scaled.pearson",
                     fun=cor,ylim=c(0,1),subset="all",...){
 

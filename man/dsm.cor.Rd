@@ -32,8 +32,7 @@ dsm.cor(dsm.obj, Transect.Label = "Transect.Label",
 a plot or a vector of \code{fun} applied at the lags.
 }
 \description{
-Once a DSM has been fitted to data, this function can be used to
-check for autocorrelation in the residuals.
+Once a DSM has been fitted to data, this function can be used to check for autocorrelation in the residuals.
 }
 \section{Details}{
  Within each \code{Transect.Label}, segments will be sorted according to their \code{Segment.Labels}. This may require some time to get right for your particular data. If one has multiple surveys where transects are revisited, for example, one may want to make \code{Transect.Label} a unique transect-survey id. Neither label need to be included in the model, they must just be present in the \code{$data} field in the model. This usually means that they have to be in the segment data passed to \code{dsm}.
@@ -48,12 +47,14 @@ If there are NA values in the residuals then the correlogram will not be calcula
  library(dsm)
 
  data(mexdolphins)
+ attach(mexdolphins)
 
  hr.model <- ds(distdata, max(distdata$distance),
                 key = "hr", adjustment = NULL)
  mod1<-dsm(N~s(x,y), hr.model, segdata, obsdata)
 
  dsm.cor(mod1,resid.type="d",max.lag=9,Segment.Label="Sample.Label")
+ detach("mexdolphins")
 }
 }
 \author{
