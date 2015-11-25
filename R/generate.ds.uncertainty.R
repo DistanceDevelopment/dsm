@@ -61,8 +61,8 @@ generate.ds.uncertainty <- function(ds.object){
                            binned   = rep(FALSE, this.n.samps))
 
         # create a ddf object
-        ddfobj <- mrds:::create.ddfobj(as.formula(ds.object$dsmodel), xmat,
-                                       ds.object$meta.data,pars)
+        ddfobj <- mrds::create.ddfobj(as.formula(ds.object$dsmodel), xmat,
+                                      ds.object$meta.data,pars)
 
         # generate acceptance probability
         U <- runif(this.n.samps)
@@ -77,10 +77,10 @@ generate.ds.uncertainty <- function(ds.object){
         ##                                point=ds.object$ds$aux$point,
         ##                                integral.numeric=TRUE)))
 
-        inout <- U <= mrds:::detfct(new.dists$distance, ddfobj,
-                                    standardize=FALSE, width=width)
+        inout <- U <= mrds::detfct(xmat$distance, ddfobj,
+                                   standardize=FALSE, width=width)
 
-        dists <- c(dists,new.dists$distance[inout])
+        dists <- c(dists, xmat$distance[inout])
 
         n.samps <- length(dists)
 
