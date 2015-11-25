@@ -146,7 +146,7 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
     paraterm <- list(list(ddf.obj$hess))
     names(paraterm) <- dmat.name
     callo <- dsm.obj$call
-#    callo$paraPen <- c(callo$paraPen, paraterm)
+    #callo$paraPen <- c(callo$paraPen, paraterm)
     paraPen <- c(callo$paraPen, paraterm)
 
     # insert the extra data into the frame
@@ -170,21 +170,19 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
       # add the extra random effect term to the formula
       for(i in 1:ncol(firstD)){
         this.dmat.name <- paste0(dmat.name,i)
-#        formo <- paste(formo," + s(",this.dmat.name,",bs=\"re\")",collapse="")
-rand.list[[this.dmat.name]]<-pdMat(form=~1)
+        rand.list[[this.dmat.name]]<-pdMat(form=~1)
         fo2data[[ this.dmat.name]] <- firstD[,i]
       }
-callo$random <- rand.list
+      callo$random <- rand.list
     }else{
       sqrt.D <- sqrt(S.e$values)
       firstD <- firstD*sqrt.D
 
       # add the extra random effect term to the formula
-#      formo <- paste(formo," + s(",dmat.name,",bs=\"re\")",collapse="")
-rand.list <- list()
-rand.list[[dmat.name]]<-pdMat(form=~1)
+      rand.list <- list()
+      rand.list[[dmat.name]]<-pdMat(form=~1)
       fo2data[[ dmat.name]] <- firstD
-callo$random <- rand.list
+      callo$random <- rand.list
     }
 
     # make the formula a formula
@@ -291,7 +289,7 @@ callo$random <- rand.list
                  dsm.object = dsm.obj,
                  model.check = model.check,
                  deriv = firstD,
-                 seglen.varname=seglen.varname,
+                 seglen.varname = seglen.varname,
                  type.pred=type.pred
                 )
 
