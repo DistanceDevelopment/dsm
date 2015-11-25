@@ -199,8 +199,7 @@ callo$random <- rand.list
 
   ## run the model
   if(!is.gamm){
-    #fit.with.pen <- with(dsm.obj,withCallingHandlers(eval(callo),
-    #                                     warning=matrixnotposdef.handler))
+    # update the formula with the new term
     fit.with.pen <- update(dsm.obj, formula=formo, paraPen=paraPen,
                            data=fo2data)
   }else{
@@ -210,7 +209,7 @@ callo$random <- rand.list
   # strip dsm class so we can use gam methods
   class(fit.with.pen) <- class(fit.with.pen)[class(fit.with.pen)!="dsm"]
 
-  # Diagnostic from Mark
+  # Diagnostic from MVB
   # check that the fitted model isn't too different, used in summary()
   model.check <- summary(fitted(fit.with.pen) - fitted(dsm.obj))
 
@@ -304,61 +303,77 @@ callo$random <- rand.list
 ####### this is all utility stuff below here, taken from Mark's packages
 
 # from Mark Bravington's handy2
-numderiv<-function (f, x0, eps = 1e-04, TWICE. = TRUE, param.name = NULL,
-    ..., SIMPLIFY = TRUE)
-{
-    if (is.null(param.name)) 
-        ff <- function(x, ...) f(x, ...)
-    else ff <- function(x, ...) {
-        ll <- c(list(x), list(...))
-        names(ll)[1] <- param.name
-        do.call("f", ll)
+numderiv <- function(f, x0, eps = 1e-04, TWICE. = TRUE, param.name = NULL,
+                     ..., SIMPLIFY = TRUE){
+  if(is.null(param.name)){
+    ff <- function(x, ...) f(x, ...)
+  }else{
+    ff <- function(x, ...){
+      ll <- c(list(x), list(...))
+      names(ll)[1] <- param.name
+      do.call("f", ll)
     }
-    f0 <- ff(x0, ...)
-    n <- length(x0)
-    m <- matrix(0, length(f0), n)
-    for (i in 1:n) {
-        this.eps <- eps * if (x0[i] == 0)
-            1
-        else x0[i]
-        m[, i] <- (ff(x0 + this.eps * (1:n == i), ...) - f0)/this.eps
+  }
+  f0 <- ff(x0, ...)
+  n <- length(x0)
+  m <- matrix(0, length(f0), n)
+  for(i in 1:n){
+    if(x0[i] == 0){
+      this.eps <- eps
+    }else{
+      this.eps <- eps * x0[i]
     }
-    if (!is.null(dim(f0)))
-        dim(m) <- c(dim(f0), n)
-    if (TWICE.) {
-        mc <- match.call()
-        mc$eps <- -eps
-        mc$TWICE. <- FALSE
-        m <- 0.5 * (m + eval(mc, sys.frame(sys.parent())))
-    }
-    if (any(dim(m) == length(m)) && SIMPLIFY)
-        m <- c(m)
-    return(m)
+    m[, i] <- (ff(x0 + this.eps * (1:n == i), ...) - f0)/this.eps
+  }
+  if(!is.null(dim(f0))){
+    dim(m) <- c(dim(f0), n)
+  }
+  if(TWICE.){
+    mc <- match.call()
+    mc$eps <- -eps
+    mc$TWICE. <- FALSE
+    m <- 0.5 * (m + eval(mc, sys.frame(sys.parent())))
+  }
+  if(any(dim(m) == length(m)) && SIMPLIFY){
+    m <- c(m)
+  }
+  return(m)
 }
 
 # from mvbutils
 "%**%"<-function(x, y){
-    dimnames(x) <- NULL
-    dimnames(y) <- NULL
-    if (length(dim(x)) == 2 && length(dim(y)) == 2 && dim(x)[2] ==
-        1 && dim(y)[1] == 1)
-        return(c(x) %o% c(y))
-    if ((!is.null(dim(x)) && any(dim(x) == 1)))
-        dim(x) <- NULL
-    if ((!is.null(dim(y)) && any(dim(y) == 1)))
-        dim(y) <- NULL
-    if (is.null(dim(x)) && is.null(dim(y))) {
-        if (length(x) == length(y))
-            x <- x %*% y
-        else {
-            if ((length(x) != 1) && (length(y) != 1))
-                stop(paste("lengths of x (",length(x),") and y (",
-                  length(y),") are incompatible",sep=""))
-            else x <- x * y
-        }
-    }
-    else x <- x %*% y
-    if ((!is.null(dim(x)) && any(dim(x) == 1)))
-        dim(x) <- NULL
-    x
+  dimnames(x) <- NULL
+  dimnames(y) <- NULL
+
+  if(length(dim(x)) == 2 && length(dim(y)) == 2 && dim(x)[2] ==
+     1 && dim(y)[1] == 1){
+    return(c(x) %o% c(y))
+  }
+
+  if((!is.null(dim(x)) && any(dim(x) == 1))){
+    dim(x) <- NULL
+  }
+
+  if((!is.null(dim(y)) && any(dim(y) == 1))){
+    dim(y) <- NULL
+  }
+  if(is.null(dim(x)) && is.null(dim(y))){
+    if(length(x) == length(y)){
+      x <- x %*% y
+    }else{
+      if ((length(x) != 1) && (length(y) != 1)){
+          stop(paste("lengths of x (",length(x),") and y (",
+            length(y),") are incompatible",sep=""))
+      }else{
+        x <- x * y
+      }
+     }
+  }else{
+    x <- x %*% y
+  }
+
+  if((!is.null(dim(x)) && any(dim(x) == 1))){
+    dim(x) <- NULL
+  }
+  return(x)
 }
