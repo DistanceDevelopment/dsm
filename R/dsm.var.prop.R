@@ -28,6 +28,7 @@
 #' Williams, R., Hedley, S.L., Branch, T.A., Bravington, M.V., Zerbini, A.N. and Findlay, K.P. (2011). Chilean Blue Whales as a Case Study to Illustrate Methods to Estimate Abundance and Evaluate Conservation Status of Rare Species. Conservation Biology 25(3), 526-535.
 #' @export
 #' @importFrom stats as.formula update
+#' @importFrom numDeriv grad
 #' @examples
 #' \dontrun{
 #'  library(Distance)
@@ -218,7 +219,8 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
   # depending on whether we have response or link scale predictions...
   if(type.pred=="response"){
     tmfn <- dsm.obj$family$linkinv
-    dtmfn <- function(eta){vapply(eta, numderiv, numeric(1), f=tmfn)}
+    dtmfn <- function(eta){ifelse(is.na(eta), NA,
+                           grad(tmfn, ifelse(is.na(eta), 0, eta)))}
   }else if(type.pred=="link"){
     tmfn <- identity
     dtmfn <- function(eta){1}

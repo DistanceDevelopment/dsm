@@ -56,11 +56,12 @@ dsm.var.gam<-function(dsm.obj, pred.data,off.set=NULL,
 
   # depending on whether we have response or link scale predictions...
   if(type.pred=="response"){
-      tmfn <- dsm.obj$family$linkinv
-      dtmfn <- function(eta){vapply(eta, numderiv, numeric(1), f=tmfn)}
+    tmfn <- dsm.obj$family$linkinv
+    dtmfn <- function(eta){ifelse(is.na(eta), NA,
+                           grad(tmfn, ifelse(is.na(eta), 0, eta)))}
   }else if(type.pred=="link"){
-      tmfn <- identity
-      dtmfn <- function(eta){1}
+    tmfn <- identity
+    dtmfn <- function(eta){1}
   }
 
   # grab the coefficients
