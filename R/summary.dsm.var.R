@@ -18,7 +18,7 @@
 #'
 #' @seealso dsm.var.movblk dsm.var.prop
 #' @author David L. Miller
-#'
+#' @importFrom stats qnorm
 summary.dsm.var<-function(object, alpha=0.025, boxplot.coef=1.5,
                   bootstrap.subregions=NULL,...){
 
