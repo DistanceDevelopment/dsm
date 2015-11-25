@@ -55,14 +55,12 @@ generate.ds.uncertainty <- function(ds.object){
         this.n.samps <- n.mult*(n.ds.samples-n.samps)
 
         # generate some new distances
-        new.dists <- data.frame(distance = runif(this.n.samps, 0, width),
-                                detected = rep(1, this.n.samps),
-                                object   = 1:(this.n.samps))
+        xmat <- data.frame(distance = runif(this.n.samps, 0, width),
+                           detected = rep(1, this.n.samps),
+                           object   = 1:(this.n.samps),
+                           binned   = rep(FALSE, this.n.samps))
 
-        # need to call out to mrds to get the data and model objects
-        # into the correct format
-        xmat <- mrds:::process.data(new.dists, ds.object$meta.data,
-                                    check=FALSE)$xmat
+        # create a ddf object
         ddfobj <- mrds:::create.ddfobj(as.formula(ds.object$dsmodel), xmat,
                                        ds.object$meta.data,pars)
 
