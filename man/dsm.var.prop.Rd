@@ -33,18 +33,12 @@ a list with elements
                      }
 }
 \description{
-Rather than use a bootstrap to calculate the variance in a \code{dsm} model,
-use the clever variance propogation trick from Williams et al. (2011).
+Rather than use a bootstrap to calculate the variance in a \code{dsm} model, use the clever variance propogation trick from Williams et al. (2011).
 }
 \details{
-The idea is to refit the spatial model but including the Hessian of the
-offset as an extra term. Variance estimates using this new model can then
-be used to calculate the variance of abundance estimates which incorporate
-detection function uncertainty. Further mathematical details are given in
-the paper in the references below.
+The idea is to refit the spatial model but including the Hessian of the offset as an extra term. Variance estimates using this new model can then be used to calculate the variance of abundance estimates which incorporate detection function uncertainty. Further mathematical details are given in the paper in the references below.
 
-Many prediction grids can be supplied by supplying a list of
-\code{data.frame}s to the function.
+Many prediction grids can be supplied by supplying a list of \code{data.frame}s to the function.
 
 Note that this routine is only useful if a detection function has been used in the DSM.
 
