@@ -102,7 +102,7 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
       return(object$par)
     }
     object$par <- params
-    object$ds$aux$ddfobj <- mrds:::assign.par(object$ds$aux$ddfobj,params)
+    object$ds$aux$ddfobj <- assign.par(object$ds$aux$ddfobj,params)
     return(object)
   }
 
@@ -220,7 +220,7 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
   if(type.pred=="response"){
     tmfn <- dsm.obj$family$linkinv
     dtmfn <- function(eta){ifelse(is.na(eta), NA,
-                           grad(tmfn, ifelse(is.na(eta), 0, eta)))}
+                           numDeriv::grad(tmfn, ifelse(is.na(eta), 0, eta)))}
   }else if(type.pred=="link"){
     tmfn <- identity
     dtmfn <- function(eta){1}
