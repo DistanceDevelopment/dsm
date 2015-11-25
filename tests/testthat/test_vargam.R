@@ -28,8 +28,25 @@ set.seed(1123)
 mod1.var <- dsm.var.prop(mod1, preddata, off.set=preddata$area)
 
 test_that("mexdolphins - results for s(x,y)",{
+  # CV
   expect_that(summary(mod1.var)$cv,
-              equals(0.2131066,tol=cv.tol))
+              equals(0.2131066, tol=cv.tol))
+  # var
+  expect_that(mod1.var$pred.var,
+              equals(23284562.6757538, tol=N.tol))
+  # test that the CIs are right
+  expect_output(summary(mod1.var),
+                "2.5%     Mean    97.5% \\n14118.61 22643.16 36314.68")
+})
+
+test_that("different CIs work",{
+  expect_output(summary(mod1.var, alpha=0.05),
+                "5%     Mean      95% \\n14981.34 22643.16 34223.42")
+  expect_output(summary(mod1.var, alpha=0.1),
+                "10%     Mean      90% \\n16010.00 22643.16 32024.54")
+  expect_output(summary(mod1.var, alpha=0.01),
+                "1%     Mean      99% \\n13157.81 22643.16 38966.44")
+
 })
 
 ## With no detection function
