@@ -114,7 +114,7 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
   ## check that the necessary columns exist in the data
   # NB this doesn't return anything just throws an error if something
   #    bad happens
-  check.cols(ddf.obj, segment.data, observation.data, strip.width,segment.area)
+  check.cols(ddf.obj, segment.data, observation.data, strip.width, segment.area)
 
   ## build the data
   dat <- make.data(response, ddf.obj, segment.data, observation.data,

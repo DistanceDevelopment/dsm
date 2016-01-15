@@ -94,12 +94,18 @@ test_that("Missing columns cause errors",{
   for(mcov in c("Effort","Sample.Label")){
     seg_missing <- seg
     seg_missing[[mcov]] <- NULL
-    expect_error(dsm(N~s(x,y), NULL, seg_missing, obs, segment.area = 8000^2),
+    expect_error(dsm(N~s(x,y), NULL, seg_missing, obs),
                  paste0("Column(s) \"",mcov,
                         "\" not found in segment.data."),
                  fixed=TRUE)
   }
 
+  # with segment area specified we only have a problem with Sample.Label
+  seg_missing <- seg
+  seg_missing[["Sample.Label"]] <- NULL
+  expect_error(dsm(N~s(x,y), NULL, seg_missing, obs, segment.area = 8000^2),
+               paste0("Column(s) \"Sample.Label\" not found in segment.data."),
+               fixed=TRUE)
 
 })
 
