@@ -30,14 +30,14 @@ mod1.movblk <- dsm.var.movblk(mod1, preddata, n.boot = 2,
 
 test_that("mexdolphins - bootstrap results for s(x,y)",{
 
-  expect_that(mod1.movblk$study.area.total,
-              equals(c(37065.62, 20722.39),tol=N.tol))
+  expect_equal(mod1.movblk$study.area.total,
+              c(37065.62, 20722.39),tol=N.tol)
 
-  expect_that(summary(mod1.movblk)$cv[1],
-              equals(0.3367496,tol=cv.tol))
+  expect_equal(summary(mod1.movblk)$cv[1],
+              0.3367496,tol=cv.tol)
 
-  expect_that(summary(mod1.movblk)$bootstrap.cv[1],
-              equals(0.3117824,tol=cv.tol))
+  expect_equal(summary(mod1.movblk)$bootstrap.cv[1],
+              0.3117824,tol=cv.tol)
 })
 
 ## With no detection function
@@ -48,8 +48,8 @@ test_that("mexdolphins - bootstrap works for NULL detection function",{
   mod1.movblk_nodf <- dsm.var.movblk(mod1_nodf, preddata, n.boot=2,
                               block.size=3, off.set=444*1000*1000, bar=FALSE)
 
-  expect_that(summary(mod1.movblk_nodf)$cv[1],
-              equals(0.3117824, tol=cv.tol))
+  expect_equal(summary(mod1.movblk_nodf)$cv[1],
+              0.3117824, tol=cv.tol)
 
   # throw an error if you want detection function uncertainty with no
   # detection function

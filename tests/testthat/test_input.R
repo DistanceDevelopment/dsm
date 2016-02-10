@@ -19,55 +19,55 @@ test_that("formula specs",{
   ## models for count
   count.gcv <- 42.9169051
   count.N<-dsm(N~s(x,y), hn.model, segdata, obsdata)
-  expect_that(count.N$gcv.ubre, equals(count.gcv,tolerance=par.tol))
+  expect_equal(unname(count.N$gcv.ubre), count.gcv,tolerance=par.tol)
 
   count.n<-dsm(n~s(x,y), hn.model, segdata, obsdata)
-  expect_that(count.n$gcv.ubre, equals(count.gcv,tolerance=par.tol))
+  expect_equal(unname(count.n$gcv.ubre), count.gcv,tolerance=par.tol)
 
   count.count<-dsm(count~s(x,y), hn.model, segdata,
                    obsdata)
-  expect_that(count.count$gcv.ubre, equals(count.gcv,tolerance=par.tol))
+  expect_equal(unname(count.count$gcv.ubre), count.gcv,tolerance=par.tol)
 
   count.abundance<-dsm(abundance~s(x,y), hn.model, segdata,
                        obsdata)
-  expect_that(count.abundance$gcv.ubre, equals(count.gcv,tolerance=par.tol))
+  expect_equal(unname(count.abundance$gcv.ubre), count.gcv,tolerance=par.tol)
 
 
   ## models for abund.est
   abund.est.gcv <- 57.3159048
   abund.est.Nhat<-dsm(Nhat~s(x,y), hn.model, segdata,
                       obsdata)
-  expect_that(abund.est.Nhat$gcv.ubre, equals(abund.est.gcv,tolerance=par.tol))
+  expect_equal(unname(abund.est.Nhat$gcv.ubre), abund.est.gcv,tolerance=par.tol)
   abund.est.abund.est<-dsm(abundance.est~s(x,y), hn.model, segdata,
                            obsdata)
-  expect_that(abund.est.abund.est$gcv.ubre,equals(abund.est.gcv,
-                                                  tolerance=par.tol))
+  expect_equal(unname(abund.est.abund.est$gcv.ubre),abund.est.gcv,
+                                                  tolerance=par.tol)
   abund.est.abundance<-dsm(abundance.est~s(x,y), hn.model, segdata,
                        obsdata)
-  expect_that(abund.est.abundance$gcv.ubre, equals(abund.est.gcv,
-                                                   tolerance=par.tol))
+  expect_equal(unname(abund.est.abundance$gcv.ubre), abund.est.gcv,
+                                                   tolerance=par.tol)
 
 
   ## models for density
   D.gcv <- 1.660703e-07
   density.D<-dsm(D~s(x,y), hn.model, segdata, obsdata,
                  weights=rep(1,nrow(segdata)))
-  expect_that(density.D$gcv.ubre, equals(D.gcv,tolerance=par.tol))
+  expect_equal(unname(density.D$gcv.ubre), D.gcv,tolerance=par.tol)
 
   density.density<-dsm(density~s(x,y), hn.model, segdata,
                        obsdata,
                        weights=rep(1,nrow(segdata)))
-  expect_that(density.density$gcv.ubre, equals(D.gcv,tolerance=par.tol))
+  expect_equal(unname(density.density$gcv.ubre), D.gcv,tolerance=par.tol)
 
   density.Dhat<-dsm(Dhat~s(x,y), hn.model, segdata,
                     obsdata,
                     weights=rep(1,nrow(segdata)))
-  expect_that(density.Dhat$gcv.ubre, equals(D.gcv,tolerance=par.tol))
+  expect_equal(unname(density.Dhat$gcv.ubre), D.gcv,tolerance=par.tol)
 
   density.density.est<-dsm(density.est~s(x,y), hn.model, segdata,
                            obsdata,
                            weights=rep(1,nrow(segdata)))
-  expect_that(density.density.est$gcv.ubre, equals(D.gcv,tolerance=par.tol))
+  expect_equal(unname(density.density.est$gcv.ubre), D.gcv,tolerance=par.tol)
 
   # check that Effort is not zero
   mex_zero_effort <- segdata

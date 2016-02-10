@@ -21,18 +21,18 @@ test_that("Do we get the same results?",{
 
   ddf.par <- 8.626542
   names(hn.model$ddf$par) <- NULL
-  expect_that(hn.model$ddf$par, equals(ddf.par,tolerance=par.tol))
+  expect_equal(hn.model$ddf$par, ddf.par, tolerance=par.tol)
 
   # fit a simple smooth of x and y
   mod1<-dsm(N~s(x,y), hn.model, segdata, obsdata)
   #summary(mod1)
 
 
-  expect_that(mod1$gcv.ubre, equals(42.9169051,tolerance=par.tol))
+  expect_equal(unname(mod1$gcv.ubre), 42.9169051,tolerance=par.tol)
 
 
-  expect_that(dsm.cor(mod1,resid.type="d",max.lag=9),
-              throws_error("No column called Segment.Label in data"))
+  expect_error(dsm.cor(mod1,resid.type="d",max.lag=9),
+               "No column called Segment.Label in data")
 })
 
 test_that("Density weighting",{
