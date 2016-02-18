@@ -5,7 +5,11 @@ Title: Density Surface Modelling of Distance Sampling Data
 LazyLoad: yes
 Author: David L. Miller, Eric Rexstad, Louise Burt, Mark V. Bravington,
     Sharon Hedley.
-Description: Density surface modelling of line transect data. A Generalized Additive Model-based approach is used to calculate spatially-explicit estimates of animal abundance from distance sampling (also presence/absence and strip transect) data. Several utility functions are provided for model checking, plotting and variance estimation.
+Description: Density surface modelling of line transect data. A Generalized
+    Additive Model-based approach is used to calculate spatially-explicit estimates
+    of animal abundance from distance sampling (also presence/absence and strip
+    transect) data. Several utility functions are provided for model checking,
+    plotting and variance estimation.
 Version: 2.2.11
 URL: http://github.com/DistanceDevelopment/dsm
 Depends:
@@ -20,3 +24,4 @@ Imports:
 Suggests:
     Distance,
     tweedie
+RoxygenNote: 5.0.1

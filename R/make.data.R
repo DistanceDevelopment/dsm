@@ -43,12 +43,6 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
     }
   }
 
-#  # if the ps are all the same (count model) then just grab the 1 unique
-#  # value
-#  if(response %in% c("N","abundance","count","n")){
-#    fitted.p <- unique(fitted.p)
-#  }
-
   # reorder the fitted ps, making sure that
   # they match the ordering in obsdata
   fitted.p <- fitted.p[match(obsdata$object, names(fitted.p))]
