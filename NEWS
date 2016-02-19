@@ -6,6 +6,7 @@ dsm news!
  * dsm now requires mrds version 2.1.15 or higher, due to internal changes
  * fixed issue where Effort column was required even when segment.area was specified. Thanks to Greg Lollback for spotting this issue.
  * ensured that ordering of segments matched the ordering of the observations so that aggregation of observations are correct. Thanks to Dave Fifield for reporting this bug and suggesting a fix.
+ * check.cols no longer checks to see if there is a column called "distance" when strip transects are being used
 
 # 2.2.11
  * dsm.var.prop uses update() rather than messing around with eval()
