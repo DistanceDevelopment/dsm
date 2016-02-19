@@ -23,7 +23,7 @@
 predicted values on the response scale (density/abundance).
 }
 \description{
-Make predictions outside (or inside) the covered area.
+Make predictions outside (or inside) the covered area. If \code{newdata} is not supplied, predictions are made for the data that built the model. Note that the order of the results will not necessarily be the same as the \code{segdata} (segment data) \code{data.frame} that was supplied (it will be sorted by the \code{Segment.Label} field).
 }
 \author{
 David L. Miller

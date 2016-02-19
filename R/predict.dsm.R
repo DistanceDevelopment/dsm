@@ -2,6 +2,8 @@
 #'
 #' Make predictions outside (or inside) the covered area.
 #'
+#' If \code{newdata} is not supplied, predictions are made for the data that built the model. Note that the order of the results will not necessarily be the same as the \code{segdata} (segment data) \code{data.frame} that was supplied (it will be sorted by the \code{Segment.Label} field).
+#'
 #' @param object a fitted \code{\link{dsm}} object as produced by \code{dsm()}.
 #' @param newdata spatially referenced covariates e.g. altitude, depth, distance to shore, etc. Covariates in the \code{data.frame} must have names *identical* to variable names used in fitting the DSM.
 #' @param off.set area of each of the cells in the prediction grid. Should be in the same units as the segments/distances given to \code{dsm}. Ignored if there is already a column in \code{newdata} called \code{off.set}.
