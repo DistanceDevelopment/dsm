@@ -22,6 +22,7 @@ print.dsm<-function(x,...){
     gamm <- TRUE
   }
 
+
   ### General information
 
   cat("\nDensity surface model\n")
@@ -40,6 +41,8 @@ print.dsm<-function(x,...){
 
   if(gamm){
     cat("Fitting engine: gamm\n")
+  }else if(("glm" %in% class(x)) & !any(class(x)=="gam")){
+    cat("Fitting engine: glm\n")
   }else{
     cat("Fitting engine: gam\n")
   }
