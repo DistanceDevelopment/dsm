@@ -24,7 +24,7 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
   }
 
   # if we fitted a detection function
-  if (!is.null(ddfobject)){
+  if(!is.null(ddfobject)){
     # grab the probabilities of detection
     fitted.p <- fitted(ddfobject)
 
