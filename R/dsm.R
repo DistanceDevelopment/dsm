@@ -38,7 +38,7 @@
 #' @param convert.units conversion factor to multiply the area of the segments by. See 'Units' below.
 #' @param family response distribution (popular choices include \code{\link{quasipoisson}}, \code{\link{Tweedie}} and \code{\link{negbin}}). Defaults to \code{quasipossion}.
 #' @param group if \code{TRUE} the abundance of groups will be calculated rather than the abundance of individuals. Setting this option to \code{TRUE} is equivalent to setting the size of each group to be 1.
-#' @param control the usual \code{control} argument for a \code{gam}; \code{keepData} must be \code{TRUE} for variance estimation to work.
+#' @param control the usual \code{control} argument for a \code{gam}; \code{keepData} must be \code{TRUE} for variance estimation to work (though this option cannot be set for GLMs or GAMMs.
 #' @param availability an availability bias used to scale the counts/estimated  counts by. If we have \code{N} animals in a segment, then \code{N/availability} will be entered into the model. Uncertainty in the availability is not handled at present.
 #' @param gamma parameter to \code{gam()} set to a value of 1.4 (from advice in Wood (2006)) such that the \code{gam()} is inclined to not 'overfit' when GCV is used to select the smoothing parameter (ignored for REML, see \code{link{gam}} for further details).
 #' @param strip.width if \code{ddf.obj}, above, is \code{NULL}, then this is where the strip width is specified (i.e. for a strip transect survey). This is sometimes (and more correctly) referred to as the half-width, i.e. right truncation minus left truncation.
@@ -145,7 +145,10 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
                             (mgcv.version[2]==7 & mgcv.version[3]<24))){
       message("You are using mgcv version < 1.7-24, please update to at least 1.7-24 to avoid fitting problems.")
     }
+  }
 
+  # GLMs and GAMMs don't support keeping the data
+  if(engine %in% c("glm", "gamm")){
     # unsupported
     control$keepData <- NULL
   }

@@ -29,7 +29,7 @@ dsm(formula, ddf.obj, segment.data, observation.data, engine = "gam",
 
 \item{gamma}{parameter to \code{gam()} set to a value of 1.4 (from advice in Wood (2006)) such that the \code{gam()} is inclined to not 'overfit' when GCV is used to select the smoothing parameter (ignored for REML, see \code{link{gam}} for further details).}
 
-\item{control}{the usual \code{control} argument for a \code{gam}; \code{keepData} must be \code{TRUE} for variance estimation to work.}
+\item{control}{the usual \code{control} argument for a \code{gam}; \code{keepData} must be \code{TRUE} for variance estimation to work (though this option cannot be set for GLMs or GAMMs.}
 
 \item{availability}{an availability bias used to scale the counts/estimated  counts by. If we have \code{N} animals in a segment, then \code{N/availability} will be entered into the model. Uncertainty in the availability is not handled at present.}
 
