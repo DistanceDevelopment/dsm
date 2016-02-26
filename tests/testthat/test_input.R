@@ -9,12 +9,11 @@ context("test inputs")
 data(mexdolphins)
 attach(mexdolphins)
 
+# fit a detection function
+hn.model <- ds(distdata, max(distdata$distance),
+               adjustment = NULL)
+
 test_that("formula specs",{
-
-
-  # fit a detection function and look at the summary
-  hn.model <- ds(distdata, max(distdata$distance),
-                 adjustment = NULL)
 
   ## models for count
   count.gcv <- 42.9169051
@@ -85,7 +84,7 @@ test_that("Missing columns cause errors",{
   for(mcov in c("object","Sample.Label","size","distance")){
     obs_missing <- obsdata
     obs_missing[[mcov]] <- NULL
-    expect_error(dsm(N~s(x,y), NULL, seg, obs_missing, segment.area = 8000^2),
+    expect_error(dsm(N~s(x,y), hn.model, seg, obs_missing),
                  paste0("Column(s) \"",mcov,
                         "\" not found in observation.data."),
                  fixed=TRUE)
@@ -94,7 +93,7 @@ test_that("Missing columns cause errors",{
   for(mcov in c("Effort","Sample.Label")){
     seg_missing <- seg
     seg_missing[[mcov]] <- NULL
-    expect_error(dsm(N~s(x,y), NULL, seg_missing, obs),
+    expect_error(dsm(N~s(x,y), hn.model, seg_missing, obs),
                  paste0("Column(s) \"",mcov,
                         "\" not found in segment.data."),
                  fixed=TRUE)
@@ -103,7 +102,7 @@ test_that("Missing columns cause errors",{
   # with segment area specified we only have a problem with Sample.Label
   seg_missing <- seg
   seg_missing[["Sample.Label"]] <- NULL
-  expect_error(dsm(N~s(x,y), NULL, seg_missing, obs, segment.area = 8000^2),
+  expect_error(dsm(N~s(x,y), hn.model, seg_missing, obs),
                paste0("Column(s) \"Sample.Label\" not found in segment.data."),
                fixed=TRUE)
 
