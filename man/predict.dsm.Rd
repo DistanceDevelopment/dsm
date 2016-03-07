@@ -32,6 +32,6 @@ If \code{newdata} is not supplied, predictions are made for the data that built 
 David L. Miller
 }
 \seealso{
-predict.gam dsm.var.gam dsm.var.prop dsm.var.movblk
+\code{\link{predict.gam}} \code{\link{dsm.var.gam}} \code{\link{dsm.var.prop}} \code{\link{dsm.var.movblk}}
 }
 

@@ -13,7 +13,7 @@
 #' @return predicted values on the response scale (density/abundance).
 #' @export
 #'
-#' @seealso predict.gam dsm.var.gam dsm.var.prop dsm.var.movblk
+#' @seealso \code{\link{predict.gam}} \code{\link{dsm.var.gam}} \code{\link{dsm.var.prop}} \code{\link{dsm.var.movblk}}
 #' @author David L. Miller
 #' @importFrom stats predict
 predict.dsm <- function(object, newdata=NULL, off.set=NULL,
