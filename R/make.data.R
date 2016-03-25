@@ -35,6 +35,9 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
     if(nrow(obsdata) == 0){
       stop("No observations in detection function matched those in observation table. Check the \"object\" column.")
     }
+    # reorder the fitted ps, making sure that
+    # they match the ordering in obsdata
+    fitted.p <- fitted.p[match(obsdata$object, names(fitted.p))]
   }else{
     # strip transects or presence/absence data
     fitted.p <- 1
@@ -43,9 +46,6 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
     }
   }
 
-  # reorder the fitted ps, making sure that
-  # they match the ordering in obsdata
-  fitted.p <- fitted.p[match(obsdata$object, names(fitted.p))]
 
   ## Aggregate response values of the sightings over segments
   if(response %in% c("D","density","Dhat","density.est")){
