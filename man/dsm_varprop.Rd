@@ -38,6 +38,28 @@ Note that we use \code{Vc} here (see \code{\link{gamObject}}), which is the vari
 }
 \examples{
 \dontrun{
+ library(Distance)
+ library(dsm)
+
+# load the Gulf of Mexico dolphin data (see ?mexdolphins)
+data(mexdolphins)
+attach(mexdolphins)
+
+# fit a detection function and look at the summary
+df <- ds(distdata, 7000, key = "hr", adjustment = NULL, formula=~beaufort)
+
+# fit a simple smooth of x and y
+obsdata <- obsdata[obsdata$distance<=7000,]
+mod1 <- dsm(N~s(x,y), df, segdata, obsdata, method="REML")
+
+# Calculate the variance
+preddata$off.set <- preddata$area
+mod1.varp <- dsm_varprop(mod1, preddata)
+
+# this will give a summary over the whole area in mexdolphins$preddata
+
+# detach the data
+detach("mexdolphins")
 }
 }
 \author{

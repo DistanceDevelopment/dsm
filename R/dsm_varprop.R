@@ -27,6 +27,7 @@
 #' @param model a fitted \code{\link{dsm}}
 #' @param newdata the prediction grid
 #' @param trace for debugging, see how the scale parameter estimation is going
+#' @export
 #'
 #' @examples
 #' \dontrun{
