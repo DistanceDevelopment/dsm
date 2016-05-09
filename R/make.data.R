@@ -111,6 +111,12 @@ message("Count model with detection function covariates at the segment level: th
       # extract detection function variables
       df_vars <- all.vars(df_formula)
 
+      # check these vars are in the segment table
+      if(!all(df_vars %in% colnames(dat))){
+        stop(paste0("Detection function covariates are not in the segment data",
+                    "\n  Missing: ", df_vars[!(df_vars %in% colnames(dat))]))
+      }
+
       # make a data.frame to predict for
       nd <- dat[,df_vars, drop=FALSE]
       nd$distance <- 0
