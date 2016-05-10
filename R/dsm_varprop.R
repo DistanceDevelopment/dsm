@@ -86,8 +86,8 @@ dsm_varprop <- function(model, newdata, trace=FALSE){
     # calculate mu (effective strip width)
     mu <- predict(ddf, newdata=ds_newdata, esw=TRUE, compute=TRUE)$fitted
 
-    # calculate the offset 2 * effective strip width * line length
-    ret <- linkfn(2 * mu * data$Effort)
+    # calculate log mu
+    ret <- linkfn(mu)
     return(ret)
   }
 
@@ -110,12 +110,15 @@ dsm_varprop <- function(model, newdata, trace=FALSE){
   # pass the unique combinations
   u_ds_newdata <- mgcv::uniquecombs(ds_newdata)
 
-  # find the derivatives
+  # find the derivatives of log(mu)
   firstD <- as.matrix(numderiv(mu_fn, ddf$par, linkfn=linkfn, ddf=ddf,
                                data=model$data, ds_newdata=u_ds_newdata))
 
   # repopulate with the duplicates back in
   firstD <- firstD[attr(u_ds_newdata, "index"), , drop=FALSE]
+  # calculate the offset 2 * effective strip width * line length
+  #  -- log(mu) + log(2*effort)
+  firstD <- firstD + linkfn(2 * model$data$Effort)
 
   # put that in the data
   dat <- model$data
