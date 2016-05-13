@@ -20,7 +20,9 @@ residuals, a la Dunn and Smyth (1996). Checks of \code{k} are not computed,
 these need to be done using \code{\link{gam.check}}.
 }
 \details{
-In general plots other than residuals vs. linear predictors should be interpreted with caution (for example Q-Q plots and histogram of residuals will look normal by construction -- so there is no model checking information). Only works with negative binomial and Tweedie response distributions.
+In general plots other than residuals vs. linear predictors should be interpreted with caution (for example Q-Q plots and histogram of residuals will look normal by construction -- so there is no model checking information).
+
+Note that this function only works with negative binomial and Tweedie response distributions.
 }
 \examples{
 \donttest{
