@@ -111,8 +111,11 @@ dsm_varprop <- function(model, newdata, trace=FALSE){
   u_ds_newdata <- mgcv::uniquecombs(ds_newdata)
 
   # find the derivatives of log(mu)
-  firstD <- as.matrix(numderiv(mu_fn, ddf$par, linkfn=linkfn, ddf=ddf,
-                               data=model$data, ds_newdata=u_ds_newdata))
+  firstD <- numderiv(mu_fn, ddf$par, linkfn=linkfn, ddf=ddf,
+                     data=model$data, ds_newdata=u_ds_newdata)
+  if(!is.matrix(firstD)){
+    firstD <- matrix(firstD, ncol=length(ddf$par))
+  }
 
   # repopulate with the duplicates back in
   firstD <- firstD[attr(u_ds_newdata, "index"), , drop=FALSE]
