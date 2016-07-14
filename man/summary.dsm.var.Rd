@@ -4,21 +4,17 @@
 \alias{summary.dsm.var}
 \title{Summarize the variance of a density surface model}
 \usage{
-\method{summary}{dsm.var}(object, alpha = 0.025, boxplot.coef = 1.5,
+\method{summary}{dsm.var}(object, alpha = 0.05, boxplot.coef = 1.5,
   bootstrap.subregions = NULL, ...)
 }
 \arguments{
 \item{object}{a \code{dsm.var} object}
 
-\item{alpha}{alpha level for confidence intervals (default 0.025 to give a 95\% confidence internal)}
+\item{alpha}{alpha level for confidence intervals (default 0.05 to give a 95\% confidence internal, i.e. we generate \code{100*c(alpha/2, 1-alpha/2)} confidence intervals)}
 
-\item{boxplot.coef}{the value of \code{coef} used to calculate the outliers
-see \code{\link{boxplot}}.}
+\item{boxplot.coef}{the value of \code{coef} used to calculate the outliers see \code{\link{boxplot}}.}
 
-\item{bootstrap.subregions}{list of vectors of logicals or indices for 
-subregions for which variances need to be calculated (only for
-bootstraps (see \code{\link{dsm.var.prop}} for how to use subregions
-with variance propagation).}
+\item{bootstrap.subregions}{list of vectors of logicals or indices for subregions for which variances need to be calculated (only for bootstraps (see \code{\link{dsm.var.prop}} for how to use subregions with variance propagation).}
 
 \item{\dots}{unused arguments for S3 compatibility}
 }

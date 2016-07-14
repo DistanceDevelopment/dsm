@@ -1,7 +1,7 @@
 dsm news!
 
 # 2.2.12
- * The alpha argument now works for analytical variance reported using dsm.var.prop and dsm.var.gam print.summary and summary methods. Thanks to Jason Roberts for spotting this issue.
+ * The alpha argument now works for analytical variance reported using dsm.var.prop and dsm.var.gam print.summary and summary methods. Thanks to Jason Roberts and Eric Rexstad for spotting this issue.
  * dsm now uses numDeriv::grad to calculate derivatives for variance estimation -- this should be much faster. Thanks to Jason Roberts for this fix.
  * dsm now requires mrds version 2.1.15 or higher, due to internal changes
  * fixed issue where Effort column was required even when segment.area was specified. Thanks to Greg Lollback for spotting this issue.

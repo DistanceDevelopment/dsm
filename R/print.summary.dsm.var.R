@@ -30,6 +30,10 @@ print.summary.dsm.var<-function(x, ...){
     cat("Usable replicates : ",x$boot.usable,
                               " (",100*(1-x$trim.prop),"%)\n",sep="")
 
+    # Note that when we don't include detection function uncertainty in
+    # our bootstrap then we need to do the log-Normal approx with the
+    # CV calculated from the bootstrap, as the quantiles don't include
+    # any of the uncertainty in the detection function.
     if(!x$ds.uncertainty){
       # delta method asymptotic CI
       unconditional.cv.square <- x$cv^2
@@ -74,9 +78,9 @@ print.summary.dsm.var<-function(x, ...){
                    x$pred.est,
                    x$pred.est * asymp.ci.c.term)
 
-    names(asymp.tot) <- c(paste0(x$alpha*100, "%"),
+    names(asymp.tot) <- c(paste0(x$alpha/2*100, "%"),
                           "Mean",
-                          paste0((1-x$alpha)*100,"%"))
+                          paste0((1-x$alpha/2)*100,"%"))
 
     cat("Approximate asymptotic confidence interval:\n")
     print(asymp.tot)
