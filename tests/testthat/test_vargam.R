@@ -35,17 +35,15 @@ test_that("mexdolphins - results for s(x,y)",{
   expect_equal(mod1.var$pred.var,
               23284562.6757538, tol=N.tol)
   # test that the CIs are right
-  expect_output(summary(mod1.var),
-                "2.5%     Mean    97.5% \\n14118.61 22643.16 36314.67")
+  expect_output(print(summary(mod1.var)),
+                "2.5%     Mean    97.5% \\n14981.35 22643.16 34223.42")
 })
 
 test_that("different CIs work",{
-  expect_output(summary(mod1.var, alpha=0.05),
-                "5%     Mean      95% \\n14981.35 22643.16 34223.42")
-  expect_output(summary(mod1.var, alpha=0.1),
-                "10%     Mean      90% \\n16010.00 22643.16 32024.53")
-  expect_output(summary(mod1.var, alpha=0.01),
-                "1%     Mean      99% \\n13157.81 22643.16 38966.43")
+  expect_output(print(summary(mod1.var, alpha=0.1)),
+                "5%     Mean      95% \\n16010.00 22643.16 32024.53")
+  expect_output(print(summary(mod1.var, alpha=0.02)),
+                "1%     Mean      99% \\n13868.11 22643.16 36970.62")
 
 })
 
