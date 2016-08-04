@@ -10,8 +10,8 @@ data(mexdolphins)
 attach(mexdolphins)
 
 # fit a detection function
-hn.model <- ds(distdata, max(distdata$distance),
-               adjustment = NULL)
+suppressMessages(hn.model <- ds(distdata, max(distdata$distance),
+                                adjustment = NULL))
 
 test_that("formula specs",{
 
