@@ -1,5 +1,5 @@
 Package: dsm
-Maintainer: David Lawrence Miller <dave@ninepointeightone.net>
+Maintainer: Laura Marshall <lhm@st-andrews.ac.uk>
 License: GPL (>= 2)
 Title: Density Surface Modelling of Distance Sampling Data
 LazyLoad: yes
