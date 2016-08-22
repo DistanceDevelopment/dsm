@@ -12,6 +12,7 @@ Description: Density surface modelling of line transect data. A Generalized
     plotting and variance estimation.
 Version: 2.2.12
 URL: http://github.com/DistanceDevelopment/dsm
+BugReports: https://github.com/DistanceDevelopment/dsm/issues
 Depends:
     R (>= 3.0),
     mgcv (>= 1.7),
