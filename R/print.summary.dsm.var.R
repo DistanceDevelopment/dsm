@@ -101,7 +101,7 @@ print.summary.dsm.var<-function(x, ...){
       cat("Coefficient of variation       :", round(x$cv,4),"\n")
     }
   }else{
-    if(x$varprop | is.null(x$saved$ddf)){
+    if(x$varprop | is.null(x$saved$dsm.object$ddf)){
       cat("Coefficient of variation       :", round(x$cv,4),"\n")
     }else{
       if(!is.null(x$detfct.cv)) cat("CV of detection function       :",x$detfct.cv,"\n")
