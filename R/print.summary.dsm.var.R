@@ -90,22 +90,25 @@ print.summary.dsm.var<-function(x, ...){
 
   cat("\n")
   cat("Point estimate                 :", x$pred.est,"\n")
-  cat("Standard error                 :", x$se,"\n")
   # print the individual CVs if we used the delta method
   if(x$bootstrap){
     if(!x$ds.uncertainty){
       if(!is.null(x$detfct.cv)) cat("CV of detection function       :",x$detfct.cv,"\n")
       cat("CV from bootstrap              :", round(x$bootstrap.cv,4),"\n")
+      cat("Total standard error           :", x$se,"\n")
       cat("Total coefficient of variation :", round(x$cv,4),"\n")
     }else{
+      cat("Standard error                 :", x$se,"\n")
       cat("Coefficient of variation       :", round(x$cv,4),"\n")
     }
   }else{
     if(x$varprop | is.null(x$saved$dsm.object$ddf)){
+      cat("Standard error                 :", x$se,"\n")
       cat("Coefficient of variation       :", round(x$cv,4),"\n")
     }else{
       if(!is.null(x$detfct.cv)) cat("CV of detection function       :",x$detfct.cv,"\n")
       cat("CV from GAM                    :", round(x$gam.cv,4),"\n")
+      cat("Total standard error           :", x$se,"\n")
       cat("Total coefficient of variation :", round(x$cv,4),"\n")
     }
   }
