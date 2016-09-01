@@ -34,6 +34,32 @@ Use results from the Bayesian interpretation of the GAM to obtain uncertainty es
 \details{
 This is based on \code{\link{dsm.var.prop}} taken from code by Mark Bravington and Sharon Hedley.
 }
+\examples{
+\dontrun{
+ library(Distance)
+ library(dsm)
+
+ # load the Gulf of Mexico dolphin data (see ?mexdolphins)
+ data(mexdolphins)
+ attach(mexdolphins)
+
+ # fit a detection function and look at the summary
+ hr.model <- ds(distdata, max(distdata$distance),
+                key = "hr", adjustment = NULL)
+ summary(hr.model)
+
+ # fit a simple smooth of x and y
+ mod1 <- dsm(N~s(x,y), hr.model, segdata, obsdata)
+
+ # Calculate the variance
+ mod1.var <- dsm.var.gam(mod1, preddata, off.set=preddata$area)
+
+ # this will give a summary over the whole area in mexdolphins$preddata
+
+# detach the data
+detach("mexdolphins")
+}
+}
 \author{
 David L. Miller
 }
