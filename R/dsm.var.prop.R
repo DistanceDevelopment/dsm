@@ -54,7 +54,7 @@
 #' # detach the data
 #' detach("mexdolphins")
 #' }
-dsm.var.prop<-function(dsm.obj, pred.data,off.set,
+dsm.var.prop<-function(dsm.obj, pred.data, off.set,
     seglen.varname='Effort', type.pred="response") {
 
   is.gamm <- FALSE

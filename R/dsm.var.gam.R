@@ -45,8 +45,8 @@
 #' # detach the data
 #' detach("mexdolphins")
 #' }
-dsm.var.gam<-function(dsm.obj, pred.data,off.set=NULL,
-    seglen.varname='Effort', type.pred="response") {
+dsm.var.gam<-function(dsm.obj, pred.data, off.set = 1,
+    seglen.varname = 'Effort', type.pred = "response") {
 
   # strip dsm class so we can use gam methods
   class(dsm.obj) <- class(dsm.obj)[class(dsm.obj)!="dsm"]
