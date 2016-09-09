@@ -55,7 +55,7 @@
 #' detach("mexdolphins")
 #' }
 dsm.var.prop<-function(dsm.obj, pred.data, off.set,
-    seglen.varname='Effort', type.pred="response") {
+                       seglen.varname='Effort', type.pred="response") {
 
   is.gamm <- FALSE
   # if we have a gamm, then just pull out the gam object

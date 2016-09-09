@@ -91,7 +91,9 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
                 family=quasipoisson(link="log"), group=FALSE, gamma=1.4,
                 control=list(keepData=TRUE), availability=1, strip.width=NULL,
                 segment.area=NULL, weights=NULL, ...){
-
+  
+  stopifnot(engine %in% c("gam","bam","glm","gamm"))
+  
   # if we have a model fitted using Distance, then just pull out the
   # ddf component
   if(!is.null(ddf.obj)){
@@ -135,16 +137,9 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
     }
   }
 
-  # if we're using a gamm engine
-  if(engine == "gamm"){
-
-    # warn if using an old version of mgcv
-    mgcv.version <- as.numeric(strsplit(as.character(packageVersion("mgcv")),
-                                        "\\.")[[1]])
-    if(mgcv.version[1]<1 | (mgcv.version[2]<7 |
-                            (mgcv.version[2]==7 & mgcv.version[3]<24))){
+  # if we're using a gamm engine, warn if using an old version of mgcv
+  if(engine == "gamm" && dsm_env$old_version){
       message("You are using mgcv version < 1.7-24, please update to at least 1.7-24 to avoid fitting problems.")
-    }
   }
 
   # GLMs and GAMMs don't support keeping the data
@@ -154,20 +149,15 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
   }
 
   ## run the engine
-  if(engine %in% c("gam","bam","glm","gamm")){
-    args <- list(formula = formula,
-                 family  = family,
-                 data    = dat,
-                 gamma   = gamma,
-                 weights = weights,
-                 control = control, ...)
+  args <- list(formula = formula,
+               family  = family,
+               data    = dat,
+               gamma   = gamma,
+               weights = weights,
+               control = control, ...)
 
-    fit <- withCallingHandlers(do.call(engine, args),
-                               warning=matrixnotposdef.handler)
-  }else{
-    stop("engine must be one of 'gam', 'gamm', 'bam' or 'glm'")
-  }
-
+  fit <- withCallingHandlers(do.call(engine, args),
+                             warning=matrixnotposdef.handler)
 
   ## save knots
   if("knots" %in% names(match.call())){
