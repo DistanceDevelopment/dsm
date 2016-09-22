@@ -75,6 +75,11 @@ dsm.var.prop<-function(dsm.obj, pred.data, off.set,
       off.set <- rep(off.set,nrow(pred.data))
     }
   }
+  
+  # check that there are no covariates in the df model
+  if(length(unique(dsm.obj$ddf$fitted)) > 1){
+    stop("Covariate detection functions are not currently supported within dsm.var.prop.")
+  }
 
   # make sure if one of pred.data and off.set is not a list we break
   # if we didn't have a list, then put them in a list so everything works
