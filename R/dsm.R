@@ -65,6 +65,7 @@
 #' data(mexdolphins)
 #' attach(mexdolphins)
 #'
+#' \dontrun{
 #' # fit a detection function and look at the summary
 #' hr.model <- ds(distdata, max(distdata$distance),
 #'                key = "hr", adjustment = NULL)
@@ -74,7 +75,6 @@
 #' mod1 <- dsm(N~s(x,y), hr.model, segdata, obsdata)
 #' summary(mod1)
 #'
-#' \dontrun{
 #' # predict over a grid
 #' mod1.pred <- predict(mod1, preddata, preddata$area)
 #'
