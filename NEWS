@@ -2,6 +2,7 @@ dsm news!
 
 # 2.2.13
  * dsm.var.gam now has an example
+ * dsm.var.prop now checks that the detection function model does not have covariates
 
 # 2.2.12
  * The alpha argument now works for analytical variance reported using dsm.var.prop and dsm.var.gam print.summary and summary methods. Thanks to Jason Roberts and Eric Rexstad for spotting this issue.
