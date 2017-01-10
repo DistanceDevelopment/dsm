@@ -23,23 +23,29 @@ predict.dsm <- function(object, newdata=NULL, off.set=NULL,
     object <- object$gam
   }
 
+  # if there is no newdata, then use the data stored in the model object
   if(is.null(newdata)){
     newdata <- object$data
-  }
+  }else{
 
-  # if we don't have a density model, then set the offset
-  if(!(c(object$formula[[2]]) %in% c("D","presence","density"))){
-    if(is.null(newdata$off.set)){
-      if(is.null(off.set)){
-        stop("You must supply off.set in data or as an argument.")
+    # if we don't have a density model, then set the offset
+    # this is already set if we're using the data that was in the model
+    # object, so don't re-log and ignore the off.set specified
+    # thanks to Megan Furguson for pointing this out!
+    if(!(c(object$formula[[2]]) %in% c("D","presence","density"))){
+      if(is.null(newdata$off.set)){
+        if(is.null(off.set)){
+          stop("You must supply off.set in data or as an argument.")
+        }
+        newdata$off.set <- off.set
       }
-      newdata$off.set <- off.set
-    }
 
-    # apply the link function
-    linkfn <- object$family$linkfun
-    newdata$off.set <- linkfn(newdata$off.set)
+      # apply the link function
+      linkfn <- object$family$linkfun
+      newdata$off.set <- linkfn(newdata$off.set)
+    }
   }
+
 
   # remove the dsm class
   class(object) <- class(object)[class(object)!="dsm"]

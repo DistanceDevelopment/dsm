@@ -54,8 +54,8 @@
 #' # detach the data
 #' detach("mexdolphins")
 #' }
-dsm.var.prop<-function(dsm.obj, pred.data,off.set,
-    seglen.varname='Effort', type.pred="response") {
+dsm.var.prop<-function(dsm.obj, pred.data, off.set,
+                       seglen.varname='Effort', type.pred="response") {
 
   is.gamm <- FALSE
   # if we have a gamm, then just pull out the gam object
@@ -74,6 +74,11 @@ dsm.var.prop<-function(dsm.obj, pred.data,off.set,
     }else{
       off.set <- rep(off.set,nrow(pred.data))
     }
+  }
+  
+  # check that there are no covariates in the df model
+  if(length(unique(dsm.obj$ddf$fitted)) > 1){
+    stop("Covariate detection functions are not currently supported within dsm.var.prop.")
   }
 
   # make sure if one of pred.data and off.set is not a list we break

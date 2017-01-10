@@ -24,7 +24,7 @@ test_that("Do we get the same results?",{
   expect_equal(hn.model$ddf$par, ddf.par, tolerance=par.tol)
 
   # fit a simple smooth of x and y
-  mod1<-dsm(N~s(x,y), hn.model, segdata, obsdata)
+  mod1 <- dsm(count~s(x, y), hn.model, segdata, obsdata)
   #summary(mod1)
 
 
@@ -33,6 +33,9 @@ test_that("Do we get the same results?",{
 
   expect_error(dsm.cor(mod1,resid.type="d",max.lag=9),
                "No column called Segment.Label in data")
+
+  # predict(model) shoudld be the same as fitted(model)
+  expect_equal(as.vector(predict(mod1)), as.vector(fitted(mod1)), tolerance=par.tol)
 })
 
 test_that("Density weighting",{
@@ -62,6 +65,7 @@ test_that("Density weighting",{
                 weights=1)
 
   expect_equal(fitted(mod1.ws1),fitted(mod1.w2),tolerance=par.tol)
+
 
 })
 

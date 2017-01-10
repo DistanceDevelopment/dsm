@@ -1,7 +1,7 @@
 #' @importFrom stats aggregate
 make.data <- function(response, ddfobject, segdata, obsdata, group,
                       convert.units, availability, strip.width, segment.area,
-                      family){
+                      family, transect){
 
   # probably want to do something smart here...
   seglength.name<-'Effort'
@@ -50,7 +50,7 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
   ## Aggregate response values of the sightings over segments
   if(response %in% c("D","density","Dhat","density.est")){
     responsedata <- aggregate(obsdata[,cluster.name]/(fitted.p*availability),
-                                list(obsdata[,segnum.name]), sum)
+                              list(obsdata[,segnum.name]), sum)
     off.set <- "none"
   }else if(response %in% c("N","abundance","count","n")){
     responsedata <- aggregate(obsdata[,cluster.name]/availability,
@@ -179,19 +179,28 @@ message("Count model with detection function covariates at the segment level: th
     #   effective area multiply by p
     #   when density is response, offset should be 1 (and is ignored anyway)
 
+    # calculate the area
+    # if we have point transects
+    if(transect=="point"){
+      # here "Effort" is number of visits
+      dat$segment.area <- pi*width^2*dat[,seglength.name]
+    }else{
+    # line transects
+      dat$segment.area <- 2*dat[,seglength.name]*width
+    }
+
     dat$off.set <- switch(off.set,
-                          eff.area=2*dat[,seglength.name]*width*fitted.p,
-                          area=2*dat[,seglength.name]*width,
+                          eff.area=dat$segment.area*fitted.p,
+                          area=dat$segment.area,
                           none=1)
 
     # calculate the density (count/area)
     if(response %in% c("D","density","Dhat","density.est")){
-      dat[,response] <- dat[,response]/(2*dat[,seglength.name]*
-                                        width*convert.units)
+      dat[,response] <- dat[,response]/(dat$segment.area*convert.units)
     }
 
-    # set the segment area in the data
-    dat$segment.area <- 2*dat[,seglength.name]*width*convert.units
+    # correct segment area units
+    dat$segment.area <- dat$segment.area*convert.units
   }
 
   # multiply up by conversion factor

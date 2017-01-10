@@ -30,6 +30,10 @@ print.summary.dsm.var<-function(x, ...){
     cat("Usable replicates : ",x$boot.usable,
                               " (",100*(1-x$trim.prop),"%)\n",sep="")
 
+    # Note that when we don't include detection function uncertainty in
+    # our bootstrap then we need to do the log-Normal approx with the
+    # CV calculated from the bootstrap, as the quantiles don't include
+    # any of the uncertainty in the detection function.
     if(!x$ds.uncertainty){
       # asymptotic CI
       # this doesn't transform N, only se(N)
@@ -103,22 +107,25 @@ print.summary.dsm.var<-function(x, ...){
 
   cat("\n")
   cat("Point estimate                 :", x$pred.est,"\n")
-  cat("Standard error                 :", x$se,"\n")
   # print the individual CVs if we used the delta method
   if(x$bootstrap){
     if(!x$ds.uncertainty){
       if(!is.null(x$detfct.cv)) cat("CV of detection function       :",x$detfct.cv,"\n")
       cat("CV from bootstrap              :", round(x$bootstrap.cv,4),"\n")
+      cat("Total standard error           :", x$se,"\n")
       cat("Total coefficient of variation :", round(x$cv,4),"\n")
     }else{
+      cat("Standard error                 :", x$se,"\n")
       cat("Coefficient of variation       :", round(x$cv,4),"\n")
     }
   }else{
-    if(x$varprop | is.null(x$saved$ddf)){
+    if(x$varprop | is.null(x$saved$dsm.object$ddf)){
+      cat("Standard error                 :", x$se,"\n")
       cat("Coefficient of variation       :", round(x$cv,4),"\n")
     }else{
       if(!is.null(x$detfct.cv)) cat("CV of detection function       :",x$detfct.cv,"\n")
       cat("CV from GAM                    :", round(x$gam.cv,4),"\n")
+      cat("Total standard error           :", x$se,"\n")
       cat("Total coefficient of variation :", round(x$cv,4),"\n")
     }
   }

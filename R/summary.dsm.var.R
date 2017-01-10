@@ -5,13 +5,9 @@
 #' @aliases summary.dsm.var
 #'
 #' @param object a \code{dsm.var} object
-#' @param alpha alpha level for confidence intervals (default 0.05 to give a 95\% confidence internal)
-#' @param boxplot.coef the value of \code{coef} used to calculate the outliers
-#'        see \code{\link{boxplot}}.
-#' @param bootstrap.subregions list of vectors of logicals or indices for 
-#'        subregions for which variances need to be calculated (only for
-#'        bootstraps (see \code{\link{dsm.var.prop}} for how to use subregions
-#'        with variance propagation).
+#' @param alpha alpha level for confidence intervals (default 0.05 to give a 95\% confidence internal, i.e. we generate \code{100*c(alpha/2, 1-alpha/2)} confidence intervals)
+#' @param boxplot.coef the value of \code{coef} used to calculate the outliers see \code{\link{boxplot}}.
+#' @param bootstrap.subregions list of vectors of logicals or indices for subregions for which variances need to be calculated (only for bootstraps (see \code{\link{dsm.var.prop}} for how to use subregions with variance propagation).
 #' @param \dots unused arguments for S3 compatibility
 #' @return a summary object
 #' @export
@@ -19,11 +15,11 @@
 #' @seealso dsm.var.movblk dsm.var.prop
 #' @author David L. Miller
 #' @importFrom stats qnorm
-summary.dsm.var<-function(object, alpha=0.05, boxplot.coef=1.5,
-                  bootstrap.subregions=NULL,...){
+summary.dsm.var <- function(object, alpha=0.05, boxplot.coef=1.5,
+                            bootstrap.subregions=NULL, ...){
 
   # storage
-  sinfo<-list()
+  sinfo <- list()
   # save the alpha value for cis
   sinfo$alpha <- alpha
 
@@ -87,7 +83,7 @@ summary.dsm.var<-function(object, alpha=0.05, boxplot.coef=1.5,
       sinfo$bootstrap.cv <- sqrt(cvNbs.sq)
 
       # cv of N
-      cvN <- sqrt(cvp.sq+cvNbs.sq)
+      cvN <- sqrt(cvp.sq + cvNbs.sq)
       sinfo$cv <- cvN
 
       # variance (delta method)
@@ -106,13 +102,14 @@ summary.dsm.var<-function(object, alpha=0.05, boxplot.coef=1.5,
     sinfo$boot.finite <- sum(!is.infinite(bootstrap.abund))
     sinfo$boot.NA <- sum(is.na(bootstrap.abund))
     sinfo$boot.NaN <- sum(is.nan(bootstrap.abund))
-    sinfo$boot.usable <- sinfo$boot.finite - (sinfo$boot.outliers + 
+    sinfo$boot.usable <- sinfo$boot.finite - (sinfo$boot.outliers +
                          sinfo$boot.infinite + sinfo$boot.NA + sinfo$boot.NaN)
 
     # grab the %ile c.i.s at alpha, 1-alpha and also median
-    sinfo$quantiles <- quantile(bootstrap.abund[sinfo$trim.ind], 
-                                c(alpha, 0.5, 1-alpha),na.rm=TRUE)
-    attr(sinfo$quantiles,"names")[2] <- "Median"
+    sinfo$quantiles <- quantile(bootstrap.abund[sinfo$trim.ind],
+                                c(alpha, 0.5, 1-alpha),
+                                na.rm=TRUE)
+    attr(sinfo$quantiles, "names")[2] <- "Median"
 
 
     ### subregions...
@@ -141,7 +138,7 @@ summary.dsm.var<-function(object, alpha=0.05, boxplot.coef=1.5,
   }else{
   ### varprop and "Bayesian" stuff
     sinfo$varprop <- !is.null(object$deriv)
-    sinfo$saved<-object
+    sinfo$saved <- object
     sinfo$bootstrap <- object$bootstrap
 
     # what if we had multiple areas (ie this is from a CV plot?)
@@ -199,6 +196,9 @@ summary.dsm.var<-function(object, alpha=0.05, boxplot.coef=1.5,
       sinfo$gam.cv <- sinfo$se/sinfo$pred.est
 
       sinfo$cv <- sqrt(cvp.sq+sinfo$gam.cv^2)
+
+      # total se
+      sinfo$se <- sinfo$cv*sinfo$pred.est
     }
   }
 

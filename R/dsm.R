@@ -44,6 +44,7 @@
 #' @param strip.width if \code{ddf.obj}, above, is \code{NULL}, then this is where the strip width is specified (i.e. for a strip transect survey). This is sometimes (and more correctly) referred to as the half-width, i.e. right truncation minus left truncation.
 #' @param segment.area if `NULL` (default) segment areas will be calculated by multiplying the `Effort` column in `segment.data` by the (right minus left) truncation distance for the `ddf.obj` or by `strip.width`. Alternatively a vector of segment areas can be provided (which must be the same length as the number of rows in `segment.data`) or a character string giving the name of a column in `segment.data` which contains the areas. If \code{segment.area} is specified it takes precident.
 #' @param weights weights for each observation used in model fitting. The default, \code{weights=NULL}, weights each observation by its area (see Details). Setting a scalar value (e.g. \code{weights=1}) all observations are equally weighted.
+#' @param transect type of transect (\code{"line"}, the default or \code{"point"}). This is overridden by the detection function transect type, this is usually only necessary when no detection function is specified.
 #' @param \dots anything else to be passed straight to \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}}/\code{\link{bam}}.
 #' @return a \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}} object, with an additional element, \code{ddf} which holds the detection function object.
 #' @author David L. Miller
@@ -65,6 +66,7 @@
 #' data(mexdolphins)
 #' attach(mexdolphins)
 #'
+#' \dontrun{
 #' # fit a detection function and look at the summary
 #' hr.model <- ds(distdata, max(distdata$distance),
 #'                key = "hr", adjustment = NULL)
@@ -74,7 +76,6 @@
 #' mod1 <- dsm(N~s(x,y), hr.model, segdata, obsdata)
 #' summary(mod1)
 #'
-#' \dontrun{
 #' # predict over a grid
 #' mod1.pred <- predict(mod1, preddata, preddata$area)
 #'
@@ -90,7 +91,9 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
                 engine="gam", convert.units=1,
                 family=quasipoisson(link="log"), group=FALSE, gamma=1.4,
                 control=list(keepData=TRUE), availability=1, strip.width=NULL,
-                segment.area=NULL, weights=NULL, ...){
+                segment.area=NULL, weights=NULL, transect="line", ...){
+
+  stopifnot(engine %in% c("gam","bam","glm","gamm"))
 
   # if we have a model fitted using Distance, then just pull out the
   # ddf component
@@ -116,10 +119,19 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
   #    bad happens
   check.cols(ddf.obj, segment.data, observation.data, strip.width, segment.area)
 
+  # what is the transect type?
+  if(!is.null(ddf.obj)){
+    if(ddf.obj$meta.data$point){
+      transect <- "point"
+    }else{
+      transect <- "line"
+    }
+  }
+
   ## build the data
   dat <- make.data(response, ddf.obj, segment.data, observation.data,
                    group, convert.units, availability, strip.width,
-                   segment.area, family)
+                   segment.area, family, transect)
 
   ## if we are not modelling density/presence, then add in the offset
   ##  to the formula
@@ -135,16 +147,9 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
     }
   }
 
-  # if we're using a gamm engine
-  if(engine == "gamm"){
-
-    # warn if using an old version of mgcv
-    mgcv.version <- as.numeric(strsplit(as.character(packageVersion("mgcv")),
-                                        "\\.")[[1]])
-    if(mgcv.version[1]<1 | (mgcv.version[2]<7 |
-                            (mgcv.version[2]==7 & mgcv.version[3]<24))){
+  # if we're using a gamm engine, warn if using an old version of mgcv
+  if(engine == "gamm" && dsm_env$old_version){
       message("You are using mgcv version < 1.7-24, please update to at least 1.7-24 to avoid fitting problems.")
-    }
   }
 
   # GLMs and GAMMs don't support keeping the data
@@ -154,20 +159,15 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
   }
 
   ## run the engine
-  if(engine %in% c("gam","bam","glm","gamm")){
-    args <- list(formula = formula,
-                 family  = family,
-                 data    = dat,
-                 gamma   = gamma,
-                 weights = weights,
-                 control = control, ...)
+  args <- list(formula = formula,
+               family  = family,
+               data    = dat,
+               gamma   = gamma,
+               weights = weights,
+               control = control, ...)
 
-    fit <- withCallingHandlers(do.call(engine, args),
-                               warning=matrixnotposdef.handler)
-  }else{
-    stop("engine must be one of 'gam', 'gamm', 'bam' or 'glm'")
-  }
-
+  fit <- withCallingHandlers(do.call(engine, args),
+                             warning=matrixnotposdef.handler)
 
   ## save knots
   if("knots" %in% names(match.call())){

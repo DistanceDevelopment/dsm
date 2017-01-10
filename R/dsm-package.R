@@ -25,23 +25,25 @@ NULL
 
 #' Data format for DSM
 #'
-#' Two \code{data.frame}s must be provided to \code{\link{dsm}}. They are referred to as \code{observation.data} and \code{segment.data} (for observation and segment data, respectively).
+#' Two \code{data.frame}s must be provided to \code{\link{dsm}}. They are referred to as \code{observation.data} and \code{segment.data}.
 #'
-#' \code{observation.data} - the observation data frame must have the 
-#' following columns:
+#' The \code{segment.data} table has the sample identifiers which define the segments, the corresponding effort (line length) expended and the environmental covariates that will be used to model abundance/density. \code{observation.data} provides a link table between the observations used in the detection function and the samples (segments), so that we can aggregate the observations to the segments (i.e. \code{observation.data} is a "look-up table" between the observations and the segments).
+#'
+#' \code{observation.data} - the observation \code{data.frame} must have (at least) the following columns:
+#'
 #' \tabular{ll}{\code{object} \tab unique object identifier \cr
-#'    \code{Sample.Label} \tab the identifier for the segment that the 
-#'      observation occurred in \cr
-#'    \code{size} \tab the size of each observed group (i.e. 1 for 
-#'      individuals) \cr
-#'    \code{distance} \tab perpendicular/radial distance to observation}
+#'    \code{Sample.Label} \tab the identifier for the segment that the observation occurred in \cr
+#'    \code{size} \tab the size of each observed group (e.g 1 if all animals occurred individually)\cr
+#'    \code{distance} \tab distance to observation}
 #'
-#' \code{segment.data} - the segment data frame must have the following columns:
+#' One can often also use \code{observation.data} to fit a detection function (so additional columns for detection function covariates are allowed in this table).
+#'
+#' \code{segment.data}: the segment \code{data.frame} must have (at least) the following columns:
+#'
 #'  \tabular{ll}{
 #'    \code{Effort} \tab the effort (in terms of length of the segment)\cr
 #'    \code{Sample.Label} \tab identifier for the segment (unique!)\cr
-#'    \code{???} \tab environmental covariates, for example \code{x} and 
-#'          \code{y}}
+#'    ??? \tab environmental covariates, for example location (projected latitude and longitude), and other relevant covariates (sea surface temperature, foliage type, altitude, bathymetry etc).}
 #'
 #' @name dsm-data
 NULL
