@@ -2,6 +2,7 @@ dsm news!
 
 # 2.2.14
  * nasty bug in predict.dsm fixed: was logging the offset twice when newdata was not provided, leading to very odd checking plots. Thanks to Megan Furguson for alerting us to this.
+ * add support for point transects
 
 # 2.2.13
  * dsm.var.gam now has an example
