@@ -1,5 +1,8 @@
 dsm news!
 
+# 2.2.14
+ * nasty bug in predict.dsm fixed: was logging the offset twice when newdata was not provided, leading to very odd checking plots. Thanks to Megan Furguson for alerting us to this.
+
 # 2.2.13
  * dsm.var.gam now has an example
  * dsm.var.prop now checks that the detection function model does not have covariates
