@@ -2,7 +2,7 @@
 % Please edit documentation in R/rqgam.check.R
 \name{rqgam.check}
 \alias{rqgam.check}
-\title{Randomised quantile residuals check plots for GAMs/DSMs}
+\title{Randomised quantile residuals check plot for GAMs/DSMs}
 \usage{
 rqgam.check(gam.obj, ...)
 }
@@ -15,14 +15,12 @@ rqgam.check(gam.obj, ...)
 just plots!
 }
 \description{
-Function operates as \code{\link{gam.check}} but using randomised quantile
-residuals, a la Dunn and Smyth (1996). Checks of \code{k} are not computed,
-these need to be done using \code{\link{gam.check}}.
+Reproduces the "Resids vs. linear pred" plot from \code{\link{gam.check}} but using randomised quantile residuals, a la Dunn and Smyth (1996). Checks for heteroskedasticity as as usual, looking for "funnel"-type structures in the points, which is much easier with randomised quantile residuals than with deviance residuals, when your model uses a count distribution as the response.
 }
 \details{
-In general plots other than residuals vs. linear predictors should be interpreted with caution (for example Q-Q plots and histogram of residuals will look normal by construction -- so there is no model checking information).
-
 Note that this function only works with negative binomial and Tweedie response distributions.
+
+Earlier versions of this function produced the full \code{gam.check} output, but this was confusing as only one of the plots was really usedul. Checks of \code{k} are not computed, these need to be done using \code{\link{gam.check}}.
 }
 \examples{
 \donttest{

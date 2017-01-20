@@ -1,12 +1,11 @@
-#' Randomised quantile residuals check plots for GAMs/DSMs
+#' Randomised quantile residuals check plot for GAMs/DSMs
 #'
-#' Function operates as \code{\link{gam.check}} but using randomised quantile
-#' residuals, a la Dunn and Smyth (1996). Checks of \code{k} are not computed,
-#' these need to be done using \code{\link{gam.check}}.
-#'
-#' In general plots other than residuals vs. linear predictors should be interpreted with caution (for example Q-Q plots and histogram of residuals will look normal by construction -- so there is no model checking information).
+#' Reproduces the "Resids vs. linear pred" plot from \code{\link{gam.check}} but using randomised quantile residuals, a la Dunn and Smyth (1996). Checks for heteroskedasticity as as usual, looking for "funnel"-type structures in the points, which is much easier with randomised quantile residuals than with deviance residuals, when your model uses a count distribution as the response.
 #'
 #' Note that this function only works with negative binomial and Tweedie response distributions.
+#'
+#' Earlier versions of this function produced the full \code{gam.check} output, but this was confusing as only one of the plots was really usedul. Checks of \code{k} are not computed, these need to be done using \code{\link{gam.check}}.
+#'
 #'
 #' @param gam.obj a \code{gam}, \code{glm} or \code{dsm} object.
 #' @param ... arguments passed on to all plotting functions
@@ -43,7 +42,7 @@
 rqgam.check<-function(gam.obj,...){
 
   # layout stuff
-  opar <- par(mfrow=c(2,2))
+  #opar <- par(mfrow=c(2,2))
 
   # grab the randomised quantile residuals
   # requires statmod package
@@ -74,21 +73,21 @@ rqgam.check<-function(gam.obj,...){
   linpred <- napredict(gam.obj$na.action, gam.obj$linear.predictors)
 
   ## normal Q-Q plot
-  qqnorm(qres,ylab="Randomised quantile residuals",...)
+  #qqnorm(qres,ylab="Randomised quantile residuals",...)
 
   ## resids vs. linear pred
   plot(linpred, qres,main="Resids vs. linear pred.",
          xlab="linear predictor",ylab="Randomised quantile residuals",...)
 
   ## histogram
-  hist(qres, main="Histogram of residuals",
-       xlab="Randomised quantile residuals",...)
+  #hist(qres, main="Histogram of residuals",
+  #     xlab="Randomised quantile residuals",...)
 
 
   ## Response vs. Fitted Values
-  plot(fitted(gam.obj), gam.obj$y,
-       main="Response vs. Fitted Values",
-       xlab="Fitted Values", ylab="Response",...)
+  #plot(fitted(gam.obj), gam.obj$y,
+  #     main="Response vs. Fitted Values",
+  #     xlab="Fitted Values", ylab="Response",...)
   #lines(lowess(gam.obj$fitted.values, gam.obj$model[,1]), col = 2)
 
 
@@ -101,5 +100,5 @@ rqgam.check<-function(gam.obj,...){
   ##lines(lowess(gam.obj$fitted.values, sqrt(abs(qresid(gam.obj)))), col = 2)
 
 
-  par(opar)
+  #par(opar)
 }
