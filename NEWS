@@ -4,6 +4,7 @@ dsm news!
  * nasty bug in predict.dsm fixed: was logging the offset twice when newdata was not provided, leading to very odd checking plots. Thanks to Megan Furguson for alerting us to this.
  * add support for point transects(!)
  * rqgam.check() now produced ONLY the linear predictor vs. randomised quantile residuals plot to avoid confusion in interpreting the other plots
+ * REML is now default method for smoothing parameter selection
 
 # 2.2.13
  * dsm.var.gam now has an example

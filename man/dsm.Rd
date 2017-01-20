@@ -42,6 +42,8 @@ dsm(formula, ddf.obj, segment.data, observation.data, engine = "gam",
 
 \item{transect}{type of transect (\code{"line"}, the default or \code{"point"}). This is overridden by the detection function transect type, this is usually only necessary when no detection function is specified.}
 
+\item{method}{The smoothing parameter estimation method. Default is \code{"REML"}, using REstricted Maximum Likelihood. See \code{\link{gam}} for other options.}
+
 \item{\dots}{anything else to be passed straight to \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}}/\code{\link{bam}}.}
 }
 \value{
