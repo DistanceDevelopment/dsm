@@ -30,20 +30,20 @@ mod1.var <- dsm.var.prop(mod1, preddata, off.set=preddata$area)
 test_that("mexdolphins - results for s(x,y)",{
   # CV
   expect_equal(summary(mod1.var)$cv,
-              0.2131066, tol=cv.tol)
+               0.2168384, tol=cv.tol)
   # var
   expect_equal(mod1.var$pred.var,
-              23284562.6757538, tol=N.tol)
+               23747034.5355, tol=N.tol)
   # test that the CIs are right
   expect_output(print(summary(mod1.var)),
-                "2.5%     Mean    97.5% \\n14981.35 22643.16 34223.42")
+                "2.5%     Mean    97.5% \\n14764.25 22473.39 34207.84")
 })
 
 test_that("different CIs work",{
   expect_output(print(summary(mod1.var, alpha=0.1)),
-                "5%     Mean      95% \\n16010.00 22643.16 32024.53")
+                "5%     Mean      95% \\n15795.95 22473.39 31973.59")
   expect_output(print(summary(mod1.var, alpha=0.02)),
-                "1%     Mean      99% \\n13868.11 22643.16 36970.62")
+                "1%     Mean      99% \\n13649.10 22473.39 37002.67")
 
 })
 
@@ -55,7 +55,7 @@ test_that("mexdolphins - works for NULL detection function",{
   mod1.var <- dsm.var.gam(mod1_nodf, preddata, off.set=preddata$area)
 
   expect_equal(summary(mod1.var)$cv,
-              0.1624528, tol=cv.tol)
+               0.1639757, tol=cv.tol)
 
   # throw an error if you want detection function uncertainty with no
   # detection function
