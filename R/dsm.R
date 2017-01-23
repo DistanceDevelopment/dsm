@@ -92,7 +92,8 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
                 engine="gam", convert.units=1,
                 family=quasipoisson(link="log"), group=FALSE, gamma=1.4,
                 control=list(keepData=TRUE), availability=1, strip.width=NULL,
-                segment.area=NULL, weights=NULL, transect="line", ...){
+                segment.area=NULL, weights=NULL, transect="line", method="REML",
+                ...){
 
   stopifnot(engine %in% c("gam","bam","glm","gamm"))
 
@@ -165,7 +166,9 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
                data    = dat,
                gamma   = gamma,
                weights = weights,
-               control = control, ...)
+               control = control,
+               method  = method,
+               ...)
 
   fit <- withCallingHandlers(do.call(engine, args),
                              warning=matrixnotposdef.handler)

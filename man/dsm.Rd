@@ -9,7 +9,7 @@ dsm(formula, ddf.obj, segment.data, observation.data, engine = "gam",
   convert.units = 1, family = quasipoisson(link = "log"), group = FALSE,
   gamma = 1.4, control = list(keepData = TRUE), availability = 1,
   strip.width = NULL, segment.area = NULL, weights = NULL,
-  transect = "line", ...)
+  transect = "line", method = "REML", ...)
 }
 \arguments{
 \item{formula}{formula for the surface. This should be a valid \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}} formula. See "Details", below, for how to define the response.}
