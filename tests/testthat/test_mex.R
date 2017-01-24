@@ -40,23 +40,18 @@ test_that("Do we get the same results?",{
 
 test_that("Density weighting",{
 
-  # fit density model
-  mod1 <- dsm(D~s(x,y), hn.model, segdata, obsdata)
-
-  # compare when we set the weights
-  mod1.w <- dsm(D~s(x,y), hn.model, segdata, obsdata,
-                weights=mod1$data$segment.area)
-
-  expect_equal(fitted(mod1),fitted(mod1.w),tolerance=par.tol)
-
+  ## compare when we set the weights
+  #mod1.w <- dsm(D~s(x,y), hn.model, segdata, obsdata,
+  #              weights=mod1$data$segment.area/sum(mod1$data$segment.area))
+  #expect_equal(fitted(mod1),fitted(mod1.w),tolerance=par.tol)
 
   # setting weights to 1 or another constant
   # compare when we set the weights
   mod1.w1 <- dsm(D~s(x,y), hn.model, segdata, obsdata,
-                weights=rep(1,nrow(segdata)))
+                 weights=rep(1,nrow(segdata)))
   # compare when we set the weights
   mod1.w2 <- dsm(D~s(x,y), hn.model, segdata, obsdata,
-                weights=rep(100,nrow(segdata)))
+                 weights=rep(100,nrow(segdata)))
 
   expect_equal(fitted(mod1.w1),fitted(mod1.w2),tolerance=par.tol)
 
@@ -65,8 +60,6 @@ test_that("Density weighting",{
                 weights=1)
 
   expect_equal(fitted(mod1.ws1),fitted(mod1.w2),tolerance=par.tol)
-
-
 })
 
 detach("mexdolphins")
