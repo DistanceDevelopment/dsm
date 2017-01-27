@@ -150,7 +150,7 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
   }
 
   # if we're using a gamm engine, warn if using an old version of mgcv
-  if(engine == "gamm" && dsm_env$old_version){
+  if(engine == "gamm" && dsm_env$old_mgcv){
       message("You are using mgcv version < 1.7-24, please update to at least 1.7-24 to avoid fitting problems.")
   }
 
