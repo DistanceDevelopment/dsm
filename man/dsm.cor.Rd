@@ -52,7 +52,7 @@ If there are NA values in the residuals then the correlogram will not be calcula
  # fit a model
  hr.model <- ds(distdata, max(distdata$distance),
                 key = "hr", adjustment = NULL)
- mod1<-dsm(N~s(x,y), hr.model, segdata, obsdata)
+ mod1<-dsm(count~s(x,y), hr.model, segdata, obsdata)
 
  # look at lag 1 differences up to a maximum of lag 9, using deviance
  # residuals

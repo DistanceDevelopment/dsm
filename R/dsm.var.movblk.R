@@ -48,7 +48,7 @@
 #' summary(hr.model)
 #'
 #' # fit a simple smooth of x and y
-#' mod1<-dsm(N~s(x,y), hr.model, segdata, obsdata)
+#' mod1 <- dsm(count~s(x, y), hr.model, segdata, obsdata)
 #' summary(mod1)
 #'
 #' # calculate the variance by 500 moving block bootstraps

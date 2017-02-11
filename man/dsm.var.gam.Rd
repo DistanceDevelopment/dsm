@@ -48,7 +48,7 @@ This is based on \code{\link{dsm.var.prop}} taken from code by Mark Bravington a
  summary(hr.model)
 
  # fit a simple smooth of x and y
- mod1 <- dsm(N~s(x, y), hr.model, segdata, obsdata)
+ mod1 <- dsm(count~s(x, y), hr.model, segdata, obsdata)
 
  # Calculate the variance
  # this will give a summary over the whole area in mexdolphins$preddata

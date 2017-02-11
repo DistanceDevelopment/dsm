@@ -95,8 +95,8 @@ hr.model <- ds(distdata, max(distdata$distance),
                key = "hr", adjustment = NULL)
 summary(hr.model)
 
-# fit a simple smooth of x and y
-mod1 <- dsm(N~s(x,y), hr.model, segdata, obsdata)
+# fit a simple smooth of x and y to counts
+mod1 <- dsm(count~s(x,y), hr.model, segdata, obsdata)
 summary(mod1)
 
 # predict over a grid

@@ -32,7 +32,7 @@
 #'
 #' # fit a simple smooth of x and y with a Tweedie response with estimated
 #' #  p parameter
-#' mod1 <- dsm(N~s(x, y), hr.model, segdata, obsdata, family=tw())
+#' mod1 <- dsm(count~s(x, y), hr.model, segdata, obsdata, family=tw())
 #' rqgam.check(mod1)
 #' }
 rqgam.check <- function(gam.obj, ...){
