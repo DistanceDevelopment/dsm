@@ -1,12 +1,12 @@
-#' Variance propogation for DSM models
+#' Prediction variance propogation for DSMs
 #'
-#' Rather than use a bootstrap to calculate the variance in a \code{dsm} model, use the clever variance propogation trick from Williams et al. (2011).
+#' To ensure that uncertainty from the detection function is correctly propagated to the final variance estimate of abundace, this function uses a method first detailed in Williams et al (2011).
 #'
-#' The idea is to refit the spatial model but including the Hessian of the offset as an extra term. Variance estimates using this new model can then be used to calculate the variance of abundance estimates which incorporate detection function uncertainty. Further mathematical details are given in the paper in the references below.
+#' The idea is to refit the spatial model but including an extra random effect. This random effect has zero mean and hence to effect on point estimates. Its variance is the Hessian of the detection function. Variance estimates then incorporate detection function uncertainty. Further mathematical details are given in the paper in the references below.
 #'
 #' Many prediction grids can be supplied by supplying a list of \code{data.frame}s to the function.
 #'
-#' Note that this routine is only useful if a detection function has been used in the DSM.
+#' Note that this routine is only useful if a detection function has been used in the DSM. It cannot be used when the \code{Nhat}, \code{abundance.est} responses are used.
 #'
 #' Based on (much more general) code from Mark Bravington and Sharon Hedley.
 #'
@@ -70,10 +70,15 @@ dsm.var.prop<-function(dsm.obj, pred.data, off.set,
       off.set <- rep(off.set,nrow(pred.data))
     }
   }
-  
+
   # check that there are no covariates in the df model
   if(length(unique(dsm.obj$ddf$fitted)) > 1){
     stop("Covariate detection functions are not currently supported within dsm.var.prop.")
+  }
+
+  # break if we use the wrong response
+  if(!(as.character(dsm.obj$formula)[2] %in% c("N", "count"))){
+    stop("Variance propagation cannot be used with estimated abundance as the response.")
   }
 
   # make sure if one of pred.data and off.set is not a list we break

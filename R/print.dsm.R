@@ -10,7 +10,7 @@
 #' @author David L. Miller
 #' @seealso \code{\link{summary.ds}}
 #' @keywords utility
-print.dsm<-function(x,...){
+print.dsm <- function(x, ...){
 
   # the code here is chopped together from mgcv and mrds
 
@@ -22,9 +22,7 @@ print.dsm<-function(x,...){
     gamm <- TRUE
   }
 
-
   ### General information
-
   cat("\nDensity surface model\n")
   cat("Response : ",as.character(x$formula)[2] , "\n")
 

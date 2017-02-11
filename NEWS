@@ -1,5 +1,9 @@
 dsm news!
 
+# 2.2.15
+ * when mexdolphins is loaded using data(), the data no longer need to be attach()ed
+ * dsm.var.prop throws an error when count or N are not used as the response.
+
 # 2.2.14
  * nasty bug in predict.dsm fixed: was logging the offset twice when newdata was not provided, leading to very odd checking plots. This also effected the results of predict() when newdata= was not specified. Thanks to Megan Ferguson for alerting us to this.
  * add support for point transects(!)

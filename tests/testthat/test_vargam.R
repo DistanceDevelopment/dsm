@@ -18,7 +18,8 @@ hn.model <- suppressMessages(ds(distdata,
                                 adjustment = NULL))
 
 # fit a simple smooth of x and y
-mod1<-dsm(N~s(x,y), hn.model, segdata, obsdata)
+mod1 <- dsm(N~s(x,y), hn.model, segdata, obsdata)
+
 
 # run the moving block bootstrap for 2 rounds
 set.seed(1123)
@@ -60,3 +61,12 @@ test_that("mexdolphins - works for NULL detection function",{
                "No detection function in this analysis, use dsm.var.gam")
 
 })
+
+test_that("varprop doesn't work for estimated abundance", {
+
+  mod1_Nhat <- dsm(abundance.est~s(x,y), hn.model, segdata, obsdata)
+  expect_error(dsm.var.prop(mod1_Nhat, preddata, off.set=preddata$area),
+               "Variance propagation cannot be used with estimated abundance as the response.")
+
+})
+

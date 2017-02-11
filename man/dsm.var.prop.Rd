@@ -2,13 +2,13 @@
 % Please edit documentation in R/dsm.var.prop.R
 \name{dsm.var.prop}
 \alias{dsm.var.prop}
-\title{Variance propogation for DSM models}
+\title{Prediction variance propogation for DSMs}
 \usage{
 dsm.var.prop(dsm.obj, pred.data, off.set, seglen.varname = "Effort",
   type.pred = "response")
 }
 \arguments{
-\item{dsm.obj}{an object returned from running \code{\link{dsm}}.}
+\item{dsm.obj}{a model object returned from running \code{\link{dsm}}.}
 
 \item{pred.data}{either: a single prediction grid or list of prediction grids. Each grid should be a \code{data.frame} with the same columns as the original data.}
 
@@ -33,14 +33,14 @@ a list with elements
                      }
 }
 \description{
-Rather than use a bootstrap to calculate the variance in a \code{dsm} model, use the clever variance propogation trick from Williams et al. (2011).
+To ensure that uncertainty from the detection function is correctly propagated to the final variance estimate of abundace, this function uses a method first detailed in Williams et al (2011).
 }
 \details{
-The idea is to refit the spatial model but including the Hessian of the offset as an extra term. Variance estimates using this new model can then be used to calculate the variance of abundance estimates which incorporate detection function uncertainty. Further mathematical details are given in the paper in the references below.
+The idea is to refit the spatial model but including an extra random effect. This random effect has zero mean and hence to effect on point estimates. Its variance is the Hessian of the detection function. Variance estimates then incorporate detection function uncertainty. Further mathematical details are given in the paper in the references below.
 
 Many prediction grids can be supplied by supplying a list of \code{data.frame}s to the function.
 
-Note that this routine is only useful if a detection function has been used in the DSM.
+Note that this routine is only useful if a detection function has been used in the DSM. It cannot be used when the \code{Nhat}, \code{abundance.est} responses are used.
 
 Based on (much more general) code from Mark Bravington and Sharon Hedley.
 }
