@@ -13,7 +13,7 @@
 #'
 #' @author Based on code provided by Natalie Kelly, bugs added by Dave Miller
 #' @export
-#' @importFrom statmod qres.nbinom qresid qres.tweedie
+#' @importFrom statmod qres.nbinom qresid qres.tweedie qres.binom
 #' @importFrom graphics par hist
 #' @importFrom stats napredict fitted qqnorm
 #'
@@ -32,10 +32,10 @@
 #'
 #' # fit a simple smooth of x and y with a Tweedie response with estimated
 #' #  p parameter
-#' mod1<-dsm(N~s(x,y), hr.model, segdata, obsdata, family=tw())
+#' mod1 <- dsm(N~s(x, y), hr.model, segdata, obsdata, family=tw())
 #' rqgam.check(mod1)
 #' }
-rqgam.check<-function(gam.obj,...){
+rqgam.check <- function(gam.obj, ...){
 
   # layout stuff
   #opar <- par(mfrow=c(2,2))
@@ -44,14 +44,14 @@ rqgam.check<-function(gam.obj,...){
   # requires statmod package
 
   # need to do the right thing for mgcv's Tweedie
-  if(grepl("^Tweedie",gam.obj$family$family)){
+  if(grepl("^Tweedie", gam.obj$family$family)){
     if(is.null(environment(gam.obj$family$variance)$p)){
       p.val <- gam.obj$family$getTheta(TRUE)
       environment(gam.obj$family$variance)$p <- p.val
     }
     qres <- qres.tweedie(gam.obj)
   # and for negbin
-  }else if(grepl("^Negative Binomial",gam.obj$family$family)){
+  }else if(grepl("^Negative Binomial", gam.obj$family$family)){
     # need to set $theta
     if("extended.family" %in% class(gam.obj$family)){
       # for SNW's extended family, need to set TRUE in getTheta as theta
@@ -61,6 +61,8 @@ rqgam.check<-function(gam.obj,...){
       gam.obj$theta <- gam.obj$family$getTheta()
     }
     qres <- qres.nbinom(gam.obj)
+  }else if(grepl("^binomial", gam.obj$family$family)){
+    qres <- qres.binom(gam.obj)
   }else{
     stop("Only negative binomial and Tweedie response distributions are supported.")
   }
