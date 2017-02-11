@@ -5,15 +5,12 @@ library(testthat)
 cv.tol<-1e-5
 N.tol<-1e-4
 
-
 ## NB the 444km^2 for the prediction grid is INCORRECT but
 ## serves us fine for the purpose of these tests.
-
 context("GAM variance")
 
 # load the Gulf of Mexico dolphin data
 data(mexdolphins)
-attach(mexdolphins)
 
 # fit a detection function and look at the summary
 hn.model <- suppressMessages(ds(distdata,
@@ -63,4 +60,3 @@ test_that("mexdolphins - works for NULL detection function",{
                "No detection function in this analysis, use dsm.var.gam")
 
 })
-detach("mexdolphins")

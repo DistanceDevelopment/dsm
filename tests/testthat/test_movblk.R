@@ -13,7 +13,6 @@ context("Moving block bootstrap")
 
 # load the Gulf of Mexico dolphin data
 data(mexdolphins)
-attach(mexdolphins)
 
 # fit a detection function and look at the summary
 hn.model <- suppressMessages(ds(distdata,
@@ -59,4 +58,3 @@ test_that("mexdolphins - bootstrap works for NULL detection function",{
                "Cannot incorporate detection function uncertainty with no detection function!")
 
 })
-detach("mexdolphins")

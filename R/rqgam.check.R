@@ -25,7 +25,6 @@
 #'
 #' # load the Gulf of Mexico dolphin data (see ?mexdolphins)
 #' data(mexdolphins)
-#' attach(mexdolphins)
 #'
 #' # fit a detection function and look at the summary
 #' hr.model <- ds(distdata, max(distdata$distance),
@@ -35,9 +34,6 @@
 #' #  p parameter
 #' mod1<-dsm(N~s(x,y), hr.model, segdata, obsdata, family=tw())
 #' rqgam.check(mod1)
-#'
-#' # detach the data
-#' detach("mexdolphins")
 #' }
 rqgam.check<-function(gam.obj,...){
 

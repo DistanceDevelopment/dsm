@@ -10,7 +10,6 @@ context("Do GLMs work")
 
 # load the Gulf of Mexico dolphin data
 data(mexdolphins)
-attach(mexdolphins)
 
 # fit a detection function and look at the summary
 hn.model <- suppressMessages(ds(distdata,
@@ -44,5 +43,3 @@ test_that("Density weighting",{
   expect_equal(coef(mod1.w), res_coef, tolerance=par.tol)
 
 })
-
-detach("mexdolphins")

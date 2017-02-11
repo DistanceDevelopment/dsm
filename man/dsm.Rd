@@ -83,14 +83,13 @@ It is often the case that distances are collected in metres and segment lengths 
 For large models, \code{engine="bam"} with \code{method="fREML"} may be useful. Models specified for \code{bam} should be as \code{gam}. READ \code{\link{bam}} before using this option; this option is considered EXPERIMENTAL at the moment. In particular note that the default basis choice (thin plate regression splines) will be slow and that in general fitting is less stable than when using \code{gam}. For negative binomial response, theta must be specified when using \code{bam}.
 }
 \examples{
+\dontrun{
 library(Distance)
 library(dsm)
 
 # load the Gulf of Mexico dolphin data (see ?mexdolphins)
 data(mexdolphins)
-attach(mexdolphins)
 
-\dontrun{
 # fit a detection function and look at the summary
 hr.model <- ds(distdata, max(distdata$distance),
                key = "hr", adjustment = NULL)
@@ -109,8 +108,6 @@ sum(mod1.pred)
 # plot the smooth
 plot(mod1)
 }
-# detach the data
-detach("mexdolphins")
 }
 \author{
 David L. Miller

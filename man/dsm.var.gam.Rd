@@ -41,7 +41,6 @@ This is based on \code{\link{dsm.var.prop}} taken from code by Mark Bravington a
 
  # load the Gulf of Mexico dolphin data (see ?mexdolphins)
  data(mexdolphins)
- attach(mexdolphins)
 
  # fit a detection function and look at the summary
  hr.model <- ds(distdata, max(distdata$distance),
@@ -49,15 +48,11 @@ This is based on \code{\link{dsm.var.prop}} taken from code by Mark Bravington a
  summary(hr.model)
 
  # fit a simple smooth of x and y
- mod1 <- dsm(N~s(x,y), hr.model, segdata, obsdata)
+ mod1 <- dsm(N~s(x, y), hr.model, segdata, obsdata)
 
  # Calculate the variance
- mod1.var <- dsm.var.gam(mod1, preddata, off.set=preddata$area)
-
  # this will give a summary over the whole area in mexdolphins$preddata
-
-# detach the data
-detach("mexdolphins")
+ mod1.var <- dsm.var.gam(mod1, preddata, off.set=preddata$area)
 }
 }
 \author{

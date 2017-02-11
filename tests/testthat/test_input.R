@@ -7,7 +7,6 @@ par.tol<-1e-5
 context("test inputs")
 # load the Gulf of Mexico dolphin data
 data(mexdolphins)
-attach(mexdolphins)
 
 # fit a detection function
 suppressMessages(hn.model <- ds(distdata, max(distdata$distance),
@@ -105,7 +104,3 @@ test_that("Missing columns cause errors",{
                fixed=TRUE)
 
 })
-
-
-
-detach("mexdolphins")

@@ -36,7 +36,6 @@
 #'
 #'  # load the Gulf of Mexico dolphin data (see ?mexdolphins)
 #'  data(mexdolphins)
-#'  attach(mexdolphins)
 #'
 #'  # fit a detection function and look at the summary
 #'  hr.model <- ds(distdata, max(distdata$distance),
@@ -47,12 +46,8 @@
 #'  mod1 <- dsm(N~s(x,y), hr.model, segdata, obsdata)
 #'
 #'  # Calculate the variance
-#'  mod1.var <- dsm.var.prop(mod1, preddata, off.set=preddata$area)
-#'
 #'  # this will give a summary over the whole area in mexdolphins$preddata
-#'
-#' # detach the data
-#' detach("mexdolphins")
+#'  mod1.var <- dsm.var.prop(mod1, preddata, off.set=preddata$area)
 #' }
 dsm.var.prop<-function(dsm.obj, pred.data, off.set,
                        seglen.varname='Effort', type.pred="response") {

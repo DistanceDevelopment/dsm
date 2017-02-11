@@ -60,14 +60,13 @@
 #' @importFrom utils packageVersion
 #'
 #' @examples
+#' \dontrun{
 #' library(Distance)
 #' library(dsm)
 #'
 #' # load the Gulf of Mexico dolphin data (see ?mexdolphins)
 #' data(mexdolphins)
-#' attach(mexdolphins)
 #'
-#' \dontrun{
 #' # fit a detection function and look at the summary
 #' hr.model <- ds(distdata, max(distdata$distance),
 #'                key = "hr", adjustment = NULL)
@@ -86,8 +85,6 @@
 #' # plot the smooth
 #' plot(mod1)
 #'}
-#' # detach the data
-#' detach("mexdolphins")
 dsm <- function(formula, ddf.obj, segment.data, observation.data,
                 engine="gam", convert.units=1,
                 family=quasipoisson(link="log"), group=FALSE, gamma=1.4,

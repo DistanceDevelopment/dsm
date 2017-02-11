@@ -60,7 +60,6 @@ library(dsm)
 
 # load the Gulf of Mexico dolphin data (see ?mexdolphins)
 data(mexdolphins)
-attach(mexdolphins)
 
 # fit a detection function and look at the summary
 hr.model <- ds(distdata, max(distdata$distance),
@@ -76,8 +75,6 @@ mod1.movblk <- dsm.var.movblk(mod1, preddata, n.boot = 500,
    block.size = 3, samp.unit.name = "Transect.Label",
    off.set = preddata$area,
    bar = TRUE, bs.file = "mexico-bs.csv", ds.uncertainty = TRUE)
-# detach the data
-detach("mexdolphins")
 }
 }
 

@@ -46,15 +46,18 @@ If there are NA values in the residuals then the correlogram will not be calcula
  library(Distance)
  library(dsm)
 
+ # load the data, see ?mexdolphins
  data(mexdolphins)
- attach(mexdolphins)
 
+ # fit a model
  hr.model <- ds(distdata, max(distdata$distance),
                 key = "hr", adjustment = NULL)
  mod1<-dsm(N~s(x,y), hr.model, segdata, obsdata)
 
- dsm.cor(mod1,resid.type="d",max.lag=9,Segment.Label="Sample.Label")
- detach("mexdolphins")
+ # look at lag 1 differences up to a maximum of lag 9, using deviance
+ # residuals
+ dsm.cor(mod1, resid.type="deviance", max.lag=9,
+         Segment.Label="Sample.Label")
 }
 }
 \author{

@@ -9,7 +9,6 @@ context("Mexico pantropical dolphin data")
 
 # load the Gulf of Mexico dolphin data
 data(mexdolphins)
-attach(mexdolphins)
 
 # fit a detection function and look at the summary
 hn.model <- suppressMessages(ds(distdata,
@@ -61,5 +60,3 @@ test_that("Density weighting",{
 
   expect_equal(fitted(mod1.ws1),fitted(mod1.w2),tolerance=par.tol)
 })
-
-detach("mexdolphins")
