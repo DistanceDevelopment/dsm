@@ -57,6 +57,7 @@ NULL
 #' NOAA Southeast Fisheries Science Center. 1996. Report of a Cetacean Survey of Oceanic and Selected Continental Shelf Waters of the Northern Gulf of Mexico aboard NOAA Ship Oregon II (Cruise 220)
 #'
 #' @name mexdolphins
+#' @aliases obsdata segdata preddata pred.polys distdata survey.area
 #' @docType data
 #' @keywords datasets
 NULL

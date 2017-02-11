@@ -2,7 +2,13 @@
 % Please edit documentation in R/dsm-package.R
 \docType{data}
 \name{mexdolphins}
+\alias{distdata}
 \alias{mexdolphins}
+\alias{obsdata}
+\alias{pred.polys}
+\alias{preddata}
+\alias{segdata}
+\alias{survey.area}
 \title{Pan-tropical spotted dolphins in the Gulf of Mexico}
 \description{
 Data from a combination of several NOAA shipboard surveys conducted on pan-tropical spotted dolphins in the Gulf of Mexico. 47 observations of groups of dolphins The group size was recorded, as well as the Beaufort sea state at the time of the observation. Coordinates for each observation and bathymetry data were also available as covariates for the analysis. A complete example analysis (and description of the data) is provided at \url{http://distancesampling.org/R/vignettes/mexico-analysis.html}.
