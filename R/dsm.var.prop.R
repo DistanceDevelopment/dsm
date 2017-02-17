@@ -78,7 +78,7 @@ dsm.var.prop<-function(dsm.obj, pred.data, off.set,
 
   # break if we use the wrong response
   if(!(as.character(dsm.obj$formula)[2] %in% c("N", "count"))){
-    stop("Variance propagation cannot be used with estimated abundance as the response.")
+    stop("Variance propagation can only be used with count as the response.")
   }
 
   # make sure if one of pred.data and off.set is not a list we break

@@ -66,7 +66,7 @@ test_that("varprop doesn't work for estimated abundance", {
 
   mod1_Nhat <- dsm(abundance.est~s(x,y), hn.model, segdata, obsdata)
   expect_error(dsm.var.prop(mod1_Nhat, preddata, off.set=preddata$area),
-               "Variance propagation cannot be used with estimated abundance as the response.")
+               "Variance propagation can only be used with count as the response.")
 
 })
 
