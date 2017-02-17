@@ -94,7 +94,35 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
     if(length(unique(fitted.p)) == 1){
       fitted.p <- rep(unique(fitted.p), nrow(dat))
     }else{
-      stop("Covariate detection functions are not currently supported with effective area as the offset")
+#      stop("Covariate detection functions are not currently supported with effective area as the offset")
+message("Count model with detection function covariates at the segment level: this is EXPERIMENTAL!")
+
+      if(ddfobject$method != "ds"){
+        stop("Only dsmodels are supported!")
+      }
+
+      # extract formula
+      df_formula <- as.formula(ddfobject$ds$aux$ddfobj$scale$formula)
+      if(!is.null(ddfobject$ds$aux$ddfobj$shape$formula) &&
+         ddfobject$ds$aux$ddfobj$shape$formula != "~1"){
+        stop("Shape parameter formulae are not supported!")
+      }
+
+      # extract detection function variables
+      df_vars <- all.vars(df_formula)
+
+      # check these vars are in the segment table
+      if(!all(df_vars %in% colnames(dat))){
+        stop(paste0("Detection function covariates are not in the segment data",
+                    "\n  Missing: ", df_vars[!(df_vars %in% colnames(dat))]))
+      }
+
+      # make a data.frame to predict for
+      nd <- dat[,df_vars, drop=FALSE]
+      nd$distance <- 0
+
+      fitted.p <- predict(ddfobject, newdata=nd)$fitted
+
     }
   }
 
