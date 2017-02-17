@@ -27,12 +27,13 @@
 #' @param model a fitted \code{\link{dsm}}
 #' @param newdata the prediction grid
 #' @param trace for debugging, see how the scale parameter estimation is going
+#' @param var which variance-covariance matrix should be used (\code{"Vp"} for variance-covariance conditional on smoothing parameter(s), \code{"Vc"} for unconditional). See \code{\link{gamObject}} for an details/explanation. If in doubt, stick with the default, \code{"Vp"}.
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#'  library(Distance)
-#'  library(dsm)
+#' library(Distance)
+#' library(dsm)
 #'
 #' # load the Gulf of Mexico dolphin data (see ?mexdolphins)
 #' data(mexdolphins)
@@ -54,11 +55,21 @@
 #' # detach the data
 #' detach("mexdolphins")
 #' }
-dsm_varprop <- function(model, newdata, trace=FALSE){
+dsm_varprop <- function(model, newdata, trace=FALSE, var_type="Vp"){
 
   # die if the link isn't log
   if(model$family$link != "log"){
     stop("log link must be used!")
+  }
+
+  # check for valid var_type
+  if(!(var_type %in% c("Vp","Vc"))){
+    stop("var_type must be \"Vp\" or \"Vc\"")
+  }
+
+  # check line transects
+  if(model$ddf$meta.data$point){
+    stop("Only line transects are supported at the moment")
   }
 
   # extract the link & invlink
@@ -87,7 +98,7 @@ dsm_varprop <- function(model, newdata, trace=FALSE){
     mu <- predict(ddf, newdata=ds_newdata, esw=TRUE, compute=TRUE)$fitted
 
     # calculate log mu
-    ret <- linkfn(mu)
+    ret <- linkfn(2 * mu * data$Effort)
     return(ret)
   }
 
@@ -119,9 +130,6 @@ dsm_varprop <- function(model, newdata, trace=FALSE){
 
   # repopulate with the duplicates back in
   firstD <- firstD[attr(u_ds_newdata, "index"), , drop=FALSE]
-  # calculate the offset 2 * effective strip width * line length
-  #  -- log(mu) + log(2*effort)
-  firstD <- firstD + linkfn(2 * model$data$Effort)
 
   # put that in the data
   dat <- model$data
@@ -172,18 +180,28 @@ dsm_varprop <- function(model, newdata, trace=FALSE){
   pred <- newdata$off.set * linkinvfn(pred)
 
   # get variance-covariance with smoothing parameter uncertainty
-  Vc <- refit$Vc
+  vc <- refit[[var_type]]
 
   # this is why we can only use log link
   dNdbeta <- pred%**%Lp
 
   # make a sandwich
-  var_p <- dNdbeta %*% Vc %*% dNdbeta
+  var_p <- dNdbeta %*% vc %*% dNdbeta
 
   # apply the link function to the offset
+  # NB this is because refit is a gam not dsm object! If refit is dsm
+  #    then this will get done in predict.dsm
   newdata$off.set <- linkfn(newdata$off.set)
+
+  # if we are using Vc we need to set unconditional=TRUE
+  if(var_type=="Vc"){
+    uncond <- TRUE
+  }else{
+    uncond <- FALSE
+  }
   # get the standard errors
-  ses <- predict(refit, newdata=newdata, type="response", se.fit=TRUE)$se.fit
+  ses <- predict(refit, newdata=newdata, type="response", se.fit=TRUE,
+                 unconditional=uncond)$se.fit
 
   # what should we return?
   ret <- list(old_model = model,

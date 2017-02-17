@@ -4,7 +4,7 @@
 \alias{dsm_varprop}
 \title{Variance propagation for density surface models}
 \usage{
-dsm_varprop(model, newdata, trace = FALSE)
+dsm_varprop(model, newdata, trace = FALSE, var_type = "Vp")
 }
 \arguments{
 \item{model}{a fitted \code{\link{dsm}}}
@@ -12,6 +12,8 @@ dsm_varprop(model, newdata, trace = FALSE)
 \item{newdata}{the prediction grid}
 
 \item{trace}{for debugging, see how the scale parameter estimation is going}
+
+\item{var}{which variance-covariance matrix should be used (\code{"Vp"} for variance-covariance conditional on smoothing parameter(s), \code{"Vc"} for unconditional). See \code{\link{gamObject}} for an details/explanation. If in doubt, stick with the default, \code{"Vp"}.}
 }
 \value{
 a list with elements
@@ -38,8 +40,8 @@ Note that we use \code{Vc} here (see \code{\link{gamObject}}), which is the vari
 }
 \examples{
 \dontrun{
- library(Distance)
- library(dsm)
+library(Distance)
+library(dsm)
 
 # load the Gulf of Mexico dolphin data (see ?mexdolphins)
 data(mexdolphins)
