@@ -37,7 +37,6 @@
 #'
 #' # load the Gulf of Mexico dolphin data (see ?mexdolphins)
 #' data(mexdolphins)
-#' attach(mexdolphins)
 #'
 #' # fit a detection function and look at the summary
 #' df <- ds(distdata, 7000, key = "hr", adjustment = NULL, formula=~beaufort)
@@ -51,9 +50,6 @@
 #' mod1.varp <- dsm_varprop(mod1, preddata)
 #'
 #' # this will give a summary over the whole area in mexdolphins$preddata
-#'
-#' # detach the data
-#' detach("mexdolphins")
 #' }
 dsm_varprop <- function(model, newdata, trace=FALSE, var_type="Vp"){
 

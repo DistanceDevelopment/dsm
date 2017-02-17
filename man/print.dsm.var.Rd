@@ -12,8 +12,7 @@
 \item{\dots}{unspecified and unused arguments for S3 consistency}
 }
 \description{
-This method only provides a short summary, use the 
-\code{\link{summary.dsm.var}} method for information.
+This method only provides a short summary, use the \code{\link{summary.dsm.var}} method for information.
 }
 \author{
 David L. Miller
