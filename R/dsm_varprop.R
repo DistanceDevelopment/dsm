@@ -175,14 +175,14 @@ dsm_varprop <- function(model, newdata, trace=FALSE, var_type="Vp"){
   pred <- Lp %*% coef(refit)
   pred <- newdata$off.set * linkinvfn(pred)
 
-  # get variance-covariance with smoothing parameter uncertainty
+  # get variance-covariance matrix
   vc <- refit[[var_type]]
 
   # this is why we can only use log link
-  dNdbeta <- pred%**%Lp
+  dNdbeta <- t(pred)%*%Lp
 
   # make a sandwich
-  var_p <- dNdbeta %*% vc %*% dNdbeta
+  var_p <- dNdbeta %*% vc %*% t(dNdbeta)
 
   # apply the link function to the offset
   # NB this is because refit is a gam not dsm object! If refit is dsm

@@ -103,22 +103,67 @@ dsm.var.prop <- function(dsm.obj, pred.data, off.set,
   for(i in seq_along(pred.data)){
     pred.data[[i]]$off.set <- off.set[[i]]
   }
+
+  # mudge together all the prediction data
+  all_preddata <- do.call("rbind", pred.data)
+  all_preddata[["XX"]] <- matrix(0, nrow(all_preddata), length(dsm.obj$ddf$par))
+
   ## end data setup
 
-  ## run varprop and calculate stuff!
-  #varp <- dsm_varprop(dsm.obj, pred.data[[1]])
-  #fit.with.pen <- varp$refit
 
-# storage
-vpred <- length(pred.data)
-preddo <- list(length(pred.data))
-varp <- list()
+  # extract the link & invlink
+  linkfn <- dsm.obj$family$linkfun
+  linkinvfn <- dsm.obj$family$linkinv
+
+  # storage
+  vpred <- length(pred.data)
+  preddo <- list()
+  varp <- list()
+
+  # to the varprop thing once to get the model
+  varp <- dsm_varprop(dsm.obj, pred.data[[1]])
+  refit <- varp$refit
+
+
+  # get a big Lp matrix now and just get rows below
+  Lp_big <- predict(refit, newdata=all_preddata, type="lpmatrix")
+
+  # start indices
+  start <- 1
+  end <- nrow(pred.data[[1]])
 
   # loop over the prediction grids
   for(ipg in seq_along(pred.data)){
-    varp <- dsm_varprop(dsm.obj, pred.data[[1]])
-    vpred[ipg] <- varp$var
-    preddo[[ipg]] <- sum(varp$pred)
+
+    # get some data
+    newdata <- pred.data[[ipg]]
+    Lp <- Lp_big[start:end,,drop=FALSE]
+
+    # predictions on the link scale
+    pred <- Lp %*% coef(refit)
+    pred <- newdata$off.set * linkinvfn(pred)
+
+    # get variance-covariance
+    vc <- refit$Vp
+
+    # this is why we can only use log link
+    dNdbeta <- t(pred)%*%Lp
+
+    # make a sandwich
+    var_p <- dNdbeta %*% vc %*% t(dNdbeta)
+
+    # apply the link function to the offset
+    # NB this is because refit is a gam not dsm object! If refit is dsm
+    #    then this will get done in predict.dsm
+    newdata$off.set <- linkfn(newdata$off.set)
+
+
+    vpred[ipg] <- var_p
+    preddo[[ipg]] <- sum(pred)
+
+    # get next indices
+    start <- end+1
+    end <- start + nrow(pred.data[[ipg]])-1
   }
 
   # Diagnostic from MVB

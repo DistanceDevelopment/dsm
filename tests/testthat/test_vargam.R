@@ -69,18 +69,30 @@ test_that("varprop doesn't work for estimated abundance", {
                "Variance propagation can only be used with count as the response.")
 })
 
-#set.seed(1123)
-#preddata$off.set <- preddata$area
-#mod1.var <- dsm_varprop(mod1, preddata)
-#
-#test_that("mexdolphins - results for s(x,y)",{
-#  # CV
-#  expect_equal(summary(mod1.var)$cv,
-#               0.2168384, tol=cv.tol)
+
+## test that disaggregated estimation does the right thing
+
+test_that("mexdolphins - results for s(x,y)",{
+  set.seed(1123)
+  preddata$off.set <- preddata$area
+
+  # estimate using the "quick" routine
+  mod1.varp <- dsm_varprop(mod1, preddata)
+
+  # do it the "long way" for D7 compatibility
+  set.seed(1123)
+  lpreddata <- split(preddata, 1:nrow(preddata))
+  mod1.var <- dsm.var.prop(mod1, lpreddata, off.set=preddata$area)
+
+
+  # ses
+  expect_equal(sqrt(mod1.var$pred.var)/unlist(mod1.var$pred),
+               as.vector(unname(mod1.varp$ses/mod1.varp$pred[,1])), tol=cv.tol,
+               check.attributes=FALSE)
 #  # var
 #  expect_equal(mod1.var$pred.var,
 #               23747034.5355, tol=N.tol)
 #  # test that the CIs are right
 #  expect_output(print(summary(mod1.var)),
 #                "2.5%     Mean    97.5% \\n14764.25 22473.39 34207.84")
-#})
+})
