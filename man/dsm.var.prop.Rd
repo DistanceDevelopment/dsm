@@ -43,6 +43,8 @@ Many prediction grids can be supplied by supplying a list of \code{data.frame}s 
 Note that this routine is only useful if a detection function has been used in the DSM. It cannot be used when the \code{Nhat}, \code{abundance.est} responses are used.
 
 Based on (much more general) code from Mark Bravington and Sharon Hedley.
+
+Note that this routine simply calls \code{\link{dsm_varprop}}. If you don't require multiple prediction grids, the other routine will probably be faster.
 }
 \examples{
 \dontrun{

@@ -137,7 +137,7 @@ summary.dsm.var <- function(object, alpha=0.05, boxplot.coef=1.5,
 
   }else{
   ### varprop and "Bayesian" stuff
-    sinfo$varprop <- !is.null(object$deriv)
+    sinfo$varprop <- object$var.prop
     sinfo$saved <- object
     sinfo$bootstrap <- object$bootstrap
 
@@ -156,10 +156,10 @@ summary.dsm.var <- function(object, alpha=0.05, boxplot.coef=1.5,
       object$off.set <- as.vector(off)
 
       if(object$var.prop){
-        var.prop <- dsm.var.prop(object$dsm.obj,object$pred.data,object$off.set,
+        var.prop <- dsm.var.prop(object$dsm.obj, object$pred.data,object$off.set,
                                  object$seglen.varname, object$type.pred)
       }else{
-        var.prop <- dsm.var.gam(object$dsm.obj,object$pred.data,object$off.set,
+        var.prop <- dsm.var.gam(object$dsm.obj, object$pred.data,object$off.set,
                                  object$seglen.varname, object$type.pred)
       }
 
