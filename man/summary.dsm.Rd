@@ -17,10 +17,9 @@ a summary object
 \description{
 Gives a brief summary of a fitted \code{dsm} object.
 }
-\author{
-David L. Miller
-}
 \seealso{
 dsm
 }
-
+\author{
+David L. Miller
+}

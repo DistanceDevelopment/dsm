@@ -14,11 +14,10 @@
 \description{
 See \code{\link{summary.dsm.var}} for information.
 }
-\author{
-David L. Miller
-}
 \seealso{
 \code{\link{summary.dsm.var}}
 }
+\author{
+David L. Miller
+}
 \keyword{utility}
-

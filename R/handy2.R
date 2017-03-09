@@ -1,6 +1,6 @@
 # functions from Mark V Bravington's "handy2" library
 # all code belongs to Mark!
-
+#' @importFrom stats optimize
 "gam.fixed.priors" <-
 function( ..., fixed.priors=character(0), debugging=FALSE, scale.trace=1){
   gamf <- gam
@@ -83,8 +83,8 @@ stop( "Fixed priors must correspond to things in paraPen (for now)")
   return( marg.lglk) 
   }
 
-  if( debugging)
-    mtrace( gamcrit)
+#  if( debugging)
+#    mtrace( gamcrit)
   opto <- optimize( NEG( gamcrit), interval=0:1)  
   
   b.para1$call$fixed.priors <- fp
@@ -208,3 +208,8 @@ numderiv <- function(f, x0, eps = 1e-04, TWICE. = TRUE, param.name = NULL,
   }
   return(x)
 }
+
+# actually from mvbutils
+"%&%" <- function(a, b)  paste(a, b, sep = "")
+
+

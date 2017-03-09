@@ -27,4 +27,3 @@ Code originally by Louise Burt.
 \author{
 Louise Burt
 }
-

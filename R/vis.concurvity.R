@@ -8,6 +8,7 @@
 #' @param type concurvity measure to plot, see \code{\link{concurvity}}
 #' @author David L Miller
 #' @export
+#' @importFrom graphics image layout
 #' @examples
 #' \dontrun{
 #' library(Distance)
@@ -26,7 +27,7 @@
 #' # visualise concurvity using the "estimate" metric
 #' vis.concurvity(mod1)
 #'}
-vis_concurvity <- function(model, type="estimate"){
+vis.concurvity <- function(model, type="estimate"){
 
   # calculate concurvity for this model
   cc <- concurvity(model, full=FALSE)[[type]]

@@ -13,7 +13,7 @@ dsm_varprop(model, newdata, trace = FALSE, var_type = "Vp")
 
 \item{trace}{for debugging, see how the scale parameter estimation is going}
 
-\item{var}{which variance-covariance matrix should be used (\code{"Vp"} for variance-covariance conditional on smoothing parameter(s), \code{"Vc"} for unconditional). See \code{\link{gamObject}} for an details/explanation. If in doubt, stick with the default, \code{"Vp"}.}
+\item{var_type}{which variance-covariance matrix should be used (\code{"Vp"} for variance-covariance conditional on smoothing parameter(s), \code{"Vc"} for unconditional). See \code{\link{gamObject}} for an details/explanation. If in doubt, stick with the default, \code{"Vp"}.}
 }
 \value{
 a list with elements
@@ -60,10 +60,9 @@ mod1.varp <- dsm_varprop(mod1, preddata)
 # this will give a summary over the whole area in mexdolphins$preddata
 }
 }
-\author{
-David L. Miller, based on code from Mark V. Bravington and Sharon L. Hedley.
-}
 \references{
 Williams, R., Hedley, S.L., Branch, T.A., Bravington, M.V., Zerbini, A.N. and Findlay, K.P. (2011). Chilean Blue Whales as a Case Study to Illustrate Methods to Estimate Abundance and Evaluate Conservation Status of Rare Species. Conservation Biology 25(3), 526-535.
 }
-
+\author{
+David L. Miller, based on code from Mark V. Bravington and Sharon L. Hedley.
+}

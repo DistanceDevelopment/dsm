@@ -58,4 +58,3 @@ This is based on \code{\link{dsm.var.prop}} taken from code by Mark Bravington a
 \author{
 David L. Miller
 }
-

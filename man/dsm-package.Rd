@@ -13,4 +13,3 @@ For help with distance sampling and this package, there is a Google Group \url{h
 
 A example analysis is available at \url{http://distancesampling.org/R/vignettes/mexico-analysis.html}.
 }
-
