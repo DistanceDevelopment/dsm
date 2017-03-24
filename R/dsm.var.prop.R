@@ -66,7 +66,7 @@ dsm.var.prop <- function(dsm.obj, pred.data, off.set,
   }
 
   # break if we use the wrong response
-  if(!(as.character(dsm.obj$formula)[2] %in% c("N", "count"))){
+  if(!(as.character(dsm.obj$formula)[2] %in% c("N", "n", "count"))){
     stop("Variance propagation can only be used with count as the response.")
   }
 
