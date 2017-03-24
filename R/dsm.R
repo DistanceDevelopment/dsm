@@ -5,7 +5,7 @@
 #'
 #' The response (LHS of `formula`) can be one of the following:
 #' \tabular{ll}{
-#'   \code{n}, \code{count}, \code{N}, \code{abundance} \tab count in each segment\cr
+#'   \code{n}, \code{count}, \code{N} \tab count in each segment\cr
 #'   \code{Nhat}, \code{abundance.est} \tab estimated abundance per segment, estimation is via a Horvitz-Thompson estimator. This should be used when there are covariates in the detection function.\cr
 #'   \code{presence} \tab interpret the data as presence/absence (remember to change the \code{family} argument to \code{binomial()})\cr
 #'   \code{D}, \code{density}, \code{Dhat}, \code{density.est} \tab density per segment\cr
@@ -105,7 +105,7 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
   ## check the formula
   response <- as.character(formula)[2]
   possible.responses <- c("D", "density", "Dhat", "density.est",
-                          "N", "abundance", "count", "n",
+                          "N", "count", "n",
                           "Nhat", "abundance.est",
                           "presence")
   if(!(response %in% possible.responses)){

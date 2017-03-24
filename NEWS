@@ -6,6 +6,7 @@ dsm news!
  * dsm.var.prop now calls dsm_varprop, which keeps the scale parameter constant when refitting models for variance propagation. dsm_varprop provides a lower-level interface to variance propagation and is probably faster and more flexible.
  * add vis.concurvity to visually assess concurvity (colinearity extended to smooth terms) in the model
  * new model diagnostic function: plot_pred_by_term -- plots the effect of each smooth in the model spatially.
+ * remove "abundance" option for the response, use "count"
 
 # 2.2.14
  * nasty bug in predict.dsm fixed: was logging the offset twice when newdata was not provided, leading to very odd checking plots. This also effected the results of predict() when newdata= was not specified. Thanks to Megan Ferguson for alerting us to this.

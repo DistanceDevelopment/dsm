@@ -52,7 +52,7 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
     responsedata <- aggregate(obsdata[,cluster.name]/(fitted.p*availability),
                               list(obsdata[,segnum.name]), sum)
     off.set <- "none"
-  }else if(response %in% c("N","abundance","count","n")){
+  }else if(response %in% c("N","count","n")){
     responsedata <- aggregate(obsdata[,cluster.name]/availability,
                               list(obsdata[,segnum.name]), sum)
     off.set <- "eff.area"
