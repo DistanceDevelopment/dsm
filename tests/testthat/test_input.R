@@ -25,10 +25,6 @@ test_that("formula specs",{
   count.count <- dsm(count~s(x,y), hn.model, segdata, obsdata)
   expect_equal(unname(count.count$gcv.ubre), count.reml, tolerance=par.tol, check.attributes=FALSE)
 
-  count.abundance <- dsm(abundance~s(x,y), hn.model, segdata, obsdata)
-  expect_equal(unname(count.abundance$gcv.ubre), count.reml,tolerance=par.tol, check.attributes=FALSE)
-
-
   ## models for abund.est
   abund.est.gcv <- 992.0182117
   abund.est.Nhat<-dsm(Nhat~s(x,y), hn.model, segdata,
