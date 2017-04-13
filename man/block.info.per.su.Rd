@@ -28,3 +28,4 @@ a \code{data.frame} with the following columns
 Takes the transect data and works out how many blocks of a given
 size (in segment terms) fit into each.
 }
+

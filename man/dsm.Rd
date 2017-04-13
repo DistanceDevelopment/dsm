@@ -82,7 +82,6 @@ It is often the case that distances are collected in metres and segment lengths 
 
 For large models, \code{engine="bam"} with \code{method="fREML"} may be useful. Models specified for \code{bam} should be as \code{gam}. READ \code{\link{bam}} before using this option; this option is considered EXPERIMENTAL at the moment. In particular note that the default basis choice (thin plate regression splines) will be slow and that in general fitting is less stable than when using \code{gam}. For negative binomial response, theta must be specified when using \code{bam}.
 }
-
 \examples{
 \dontrun{
 library(Distance)
@@ -110,6 +109,9 @@ sum(mod1.pred)
 plot(mod1)
 }
 }
+\author{
+David L. Miller
+}
 \references{
 Hedley, S. and S. T. Buckland. 2004. Spatial models for line transect sampling. JABES 9:181-199.
 
@@ -117,6 +119,4 @@ Miller, D. L., Burt, M. L., Rexstad, E. A., Thomas, L. (2013), Spatial models fo
 
 Wood, S.N. 2006. Generalized Additive Models: An Introduction with R. CRC/Chapman & Hall.
 }
-\author{
-David L. Miller
-}
+

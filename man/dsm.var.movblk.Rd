@@ -53,7 +53,6 @@ function uncertainty, one not.
  uncertainty using the delta method. This assumes that the detection function
  and the spatial model are INDEPENDENT. This is probably not reasonable.
 }
-
 \examples{
 \dontrun{
 library(Distance)
@@ -78,3 +77,4 @@ mod1.movblk <- dsm.var.movblk(mod1, preddata, n.boot = 500,
    bar = TRUE, bs.file = "mexico-bs.csv", ds.uncertainty = TRUE)
 }
 }
+

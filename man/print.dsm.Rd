@@ -15,10 +15,11 @@
 This method just gives a short description of the fitted model. Use the
 \code{\link{summary.dsm}} method for more information.
 }
-\seealso{
-\code{\link{summary.ds}}
-}
 \author{
 David L. Miller
 }
+\seealso{
+\code{\link{summary.ds}}
+}
 \keyword{utility}
+
