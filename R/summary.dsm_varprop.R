@@ -36,7 +36,7 @@ summary.dsm_varprop <- function(object, alpha=0.05, ...){
   sinfo$detfct.cv <- sqrt(cvp.sq)
 
   # save model check diagnostic
-  sinfo$model.check <- summary(fitted(object$refit) - fitted(object$old_model))
+  sinfo$varprop_diagnostic <- varprop_check(object)
 
   class(sinfo) <- "summary.dsm_varprop"
   return(sinfo)

@@ -13,8 +13,10 @@ print.summary.dsm_varprop<-function(x, ...){
 
   cat("Summary of uncertainty in a density surface model calculated\n")
   cat(" by variance propagation.\n")
-  cat("\nQuantiles of differences between fitted model and variance model\n")
-  print(x$model.check)
+  #cat("\nQuantiles of differences between fitted model and variance model\n")
+  #print(x$model.check)
+  cat("\nProbability of detection in fitted model and variance model\n")
+  print(x$varprop_diagnostic)
 
   cat("\n")
 

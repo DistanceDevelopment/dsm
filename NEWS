@@ -7,6 +7,7 @@ dsm news!
  * add vis.concurvity to visually assess concurvity (colinearity extended to smooth terms) in the model
  * new model diagnostic function: plot_pred_by_term -- plots the effect of each smooth in the model spatially.
  * remove "abundance" option for the response, use "count"
+ * dsm.var.prop and dsm_varprop have better diagnostics for checking the variance model hasn't done something weird
 
 # 2.2.14
  * nasty bug in predict.dsm fixed: was logging the offset twice when newdata was not provided, leading to very odd checking plots. This also effected the results of predict() when newdata= was not specified. Thanks to Megan Ferguson for alerting us to this.

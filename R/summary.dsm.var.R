@@ -15,6 +15,7 @@
 #' @seealso dsm.var.movblk dsm.var.prop
 #' @author David L. Miller
 #' @importFrom stats qnorm
+# @importFrom mgcv uniquecombs
 summary.dsm.var <- function(object, alpha=0.05, boxplot.coef=1.5,
                             bootstrap.subregions=NULL, ...){
 
@@ -136,7 +137,7 @@ summary.dsm.var <- function(object, alpha=0.05, boxplot.coef=1.5,
     }
 
   }else{
-  ### varprop and "Bayesian" stuff
+  ### analytical variance estimation (varprop and gam results)
     sinfo$varprop <- object$var.prop
     sinfo$saved <- object
     sinfo$bootstrap <- object$bootstrap
@@ -200,6 +201,10 @@ summary.dsm.var <- function(object, alpha=0.05, boxplot.coef=1.5,
       # total se
       sinfo$se <- sinfo$cv*sinfo$pred.est
     }
+    if(sinfo$varprop){
+      sinfo$model.check <- object$model.check
+    }
+
   }
 
   class(sinfo) <- "summary.dsm.var"

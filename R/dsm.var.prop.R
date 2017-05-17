@@ -166,9 +166,6 @@ dsm.var.prop <- function(dsm.obj, pred.data, off.set,
     end <- start + nrow(pred.data[[ipg]])-1
   }
 
-  # Diagnostic from MVB
-  # check that the fitted model isn't too different, used in summary()
-  model.check <- summary(fitted(varp$refit) - fitted(dsm.obj))
 
   result <- list(pred.var = vpred,
                  bootstrap = FALSE,
@@ -178,7 +175,7 @@ dsm.var.prop <- function(dsm.obj, pred.data, off.set,
                  off.set = off.set,
                  model = varp$refit,
                  dsm.object = dsm.obj,
-                 model.check = model.check,
+                 model.check = varprop_check(varp),
                  #deriv = firstD,
                  seglen.varname = seglen.varname,
                  type.pred=type.pred

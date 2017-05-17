@@ -69,7 +69,7 @@ print.summary.dsm.var<-function(x, ...){
     cat("Summary of uncertainty in a density surface model calculated\n")
     if(x$varprop){
       cat(" by variance propagation.\n")
-      cat("\nSummary of differences between fitted model and variance model\n")
+      cat("\nProbability of detection in fitted model and variance model\n")
       print(x$saved$model.check)
     }else{
       cat(" analytically for GAM, with delta method\n")
