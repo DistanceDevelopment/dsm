@@ -1,4 +1,5 @@
 #' @importFrom mgcv uniquecombs
+#' @importFrom mrds DeltaMethod
 varprop_check <- function(object){
 
   # calculate the difference between the prob. detection before we refitted
@@ -13,9 +14,20 @@ varprop_check <- function(object){
     nd <- mgcv::uniquecombs(nd[, all.vars(as.formula(oddf$ds$aux$ddfobj$scale$formula)), drop=FALSE])
     nd$distance <- 1
   }
+  rownames(nd) <- NULL
 
   # p's for old model
   old_p <- predict(object$old_model$ddf, compute=TRUE, newdata=nd)
+
+  # old model standard errors
+  predict_f <- function(par, model, newdata){
+    model$par <- par
+    predict(model, compute=TRUE, newdata=nd)$fitted
+  }
+  old_p_se <- sqrt(diag(DeltaMethod(object$old_model$ddf$par, predict_f,
+                                    solve(object$old_model$ddf$hessian),
+                                    newdata=nd, model=object$old_model$ddf,
+                                    delta=1e-8)$variance))
 
   # get new detection function
   fix_ddf <- object$old_model$ddf
@@ -26,8 +38,9 @@ varprop_check <- function(object){
   new_p <- predict(fix_ddf, compute=TRUE, newdata=nd)
 
   # format data for return
-  varprop_diagnostic <- data.frame("Original model" = old_p$fitted,
-                                         "Variance model" = new_p$fitted)
+  varprop_diagnostic <- data.frame("Original model"    = old_p$fitted,
+                                   "Original model se" = old_p_se,
+                                   "Variance model"    = new_p$fitted)
   nd$distance <- NULL
   varprop_diagnostic <- cbind.data.frame(nd, varprop_diagnostic)
 
