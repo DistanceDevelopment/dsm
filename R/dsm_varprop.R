@@ -93,6 +93,9 @@ dsm_varprop <- function(model, newdata, trace=FALSE, var_type="Vp"){
     # calculate mu (effective strip width)
     mu <- predict(ddf, newdata=ds_newdata, esw=TRUE, compute=TRUE)$fitted
 
+    # repopulate with the duplicates back in
+    mu <- mu[attr(u_ds_newdata, "index"), drop=FALSE]
+
     # calculate log mu
     ret <- linkfn(2 * mu * data$Effort)
     return(ret)
@@ -115,6 +118,7 @@ dsm_varprop <- function(model, newdata, trace=FALSE, var_type="Vp"){
 
   # probably a lot of duplicated stuff in the above, so let's just
   # pass the unique combinations
+  # inside mu_fn will return the right length
   u_ds_newdata <- mgcv::uniquecombs(ds_newdata)
 
   # find the derivatives of log(mu)
@@ -124,8 +128,6 @@ dsm_varprop <- function(model, newdata, trace=FALSE, var_type="Vp"){
     firstD <- matrix(firstD, ncol=length(ddf$par))
   }
 
-  # repopulate with the duplicates back in
-  firstD <- firstD[attr(u_ds_newdata, "index"), , drop=FALSE]
 
   # put that in the data
   dat <- model$data
