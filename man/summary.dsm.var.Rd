@@ -24,9 +24,10 @@ a summary object
 \description{
 Gives a brief summary of a fitted \code{dsm} variance object.
 }
-\seealso{
-dsm.var.movblk dsm.var.prop
-}
 \author{
 David L. Miller
 }
+\seealso{
+dsm.var.movblk dsm.var.prop
+}
+

@@ -26,3 +26,4 @@ Internal function to check that supplied `data.frames` have the correct columns 
 \author{
 David Lawrence Miller
 }
+

@@ -41,3 +41,4 @@ plot_pred_by_term(mod1, preddata, c("x","y"))
 \author{
 David L Miller (idea taken from \code{inlabru})
 }
+

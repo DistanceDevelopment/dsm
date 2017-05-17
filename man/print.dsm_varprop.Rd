@@ -14,10 +14,11 @@
 \description{
 This method only provides a short summary, see \code{\link{summary.dsm_varprop}}.
 }
-\seealso{
-\code{\link{summary.dsm_varprop}}
-}
 \author{
 David L. Miller
 }
+\seealso{
+\code{\link{summary.dsm_varprop}}
+}
 \keyword{utility}
+

@@ -62,10 +62,10 @@ even if these were not used in the model.
  \code{data.frame}), say, we can create the correct format by simply using
  \code{pred.new <- split(pred,1:nrow(pred))}.
 }
-
-\seealso{
-dsm.var.prop, dsm.var.gam, dsm.var.movblk
-}
 \author{
 David L. Miller
 }
+\seealso{
+dsm.var.prop, dsm.var.gam, dsm.var.movblk
+}
+

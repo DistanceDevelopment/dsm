@@ -26,3 +26,4 @@ vector of log-residuals
 \description{
 Not usually used on its own, called from within \code{\link{dsm.var.movblk}}.
 }
+

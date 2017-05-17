@@ -2,12 +2,12 @@
 % Please edit documentation in R/dsm-package.R
 \docType{data}
 \name{mexdolphins}
+\alias{distdata}
 \alias{mexdolphins}
 \alias{obsdata}
-\alias{segdata}
-\alias{preddata}
 \alias{pred.polys}
-\alias{distdata}
+\alias{preddata}
+\alias{segdata}
 \alias{survey.area}
 \title{Pan-tropical spotted dolphins in the Gulf of Mexico}
 \description{
@@ -19,3 +19,4 @@ Halpin, P.N., A.J. Read, E. Fujioka, B.D. Best, B. Donnelly, L.J. Hazen, C. Kot,
 NOAA Southeast Fisheries Science Center. 1996. Report of a Cetacean Survey of Oceanic and Selected Continental Shelf Waters of the Northern Gulf of Mexico aboard NOAA Ship Oregon II (Cruise 220)
 }
 \keyword{datasets}
+

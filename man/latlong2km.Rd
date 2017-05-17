@@ -31,3 +31,4 @@ available in packages \code{sp} and \code{rgdal} for better results.
 \author{
 Simon N. Wood
 }
+
