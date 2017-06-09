@@ -67,10 +67,9 @@ Note that this routine simply calls \code{\link{dsm_varprop}}. If you don't requ
  mod1.var <- dsm.var.prop(mod1, preddata, off.set=preddata$area)
 }
 }
-\author{
-Mark V. Bravington, Sharon L. Hedley. Bugs added by David L. Miller.
-}
 \references{
 Williams, R., Hedley, S.L., Branch, T.A., Bravington, M.V., Zerbini, A.N. and Findlay, K.P. (2011). Chilean Blue Whales as a Case Study to Illustrate Methods to Estimate Abundance and Evaluate Conservation Status of Rare Species. Conservation Biology 25(3), 526-535.
 }
-
+\author{
+Mark V. Bravington, Sharon L. Hedley. Bugs added by David L. Miller.
+}

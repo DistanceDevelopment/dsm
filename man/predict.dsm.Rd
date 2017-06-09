@@ -28,10 +28,9 @@ Make predictions outside (or inside) the covered area.
 \details{
 If \code{newdata} is not supplied, predictions are made for the data that built the model. Note that the order of the results will not necessarily be the same as the \code{segdata} (segment data) \code{data.frame} that was supplied (it will be sorted by the \code{Segment.Label} field).
 }
-\author{
-David L. Miller
-}
 \seealso{
 \code{\link{predict.gam}} \code{\link{dsm.var.gam}} \code{\link{dsm.var.prop}} \code{\link{dsm.var.movblk}}
 }
-
+\author{
+David L. Miller
+}

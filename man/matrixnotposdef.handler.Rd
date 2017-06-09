@@ -22,4 +22,3 @@ See: http://romainfrancois.blog.free.fr/index.php?post/2009/05/20/Disable-specif
 \author{
 David L. Miller
 }
-

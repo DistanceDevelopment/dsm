@@ -19,10 +19,9 @@ a summary object
 \description{
 Gives a brief summary of a fitted \code{dsm_varprop} variance object.
 }
-\author{
-David L. Miller
-}
 \seealso{
 dsm_varprop summary.dsm.var
 }
-
+\author{
+David L. Miller
+}

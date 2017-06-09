@@ -39,4 +39,3 @@ vis.concurvity(mod1)
 \author{
 David L Miller
 }
-

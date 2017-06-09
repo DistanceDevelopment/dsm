@@ -17,10 +17,9 @@ a plot!
 \description{
 See \code{\link{plot.gam}}.
 }
-\author{
-David L. Miller
-}
 \seealso{
 dsm plot.gam
 }
-
+\author{
+David L. Miller
+}

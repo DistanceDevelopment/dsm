@@ -41,6 +41,7 @@ The current iteration of this function will only plot correlations nicely, other
 
 If there are NA values in the residuals then the correlogram will not be calculated. This usually occurs due to NA values in the covariates (so the smoother will not have fitted values there). Code like `any(is.na(dsm.obj$data))` might be helpful.
 }
+
 \examples{
 \donttest{
  library(Distance)
@@ -63,4 +64,3 @@ If there are NA values in the residuals then the correlogram will not be calcula
 \author{
 David L. Miller
 }
-
