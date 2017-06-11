@@ -245,12 +245,12 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
     #   withCallingHandlers() to deal with possible spurious error message
     #   with() is not required for gam but IS necessary for gamm models
     #     to obtain covariance structure etc
-    #dsm.bs.model <- try(with(dsm.object,eval(gam.call)))
     dsm.bs.model <- try(with(dsm.object,withCallingHandlers(eval(gam.call),
                                            warning = matrixnotposdef.handler)))
 
     # if everything didn't fail...
-    if(all(class(dsm.bs.model)!="try-error")){
+    if(all(class(dsm.bs.model) != "try-error") &&
+       dsm.bs.model$converged){
       # make the model a dsm
       class(dsm.bs.model) <- c("dsm",class(dsm.bs.model))
 
@@ -274,13 +274,13 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
         write.table(t(dsm.predict.bs),bs.file,append=TRUE,
                     sep=",",col.names=FALSE)
       }
+      # the model and data might be quite big, so clear some space
+      rm(dsm.predict.bs, gam.call, bs.samp)
+      gc()
     }else{
       study.area.total[i] <- NA
     }
 
-    # the model and data might be quite big, so clear some space
-    rm(dsm.predict.bs,gam.call,bs.samp)
-    gc()
 
     # add a tick to the progress bar
     if(bar){
