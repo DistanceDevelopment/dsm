@@ -24,7 +24,7 @@ dsm(formula, ddf.obj, segment.data, observation.data, engine = "gam",
 
 \item{convert.units}{conversion factor to multiply the area of the segments by. See 'Units' below.}
 
-\item{family}{response distribution (popular choices include \code{\link{quasipoisson}}, \code{\link{Tweedie}} and \code{\link{negbin}}). Defaults to \code{quasipossion}.}
+\item{family}{response distribution (popular choices include \code{\link{quasipoisson}}, \code{\link{Tweedie}}/\code{\link{tw}} and \code{\link{negbin}}/\code{\link{nb}}). Defaults to \code{quasipossion}.}
 
 \item{group}{if \code{TRUE} the abundance of groups will be calculated rather than the abundance of individuals. Setting this option to \code{TRUE} is equivalent to setting the size of each group to be 1.}
 
