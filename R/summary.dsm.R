@@ -12,8 +12,7 @@
 #'
 #' @seealso dsm
 #' @author David L. Miller
-#'
-summary.dsm<-function(object,...){
+summary.dsm <- function(object, ...){
   class(object) <- class(object)[class(object)!="dsm"]
   return(summary(object))
 }
