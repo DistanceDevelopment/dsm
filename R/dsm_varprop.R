@@ -10,7 +10,8 @@
 #'
 #' This routine is only useful if a detection function has been used in the DSM.
 #'
-#' Note that we use \code{Vc} here (see \code{\link{gamObject}}), which is the variance-covariance matrix for the spatial model, corrected for smoothing parameter uncertainty.
+#' Note that we can use \code{var_type="Vc"} here (see \code{\link{gamObject}}), which is the variance-covariance matrix for the spatial model, corrected for smoothing parameter uncertainty. See Wood, Pya & Säfken (2016) for more information.
+#' Negative binomial models fitted using the \code{\link{nb}} family will give strange results (overly big variance estimates due to scale parameter issues) so \code{nb} models are automatically efitted with \code{\link{negbin}} (with a warning). It is probably worth refitting these models with \code{negbin} manually (perhaps giving a smallish range of possible values for the negative binomial parameter) to check that convergence was reached.
 #'
 #' @return a list with elements
 #' \tabular{ll}{\code{old_model} \tab fitted model supplied to the function as \code{model}\cr
@@ -22,6 +23,7 @@
 #' @author David L. Miller, based on code from Mark V. Bravington and Sharon L. Hedley.
 #' @references
 #' Williams, R., Hedley, S.L., Branch, T.A., Bravington, M.V., Zerbini, A.N. and Findlay, K.P. (2011). Chilean Blue Whales as a Case Study to Illustrate Methods to Estimate Abundance and Evaluate Conservation Status of Rare Species. Conservation Biology 25(3), 526-535.
+#' Wood, S.N., Pya, N. and Säfken, B. (2016) Smoothing parameter and model selection for general smooth models. Journal of the American Statistical Association, 1–45.
 #'
 #'
 #' @param model a fitted \code{\link{dsm}}
@@ -68,6 +70,27 @@ dsm_varprop <- function(model, newdata, trace=FALSE, var_type="Vp"){
     stop("Only line transects are supported at the moment")
   }
 
+  # negative binomial work-around, see https://github.com/DistanceDevelopment/dsm/issues/29
+  if(grepl("^Negative Binomial", model$family$family) &
+     any(class(model$family) == "extended.family")){
+    warning("Model was fitted using nb() family, refitting with negbin(). See ?dsm_varprop")
+
+    # extract fitted nb par
+    this_theta <- model$family$getTheta(TRUE)
+
+    # save ddf
+    this_ddf <- model$ddf
+
+    model_call <- as.list(model$call)
+    model_call[1] <- NULL
+    model_call$family <- negbin(this_theta)
+    model <- do.call("gam", model_call)
+
+    # rebuild model
+    model$ddf <- this_ddf
+    class(model) <- c("dsm", class(model))
+  }
+
   # extract the link & invlink
   linkfn <- model$family$linkfun
   linkinvfn <- model$family$linkinv
@@ -79,7 +102,7 @@ dsm_varprop <- function(model, newdata, trace=FALSE, var_type="Vp"){
 
   # extract the call
   this_call <- as.list(model$call)
-  # remvoe the function
+  # remove the function
   this_call[1] <- NULL
 
   # extract the detection function
