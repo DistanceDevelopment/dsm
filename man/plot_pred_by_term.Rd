@@ -20,6 +20,7 @@ a \code{ggplot2} plot
 Plot the effect of each smooth in the model spatially. For each term in the model, plot its effect in space. Plots are made on the same scale, so that the relative influence of each smooth can be seen.
 }
 \examples{
+\dontrun{
 library(Distance)
 library(dsm)
 
@@ -37,6 +38,7 @@ plot_pred_by_term(mod1, preddata, c("x","y"))
 # better plot would be
 # library(viridis)
 # plot_pred_by_term(mod1, preddata, c("x","y")) + scale_fill_viridis()
+}
 }
 \author{
 David L Miller (idea taken from \code{inlabru})

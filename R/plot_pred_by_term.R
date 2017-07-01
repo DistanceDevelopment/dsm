@@ -10,6 +10,7 @@
 #' @author David L Miller (idea taken from \code{inlabru})
 #' @importFrom ggplot2 ggplot geom_tile facet_wrap
 #' @examples
+#' \dontrun{
 #' library(Distance)
 #' library(dsm)
 #'
@@ -27,6 +28,7 @@
 #' # better plot would be
 #' # library(viridis)
 #' # plot_pred_by_term(mod1, preddata, c("x","y")) + scale_fill_viridis()
+#' }
 plot_pred_by_term <- function(dsm.obj, data, location_cov=c("x","y")){
 
   # don't need offset
