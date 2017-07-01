@@ -10,7 +10,7 @@ function( ..., fixed.priors=character(0), debugging=FALSE, scale.trace=1){
   mc[[1]] <- quote( gam)
   fp <- fixed.priors
   mc$fixed.priors <- NULL
-  
+
   check.ok <- function( x, must.be) {
       if( !is.null( mc[[x]]) && mc[[x]] != must.be)
         warning( x %&% "will be set to " %&% must.be)
@@ -20,7 +20,7 @@ function( ..., fixed.priors=character(0), debugging=FALSE, scale.trace=1){
   check.ok( 'G', NULL)
   check.ok( 'method', 'REML')
   check.ok( 'optimizer', c( 'outer', 'newton'))
-  
+
   paraPen <- eval( mc$paraPen, parent.frame())
   if( !all( fp %in% names( paraPen)))
 stop( "Fixed priors must correspond to things in paraPen (for now)")
