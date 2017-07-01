@@ -19,7 +19,7 @@
 #' @export
 latlong2km<-function(lon,lat,lon0=sum(range(lon))/2,lat0=sum(range(lat))/2) {
   R <- 6371         ## Earth's mean radius 
-  deg2rad = pi/180 ## Conversion factor to convert between degrees to radians
+  deg2rad <- pi/180 ## Conversion factor to convert between degrees to radians
   ## Convert lons and lats from degrees to radians:
   rlon <- lon * deg2rad
   rlat <- lat * deg2rad
@@ -32,5 +32,5 @@ latlong2km<-function(lon,lat,lon0=sum(range(lon))/2,lat0=sum(range(lat))/2) {
                  cos(rlat0) * cos(rlat) ) * R
   km.e <- sign(rlon-rlon0)*acos(sin(rlat) * sin(rlat) +
                cos(rlat) * cos(rlat) * cos(delrlon)) * R
-  return(list(km.e=km.e,km.n=km.n))
+  return(list(km.e=km.e, km.n=km.n))
 }
