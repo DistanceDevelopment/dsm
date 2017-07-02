@@ -2,7 +2,7 @@
 % Please edit documentation in R/dsm.var.prop.R
 \name{dsm.var.prop}
 \alias{dsm.var.prop}
-\title{Prediction variance propogation for DSMs}
+\title{Prediction variance propagation for DSMs}
 \usage{
 dsm.var.prop(dsm.obj, pred.data, off.set, seglen.varname = "Effort",
   type.pred = "response")
@@ -33,19 +33,27 @@ a list with elements
                      }
 }
 \description{
-To ensure that uncertainty from the detection function is correctly propagated to the final variance estimate of abundace, this function uses a method first detailed in Williams et al (2011).
+To ensure that uncertainty from the detection function is correctly propagated to the final variance estimate of abundance, this function uses a method first detailed in Williams et al (2011).
 }
 \details{
 The idea is to refit the spatial model but including an extra random effect. This random effect has zero mean and hence to effect on point estimates. Its variance is the Hessian of the detection function. Variance estimates then incorporate detection function uncertainty. Further mathematical details are given in the paper in the references below.
 
 Many prediction grids can be supplied by supplying a list of \code{data.frame}s to the function.
 
-Note that this routine is only useful if a detection function has been used in the DSM. It cannot be used when the \code{Nhat}, \code{abundance.est} responses are used.
-
-Based on (much more general) code from Mark Bravington and Sharon Hedley.
-
 Note that this routine simply calls \code{\link{dsm_varprop}}. If you don't require multiple prediction grids, the other routine will probably be faster.
 }
+\section{Diagnostics}{
+
+The summary output from the function includes a simply diagnostic that shows the average probability of detection from the "original" fitted model (the model supplied to this function; column \code{Fitted.model}) and the probability of detection from the refitted model (used for variance propagation; column \code{Variance.model}) along with the standard error of the probability of detection from the fitted model (\code{Fitted.model.se}), at the unique values of any covariates used in the detection function. If there are large differences between the probabilities of detection then there are potentially problems with the fitted model, the variance propagation or both. This can be because the fitted model does not account for enough of the variability in the data and in refitting the variance model accounts for this in the random effect.
+}
+
+\section{Limitations}{
+
+Note that this routine is only useful if a detection function has been used in the DSM. It cannot be used when the \code{Nhat}, \code{abundance.est} responses are used. Importantly this requires that if the detection function has covariates, then these do not vary within a segment (so, for example covariates like sex cannot be used).
+
+Negative binomial models fitted using the \code{\link{nb}} family will give strange results (overly big variance estimates due to scale parameter issues) so \code{nb} models are automatically refitted with \code{\link{negbin}} (with a warning). It is probably worth refitting these models with \code{negbin} manually (perhaps giving a smallish range of possible values for the negative binomial parameter) to check that convergence was reached.
+}
+
 \examples{
 \dontrun{
  library(Distance)
