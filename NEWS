@@ -10,6 +10,7 @@ dsm news!
  * dsm.var.prop and dsm_varprop have better diagnostics for checking the variance model hasn't done something weird
  * dsm.var.movblk discards replicates where the model didn't converge
  * fix potential issue with negative binomial response is used with variance propagation (due to scale parameterisations). dsm_varprop now refits nb() models as negbin() but we advise users to look into this more deeply. Thanks to Eric Rexstad for spotting this.
+ * fix bug in predict.dsm() where predictions for "density" response were not including the offset. Thanks to Len Thomas for spotting this.
 
 # 2.2.14
  * nasty bug in predict.dsm fixed: was logging the offset twice when newdata was not provided, leading to very odd checking plots. This also effected the results of predict() when newdata= was not specified. Thanks to Megan Ferguson for alerting us to this.
