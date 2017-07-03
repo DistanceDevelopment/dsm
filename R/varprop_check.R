@@ -38,9 +38,9 @@ varprop_check <- function(object){
   new_p <- predict(fix_ddf, compute=TRUE, newdata=nd)
 
   # format data for return
-  varprop_diagnostic <- data.frame("Fitted model"    = old_p$fitted,
-                                   "Fitted model se" = old_p_se,
-                                   "Variance model"    = new_p$fitted)
+  varprop_diagnostic <- data.frame("Fitted model"      = old_p$fitted,
+                                   "Fitted model se"   = old_p_se,
+                                   "Refitted model"    = new_p$fitted)
   nd$distance <- NULL
   varprop_diagnostic <- cbind.data.frame(nd, varprop_diagnostic)
 

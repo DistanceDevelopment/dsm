@@ -44,7 +44,7 @@ Note that this routine simply calls \code{\link{dsm_varprop}}. If you don't requ
 }
 \section{Diagnostics}{
 
-The summary output from the function includes a simply diagnostic that shows the average probability of detection from the "original" fitted model (the model supplied to this function; column \code{Fitted.model}) and the probability of detection from the refitted model (used for variance propagation; column \code{Variance.model}) along with the standard error of the probability of detection from the fitted model (\code{Fitted.model.se}), at the unique values of any covariates used in the detection function. If there are large differences between the probabilities of detection then there are potentially problems with the fitted model, the variance propagation or both. This can be because the fitted model does not account for enough of the variability in the data and in refitting the variance model accounts for this in the random effect.
+The summary output from the function includes a simply diagnostic that shows the average probability of detection from the "original" fitted model (the model supplied to this function; column \code{Fitted.model}) and the probability of detection from the refitted model (used for variance propagation; column \code{Refitted.model}) along with the standard error of the probability of detection from the fitted model (\code{Fitted.model.se}), at the unique values of any covariates used in the detection function. If there are large differences between the probabilities of detection then there are potentially problems with the fitted model, the variance propagation or both. This can be because the fitted model does not account for enough of the variability in the data and in refitting the variance model accounts for this in the random effect.
 }
 
 \section{Limitations}{
@@ -62,17 +62,17 @@ Negative binomial models fitted using the \code{\link{nb}} family will give stra
  # load the Gulf of Mexico dolphin data (see ?mexdolphins)
  data(mexdolphins)
 
- # fit a detection function and look at the summary
- hr.model <- ds(distdata, max(distdata$distance),
-                key = "hr", adjustment = NULL)
- summary(hr.model)
+ # fit a detection function
+ df <- ds(distdata, max(distdata$distance),
+          key = "hn", adjustment = NULL)
 
  # fit a simple smooth of x and y
- mod1 <- dsm(count~s(x, y), hr.model, segdata, obsdata)
+ mod1 <- dsm(count~s(x, y), df, segdata, obsdata, family=tw())
 
  # Calculate the variance
  # this will give a summary over the whole area in mexdolphins$preddata
  mod1.var <- dsm.var.prop(mod1, preddata, off.set=preddata$area)
+ summary(mod1.var)
 }
 }
 \references{
