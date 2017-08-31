@@ -43,6 +43,8 @@ varprop_check <- function(object){
                                    "Refitted model"    = new_p$fitted)
   nd$distance <- NULL
   varprop_diagnostic <- cbind.data.frame(nd, varprop_diagnostic)
+  # sort by variable value
+  varprop_diagnostic <- varprop_diagnostic[order(nd, decreasing=FALSE), ]
 
   return(varprop_diagnostic)
 }
