@@ -127,6 +127,18 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
     }
   }
 
+  # if we're doing presence ignore detection function
+  if(response == "presence"){
+    if(!is.null(ddf.obj)){
+      ddf.obj <- NULL
+      warning("Detection function supplied for presence/absence model but will be ignored")
+    }
+    if(is.null(strip.width)){
+      stop("strip.width must be supplied for presence/absence models")
+    }
+  }
+
+
   ## build the data
   dat <- make.data(response, ddf.obj, segment.data, observation.data,
                    group, convert.units, availability, strip.width,
@@ -142,7 +154,7 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
     if(is.null(weights)){
       weights <- dat$segment.area
     }else if(length(weights)==1){
-      weights <- rep(1, nrow(dat))
+      weights <- rep(weights, nrow(dat))
     }
   }
 
