@@ -1,11 +1,7 @@
 #' Trimmed variance
 #'
-#' Trim the variance estimates from the bootstrap. This is defined as the 
-#' percentage defined as amount necessary to bring median and trimmed mean 
-#' within 8% of each other these are defined as 'outliers'. 
+#' Trim the variance estimates from the bootstrap. This is defined as the percentage defined as amount necessary to bring median and trimmed mean within 8% of each other these are defined as 'outliers'.
 #'
-#' Code originally by Louise Burt.
-#' 
 #' @param untrimmed.bootstraps (usually the \code{$study.area.total} element
 #'        of a returned \code{dsm} bootstrap object.
 #' @param boxplot.coef the value of \code{coef} used to calculate the outliers

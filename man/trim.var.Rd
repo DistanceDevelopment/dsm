@@ -17,12 +17,7 @@ see \code{\link{boxplot}}.}
 trimmed variance
 }
 \description{
-Trim the variance estimates from the bootstrap. This is defined as the 
-percentage defined as amount necessary to bring median and trimmed mean 
-within 8% of each other these are defined as 'outliers'.
-}
-\details{
-Code originally by Louise Burt.
+Trim the variance estimates from the bootstrap. This is defined as the percentage defined as amount necessary to bring median and trimmed mean within 8% of each other these are defined as 'outliers'.
 }
 \author{
 Louise Burt
