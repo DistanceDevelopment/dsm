@@ -41,23 +41,23 @@
 #'  mod1.var <- dsm.var.gam(mod1, preddata, off.set=preddata$area)
 #' }
 dsm.var.gam <- function(dsm.obj, pred.data, off.set,
-                      seglen.varname = 'Effort', type.pred = "response") {
+                        seglen.varname='Effort', type.pred="response"){
 
   # strip dsm class so we can use gam methods
-  class(dsm.obj) <- class(dsm.obj)[class(dsm.obj)!="dsm"]
+  class(dsm.obj) <- class(dsm.obj)[class(dsm.obj) != "dsm"]
 
   # if we have a gamm, then just pull out the gam object
-  if(any(class(dsm.obj)=="gamm")){
+  if(any(class(dsm.obj) == "gamm")){
     dsm.obj <- dsm.obj$gam
     is.gamm <- TRUE
   }
 
   # if all the offsets are the same then we can just supply 1 and rep it
-  if(length(off.set)==1){
+  if(length(off.set) == 1){
     if(is.null(nrow(pred.data))){
-      off.set <- rep(list(off.set),length(pred.data))
+      off.set <- rep(list(off.set), length(pred.data))
     }else{
-      off.set <- rep(off.set,nrow(pred.data))
+      off.set <- rep(off.set, nrow(pred.data))
     }
   }
 
@@ -93,14 +93,14 @@ dsm.var.gam <- function(dsm.obj, pred.data, off.set,
   for(ipg in seq_along(pred.data)){
     ### fancy lp matrix stuff
     # set the offset to be zero here so we can use lp
-    pred.data[[ipg]]$off.set<-rep(0,nrow(pred.data[[ipg]]))
+    pred.data[[ipg]]$off.set<-rep(0, nrow(pred.data[[ipg]]))
 
-    lpmat <- predict(dsm.obj, newdata=pred.data[[ ipg]], type='lpmatrix')
+    lpmat <- predict(dsm.obj, newdata=pred.data[[ipg]], type='lpmatrix')
     lppred <- lpmat %**% cft
 
     # if the offset is just one number then repeat it enough times
-    if(length(off.set[[ipg]])==1){
-      this.off.set <- rep(off.set[[ipg]],nrow(pred.data[[ipg]]))
+    if(length(off.set[[ipg]]) == 1){
+      this.off.set <- rep(off.set[[ipg]], nrow(pred.data[[ipg]]))
     }else{
       this.off.set <- off.set[[ipg]]
     }
