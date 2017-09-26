@@ -71,12 +71,8 @@ dsm_varprop <- function(model, newdata, trace=FALSE, var_type="Vp"){
     stop("var_type must be \"Vp\" or \"Vc\"")
   }
 
-  # check line transects
-  if(model$ddf$meta.data$point){
-    stop("Only line transects are supported at the moment")
-  }
-
-  # negative binomial work-around, see https://github.com/DistanceDevelopment/dsm/issues/29
+  # negative binomial work-around, see:
+  #  https://github.com/DistanceDevelopment/dsm/issues/29
   if(grepl("^Negative Binomial", model$family$family) &
      any(class(model$family) == "extended.family")){
     warning("Model was fitted using nb() family, refitting with negbin(). See ?dsm_varprop")
@@ -125,8 +121,17 @@ dsm_varprop <- function(model, newdata, trace=FALSE, var_type="Vp"){
     # repopulate with the duplicates back in
     mu <- mu[attr(u_ds_newdata, "index"), drop=FALSE]
 
-    # calculate log mu
-    ret <- linkfn(2 * mu * data$Effort)
+    # calculate offset
+    if(model$ddf$meta.data$point){
+      # calculate log effective circle area
+      # nb. predict() returns effective area of detection for points
+      ret <- linkfn(mu * data$Effort)
+    }else{
+      # calculate log effective strip width
+      ret <- linkfn(2 * mu * data$Effort)
+    }
+
+
     return(ret)
   }
 
