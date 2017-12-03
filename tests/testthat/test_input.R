@@ -41,25 +41,29 @@ test_that("formula specs",{
 
 
   ## models for density
-  D.gcv <- -2753.087937
+  D.reml <- -2812.33881
   density.D<-dsm(D~s(x,y), hn.model, segdata, obsdata,
                  weights=rep(1,nrow(segdata)))
-  expect_equal(unname(density.D$gcv.ubre), D.gcv,tolerance=par.tol, check.attributes=FALSE)
+  expect_equal(unname(density.D$gcv.ubre), D.reml,
+               tolerance=par.tol, check.attributes=FALSE)
 
   density.density<-dsm(density~s(x,y), hn.model, segdata,
                        obsdata,
                        weights=rep(1,nrow(segdata)))
-  expect_equal(unname(density.density$gcv.ubre), D.gcv,tolerance=par.tol, check.attributes=FALSE)
+  expect_equal(unname(density.density$gcv.ubre), D.reml,
+               tolerance=par.tol, check.attributes=FALSE)
 
   density.Dhat<-dsm(Dhat~s(x,y), hn.model, segdata,
                     obsdata,
                     weights=rep(1,nrow(segdata)))
-  expect_equal(unname(density.Dhat$gcv.ubre), D.gcv,tolerance=par.tol, check.attributes=FALSE)
+  expect_equal(unname(density.Dhat$gcv.ubre), D.reml,
+               tolerance=par.tol, check.attributes=FALSE)
 
   density.density.est<-dsm(density.est~s(x,y), hn.model, segdata,
                            obsdata,
                            weights=rep(1,nrow(segdata)))
-  expect_equal(unname(density.density.est$gcv.ubre), D.gcv,tolerance=par.tol, check.attributes=FALSE)
+  expect_equal(unname(density.density.est$gcv.ubre), D.reml,
+               tolerance=par.tol, check.attributes=FALSE)
 
   # check that Effort is not zero
   mex_zero_effort <- segdata
