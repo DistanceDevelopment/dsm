@@ -100,7 +100,17 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
     if(all(class(ddf.obj)=="dsmodel")){
       ddf.obj <- ddf.obj$ddf
     }
+    # check that we are doing points with points or lines with lines and not
+    # something weird
+    if(( ddf.obj$meta.data$point & transect!="point") ||
+       (!ddf.obj$meta.data$point & transect!="line")){
+      stop(paste0("Detection function and density surface model have mismatched transect types!",
+                  "\n  Detection function is ",
+                    c("line", "point")[ddf.obj$meta.data$point+1], " transect",
+                  "\n  Density surface model is ", transect, " transect\n"))
+    }
   }
+
 
   ## check the formula
   response <- as.character(formula)[2]
