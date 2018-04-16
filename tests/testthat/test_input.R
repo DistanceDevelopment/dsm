@@ -104,3 +104,19 @@ test_that("Missing columns cause errors",{
                fixed=TRUE)
 
 })
+
+test_that("Error thrown when Sample.Labels don't match up",{
+
+  seg <- segdata
+  obs <- obsdata
+
+  # now nothing will match
+  seg$Sample.Label <- paste0(seg$Sample.Label, "-wat")
+
+  expect_error(dsm(N~s(x,y), hn.model, seg, obs),
+               "No matches between segment and observation data.frame Sample.Labels!",
+               fixed=TRUE)
+
+})
+
+

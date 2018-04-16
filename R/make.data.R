@@ -68,16 +68,23 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
     off.set <- "none"
   }
 
+
   ## warn if any observations were not allocated
   responsecheck <- aggregate(obsdata[,cluster.name],
                              list(obsdata[,segnum.name]), sum)
-  if(sum(obsdata[,cluster.name]) != sum(responsecheck[,2])){
+  if(sum(distdata[,cluster.name]) != sum(responsecheck[,2])){
     message(paste0("Some observations were not allocated to segments!\n",
                    "Check that Sample.Labels match"))
   }
 
   # name the response data columns
   names(responsedata) <- c(segnum.name, response)
+
+  # if the Sample.Labels don't match at all then we need to stop, nothing
+  # can work as all the response values will be zero
+  if(!any(segdata[,segnum.name] %in% responsedata[,segnum.name])){
+    stop("No matches between segment and observation data.frame Sample.Labels!")
+  }
 
   # Next merge the response variable with the segment records and any
   # response variable that is NA should be assigned 0 because these
