@@ -1,5 +1,8 @@
 dsm news!
 
+# 2.2.16
+ * check that any Sample.Labels match up, if none do then throw an error. Thanks to Madhura Davate for bringing this issue to my attention.
+
 # 2.2.15
  * when mexdolphins is loaded using data(), the data no longer need to be attach()ed
  * dsm.var.prop throws an error when count or N are not used as the response.
