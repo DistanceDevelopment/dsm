@@ -7,9 +7,9 @@ or density.}
 \usage{
 dsm(formula, ddf.obj, segment.data, observation.data, engine = "gam",
   convert.units = 1, family = quasipoisson(link = "log"), group = FALSE,
-  gamma = 1.4, control = list(keepData = TRUE), availability = 1,
-  strip.width = NULL, segment.area = NULL, weights = NULL,
-  transect = "line", method = "REML", ...)
+  control = list(keepData = TRUE), availability = 1, strip.width = NULL,
+  segment.area = NULL, weights = NULL, transect = "line",
+  method = "REML", ...)
 }
 \arguments{
 \item{formula}{formula for the surface. This should be a valid \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}} formula. See "Details", below, for how to define the response.}
@@ -27,8 +27,6 @@ dsm(formula, ddf.obj, segment.data, observation.data, engine = "gam",
 \item{family}{response distribution (popular choices include \code{\link{quasipoisson}}, \code{\link{Tweedie}}/\code{\link{tw}} and \code{\link{negbin}}/\code{\link{nb}}). Defaults to \code{quasipossion}.}
 
 \item{group}{if \code{TRUE} the abundance of groups will be calculated rather than the abundance of individuals. Setting this option to \code{TRUE} is equivalent to setting the size of each group to be 1.}
-
-\item{gamma}{parameter to \code{gam()} set to a value of 1.4 (from advice in Wood (2006)) such that the \code{gam()} is inclined to not 'overfit' when GCV is used to select the smoothing parameter (ignored for REML, see \code{link{gam}} for further details).}
 
 \item{control}{the usual \code{control} argument for a \code{gam}; \code{keepData} must be \code{TRUE} for variance estimation to work (though this option cannot be set for GLMs or GAMMs.}
 
