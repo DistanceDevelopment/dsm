@@ -1,3 +1,6 @@
 .travis.yml
 LICENSE
 R/obs_exp.R
+^\.travis\.yml$
+^appveyor\.yml$
+^tic\.R$
