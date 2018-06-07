@@ -41,6 +41,8 @@ The idea is to refit the spatial model but including an extra random effect. Thi
 Many prediction grids can be supplied by supplying a list of \code{data.frame}s to the function.
 
 Note that this routine simply calls \code{\link{dsm_varprop}}. If you don't require multiple prediction grids, the other routine will probably be faster.
+
+This routine is only useful if a detection function with covariates has been used in the DSM.
 }
 \section{Diagnostics}{
 
@@ -54,27 +56,6 @@ Note that this routine is only useful if a detection function has been used in t
 Negative binomial models fitted using the \code{\link{nb}} family will give strange results (overly big variance estimates due to scale parameter issues) so \code{nb} models are automatically refitted with \code{\link{negbin}} (with a warning). It is probably worth refitting these models with \code{negbin} manually (perhaps giving a smallish range of possible values for the negative binomial parameter) to check that convergence was reached.
 }
 
-\examples{
-\dontrun{
- library(Distance)
- library(dsm)
-
- # load the Gulf of Mexico dolphin data (see ?mexdolphins)
- data(mexdolphins)
-
- # fit a detection function
- df <- ds(distdata, max(distdata$distance),
-          key = "hn", adjustment = NULL)
-
- # fit a simple smooth of x and y
- mod1 <- dsm(count~s(x, y), df, segdata, obsdata, family=tw())
-
- # Calculate the variance
- # this will give a summary over the whole area in mexdolphins$preddata
- mod1.var <- dsm.var.prop(mod1, preddata, off.set=preddata$area)
- summary(mod1.var)
-}
-}
 \references{
 Williams, R., Hedley, S.L., Branch, T.A., Bravington, M.V., Zerbini, A.N. and Findlay, K.P. (2011). Chilean Blue Whales as a Case Study to Illustrate Methods to Estimate Abundance and Evaluate Conservation Status of Rare Species. Conservation Biology 25(3), 526-535.
 }

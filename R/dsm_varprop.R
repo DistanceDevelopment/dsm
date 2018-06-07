@@ -8,7 +8,7 @@
 #'
 #' For more information on how to construct the prediction grid \code{data.frame}, \code{newdata}, see \code{\link{predict.dsm}}.
 #'
-#' This routine is only useful if a detection function has been used in the DSM.
+#' This routine is only useful if a detection function with covariates has been used in the DSM.
 #'
 #' Note that we can use \code{var_type="Vc"} here (see \code{\link{gamObject}}), which is the variance-covariance matrix for the spatial model, corrected for smoothing parameter uncertainty. See Wood, Pya & S{\"a}fken (2016) for more information.
 #'
@@ -38,27 +38,27 @@
 #' @param var_type which variance-covariance matrix should be used (\code{"Vp"} for variance-covariance conditional on smoothing parameter(s), \code{"Vc"} for unconditional). See \code{\link{gamObject}} for an details/explanation. If in doubt, stick with the default, \code{"Vp"}.
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#' library(Distance)
-#' library(dsm)
-#'
-#' # load the Gulf of Mexico dolphin data (see ?mexdolphins)
-#' data(mexdolphins)
-#'
-#' # fit a detection function
-#' df <- ds(distdata, max(distdata$distance),
-#'          key = "hn", adjustment = NULL)
-#'
-#' # fit a simple smooth of x and y
-#' mod1 <- dsm(count~s(x, y), df, segdata, obsdata, family=tw())
-#'
-#' # Calculate the variance
-#' preddata$off.set <- preddata$area
-#' mod1.varp <- dsm_varprop(mod1, preddata)
-#' summary(mod1.varp)
-#' # this will give a summary over the whole area in mexdolphins$preddata
-#' }
+# @examples
+# \dontrun{
+# library(Distance)
+# library(dsm)
+#
+# # load the Gulf of Mexico dolphin data (see ?mexdolphins)
+# data(mexdolphins)
+#
+# # fit a detection function
+# df <- ds(distdata, max(distdata$distance),
+#          key = "hn", adjustment = NULL)
+#
+# # fit a simple smooth of x and y
+# mod1 <- dsm(count~s(x, y), df, segdata, obsdata, family=tw())
+#
+# # Calculate the variance
+# preddata$off.set <- preddata$area
+# mod1.varp <- dsm_varprop(mod1, preddata)
+# summary(mod1.varp)
+# # this will give a summary over the whole area in mexdolphins$preddata
+# }
 dsm_varprop <- function(model, newdata, trace=FALSE, var_type="Vp"){
 
   # die if the link isn't log
@@ -69,6 +69,10 @@ dsm_varprop <- function(model, newdata, trace=FALSE, var_type="Vp"){
   # check for valid var_type
   if(!(var_type %in% c("Vp","Vc"))){
     stop("var_type must be \"Vp\" or \"Vc\"")
+  }
+
+  if(model$ddf$ds$aux$ddfobj$scale$formula=="~1"){
+    stop("varprop doesn't work when there are no covariates in the detection function")
   }
 
   # negative binomial work-around, see:

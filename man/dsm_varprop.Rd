@@ -34,7 +34,7 @@ This function will refit the spatial model but include the Hessian of the offset
 
 For more information on how to construct the prediction grid \code{data.frame}, \code{newdata}, see \code{\link{predict.dsm}}.
 
-This routine is only useful if a detection function has been used in the DSM.
+This routine is only useful if a detection function with covariates has been used in the DSM.
 
 Note that we can use \code{var_type="Vc"} here (see \code{\link{gamObject}}), which is the variance-covariance matrix for the spatial model, corrected for smoothing parameter uncertainty. See Wood, Pya & S{\"a}fken (2016) for more information.
 
@@ -45,28 +45,6 @@ Negative binomial models fitted using the \code{\link{nb}} family will give stra
 The summary output from the function includes a simply diagnostic that shows the average probability of detection from the "original" fitted model (the model supplied to this function; column \code{Fitted.model}) and the probability of detection from the refitted model (used for variance propagation; column \code{Refitted.model}) along with the standard error of the probability of detection from the fitted model (\code{Fitted.model.se}), at the unique values of any covariates used in the detection function. If there are large differences between the probabilities of detection then there are potentially problems with the fitted model, the variance propagation or both. This can be because the fitted model does not account for enough of the variability in the data and in refitting the variance model accounts for this in the random effect.
 }
 
-\examples{
-\dontrun{
-library(Distance)
-library(dsm)
-
-# load the Gulf of Mexico dolphin data (see ?mexdolphins)
-data(mexdolphins)
-
-# fit a detection function
-df <- ds(distdata, max(distdata$distance),
-         key = "hn", adjustment = NULL)
-
-# fit a simple smooth of x and y
-mod1 <- dsm(count~s(x, y), df, segdata, obsdata, family=tw())
-
-# Calculate the variance
-preddata$off.set <- preddata$area
-mod1.varp <- dsm_varprop(mod1, preddata)
-summary(mod1.varp)
-# this will give a summary over the whole area in mexdolphins$preddata
-}
-}
 \references{
 Williams, R., Hedley, S.L., Branch, T.A., Bravington, M.V., Zerbini, A.N. and Findlay, K.P. (2011). Chilean Blue Whales as a Case Study to Illustrate Methods to Estimate Abundance and Evaluate Conservation Status of Rare Species. Conservation Biology 25(3), 526-535.
 
