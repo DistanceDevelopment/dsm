@@ -66,11 +66,6 @@ dsm.var.prop <- function(dsm.obj, pred.data, off.set,
     stop("GAMMs are not supported.")
   }
 
-  # check that there are no covariates in the df model
-  if(length(unique(dsm.obj$ddf$fitted)) > 1){
-    stop("Covariate detection functions are not currently supported within dsm.var.prop.")
-  }
-
   # break if we use the wrong response
   if(!(as.character(dsm.obj$formula)[2] %in% c("N", "n", "count"))){
     stop("Variance propagation can only be used with count as the response.")
