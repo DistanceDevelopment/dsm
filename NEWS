@@ -5,6 +5,7 @@ dsm news!
  * gamma option removed, since it now is not ignored by gam(). If using method="GCV.Cp" then gamma=1.4 should still be used (but generally we advise using REML rather than GCV for smoothing parameter selection)
  * dsm now requires mgcv version 1.8-23 or higher.
  * dsm.var.prop (and dsm_varprop) now throw an error when there are no covariates in the detection function as it can't do anything useful
+ * new function obs_exp is a diagnostic function to compare observed and expected counts at different covariate aggregations
 
 
 # 2.2.15
