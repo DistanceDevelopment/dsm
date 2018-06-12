@@ -8,7 +8,7 @@ varprop_check <- function(object){
   # get the data in order
   oddf <- object$old_model$ddf
   nd <- oddf$data
-  if(oddf$ds$aux$ddfobj$scale$formula=="~1"){
+  if(oddf$ds$aux$ddfobj$scale$formula == "~1"){
     nd <- nd[1, "distance", drop=FALSE]
   }else{
     nd <- mgcv::uniquecombs(nd[, all.vars(as.formula(oddf$ds$aux$ddfobj$scale$formula)), drop=FALSE])
@@ -44,7 +44,7 @@ varprop_check <- function(object){
   nd$distance <- NULL
   varprop_diagnostic <- cbind.data.frame(nd, varprop_diagnostic)
   # sort by variable value
-  varprop_diagnostic <- varprop_diagnostic[order(nd, decreasing=FALSE), ]
+  varprop_diagnostic <- varprop_diagnostic[order(nd[, 1], decreasing=FALSE), ]
 
   return(varprop_diagnostic)
 }
