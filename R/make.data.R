@@ -101,11 +101,9 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
     if(length(unique(fitted.p)) == 1){
       fitted.p <- rep(unique(fitted.p), nrow(dat))
     }else{
-#      stop("Covariate detection functions are not currently supported with effective area as the offset")
-message("Count model with detection function covariates at the segment level: this is EXPERIMENTAL!")
 
       if(ddfobject$method != "ds"){
-        stop("Only dsmodels are supported!")
+        stop("Only \"ds\" models are supported!")
       }
 
       # extract formula
