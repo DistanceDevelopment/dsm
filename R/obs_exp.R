@@ -7,7 +7,6 @@
 #' @param model a fitted \code{dsm} model object
 #' @param covar covariate to aggregate by (character)
 #' @param cut vector of cut points to aggregate at. If not supplied, the unique values of \code{covar} are used.
-#' @importFrom plyr ddply
 #' @export
 #' @author David L Miller, on the suggestion of Mark Bravington.
 #' @export
