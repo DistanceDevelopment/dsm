@@ -21,7 +21,8 @@ Depends:
 Imports:
     nlme,
     ggplot2,
-    statmod
+    statmod,
+    plyr
 Suggests:
     Distance,
     tweedie
