@@ -25,5 +25,6 @@ Imports:
     plyr
 Suggests:
     Distance,
-    tweedie
+    tweedie,
+    testthat
 RoxygenNote: 6.0.1
