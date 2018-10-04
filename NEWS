@@ -1,5 +1,11 @@
 dsm news!
 
+# 2.3.0
+ * responses N, n, D, Dhat, Nhat are deprecapted, use the long (unambiguous) forms instead
+ * response presence is no longer supported
+ * multiple detection function DSMs are now supported via lists of detection function objects supplied as ddf.obj
+ * strip transect (no detection function) methods must use dummy_ddf() to create a fake ddf object, use of ddf.obj=NULL is not supported any more
+
 # 2.2.16
  * check that any Sample.Labels match up, if none do then throw an error. Thanks to Madhura Davate for bringing this issue to my attention.
  * gamma option removed, since it now is not ignored by gam(). If using method="GCV.Cp" then gamma=1.4 should still be used (but generally we advise using REML rather than GCV for smoothing parameter selection)

@@ -67,14 +67,16 @@ dsm.var.prop <- function(dsm.obj, pred.data, off.set,
   }
 
   # break if we use the wrong response
-  if(!(as.character(dsm.obj$formula)[2] %in% c("N", "n", "count"))){
+  if(as.character(dsm.obj$formula)[2]!="count"){
     stop("Variance propagation can only be used with count as the response.")
   }
 
   # if there is no ddf object, then we should stop!
   # thanks to Adrian Schiavini for spotting this
-  if(is.null(dsm.obj$ddf)){
+  if(any(class(dsm.obj$ddf)=="fake_ddf")){
     stop("No detection function in this analysis, use dsm.var.gam")
+  }else if(all(class(dsm.obj$ddf)=="list")){
+    stop("Multi-detection function models not currently supported")
   }
 
   ## end of checks

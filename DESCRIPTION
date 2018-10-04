@@ -25,4 +25,4 @@ Imports:
 Suggests:
     Distance,
     tweedie
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0

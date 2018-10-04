@@ -20,7 +20,7 @@ hn.model <- suppressMessages(ds(distdata,
                                 adjustment = NULL))
 
 # fit a simple smooth of x and y
-mod1<-dsm(N~s(x,y), hn.model, segdata, obsdata)
+mod1<-dsm(count~s(x,y), hn.model, segdata, obsdata)
 
 # run the moving block bootstrap for 2 rounds
 set.seed(1123)
@@ -40,9 +40,9 @@ test_that("mexdolphins - bootstrap results for s(x,y)",{
 })
 
 ## With no detection function
-test_that("mexdolphins - bootstrap works for NULL detection function",{
-  mod1_nodf <-dsm(N~s(x,y), NULL, segdata, obsdata,
-                  strip.width=8000)
+test_that("mexdolphins - bootstrap works for strip transects",{
+  fdf <- dummy_ddf(obsdata$object, obsdata$size, 8000)
+  mod1_nodf <-dsm(count~s(x,y), fdf, segdata, obsdata)
   set.seed(1123)
   mod1.movblk_nodf <- dsm.var.movblk(mod1_nodf, preddata, n.boot=2,
                               block.size=3, off.set=444*1000*1000, bar=FALSE)

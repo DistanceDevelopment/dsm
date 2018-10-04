@@ -6,10 +6,9 @@
 or density.}
 \usage{
 dsm(formula, ddf.obj, segment.data, observation.data, engine = "gam",
-  convert.units = 1, family = quasipoisson(link = "log"), group = FALSE,
-  control = list(keepData = TRUE), availability = 1, strip.width = NULL,
-  segment.area = NULL, weights = NULL, transect = "line",
-  method = "REML", ...)
+  convert.units = 1, family = quasipoisson(link = "log"),
+  group = FALSE, control = list(keepData = TRUE), availability = 1,
+  segment.area = NULL, weights = NULL, method = "REML", ...)
 }
 \arguments{
 \item{formula}{formula for the surface. This should be a valid \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}} formula. See "Details", below, for how to define the response.}
@@ -32,17 +31,15 @@ dsm(formula, ddf.obj, segment.data, observation.data, engine = "gam",
 
 \item{availability}{an availability bias used to scale the counts/estimated  counts by. If we have \code{N} animals in a segment, then \code{N/availability} will be entered into the model. Uncertainty in the availability is not handled at present.}
 
-\item{strip.width}{if \code{ddf.obj}, above, is \code{NULL}, then this is where the strip width is specified (i.e. for a strip transect survey). This is sometimes (and more correctly) referred to as the half-width, i.e. right truncation minus left truncation.}
-
 \item{segment.area}{if `NULL` (default) segment areas will be calculated by multiplying the `Effort` column in `segment.data` by the (right minus left) truncation distance for the `ddf.obj` or by `strip.width`. Alternatively a vector of segment areas can be provided (which must be the same length as the number of rows in `segment.data`) or a character string giving the name of a column in `segment.data` which contains the areas. If \code{segment.area} is specified it takes precident.}
 
 \item{weights}{weights for each observation used in model fitting. The default, \code{weights=NULL}, weights each observation by its area (see Details). Setting a scalar value (e.g. \code{weights=1}) all observations are equally weighted.}
 
-\item{transect}{type of transect (\code{"line"}, the default or \code{"point"}). This is overridden by the detection function transect type, this is usually only necessary when no detection function is specified.}
-
 \item{method}{The smoothing parameter estimation method. Default is \code{"REML"}, using REstricted Maximum Likelihood. See \code{\link{gam}} for other options. Ignored for \code{engine="glm"}.}
 
 \item{\dots}{anything else to be passed straight to \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}}/\code{\link{bam}}.}
+
+\item{transect}{type of transect (\code{"line"}, the default or \code{"point"}). This is overridden by the detection function transect type, this is usually only necessary when no detection function is specified.}
 }
 \value{
 a \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}} object, with an additional element, \code{ddf} which holds the detection function object.
@@ -55,7 +52,6 @@ The response (LHS of `formula`) can be one of the following:
 \tabular{ll}{
   \code{n}, \code{count}, \code{N} \tab count in each segment\cr
   \code{Nhat}, \code{abundance.est} \tab estimated abundance per segment, estimation is via a Horvitz-Thompson estimator. This should be used when there are covariates in the detection function.\cr
-  \code{presence} \tab interpret the data as presence/absence (remember to change the \code{family} argument to \code{binomial()}), detectability is not accounted for\cr
   \code{D}, \code{density}, \code{Dhat}, \code{density.est} \tab density per segment\cr
  }
 
@@ -63,11 +59,10 @@ The offset used in the model is dependent on the response:
 \tabular{ll}{
   count \tab area of segment multiplied by average probability of detection in the segment\cr
   estimated count \tab area of the segment\cr
-  presence \tab zero\cr
   density \tab zero\cr
  }
 
-In the latter two cases (density and presence estimation) observations can be weighted by segment areas via the \code{weights=} argument. By default (\code{weights=NULL}), when density or presence are estimated the weights are set to the segment areas (using \code{segment.area} or by calculating \code{2*}(strip width)\code{*Effort}) Alternatively \code{weights=1} will set the weights to all be equal.  A third alternative is to pass in a vector of length equal to the number of segments, containing appropriate weights.
+For density response, observations can be weighted by segment areas via the \code{weights=} argument. By default (\code{weights=NULL}), when density is estimated the weights are set to the segment areas (using \code{segment.area} or by calculating \code{2*}(strip width)\code{*Effort}). Alternatively \code{weights=1} will set the weights to all be equal.  A third alternative is to pass in a vector of length equal to the number of segments, containing appropriate weights.
 }
 \section{Units}{
 
