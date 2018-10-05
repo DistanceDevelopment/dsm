@@ -26,13 +26,16 @@ print.dsm <- function(x, ...){
   cat("\nDensity surface model\n")
   cat("Response : ",as.character(x$formula)[2] , "\n")
 
-  if(is.null(x$ddf)){
-    cat("No detection function\n")
-  }else{
-    if(as.character(x$formula)[2]!="presence"){
-      cat("\nDetection function : ",ddf.model.description(x$ddf),"\n")
+  if(all(class(x$ddf)=="list")){
+    cat("\nDetection functions : \n")
+    for(i in seq_along(x$ddf)){
+      cat(" ", i, "-", ddf.model.description(x$ddf[[i]]),"\n")
     }
+    cat("\n")
+  }else{
+    cat("\nDetection function :", ddf.model.description(x$ddf[[i]]),"\n")
   }
+
   cat("\nFormula: ",as.character(x$formula)[2],"~",
                     as.character(x$formula)[-c(1,2)],"\n")
   cat("\n")
