@@ -26,5 +26,6 @@ Imports:
 Suggests:
     Distance,
     sp,
-    tweedie
+    tweedie,
+    testthat
 RoxygenNote: 6.1.1

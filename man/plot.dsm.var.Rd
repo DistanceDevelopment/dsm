@@ -5,9 +5,9 @@
 \title{Create plots of abundance uncertainty}
 \usage{
 \method{plot}{dsm.var}(x, poly = NULL, limits = NULL, breaks = NULL,
-  legend.breaks = NULL, xlab = "x", ylab = "y", observations = TRUE,
-  plot = TRUE, boxplot.coef = 1.5, x.name = "x", y.name = "y",
-  gg.grad = NULL, ...)
+  legend.breaks = NULL, xlab = "x", ylab = "y",
+  observations = TRUE, plot = TRUE, boxplot.coef = 1.5,
+  x.name = "x", y.name = "y", gg.grad = NULL, ...)
 }
 \arguments{
 \item{x}{a \code{dsm.var} object}
