@@ -7,7 +7,7 @@
 #' @param Segment.Label label for the segments (default: \code{Segment.Label}).The result of calling \code{order()} must make sense.
 #' @param resid.type the type of residuals used, see \code{\link{residuals.gam}} and \code{\link{residuals.gam}}. Defaults to \code{"scaled.pearson"} in the GAM case and \code{"normalized"} in the GAMM case (which are equivalent).
 #' @param fun the function to use, by default \code{\link{cor}}, must take two column vectors as arguments.
-#' @param max.lag maximum lag to calulate at.
+#' @param max.lag maximum lag to calculate at.
 #' @param ylim user defined limits in y direction.
 #' @param subset which subset of the data should the correlation function be calculated on?
 #' @param ... other options to pass to \code{plot}.
