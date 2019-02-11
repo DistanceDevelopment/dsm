@@ -16,7 +16,7 @@ dsm.cor(dsm.obj, Transect.Label = "Transect.Label",
 
 \item{Segment.Label}{label for the segments (default: \code{Segment.Label}).The result of calling \code{order()} must make sense.}
 
-\item{max.lag}{maximum lag to calulate at.}
+\item{max.lag}{maximum lag to calculate at.}
 
 \item{resid.type}{the type of residuals used, see \code{\link{residuals.gam}} and \code{\link{residuals.gam}}. Defaults to \code{"scaled.pearson"} in the GAM case and \code{"normalized"} in the GAMM case (which are equivalent).}
 

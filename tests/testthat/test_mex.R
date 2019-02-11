@@ -59,4 +59,20 @@ test_that("Density weighting",{
                 weights=1)
 
   expect_equal(fitted(mod1.ws1),fitted(mod1.w2),tolerance=par.tol)
+
+})
+
+
+
+test_that("Density predictions",{
+  # test predictions
+  mod1 <- dsm(density~s(x,y), hn.model, segdata, obsdata, family=gaussian())
+
+  # off.set=1 should be the same as newdata$off.set=1 and not supplying offset
+  expect_equal(predict(mod1, preddata), predict(mod1, preddata, offset=1))
+  preddata$off.set <- NULL
+  expect_equal(predict(mod1, preddata), predict(mod1, preddata, offset=1))
+
+
+
 })

@@ -1,6 +1,6 @@
 #' Predict from a fitted density surface model
 #'
-#' Make predictions outside (or inside) the covered area.
+#' Make predictions of density or abundance outside (or inside) the covered area.
 #'
 #' If \code{newdata} is not supplied, predictions are made for the data that built the model. Note that the order of the results will not necessarily be the same as the \code{segdata} (segment data) \code{data.frame} that was supplied (it will be sorted by the \code{Segment.Label} field).
 #'
@@ -10,7 +10,7 @@
 #' @param type what scale should the results be on. The default is
 #'  \code{"response"}, see \code{\link{predict.gam}} for an explanation of other options (usually not necessary).
 #' @param \dots any other arguments passed to \code{\link{predict.gam}}.
-#' @return predicted values on the response scale (density/abundance).
+#' @return predicted values on the response scale. If \code{offset=1} densities are returned (i.e., no offset scaling), else abundances are returned.
 #' @export
 #'
 #' @seealso \code{\link{predict.gam}} \code{\link{dsm.var.gam}} \code{\link{dsm.var.prop}} \code{\link{dsm.var.movblk}}
@@ -43,6 +43,21 @@ predict.dsm <- function(object, newdata=NULL, off.set=NULL,
       # apply the link function
       linkfn <- object$family$linkfun
       newdata$off.set <- linkfn(newdata$off.set)
+    }else{
+      # for the density case, if we had an offset in the newdata store that
+      # in offset (unless that already had a value) if neither did, set to
+      # 1 (to give density predictions)
+      if(is.null(off.set)){
+        if(is.null(newdata$off.set)){
+          # if there was no offset, set to 1
+          newdata$off.set <- off.set <- 1
+        }else{
+          # put the one in new data into off.set, remove the one in the
+          # newdata
+          off.set <- newdata$off.set
+          newdata$off.set <- NULL
+        }
+      }
     }
   }
 

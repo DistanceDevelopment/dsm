@@ -35,7 +35,7 @@ dsm(formula, ddf.obj, segment.data, observation.data, engine = "gam",
 
 \item{weights}{weights for each observation used in model fitting. The default, \code{weights=NULL}, weights each observation by its area (see Details). Setting a scalar value (e.g. \code{weights=1}) all observations are equally weighted.}
 
-\item{method}{The smoothing parameter estimation method. Default is \code{"REML"}, using REstricted Maximum Likelihood. See \code{\link{gam}} for other options. Ignored for \code{engine="glm"}.}
+\item{method}{The smoothing parameter estimation method. Default is \code{"REML"}, using Restricted Maximum Likelihood. See \code{\link{gam}} for other options. Ignored for \code{engine="glm"}.}
 
 \item{\dots}{anything else to be passed straight to \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}}/\code{\link{bam}}.}
 

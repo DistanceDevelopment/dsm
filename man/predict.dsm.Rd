@@ -20,10 +20,10 @@
 \item{\dots}{any other arguments passed to \code{\link{predict.gam}}.}
 }
 \value{
-predicted values on the response scale (density/abundance).
+predicted values on the response scale. If \code{offset=1} densities are returned (i.e., no offset scaling), else abundances are returned.
 }
 \description{
-Make predictions outside (or inside) the covered area.
+Make predictions of density or abundance outside (or inside) the covered area.
 }
 \details{
 If \code{newdata} is not supplied, predictions are made for the data that built the model. Note that the order of the results will not necessarily be the same as the \code{segdata} (segment data) \code{data.frame} that was supplied (it will be sorted by the \code{Segment.Label} field).
