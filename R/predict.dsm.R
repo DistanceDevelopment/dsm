@@ -28,10 +28,10 @@ predict.dsm <- function(object, newdata=NULL, off.set=NULL,
     newdata <- object$data
   }else{
 
-    # if we don't have a density model, then set the offset
-    # this is already set if we're using the data that was in the model
-    # object, so don't re-log and ignore the off.set specified
-    # thanks to Megan Furguson for pointing this out!
+    # If we don't have a density model, then set the offset.
+    # This is already set if we're using the data that was in the model
+    #  object, so don't re-log and ignore the off.set specified
+    #  thanks to Megan Furguson for pointing this out!
     if(!(c(object$formula[[2]]) %in% c("D", "presence", "density",
                                        "Dhat", "density.est"))){
       if(is.null(newdata$off.set)){
@@ -44,6 +44,21 @@ predict.dsm <- function(object, newdata=NULL, off.set=NULL,
       # apply the link function
       linkfn <- object$family$linkfun
       newdata$off.set <- linkfn(newdata$off.set)
+    }else{
+      # for the density case, if we had an offset in the newdata store that
+      # in offset (unless that already had a value) if neither did, set to
+      # 1 (to give density predictions)
+      if(is.null(off.set)){
+        if(is.null(newdata$off.set)){
+          # if there was no offset, set to 1
+          newdata$off.set <- off.set <- 1
+        }else{
+          # put the one in new data into off.set, remove the one in the
+          # newdata
+          off.set <- newdata$off.set
+          newdata$off.set <- NULL
+        }
+      }
     }
   }
 
