@@ -1,5 +1,8 @@
 dsm news!
 
+# 2.2.18
+ * Clarification of the predict.dsm return documentation. Thanks to Dave Fifield for the suggestion.
+
 # 2.2.17
  * Now Suggests package "sp" (needed for some parts of the mexdolphin example data)
 
