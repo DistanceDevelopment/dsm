@@ -101,6 +101,10 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
       ddf.obj <- ddf.obj$ddf
     }
   }else{
+    if(length(ddf.obj) == 1){
+      ddf.obj <- ddf.obj[[1]]
+      break
+    }
     for(i in seq_along(ddf.obj)){
       if(all(class(ddf.obj[[i]])=="dsmodel")){
         ddf.obj[[i]] <- ddf.obj[[i]]$ddf
