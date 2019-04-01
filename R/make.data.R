@@ -15,7 +15,7 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
   }
 
   # for single ddfs, make a list of 1
-  if(any(c("ds", "dsmodel")  %in% class(ddfobject))){
+  if(any(c("ddf", "dsmodel")  %in% class(ddfobject))){
     ddfobject <- list(ddfobject)
     segdata$ddfobj <- 1
   }else{
