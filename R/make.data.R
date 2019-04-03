@@ -103,7 +103,7 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
     }else{
 
       if(ddfobject$method != "ds"){
-        stop("Only single oberver models are currently supported!")
+        stop("Only single observer models are currently supported!")
       }
 
       # extract formula
