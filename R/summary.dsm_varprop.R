@@ -14,7 +14,7 @@
 summary.dsm_varprop <- function(object, alpha=0.05, ...){
 
   # storage
-  sinfo<-list()
+  sinfo <- list()
   # save the alpha value for cis
   sinfo$alpha <- alpha
 
@@ -28,7 +28,7 @@ summary.dsm_varprop <- function(object, alpha=0.05, ...){
   # calculate the CV for the whole model
   sinfo$cv <- sqrt(sinfo$var)/sinfo$pred.est
 
-  if(!all(class(object$old_model$ddf)=="list")){
+  if(!all(class(object$old_model$ddf) == "list")){
     object$old_model$ddf <- list(object$old_model$ddf)
   }
 sinfo$detfct.cv <- c()
