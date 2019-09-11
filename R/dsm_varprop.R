@@ -131,9 +131,14 @@ dsm_varprop <- function(model, newdata, trace=FALSE, var_type="Vp"){
     # put the parameter flesh back on the list bones?
     fleshy <- relist(par, skel)
 
-    ret <- rep(NA, nrow(data))
+    ret <- rep(0, nrow(data))
     for(i in seq_along(ddf)){
       this_ddf <- ddf[[i]]
+
+      # if we don't have a real detection function
+      if("fake_ddf" %in% class(this_ddf)){
+        next
+      }
       # set the detection function parameters to be par
       this_ddf$par <- fleshy[[i]]
 
@@ -165,9 +170,15 @@ dsm_varprop <- function(model, newdata, trace=FALSE, var_type="Vp"){
     # extract the formulae
     ds_formula <- ddf[[i]]$ds$aux$ddfobj$scale$formula
 
-    # if we don't have covariates then just setup the
-    # data for predict.ds to be a distance of 0, which will be
-    # ignored anyway
+    # if we don't have a real detection function
+    if("fake_ddf" %in% class(ddf[[i]])){
+      ds_newdata[[i]] <- NA
+      u_ds_newdata[[i]] <- NA
+      next
+    }
+    # if we don't have covariates
+    # then just setup the data for predict.ds to be a distance of 0,
+    # which will be ignored anyway
     if(ds_formula=="~1"){
       ds_newdata[[i]] <- data.frame(distance=rep(0, sum(model$data$ddfobj==i)))
     }else{
@@ -220,6 +231,9 @@ dsm_varprop <- function(model, newdata, trace=FALSE, var_type="Vp"){
 
     this_ddf <- ddf[[i]]
 
+    if("fake_ddf" %in% class(this_ddf)){
+      next
+    }
     opt_details <- attr(this_ddf$ds, "details")
     if(is.matrix(opt_details)){
       this_hess <- opt_details[nrow(opt_details), ]$nhatend
