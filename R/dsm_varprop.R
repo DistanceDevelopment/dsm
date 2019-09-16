@@ -185,7 +185,7 @@ dsm_varprop <- function(model, newdata, trace=FALSE, var_type="Vp"){
       # otherwise need the covars that are in the data (that we saved
       # with keepData=TRUE :))
       ds_newdata[[i]] <- model$data[model$data$ddfobj==i, ]
-      ds_newdata[[i]] <- ds_newdata[, all.vars(as.formula(ds_formula)),
+      ds_newdata[[i]] <- ds_newdata[[i]][, all.vars(as.formula(ds_formula)),
                                      drop=FALSE]
       ds_newdata[[i]]$distance <- 0
     }
@@ -240,7 +240,7 @@ dsm_varprop <- function(model, newdata, trace=FALSE, var_type="Vp"){
     }else{
       this_hess <- opt_details$nhatend
     }
-    if(any(is.na(hess))){
+    if(any(is.na(this_hess))){
       # fall back to DS use if things are bad
       this_hess <- this_ddf$hessian
     }
