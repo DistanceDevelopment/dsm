@@ -50,8 +50,8 @@ Fits a density surface model (DSM) to detection adjusted counts from a spatially
 \details{
 The response (LHS of `formula`) can be one of the following:
 \tabular{ll}{
-  \code{n}, \code{count}, \code{N} \tab count in each segment\cr
-  \code{Nhat}, \code{abundance.est} \tab estimated abundance per segment, estimation is via a Horvitz-Thompson estimator. This should be used when there are covariates in the detection function.\cr
+  \code{n}, \code{count}, \code{N} \tab count in each segment. Only covariates that vary at the segment level can be used in the detection function when using this response.\cr
+  \code{Nhat}, \code{abundance.est} \tab estimated abundance per segment, estimation is via a Horvitz-Thompson estimator. This should be used when there are covariates in the detection function at the observation level.\cr
   \code{D}, \code{density}, \code{Dhat}, \code{density.est} \tab density per segment\cr
  }
 
