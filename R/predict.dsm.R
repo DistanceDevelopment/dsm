@@ -26,14 +26,19 @@ predict.dsm <- function(object, newdata=NULL, off.set=NULL,
   # if there is no newdata, then use the data stored in the model object
   if(is.null(newdata)){
     newdata <- object$data
+
+    # tell user their supplied off.set is being ignored
+    if(!is.null(off.set)){
+      warning("Ignoring supplied off.set and using the one in the model data")
+    }
+    newdata$off.set <- object$family$linkfun(newdata$segment.area)
   }else{
 
-    # If we don't have a density model, then set the offset.
-    # This is already set if we're using the data that was in the model
-    #  object, so don't re-log and ignore the off.set specified
-    #  thanks to Megan Furguson for pointing this out!
-    if(!(c(object$formula[[2]]) %in% c("D", "presence", "density",
-                                       "Dhat", "density.est"))){
+    # if we don't have a density model, then set the offset
+    # this is already set if we're using the data that was in the model
+    # object, so don't re-log and ignore the off.set specified
+    # thanks to Megan Furguson for pointing this out!
+    if(!(c(object$formula[[2]]) %in% c("density", "density.est"))){
       if(is.null(newdata$off.set)){
         if(is.null(off.set)){
           stop("You must supply off.set in data or as an argument.")
@@ -45,23 +50,21 @@ predict.dsm <- function(object, newdata=NULL, off.set=NULL,
       linkfn <- object$family$linkfun
       newdata$off.set <- linkfn(newdata$off.set)
     }else{
-      # for the density case, if we had an offset in the newdata store that
-      # in offset (unless that already had a value) if neither did, set to
-      # 1 (to give density predictions)
-      if(is.null(off.set)){
-        if(is.null(newdata$off.set)){
+      # for the density case
+      if(is.null(newdata$off.set)){
+        if(is.null(off.set)){
           # if there was no offset, set to 1
-          newdata$off.set <- off.set <- 1
+          newdata$off.set <- 1
         }else{
-          # put the one in new data into off.set, remove the one in the
-          # newdata
-          off.set <- newdata$off.set
-          newdata$off.set <- NULL
+          newdata$off.set <- off.set
+        }
+      }else{
+        if(!is.null(off.set)){
+          warning("Ignoring supplied off.set and using the one in the prediction data")
         }
       }
     }
   }
-
 
   # remove the dsm class
   class(object) <- class(object)[class(object)!="dsm"]
@@ -69,20 +72,19 @@ predict.dsm <- function(object, newdata=NULL, off.set=NULL,
   # actually do the predict call
   result <- predict(object, newdata, type=type, ...)
 
-
-  ## if we have density do the predictions on response scale right
-  # grab standard error
-  se.fit <- list(...)$se.fit
-  if((c(object$formula[[2]]) %in% c("D", "density", "Dhat", "density.est"))){
-    # only need do this for type="response" but need to make sure
-    # that the standard errors are okay too
-    if(type=="response" & (is.null(se.fit) || !se.fit)){
-      result <- result*off.set
-    }else if(type=="response" & se.fit){
-      result$fit <- result$fit*off.set
-      result$se.fit <- result$se.fit*off.set
-    }
-  }
+  ### if we have density do the predictions on response scale right
+  ## grab standard error
+  #se.fit <- list(...)$se.fit
+  #if((c(object$formula[[2]]) %in% c("D", "density", "Dhat", "density.est"))){
+  #  # only need do this for type="response" but need to make sure
+  #  # that the standard errors are okay too
+  #  if(type=="response" & (is.null(se.fit) || !se.fit)){
+  #    result <- result*off.set
+  #  }else if(type=="response" & se.fit){
+  #    result$fit <- result$fit*off.set
+  #    result$se.fit <- result$se.fit*off.set
+  #  }
+  #}
 
   return(result)
 }
