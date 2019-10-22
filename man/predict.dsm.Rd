@@ -12,7 +12,7 @@
 
 \item{newdata}{spatially referenced covariates e.g. altitude, depth, distance to shore, etc. Covariates in the \code{data.frame} must have names *identical* to variable names used in fitting the DSM.}
 
-\item{off.set}{area of each of the cells in the prediction grid. Should be in the same units as the segments/distances given to \code{dsm}. Ignored if there is already a column in \code{newdata} called \code{off.set}.}
+\item{off.set}{area of each of the cells in the prediction grid. Should be in the same units as the segments/distances given to \code{dsm}. Replaces the column in \code{newdata} (or model data) called \code{off.set} if it is supplied.}
 
 \item{type}{what scale should the results be on. The default is
 \code{"response"}, see \code{\link{predict.gam}} for an explanation of other options (usually not necessary).}
@@ -27,6 +27,8 @@ Make predictions of density or abundance outside (or inside) the covered area.
 }
 \details{
 If \code{newdata} is not supplied, predictions are made for the data that built the model. Note that the order of the results will not necessarily be the same as the \code{segdata} (segment data) \code{data.frame} that was supplied (it will be sorted by the \code{Segment.Label} field).
+
+The area \code{off.set} is used to calculate prediction if that argument is supplied, otherwise it will look for the areas in the column named \code{off.set} in the \code{newdata} (or will calculate the areas from the data in \code{object}.
 }
 \seealso{
 \code{\link{predict.gam}} \code{\link{dsm.var.gam}} \code{\link{dsm.var.prop}} \code{\link{dsm.var.movblk}}
