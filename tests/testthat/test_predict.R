@@ -25,6 +25,14 @@ test_that("predictions from density",{
   fake_dat$off.set <- NULL
   expect_equal(predict(mod1), predict(mod1, fake_dat, off.set=1))
 
+  # check for error if we don't supply newdata but do supply off.set
+  expect_warning(predict(mod1, off.set=1),
+               "Ignoring supplied off.set as newdata was not supplied")
+
+
+  # check you get different answers from different offsets
+  expect_equal(2*predict(mod1, fake_dat, off.set=2),
+               predict(mod1, fake_dat, off.set=4))
 })
 
 

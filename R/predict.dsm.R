@@ -8,7 +8,7 @@
 #'
 #' @param object a fitted \code{\link{dsm}} object as produced by \code{dsm()}.
 #' @param newdata spatially referenced covariates e.g. altitude, depth, distance to shore, etc. Covariates in the \code{data.frame} must have names *identical* to variable names used in fitting the DSM.
-#' @param off.set area of each of the cells in the prediction grid. Should be in the same units as the segments/distances given to \code{dsm}. Replaces the column in \code{newdata} (or model data) called \code{off.set} if it is supplied.
+#' @param off.set area of each of the cells in the prediction grid. Should be in the same units as the segments/distances given to \code{dsm}. Replaces the column in \code{newdata} (or model data) called \code{off.set} if it is supplied. Ignored if \code{newdata} is not supplied.
 #' @param type what scale should the results be on. The default is
 #'  \code{"response"}, see \code{\link{predict.gam}} for an explanation of other options (usually not necessary).
 #' @param \dots any other arguments passed to \code{\link{predict.gam}}.
@@ -30,9 +30,13 @@ predict.dsm <- function(object, newdata=NULL, off.set=NULL,
     newdata <- object$data
 
     if(!is.null(off.set)){
-      newdata$off.set <- off.set
+      warning("Ignoring supplied off.set as newdata was not supplied")
     }
-    newdata$off.set <- object$family$linkfun(newdata$segment.area)
+    if(!(c(object$formula[[2]]) %in% c("density", "density.est"))){
+      newdata$off.set <- object$family$linkfun(newdata$segment.area)
+    }else{
+      newdata$off.set <- 1
+    }
   }else{
 
     if(is.null(newdata$off.set) & is.null(off.set)){
@@ -45,12 +49,9 @@ predict.dsm <- function(object, newdata=NULL, off.set=NULL,
     # thanks to Megan Furguson for pointing this out!
     if(!(c(object$formula[[2]]) %in% c("density", "density.est"))){
       if(!is.null(off.set)){
-        newdata$off.set <- off.set
+        # apply the link function
+        newdata$off.set <- object$family$linkfun(off.set)
       }
-
-      # apply the link function
-      linkfn <- object$family$linkfun
-      newdata$off.set <- linkfn(newdata$off.set)
     }else{
       # for the density case
       if(!is.null(off.set)){
@@ -64,6 +65,20 @@ predict.dsm <- function(object, newdata=NULL, off.set=NULL,
 
   # actually do the predict call
   result <- predict(object, newdata, type=type, ...)
+
+  if(c(object$formula[[2]]) %in% c("density", "density.est")){
+    ### if we have density do the predictions on response scale right
+    # grab standard error
+    se.fit <- list(...)$se.fit
+    # only need do this for type="response" but need to make sure
+    # that the standard errors are okay too
+    if(type=="response" & (is.null(se.fit) || !se.fit)){
+      result <- result*newdata$off.set
+    }else if(type=="response" & se.fit){
+      result$fit <- result$fit*newdata$off.set
+      result$se.fit <- result$se.fit*newdata$off.set
+    }
+  }
 
   return(result)
 }
