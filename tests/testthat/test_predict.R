@@ -33,6 +33,13 @@ test_that("predictions from density",{
   # check you get different answers from different offsets
   expect_equal(2*predict(mod1, fake_dat, off.set=2),
                predict(mod1, fake_dat, off.set=4))
+
+  fake_dat$off.set <- 1
+  # check lpmatrix thing
+  expect_equal(predict(mod1, fake_dat, type="link"),
+               (predict(mod1, fake_dat, type="lpmatrix")%*%coef(mod1))[,1],
+               check.attributes=FALSE)
+
 })
 
 

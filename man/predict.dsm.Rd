@@ -12,7 +12,7 @@
 
 \item{newdata}{spatially referenced covariates e.g. altitude, depth, distance to shore, etc. Covariates in the \code{data.frame} must have names *identical* to variable names used in fitting the DSM.}
 
-\item{off.set}{area of each of the cells in the prediction grid. Should be in the same units as the segments/distances given to \code{dsm}. Replaces the column in \code{newdata} (or model data) called \code{off.set} if it is supplied.}
+\item{off.set}{area of each of the cells in the prediction grid. Should be in the same units as the segments/distances given to \code{dsm}. Replaces the column in \code{newdata} (or model data) called \code{off.set} if it is supplied. Ignored if \code{newdata} is not supplied.}
 
 \item{type}{what scale should the results be on. The default is
 \code{"response"}, see \code{\link{predict.gam}} for an explanation of other options (usually not necessary).}

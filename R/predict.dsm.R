@@ -74,7 +74,7 @@ predict.dsm <- function(object, newdata=NULL, off.set=NULL,
     # that the standard errors are okay too
     if(type=="response" & (is.null(se.fit) || !se.fit)){
       result <- result*newdata$off.set
-    }else if(type=="response" & se.fit){
+    }else if(type=="response" & (!is.null(se.fit) && se.fit)){
       result$fit <- result$fit*newdata$off.set
       result$se.fit <- result$se.fit*newdata$off.set
     }
