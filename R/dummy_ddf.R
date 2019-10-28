@@ -10,6 +10,13 @@
 #' @param transect "line" or "point" transect (character)
 dummy_ddf <- function(obs, size=1, width, left=0, transect="line"){
 
+  if(!is.numeric(obs)){
+    stop("obs should to be a numeric vector")
+  }
+  if(!is.vector(obs)){
+    stop("obs should be a numeric vector")
+  }
+
   object <- list()
 
   # put object IDs in a data.frame...
