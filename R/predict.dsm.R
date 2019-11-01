@@ -32,9 +32,7 @@ predict.dsm <- function(object, newdata=NULL, off.set=NULL,
     if(!is.null(off.set)){
       warning("Ignoring supplied off.set as newdata was not supplied")
     }
-    if(!(c(object$formula[[2]]) %in% c("density", "density.est"))){
-      newdata$off.set <- object$family$linkfun(newdata$segment.area)
-    }else{
+    if(c(object$formula[[2]]) %in% c("density", "density.est")){
       newdata$off.set <- 1
     }
   }else{

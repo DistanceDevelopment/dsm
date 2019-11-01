@@ -50,9 +50,5 @@ test_that("predictions for count",{
   mod1 <- dsm(count~s(depth), hn.model, segdata, obsdata)
 
   fake_dat <- mod1$data
-  fake_dat$off.set <- NULL
-  expect_equal(predict(mod1), predict(mod1, fake_dat, off.set=fake_dat$segment.area))
-
+  expect_equal(predict(mod1), predict(mod1, fake_dat))
 })
-
-
