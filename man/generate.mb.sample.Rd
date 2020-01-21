@@ -4,8 +4,14 @@
 \alias{generate.mb.sample}
 \title{Moving block bootstrap sampler}
 \usage{
-generate.mb.sample(num.blocks.required, block.size, which.blocks, dsm.data,
-  unit.info, n.units)
+generate.mb.sample(
+  num.blocks.required,
+  block.size,
+  which.blocks,
+  dsm.data,
+  unit.info,
+  n.units
+)
 }
 \arguments{
 \item{num.blocks.required}{number of blocks that we need.}

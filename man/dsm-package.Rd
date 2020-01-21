@@ -11,5 +11,5 @@ Further information on distance sampling methods and example code is available a
 
 For help with distance sampling and this package, there is a Google Group \url{https://groups.google.com/forum/#!forum/distance-sampling}.
 
-A example analysis is available at \url{http://distancesampling.org/R/vignettes/mexico-analysis.html}.
+A example analyses are available at \url{http://examples.distancesampling.org}.
 }

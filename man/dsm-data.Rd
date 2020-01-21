@@ -20,7 +20,7 @@ One can often also use \code{observation.data} to fit a detection function (so a
 
 \code{segment.data}: the segment \code{data.frame} must have (at least) the following columns:
 
-\tabular{ll}{
+ \tabular{ll}{
    \code{Effort} \tab the effort (in terms of length of the segment)\cr
    \code{Sample.Label} \tab identifier for the segment (unique!)\cr
    ??? \tab environmental covariates, for example location (projected latitude and longitude), and other relevant covariates (sea surface temperature, foliage type, altitude, bathymetry etc).}

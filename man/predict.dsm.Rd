@@ -4,8 +4,7 @@
 \alias{predict.dsm}
 \title{Predict from a fitted density surface model}
 \usage{
-\method{predict}{dsm}(object, newdata = NULL, off.set = NULL,
-  type = "response", ...)
+\method{predict}{dsm}(object, newdata = NULL, off.set = NULL, type = "response", ...)
 }
 \arguments{
 \item{object}{a fitted \code{\link{dsm}} object as produced by \code{dsm()}.}

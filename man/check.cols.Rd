@@ -4,8 +4,7 @@
 \alias{check.cols}
 \title{Check column names exist}
 \usage{
-check.cols(ddf.obj, segment.data, observation.data, strip.width,
-  segment.area)
+check.cols(ddf.obj, segment.data, observation.data, strip.width, segment.area)
 }
 \arguments{
 \item{ddf.obj}{a ddf object from `mrds`}

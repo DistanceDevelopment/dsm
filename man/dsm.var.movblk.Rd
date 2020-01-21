@@ -4,9 +4,18 @@
 \alias{dsm.var.movblk}
 \title{Variance estimation via parametric moving block bootstrap}
 \usage{
-dsm.var.movblk(dsm.object, pred.data, n.boot, block.size, off.set,
-  ds.uncertainty = FALSE, samp.unit.name = "Transect.Label",
-  progress.file = NULL, bs.file = NULL, bar = TRUE)
+dsm.var.movblk(
+  dsm.object,
+  pred.data,
+  n.boot,
+  block.size,
+  off.set,
+  ds.uncertainty = FALSE,
+  samp.unit.name = "Transect.Label",
+  progress.file = NULL,
+  bs.file = NULL,
+  bar = TRUE
+)
 }
 \arguments{
 \item{dsm.object}{object returned from \code{\link{dsm}}.}

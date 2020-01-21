@@ -4,8 +4,13 @@
 \alias{dsm.var.gam}
 \title{Prediction variance estimation assuming independence}
 \usage{
-dsm.var.gam(dsm.obj, pred.data, off.set, seglen.varname = "Effort",
-  type.pred = "response")
+dsm.var.gam(
+  dsm.obj,
+  pred.data,
+  off.set,
+  seglen.varname = "Effort",
+  type.pred = "response"
+)
 }
 \arguments{
 \item{dsm.obj}{a model object returned from running \code{\link{dsm}}.}

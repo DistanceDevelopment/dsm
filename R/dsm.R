@@ -21,6 +21,8 @@
 #'
 #' In the latter two cases (density and presence estimation) observations can be weighted by segment areas via the \code{weights=} argument. By default (\code{weights=NULL}), when density or presence are estimated the weights are set to the segment areas (using \code{segment.area} or by calculating \code{2*}(strip width)\code{*Effort}) Alternatively \code{weights=1} will set the weights to all be equal.  A third alternative is to pass in a vector of length equal to the number of segments, containing appropriate weights.
 #'
+#' A example analyses are available at \url{http://examples.distancesampling.org}.
+#'
 #' @section Units:
 #'
 #' It is often the case that distances are collected in metres and segment lengths are recorded in kilometres. \code{dsm} allows you to provide a conversation factor (\code{convert.units}) to multiply the areas by. For example: if distances are in metres and segment lengths are in kilometres setting \code{convert.units=1000} will lead to the analysis being in metres. Setting \code{convert.units=1/1000} will lead to the analysis being in kilometres. The conversion factor will be applied to `segment.area` if that is specified.

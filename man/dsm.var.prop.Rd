@@ -4,8 +4,13 @@
 \alias{dsm.var.prop}
 \title{Prediction variance propagation for DSMs}
 \usage{
-dsm.var.prop(dsm.obj, pred.data, off.set, seglen.varname = "Effort",
-  type.pred = "response")
+dsm.var.prop(
+  dsm.obj,
+  pred.data,
+  off.set,
+  seglen.varname = "Effort",
+  type.pred = "response"
+)
 }
 \arguments{
 \item{dsm.obj}{a model object returned from running \code{\link{dsm}}.}
