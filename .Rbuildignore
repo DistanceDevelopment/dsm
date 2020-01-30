@@ -1,6 +1,4 @@
-.travis.yml
 LICENSE
 ^\.travis\.yml$
 ^appveyor\.yml$
-^tic\.R$
 .gitignore
