@@ -1,5 +1,8 @@
 dsm news!
 
+# 2.3
+ * fixed dsm_varprop (gam.fixed.priors) for response distributions with fixed scale parameters. Negative binomial results before now may have been incorrect!
+
 # 2.2.18
  * Clarification of the predict.dsm return documentation. Thanks to Dave Fifield for the suggestion.
  * off.set=NULL lead to predictions of 0 when density was used. Now just returns density. Thanks to Dave Fifield for the catch.

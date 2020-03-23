@@ -4,7 +4,7 @@
 "gam.fixed.priors" <-
 function( ..., fixed.priors=character(0), debugging=FALSE, scale.trace=1){
   gamf <- gam
-  formals( gamf)[ names( formals( sys.function())) %except% '...'] <- 
+  formals( gamf)[ names( formals( sys.function())) %except% '...'] <-
       formals( sys.function()) %without.name% '...'
   mc <- as.list( match.call( definition=gamf, expand.dots=TRUE))
   mc[[1]] <- quote( gam)
@@ -15,7 +15,7 @@ function( ..., fixed.priors=character(0), debugging=FALSE, scale.trace=1){
       if( !is.null( mc[[x]]) && mc[[x]] != must.be)
         warning( x %&% "will be set to " %&% must.be)
       mc[[ x]] <<- must.be
-    }
+  }
   check.ok( 'fit', TRUE)
   check.ok( 'G', NULL)
   check.ok( 'method', 'REML')
@@ -23,25 +23,25 @@ function( ..., fixed.priors=character(0), debugging=FALSE, scale.trace=1){
 
   paraPen <- eval( mc$paraPen, parent.frame())
   if( !all( fp %in% names( paraPen)))
-stop( "Fixed priors must correspond to things in paraPen (for now)")
+    stop( "Fixed priors must correspond to things in paraPen (for now)")
 
   for( ifp in fp)
     paraPen[[ ifp]]$sp <- 1e8
   mc$paraPen <- paraPen
-  
-  #   was: gam( form.with.paraPen, paraPen=prior.dpar.fixo, knots=knots, method='REML', fit=FALSE)
+
+  # build gam prefit object
   mc$fit <- FALSE
   mc <- as.call( mc)
-  G.fix <- eval( mc, parent.frame()) 
+  G.fix <- eval( mc, parent.frame())
 
   # For initial scale, fit with prior cfts set almost to zero
-  b0 <- gam( G=G.fix, method='REML', scale=-1) 
+  b0 <- gam( G=G.fix, method='REML', scale=-1)
   if( debugging) {
     mc$fit <- TRUE
     spunknown <- b0$sp*0-1
     pf <- parent.frame()
   }
-  
+
   # Set up for 1D optimization that will start in the right place
   phi <- (sqrt(5)-1)/2
   untrans <- function( tx) {
@@ -49,7 +49,7 @@ stop( "Fixed priors must correspond to things in paraPen (for now)")
     # 0 -> 0; 1 -> Inf; 1-phi -> b0$sig2
     b0$sig2 * (phi/(1-phi)) * ( tx / (1-tx))
   }
-  
+
   b.para1 <- NULL
   gamcrit <- function( trans.current.scale) {
     current.scale <- untrans( trans.current.scale)
@@ -63,42 +63,49 @@ stop( "Fixed priors must correspond to things in paraPen (for now)")
         mc$paraPen[[ ifp]]$sp <- 1/current.scale
       mc$scale <- current.scale
       b.direct1 <- eval( mc, pf)
-      # gam( form=form.with.paraPen, knots=knots, paraPen=prior.dpar.fixo, method='REML', 
-      #        scale=current.scale)
+      # gam(form=form.with.paraPen, knots=knots, paraPen=prior.dpar.fixo,
+      #     method='REML', scale=current.scale)
 
-      # Am suspicious of whether 'sp' is treated consistently when included in 'paraPen' vs
-      # ... set directly
+      # Am suspicious of whether 'sp' is treated consistently when included
+      # in 'paraPen' vs. set directly
       # Have to leave for now, since it's hard to set correct elts of sp
       # for( ifp in fp)
       #   mc$paraPen[[ ifp]]$sp <- NULL
       # mc$sp <- replace( spunknown, fp, 1/current.scale)
       # b.direct2 <- eval( mc, pf)
-      #gam( form=form.with.paraPen, knots=knots, paraPen=prior.dpar, method='REML', 
-      #        sp=c( dlinkE.dpar=1/current.scale, spunknown), scale=current.scale)
+      # gam(form=form.with.paraPen, knots=knots, paraPen=prior.dpar,
+      #     method='REML', sp=c( dlinkE.dpar=1/current.scale, spunknown),
+      #     scale=current.scale)
     }
-  
-    marg.lglk <- -b.para1$gcv.ubre # ?? is this the REML marg lglk ??
+
+    # REML score
+    marg.lglk <- -b.para1$gcv.ubre
+    # trace
     if( scale.trace>0)
       cat( 'Current scale: ',  current.scale, 'Marg lglk: ', marg.lglk, '\n')
-  return( marg.lglk) 
+
+    return( marg.lglk)
   }
 
-#  if( debugging)
-#    mtrace( gamcrit)
-  opto <- optimize( NEG( gamcrit), interval=0:1)  
-  
+  # if scale parameter is fixed
+  if(!mc$scale.estimated){
+    G.fix$lsp0[ fp] <- 0
+    b.para1 <- gam( G=G.fix, method=mc$method)
+  }else{
+    # do the opimization
+    opto <- optimize( NEG( gamcrit), interval=0:1)
+  }
+
   b.para1$call$fixed.priors <- fp
   b.para1$call[[1]] <- quote( gam.fixed.priors)
-return( b.para1)
-  
-  # Also need a version where the scale param is fixed but the other smoopars aren't, ...
-  # ... e.g. Poisson + soap + paraPen
+
+  return( b.para1)
 }
 
-"NEG" <-
-function( f) { 
+
+"NEG" <- function( f) {
   if( is.null( f))
-return( f) # useful for
+    return( f)
 
   if( is.primitive( f)) {
     fargs <- formals( args( f)) # primitives don't have formals
@@ -119,7 +126,7 @@ return( f) # useful for
     formals( g) <- formals( f)
     environment( g) <- environment( f) 
   }
-return( g)
+  return( g)
 }
 
 "%without.name%" <-
