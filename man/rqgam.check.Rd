@@ -20,7 +20,7 @@ Reproduces the "Resids vs. linear pred" plot from \code{\link{gam.check}} but us
 \details{
 Note that this function only works with negative binomial and Tweedie response distributions.
 
-Earlier versions of this function produced the full \code{gam.check} output, but this was confusing as only one of the plots was really usedul. Checks of \code{k} are not computed, these need to be done using \code{\link{gam.check}}.
+Earlier versions of this function produced the full \code{gam.check} output, but this was confusing as only one of the plots was really useful. Checks of \code{k} are not computed, these need to be done using \code{\link{gam.check}}.
 }
 \examples{
 \donttest{

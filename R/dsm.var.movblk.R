@@ -14,7 +14,7 @@
 #'        'Transect.Label').
 #' @param progress.file path to a file to be used (usually by Distance) to
 #'        generate a progress bar (default \code{NULL} -- no file written).
-#' @param bs.file path to a file to store each boostrap round. This stores all
+#' @param bs.file path to a file to store each bootstrap round. This stores all
 #'        of the bootstrap results rather than just the summaries, enabling
 #'        outliers to be detected and removed. (Default \code{NULL}).
 #' @param bar should a progress bar be printed to screen? (Default \code{TRUE}).

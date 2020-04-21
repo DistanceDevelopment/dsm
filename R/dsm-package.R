@@ -14,15 +14,6 @@
 NULL
 
 
-#' Offsets
-#'
-#' This will be documentation on calculating offsets.
-#'
-#' @name offsets
-#'
-NULL
-
-
 #' Data format for DSM
 #'
 #' Two \code{data.frame}s must be provided to \code{\link{dsm}}. They are referred to as \code{observation.data} and \code{segment.data}.

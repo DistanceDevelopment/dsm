@@ -37,7 +37,7 @@ Details, below. Note that this feature is EXPERIMENTAL at the moment.}
 \item{progress.file}{path to a file to be used (usually by Distance) to
 generate a progress bar (default \code{NULL} -- no file written).}
 
-\item{bs.file}{path to a file to store each boostrap round. This stores all
+\item{bs.file}{path to a file to store each bootstrap round. This stores all
 of the bootstrap results rather than just the summaries, enabling
 outliers to be detected and removed. (Default \code{NULL}).}
 
