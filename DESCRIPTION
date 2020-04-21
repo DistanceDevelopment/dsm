@@ -1,5 +1,5 @@
 Package: dsm
-Maintainer: Laura Marshall <lhm@st-andrews.ac.uk>
+Maintainer: Laura Marshall <dave@ninepointeightone.net>
 License: GPL (>= 2)
 Title: Density Surface Modelling of Distance Sampling Data
 LazyLoad: yes
@@ -11,6 +11,7 @@ Description: Density surface modelling of line transect data. A Generalized
     transect) data. Several utility functions are provided for model checking,
     plotting and variance estimation.
 Version: 2.3
+Language: en-GB
 URL: http://github.com/DistanceDevelopment/dsm
 BugReports: https://github.com/DistanceDevelopment/dsm/issues
 Depends:
