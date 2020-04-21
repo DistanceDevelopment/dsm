@@ -14,7 +14,7 @@ Version: 2.3
 URL: http://github.com/DistanceDevelopment/dsm
 BugReports: https://github.com/DistanceDevelopment/dsm/issues
 Depends:
-    R (>= 3.0),
+    R (>= 3.5.0),
     mgcv (>= 1.8-23),
     mrds (>= 2.1.16),
     numDeriv
