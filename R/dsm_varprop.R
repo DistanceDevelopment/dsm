@@ -71,10 +71,6 @@ dsm_varprop <- function(model, newdata, trace=FALSE, var_type="Vp"){
     stop("var_type must be \"Vp\" or \"Vc\"")
   }
 
-  if(model$ddf$ds$aux$ddfobj$scale$formula=="~1"){
-    stop("varprop doesn't work when there are no covariates in the detection function")
-  }
-
   # extract the link & invlink
   linkfn <- model$family$linkfun
   linkinvfn <- model$family$linkinv
@@ -89,61 +85,98 @@ dsm_varprop <- function(model, newdata, trace=FALSE, var_type="Vp"){
   # remove the function
   this_call[1] <- NULL
 
-  # extract the detection function
+  # extract the detection function(s)
   ddf <- model$ddf
+  if(all(class(ddf)!="list")){
+    ddf <- list(ddf)
+  }
 
-  # function to differentiate
-  mu_fn <- function(par, linkfn, ddf, data, ds_newdata){
-    # set the detection function parameters to be par
-    ddf$par <- par
+  # get detection function info
+  parskel <- list()
+  for(i in seq_along(ddf)){
+    parskel[[i]] <- ddf[[i]]$par
+  }
+  npars <- lapply(parskel, length)
 
-    # calculate mu (effective strip width)
-    mu <- predict(ddf, newdata=ds_newdata, esw=TRUE, compute=TRUE)$fitted
+  # new function to differentiate
+  mu_fn <- function(par, linkfn, ddf, data, ds_newdata, skel){
 
-    # repopulate with the duplicates back in
-    mu <- mu[attr(u_ds_newdata, "index"), drop=FALSE]
+    # put the parameter flesh back on the list bones?
+    fleshy <- relist(par, skel)
 
-    # calculate offset
-    if(model$ddf$meta.data$point){
-      # calculate log effective circle area
-      # nb. predict() returns effective area of detection for points
-      ret <- linkfn(mu * data$Effort)
-    }else{
-      # calculate log effective strip width
-      ret <- linkfn(2 * mu * data$Effort)
+    ret <- rep(0, nrow(data))
+    for(i in seq_along(ddf)){
+      this_ddf <- ddf[[i]]
+
+      # if we don't have a real detection function
+      if("fake_ddf" %in% class(this_ddf)){
+        next
+      }
+      # set the detection function parameters to be par
+      this_ddf$par <- fleshy[[i]]
+
+      # calculate mu (effective strip width)
+      mu <- predict(this_ddf, newdata=ds_newdata[[i]], esw=TRUE,
+                    compute=TRUE)$fitted
+
+      # repopulate with the duplicates back in
+      mu <- mu[attr(ds_newdata[[i]], "index"), drop=FALSE]
+
+      # calculate offset
+      if(this_ddf$meta.data$point){
+        # calculate log effective circle area
+        # nb. predict() returns effective area of detection for points
+        ret[data$ddfobj==i] <- linkfn(mu * data$Effort[data$ddfobj==i])
+      }else{
+        # calculate log effective strip width
+        ret[data$ddfobj==i] <- linkfn(2 * mu * data$Effort[data$ddfobj==i])
+      }
     }
-
-
     return(ret)
   }
 
-  # extract the formula
-  ds_formula <- ddf$ds$aux$ddfobj$scale$formula
+  # now form the data structures we need to calculate the derivatives
+  # using the function above...
+  ds_newdata <- list()
+  u_ds_newdata <- list()
+  for(i in seq_along(ddf)){
+    # extract the formulae
+    ds_formula <- ddf[[i]]$ds$aux$ddfobj$scale$formula
 
-  # if we don't have covariates then just setup the
-  # data for predict.ds to be a distance of 0, which will be
-  # ignored anyway
-  if(ds_formula=="~1"){
-    ds_newdata <- data.frame(distance=rep(0, nrow(model$data)))
-  }else{
-    # otherwise need the covars that are in the data (that we saved
-    # with keepData=TRUE :))
-    ds_newdata <- model$data[, all.vars(as.formula(ds_formula)), drop=FALSE]
-    ds_newdata$distance <- 0
+    # if we don't have a real detection function
+    if("fake_ddf" %in% class(ddf[[i]])){
+      ds_newdata[[i]] <- NA
+      u_ds_newdata[[i]] <- NA
+      next
+    }
+    # if we don't have covariates
+    # then just setup the data for predict.ds to be a distance of 0,
+    # which will be ignored anyway
+    if(ds_formula=="~1"){
+      ds_newdata[[i]] <- data.frame(distance=rep(0, sum(model$data$ddfobj==i)))
+    }else{
+      # otherwise need the covars that are in the data (that we saved
+      # with keepData=TRUE :))
+      ds_newdata[[i]] <- model$data[model$data$ddfobj==i, ]
+      ds_newdata[[i]] <- ds_newdata[[i]][, all.vars(as.formula(ds_formula)),
+                                     drop=FALSE]
+      ds_newdata[[i]]$distance <- 0
+    }
+
+    # probably a lot of duplicated stuff in the above, so let's just
+    # pass the unique combinations
+    # inside mu_fn will return the right length
+    u_ds_newdata[[i]] <- mgcv::uniquecombs(ds_newdata[[i]])
+
   }
-
-  # probably a lot of duplicated stuff in the above, so let's just
-  # pass the unique combinations
-  # inside mu_fn will return the right length
-  u_ds_newdata <- mgcv::uniquecombs(ds_newdata)
 
   # find the derivatives of log(mu)
-  firstD <- numderiv(mu_fn, ddf$par, linkfn=linkfn, ddf=ddf,
-                     data=model$data, ds_newdata=u_ds_newdata)
+  pars <- unlist(parskel)
+  firstD <- numderiv(mu_fn, pars, linkfn=linkfn, ddf=ddf,
+                     data=model$data, ds_newdata=u_ds_newdata, skel=parskel)
   if(!is.matrix(firstD)){
-    firstD <- matrix(firstD, ncol=length(ddf$par))
+    firstD <- matrix(firstD, ncol=length(pars))
   }
-
 
   # put that in the data
   dat <- model$data
@@ -159,18 +192,36 @@ dsm_varprop <- function(model, newdata, trace=FALSE, var_type="Vp"){
                                  collapse=" "), " + XX"))
   # update data
   this_call$data <- dat
-  # add paraPen bit
-  # hessian needs to be 2nd REAL Hessian not DS thing
-  # that lives in $hessian
-  opt_details <- attr(ddf$ds,"details")
-  if(is.matrix(opt_details)){
-    hess <- opt_details[nrow(opt_details),]$nhatend
-  }else{
-    hess <- opt_details$nhatend
-  }
-  if(any(is.na(hess))){
-    # fall back to DS use if things are bad
-    hess <- ddf$hessian
+
+  # now form the paraPen bit
+  hess <- matrix(0, length(pars), length(pars))
+  ii <- 1
+
+  # loop over our detection functions
+  for(i in seq_along(ddf)){
+    # hessian needs to be 2nd REAL Hessian from the optimisation, not
+    # "distance sampling" version (product of 1st derivs) that lives in $hessian
+
+    this_ddf <- ddf[[i]]
+
+    if("fake_ddf" %in% class(this_ddf)){
+      next
+    }
+    opt_details <- attr(this_ddf$ds, "details")
+    if(is.matrix(opt_details)){
+      this_hess <- opt_details[nrow(opt_details), ]$nhatend
+    }else{
+      this_hess <- opt_details$nhatend
+    }
+    if(any(is.na(this_hess))){
+      # fall back to DS use if things are bad
+      this_hess <- this_ddf$hessian
+    }
+
+    # drop that matrix into the big hessian
+    hess[ii:(ii+nrow(this_hess)-1), ii:(ii+ncol(this_hess)-1)] <- this_hess
+
+    ii <- ii+nrow(this_hess)
   }
   this_call$paraPen <- c(this_call$paraPen, list(XX=list(hess)))
   # tell gam.fixed.priors what to look for

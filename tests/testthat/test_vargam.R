@@ -18,7 +18,7 @@ hn.model <- suppressMessages(ds(distdata,
                                 adjustment = NULL))
 
 # fit a simple smooth of x and y
-mod1 <- dsm(N~s(x,y), hn.model, segdata, obsdata)
+mod1 <- dsm(abundance.est~s(x,y), hn.model, segdata, obsdata)
 
 
 # run the moving block bootstrap for 2 rounds
@@ -46,9 +46,10 @@ mod1 <- dsm(N~s(x,y), hn.model, segdata, obsdata)
 # })
 
 ## With no detection function
-test_that("mexdolphins - works for NULL detection function",{
-  mod1_nodf <-dsm(N~s(x,y), NULL, segdata, obsdata,
-                  strip.width=8000)
+test_that("mexdolphins - works for strip transects",{
+
+  dum <- dummy_ddf(obsdata$object, obsdata$size, 8000)
+  mod1_nodf <- dsm(abundance.est~s(x,y), dum, segdata, obsdata)
   set.seed(1123)
   mod1.var <- dsm.var.gam(mod1_nodf, preddata, off.set=preddata$area)
 
@@ -58,7 +59,7 @@ test_that("mexdolphins - works for NULL detection function",{
   # throw an error if you want detection function uncertainty with no
   # detection function
   expect_error(dsm.var.prop(mod1_nodf, preddata, off.set=preddata$area),
-               "No detection function in this analysis, use dsm.var.gam")
+               "Variance propagation can only be used with count as the response.")
 
 })
 

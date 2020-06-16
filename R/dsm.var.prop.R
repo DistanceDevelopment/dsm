@@ -71,7 +71,7 @@ dsm.var.prop <- function(dsm.obj, pred.data, off.set,
 
   # if there is no ddf object, then we should stop!
   # thanks to Adrian Schiavini for spotting this
-  if(is.null(dsm.obj$ddf)){
+  if(any(class(dsm.obj$ddf)=="fake_ddf")){
     stop("No detection function in this analysis, use dsm.var.gam")
   }
 
@@ -105,7 +105,6 @@ dsm.var.prop <- function(dsm.obj, pred.data, off.set,
 
   # mudge together all the prediction data
   all_preddata <- do.call("rbind", pred.data)
-  all_preddata[["XX"]] <- matrix(0, nrow(all_preddata), length(dsm.obj$ddf$par))
 
   ## end data setup
 
@@ -123,6 +122,13 @@ dsm.var.prop <- function(dsm.obj, pred.data, off.set,
   varp <- dsm_varprop(dsm.obj, pred.data[[1]])
   refit <- varp$refit
 
+  # add extra cols
+  if(all(class(dsm.obj$ddf) == "list")){
+    df_npars <- sum(unlist(lapply(dsm.obj$ddf,function(x) length(x$par))))
+  }else{
+    df_npars <- length(dsm.obj$ddf$par)
+  }
+  all_preddata[["XX"]] <- matrix(0, nrow(all_preddata), df_npars)
 
   # get a big Lp matrix now and just get rows below
   Lp_big <- predict(refit, newdata=all_preddata, type="lpmatrix")

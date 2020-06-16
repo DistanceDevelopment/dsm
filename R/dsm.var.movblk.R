@@ -72,9 +72,14 @@ dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
                            samp.unit.name='Transect.Label',
                            progress.file=NULL, bs.file=NULL,bar=TRUE){
 
+  # no multiddf
+  if(all(class(dsm.object$ddf) == "list") &&
+     length(dsm.object$ddf)>1){
+    stop("Cannot use multiple detection functions with the bootstrap.")
+  }
   # check the user didn't ask for DS uncertainty and didn't supply
   # a detection function
-  if(ds.uncertainty & is.null(dsm.object$ddf)){
+  if(ds.uncertainty & any(class(dsm.object$ddf)=="fake_ddf")){
     stop("Cannot incorporate detection function uncertainty with no detection function!")
   }
   # check the user didn't ask for individual level covars and detection

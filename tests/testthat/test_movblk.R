@@ -20,7 +20,7 @@ hn.model <- suppressMessages(ds(distdata,
                                 adjustment = NULL))
 
 # fit a simple smooth of x and y
-mod1<-dsm(N~s(x,y), hn.model, segdata, obsdata)
+mod1<-dsm(abundance.est~s(x,y), hn.model, segdata, obsdata)
 
 # run the moving block bootstrap for 2 rounds
 set.seed(1123)
@@ -39,10 +39,21 @@ test_that("mexdolphins - bootstrap results for s(x,y)",{
                0.3340702, tol=cv.tol)
 })
 
+# no multiddf
+
+test_that("mexdolphins - no multiddf",{
+  mod2 <- mod1
+  mod2$ddf <- list(hn.model, hn.model)
+
+  expect_error(dsm.var.movblk(mod1, preddata, n.boot = 2,
+                              block.size = 3, off.set = 444*1000*1000,bar=FALSE),
+               "Cannot use multiple detection functions with the bootstrap.")
+})
+
 ## With no detection function
-test_that("mexdolphins - bootstrap works for NULL detection function",{
-  mod1_nodf <-dsm(N~s(x,y), NULL, segdata, obsdata,
-                  strip.width=8000)
+test_that("mexdolphins - bootstrap works for strip transects",{
+  dum <- dummy_ddf(obsdata$object, obsdata$size, 8000)
+  mod1_nodf <-dsm(abundance.est~s(x,y), dum, segdata, obsdata)
   set.seed(1123)
   mod1.movblk_nodf <- dsm.var.movblk(mod1_nodf, preddata, n.boot=2,
                               block.size=3, off.set=444*1000*1000, bar=FALSE)

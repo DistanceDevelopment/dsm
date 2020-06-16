@@ -1,6 +1,10 @@
 dsm news!
 
-# 2.3
+# 2.3.1
+ * multiple detection functions are now possible, use a list() of fitted detection functions supplied to ddf.obj= argument to dsm(). dsm.var.gam, dsm.var.prop and dsm_varprop are compatible. Vignette coming soon.
+ * strip transects now handled using the dummy_ddf() function.
+
+# 2.3.0
  * fixed dsm_varprop (gam.fixed.priors) for response distributions with fixed scale parameters. Negative binomial results before now may have been incorrect!
 
 # 2.2.18

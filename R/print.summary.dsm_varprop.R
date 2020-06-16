@@ -13,10 +13,19 @@ print.summary.dsm_varprop<-function(x, ...){
 
   cat("Summary of uncertainty in a density surface model calculated\n")
   cat(" by variance propagation.\n")
-  #cat("\nQuantiles of differences between fitted model and variance model\n")
-  #print(x$model.check)
   cat("\nProbability of detection in fitted model and variance model\n")
-  print(x$varprop_diagnostic)
+  #lapply(x$varprop_diagnostic, function(x){
+  #  #cat(attr(x, "model_description"), ":\n")
+  #  print(x)
+  #})
+  if(length(x$varprop_diagnostic) > 1){
+    for(i in seq_along(x$varprop_diagnostic)){
+      cat("Detection function", i,"\n")
+      print(x$varprop_diagnostic[[i]])
+    }
+  }else{
+    print(x$varprop_diagnostic[[1]])
+  }
 
   cat("\n")
 
@@ -46,7 +55,8 @@ print.summary.dsm_varprop<-function(x, ...){
   cat("(Using log-Normal approximation)\n")
 
   cat("\n")
-  cat("Detection function CV          :", x$detfct.cv, "\n")
+  cat("Detection function CV          :", paste(round(x$detfct.cv, 4),
+                                                collapse=", "), "\n")
   cat("\n")
   cat("Point estimate                 :", x$pred.est,"\n")
   cat("Standard error                 :", sqrt(x$var),"\n")
