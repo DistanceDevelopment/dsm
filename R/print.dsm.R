@@ -33,7 +33,7 @@ print.dsm <- function(x, ...){
     }
     cat("\n")
   }else{
-    cat("\nDetection function :", ddf.model.description(x$ddf[[i]]),"\n")
+    cat("\nDetection function :", ddf.model.description(x$ddf),"\n")
   }
 
   cat("\nFormula: ",as.character(x$formula)[2],"~",
