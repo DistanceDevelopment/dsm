@@ -36,12 +36,12 @@ summary.dsm_varprop <- function(object, alpha=0.05, ...){
 
   for(i in seq_along(object$old_model$ddf)){
 
-  # detection function CV too
-  ddf.summary <- summary(object$old_model$ddf[[i]])
+    # detection function CV too
+    ddf.summary <- summary(object$old_model$ddf[[i]])
 
-  cvp.sq <- (ddf.summary$average.p.se/
-             ddf.summary$average.p)^2
-  sinfo$detfct.cv <- c(sinfo$detfct.cv, sqrt(cvp.sq))
+    cvp.sq <- (ddf.summary$average.p.se/
+               ddf.summary$average.p)^2
+    sinfo$detfct.cv <- c(sinfo$detfct.cv, sqrt(cvp.sq))
   }
 
   # save model check diagnostic
