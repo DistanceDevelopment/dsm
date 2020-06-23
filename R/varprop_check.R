@@ -25,7 +25,9 @@ varprop_check <- function(object){
     oddf <- object$old_model$ddf[[ii]]
     nd <- oddf$data
 
-    if(oddf$ds$aux$ddfobj$scale$formula == "~1"){
+    if(any(class(oddf)=="fake_ddf")){
+      next
+    }else if(oddf$ds$aux$ddfobj$scale$formula == "~1"){
       nd <- nd[1, "distance", drop=FALSE]
     }else{
       vars <- all.vars(as.formula(oddf$ds$aux$ddfobj$scale$formula))
