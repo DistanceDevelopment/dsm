@@ -31,7 +31,9 @@ summary.dsm_varprop <- function(object, alpha=0.05, ...){
   if(!all(class(object$old_model$ddf) == "list")){
     object$old_model$ddf <- list(object$old_model$ddf)
   }
-sinfo$detfct.cv <- c()
+
+  sinfo$detfct.cv <- c()
+
   for(i in seq_along(object$old_model$ddf)){
 
   # detection function CV too
@@ -40,7 +42,7 @@ sinfo$detfct.cv <- c()
   cvp.sq <- (ddf.summary$average.p.se/
              ddf.summary$average.p)^2
   sinfo$detfct.cv <- c(sinfo$detfct.cv, sqrt(cvp.sq))
-}
+  }
 
   # save model check diagnostic
   sinfo$varprop_diagnostic <- varprop_check(object)
