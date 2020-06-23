@@ -70,12 +70,19 @@ predict.fake_ddf <- function(object, newdata=NULL, compute=FALSE,
   return(ret)
 }
 
+#' @export
+print.fake_ddf <- function(x, ...){
+  print(summary(x))
+}
+
+#' @export
 summary.fake_ddf <- function(object, ...){
-  class(object) <- "summary.fake.ddf"
+  class(object) <- "summary.fake_ddf"
   return(object)
 }
 
-print.summary.fake.ddf <- function(x, ...){
+#' @export
+print.summary.fake_ddf <- function(x, ...){
   cat("\nSummary for dummy ds object \n")
   cat("Number of observations : ", nrow(x$data),"\n")
   cat("Distance range         : ", x$meta.data$left, " - ",
