@@ -19,7 +19,7 @@ hn.model <- suppressMessages(ds(distdata,
 test_that("predictions from density",{
 
   # fit a simple smooth of x and y
-  mod1 <- dsm(density~s(depth), hn.model, segdata, obsdata)
+  mod1 <- dsm(density.est~s(depth), hn.model, segdata, obsdata)
 
   fake_dat <- mod1$data
   fake_dat$off.set <- NULL

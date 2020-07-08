@@ -14,7 +14,7 @@
 #' The summary output from the function includes a simply diagnostic that shows the average probability of detection from the "original" fitted model (the model supplied to this function; column \code{Fitted.model}) and the probability of detection from the refitted model (used for variance propagation; column \code{Refitted.model}) along with the standard error of the probability of detection from the fitted model (\code{Fitted.model.se}), at the unique values of any factor covariates used in the detection function (for continuous covariates the 5%, 50% and 95% quantiles are shown). If there are large differences between the probabilities of detection then there are potentially problems with the fitted model, the variance propagation or both. This can be because the fitted model does not account for enough of the variability in the data and in refitting the variance model accounts for this in the random effect.
 #'
 #' @section Limitations:
-#' Note that this routine is only useful if a detection function has been used in the DSM. It cannot be used when the \code{Nhat}, \code{abundance.est} responses are used. Importantly this requires that if the detection function has covariates, then these do not vary within a segment (so, for example covariates like sex cannot be used).
+#' Note that this routine is only useful if a detection function has been used in the DSM. It cannot be used when the \code{abundance.est} or \code{density.est} responses are used. Importantly this requires that if the detection function has covariates, then these do not vary within a segment (so, for example covariates like sex cannot be used).
 #'
 #' @inheritParams dsm.var.gam
 #' @return a list with elements
@@ -65,7 +65,7 @@ dsm.var.prop <- function(dsm.obj, pred.data, off.set,
   }
 
   # break if we use the wrong response
-  if(!(as.character(dsm.obj$formula)[2] %in% c("N", "n", "count"))){
+  if(as.character(dsm.obj$formula)[2] != "count"){
     stop("Variance propagation can only be used with count as the response.")
   }
 

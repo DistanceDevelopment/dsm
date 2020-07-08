@@ -56,7 +56,7 @@ The summary output from the function includes a simply diagnostic that shows the
 
 \section{Limitations}{
 
-Note that this routine is only useful if a detection function has been used in the DSM. It cannot be used when the \code{Nhat}, \code{abundance.est} responses are used. Importantly this requires that if the detection function has covariates, then these do not vary within a segment (so, for example covariates like sex cannot be used).
+Note that this routine is only useful if a detection function has been used in the DSM. It cannot be used when the \code{abundance.est} or \code{density.est} responses are used. Importantly this requires that if the detection function has covariates, then these do not vary within a segment (so, for example covariates like sex cannot be used).
 }
 
 \references{

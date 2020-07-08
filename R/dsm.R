@@ -5,9 +5,9 @@
 #'
 #' The response (LHS of `formula`) can be one of the following:
 #' \tabular{ll}{
-#'   \code{n}, \code{count}, \code{N} \tab count in each segment\cr
-#'   \code{Nhat}, \code{abundance.est} \tab estimated abundance per segment, estimation is via a Horvitz-Thompson estimator. This should be used when there are covariates in the detection function.\cr
-#'   \code{D}, \code{density}, \code{Dhat}, \code{density.est} \tab density per segment\cr
+#'   \code{count} \tab count in each segment\cr
+#'   \code{abundance.est} \tab estimated abundance per segment, estimation is via a Horvitz-Thompson estimator. This should be used when there are covariates in the detection function.\cr
+#'   \code{density.est} \tab density per segment\cr
 #'  }
 #'
 #' The offset used in the model is dependent on the response:
@@ -118,12 +118,12 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
   ## check the formula
   response <- as.character(formula)[2]
   # throw an error if we have one of the deprecated responses
-  if(response %in% c("presence")){
-    stop(paste("Response", response, "is now deprecated."))
+  if(response %in% c("presence", "D", "density", "Dhat", "N", "Nhat", "n")){
+    stop(paste("Response", response, "is deprecated, see ?dsm for details."))
   }
-  possible.responses <- c("D", "density", "Dhat", "density.est",
-                          "N", "count", "n",
-                          "Nhat", "abundance.est")
+  possible.responses <- c("density.est",
+                          "count",
+                          "abundance.est")
   if(!(response %in% possible.responses)){
     stop(paste("Model must be one of:",
                paste(possible.responses, collapse=", ")))
@@ -141,7 +141,7 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
 
   ## if we are not modelling density, then add in the offset
   ##  to the formula
-  if(!(response %in% c("D","density","Dhat","density.est"))){
+  if(!(response %in% c("density.est"))){
     formula <- as.formula(paste(c(as.character(formula)[c(2, 1, 3)],
                                 "+ offset(off.set)"), collapse=""))
   }else{

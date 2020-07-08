@@ -19,7 +19,7 @@ hn.model <- suppressMessages(ds(distdata,
 test_that("Do we get the same results?",{
 
   # fit a simple smooth of x and y
-  mod1<-dsm(N~x+y+depth, hn.model, segdata, obsdata, engine="glm")
+  mod1<-dsm(count~x+y+depth, hn.model, segdata, obsdata, engine="glm")
   #summary(mod1)
 
   res_coef <- c(-1.445646175e+01, -6.034068174e-07,
@@ -33,8 +33,8 @@ test_that("Do we get the same results?",{
 test_that("Density weighting",{
 
   # compare when we set the weights
-  mod1<-dsm(N~x+y, hn.model, segdata, obsdata, engine="glm")
-  mod1.w <- dsm(D ~ x + y + depth, hn.model, segdata, obsdata,
+  mod1<-dsm(count~x+y, hn.model, segdata, obsdata, engine="glm")
+  mod1.w <- dsm(density.est ~ x + y + depth, hn.model, segdata, obsdata,
                 weights=mod1$data$segment.area, engine="glm")
 
   res_coef <- c(-1.445646196e+01, -6.034067589e-07,

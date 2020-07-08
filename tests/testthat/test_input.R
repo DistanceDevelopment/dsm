@@ -12,52 +12,46 @@ data(mexdolphins)
 suppressMessages(hn.model <- ds(distdata, max(distdata$distance),
                                 adjustment = NULL))
 
+test_that("errors are thrown for deprecated responses",{
+
+  expect_error(dsm(N~s(x,y), hn.model, segdata, obsdata),
+               "Response N is deprecated, see ?dsm for details.", fixed=TRUE)
+
+  expect_error(dsm(n~s(x,y), hn.model, segdata, obsdata),
+               "Response n is deprecated, see ?dsm for details.", fixed=TRUE)
+
+  expect_error(dsm(Nhat~s(x,y), hn.model, segdata, obsdata),
+               "Response Nhat is deprecated, see ?dsm for details.", fixed=TRUE)
+
+  expect_error(dsm(D~s(x,y), hn.model, segdata, obsdata,
+                   weights=rep(1,nrow(segdata))),
+               "Response D is deprecated, see ?dsm for details.", fixed=TRUE)
+
+  expect_error(dsm(density~s(x,y), hn.model, segdata, obsdata,
+               weights=rep(1,nrow(segdata))),
+               "Response density is deprecated, see ?dsm for details.", fixed=TRUE)
+
+  expect_error(dsm(Dhat~s(x,y), hn.model, segdata, obsdata,
+                   weights=rep(1,nrow(segdata))),
+               "Response Dhat is deprecated, see ?dsm for details.", fixed=TRUE)
+})
+
 test_that("formula specs",{
 
   ## models for count
   count.reml <- 936.0362722
-  count.N <- dsm(N~s(x,y), hn.model, segdata, obsdata)
-  expect_equal(unname(count.N$gcv.ubre), count.reml, tolerance=par.tol, check.attributes=FALSE)
-
-  count.n <- dsm(n~s(x,y), hn.model, segdata, obsdata)
-  expect_equal(unname(count.n$gcv.ubre), count.reml, tolerance=par.tol, check.attributes=FALSE)
-
   count.count <- dsm(count~s(x,y), hn.model, segdata, obsdata)
   expect_equal(unname(count.count$gcv.ubre), count.reml, tolerance=par.tol, check.attributes=FALSE)
 
   ## models for abund.est
   abund.est.gcv <- 992.0182117
-  abund.est.Nhat<-dsm(Nhat~s(x,y), hn.model, segdata,
-                      obsdata)
-  expect_equal(unname(abund.est.Nhat$gcv.ubre), abund.est.gcv,tolerance=par.tol, check.attributes=FALSE)
   abund.est.abund.est<-dsm(abundance.est~s(x,y), hn.model, segdata,
                            obsdata)
   expect_equal(unname(abund.est.abund.est$gcv.ubre),abund.est.gcv,
                                                   tolerance=par.tol, check.attributes=FALSE)
-  abund.est.abundance<-dsm(abundance.est~s(x,y), hn.model, segdata,
-                       obsdata)
-  expect_equal(unname(abund.est.abundance$gcv.ubre), abund.est.gcv,
-                                                   tolerance=par.tol, check.attributes=FALSE)
-
 
   ## models for density
   D.reml <- -2812.33881
-  density.D<-dsm(D~s(x,y), hn.model, segdata, obsdata,
-                 weights=rep(1,nrow(segdata)))
-  expect_equal(unname(density.D$gcv.ubre), D.reml,
-               tolerance=par.tol, check.attributes=FALSE)
-
-  density.density<-dsm(density~s(x,y), hn.model, segdata,
-                       obsdata,
-                       weights=rep(1,nrow(segdata)))
-  expect_equal(unname(density.density$gcv.ubre), D.reml,
-               tolerance=par.tol, check.attributes=FALSE)
-
-  density.Dhat<-dsm(Dhat~s(x,y), hn.model, segdata,
-                    obsdata,
-                    weights=rep(1,nrow(segdata)))
-  expect_equal(unname(density.Dhat$gcv.ubre), D.reml,
-               tolerance=par.tol, check.attributes=FALSE)
 
   density.density.est<-dsm(density.est~s(x,y), hn.model, segdata,
                            obsdata,
@@ -81,7 +75,7 @@ test_that("Missing columns cause errors",{
   for(mcov in c("object","Sample.Label","size","distance")){
     obs_missing <- obsdata
     obs_missing[[mcov]] <- NULL
-    expect_error(dsm(N~s(x,y), hn.model, seg, obs_missing),
+    expect_error(dsm(count~s(x,y), hn.model, seg, obs_missing),
                  paste0("Column(s) \"",mcov,
                         "\" not found in observation.data."),
                  fixed=TRUE)
@@ -90,7 +84,7 @@ test_that("Missing columns cause errors",{
   for(mcov in c("Effort","Sample.Label")){
     seg_missing <- seg
     seg_missing[[mcov]] <- NULL
-    expect_error(dsm(N~s(x,y), hn.model, seg_missing, obs),
+    expect_error(dsm(count~s(x,y), hn.model, seg_missing, obs),
                  paste0("Column(s) \"",mcov,
                         "\" not found in segment.data."),
                  fixed=TRUE)
@@ -99,7 +93,7 @@ test_that("Missing columns cause errors",{
   # with segment area specified we only have a problem with Sample.Label
   seg_missing <- seg
   seg_missing[["Sample.Label"]] <- NULL
-  expect_error(dsm(N~s(x,y), hn.model, seg_missing, obs),
+  expect_error(dsm(count~s(x,y), hn.model, seg_missing, obs),
                paste0("Column(s) \"Sample.Label\" not found in segment.data."),
                fixed=TRUE)
 
@@ -113,7 +107,7 @@ test_that("Error thrown when Sample.Labels don't match up",{
   # now nothing will match
   seg$Sample.Label <- paste0(seg$Sample.Label, "-wat")
 
-  expect_error(dsm(N~s(x,y), hn.model, seg, obs),
+  expect_error(dsm(count~s(x,y), hn.model, seg, obs),
                "No matches between segment and observation data.frame Sample.Labels!",
                fixed=TRUE)
 
