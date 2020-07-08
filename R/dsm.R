@@ -7,7 +7,6 @@
 #' \tabular{ll}{
 #'   \code{n}, \code{count}, \code{N} \tab count in each segment\cr
 #'   \code{Nhat}, \code{abundance.est} \tab estimated abundance per segment, estimation is via a Horvitz-Thompson estimator. This should be used when there are covariates in the detection function.\cr
-#'   \code{presence} \tab interpret the data as presence/absence (remember to change the \code{family} argument to \code{binomial()}), detectability is not accounted for\cr
 #'   \code{D}, \code{density}, \code{Dhat}, \code{density.est} \tab density per segment\cr
 #'  }
 #'
@@ -15,11 +14,10 @@
 #' \tabular{ll}{
 #'   count \tab area of segment multiplied by average probability of detection in the segment\cr
 #'   estimated count \tab area of the segment\cr
-#'   presence \tab zero\cr
 #'   density \tab zero\cr
 #'  }
 #'
-#' In the latter two cases (density and presence estimation) observations can be weighted by segment areas via the \code{weights=} argument. By default (\code{weights=NULL}), when density or presence are estimated the weights are set to the segment areas (using \code{segment.area} or by calculating \code{2*}(strip width)\code{*Effort}) Alternatively \code{weights=1} will set the weights to all be equal.  A third alternative is to pass in a vector of length equal to the number of segments, containing appropriate weights.
+#' In the density case, observations can be weighted by segment areas via the \code{weights=} argument. By default (\code{weights=NULL}), when density is estimated the weights are set to the segment areas (using \code{segment.area} or by calculating \code{2*}(strip width)\code{*Effort}) Alternatively \code{weights=1} will set the weights to all be equal. A third alternative is to pass in a vector of length equal to the number of segments, containing appropriate weights.
 #'
 #' A example analyses are available at \url{http://examples.distancesampling.org}.
 #'
@@ -119,10 +117,13 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
 
   ## check the formula
   response <- as.character(formula)[2]
+  # throw an error if we have one of the deprecated responses
+  if(response %in% c("presence")){
+    stop(paste("Response", response, "is now deprecated."))
+  }
   possible.responses <- c("D", "density", "Dhat", "density.est",
                           "N", "count", "n",
-                          "Nhat", "abundance.est",
-                          "presence")
+                          "Nhat", "abundance.est")
   if(!(response %in% possible.responses)){
     stop(paste("Model must be one of:",
                paste(possible.responses, collapse=", ")))
@@ -134,29 +135,17 @@ dsm <- function(formula, ddf.obj, segment.data, observation.data,
   check.cols(ddf.obj, segment.data, observation.data, segment.area)
 
 
- # if we're doing presence ignore detection function
- if(response == "presence"){
-   if(!is.null(ddf.obj)){
-     ddf.obj <- NULL
-     warning("Detection function supplied for presence/absence model but will be ignored")
-   }
-   if(is.null(strip.width)){
-     stop("strip.width must be supplied for presence/absence models")
-   }
- }
-
-
   ## build the data
   dat <- make.data(response, ddf.obj, segment.data, observation.data,
                    group, convert.units, availability, segment.area, family)
 
-  ## if we are not modelling density/presence, then add in the offset
+  ## if we are not modelling density, then add in the offset
   ##  to the formula
-  if(!(response %in% c("D","density","Dhat","density.est","presence"))){
+  if(!(response %in% c("D","density","Dhat","density.est"))){
     formula <- as.formula(paste(c(as.character(formula)[c(2, 1, 3)],
                                 "+ offset(off.set)"), collapse=""))
   }else{
-    # set the weights if we are doing density or presence estimation
+    # set the weights if we are doing density estimation
     if(is.null(weights)){
       weights <- dat$segment.area
     }else if(length(weights)==1){

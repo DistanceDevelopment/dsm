@@ -120,12 +120,6 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
     responsedata <- aggregate(obsdata[,cluster.name]/(obsdata$p*availability),
                               list(obsdata[,segnum.name]), sum)
     off.set<-"area"
-  }else if(response == "presence"){
-    responsedata <- aggregate(obsdata[,cluster.name],
-                              list(obsdata[,segnum.name]), sum)
-    responsedata$x[responsedata$x>0] <- 1
-    responsedata$x[responsedata$x<1] <- 0
-    off.set <- "none"
   }
 
 

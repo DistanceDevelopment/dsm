@@ -64,7 +64,6 @@ The response (LHS of `formula`) can be one of the following:
 \tabular{ll}{
   \code{n}, \code{count}, \code{N} \tab count in each segment\cr
   \code{Nhat}, \code{abundance.est} \tab estimated abundance per segment, estimation is via a Horvitz-Thompson estimator. This should be used when there are covariates in the detection function.\cr
-  \code{presence} \tab interpret the data as presence/absence (remember to change the \code{family} argument to \code{binomial()}), detectability is not accounted for\cr
   \code{D}, \code{density}, \code{Dhat}, \code{density.est} \tab density per segment\cr
  }
 
@@ -72,11 +71,10 @@ The offset used in the model is dependent on the response:
 \tabular{ll}{
   count \tab area of segment multiplied by average probability of detection in the segment\cr
   estimated count \tab area of the segment\cr
-  presence \tab zero\cr
   density \tab zero\cr
  }
 
-In the latter two cases (density and presence estimation) observations can be weighted by segment areas via the \code{weights=} argument. By default (\code{weights=NULL}), when density or presence are estimated the weights are set to the segment areas (using \code{segment.area} or by calculating \code{2*}(strip width)\code{*Effort}) Alternatively \code{weights=1} will set the weights to all be equal.  A third alternative is to pass in a vector of length equal to the number of segments, containing appropriate weights.
+In the density case, observations can be weighted by segment areas via the \code{weights=} argument. By default (\code{weights=NULL}), when density is estimated the weights are set to the segment areas (using \code{segment.area} or by calculating \code{2*}(strip width)\code{*Effort}) Alternatively \code{weights=1} will set the weights to all be equal. A third alternative is to pass in a vector of length equal to the number of segments, containing appropriate weights.
 
 A example analyses are available at \url{http://examples.distancesampling.org}.
 }
