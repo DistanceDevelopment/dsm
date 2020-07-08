@@ -25,7 +25,7 @@ dsm(
 \arguments{
 \item{formula}{formula for the surface. This should be a valid \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}} formula. See "Details", below, for how to define the response.}
 
-\item{ddf.obj}{result from call to \code{\link{ddf}} or \code{\link[Distance]{ds}}. If \code{ddf.obj} is \code{NULL} then strip transects are assumed.}
+\item{ddf.obj}{result from call to \code{\link{ddf}} or \code{\link[Distance]{ds}}. If multiple detection functions are required a \code{list} can be provided. For strip/circle transects where it is assumed all objects are observed, see \code{\link{dummy_ddf}}.}
 
 \item{segment.data}{segment data, see \code{\link{dsm-data}}.}
 
@@ -50,8 +50,6 @@ dsm(
 \item{method}{The smoothing parameter estimation method. Default is \code{"REML"}, using Restricted Maximum Likelihood. See \code{\link{gam}} for other options. Ignored for \code{engine="glm"}.}
 
 \item{\dots}{anything else to be passed straight to \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}}/\code{\link{bam}}.}
-
-\item{transect}{type of transect (\code{"line"}, the default or \code{"point"}). This is overridden by the detection function transect type, this is usually only necessary when no detection function is specified.}
 }
 \value{
 a \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}} object, with an additional element, \code{ddf} which holds the detection function object.
@@ -74,14 +72,14 @@ The offset used in the model is dependent on the response:
   density \tab zero\cr
  }
 
-In the density case, observations can be weighted by segment areas via the \code{weights=} argument. By default (\code{weights=NULL}), when density is estimated the weights are set to the segment areas (using \code{segment.area} or by calculating \code{2*}(strip width)\code{*Effort}) Alternatively \code{weights=1} will set the weights to all be equal. A third alternative is to pass in a vector of length equal to the number of segments, containing appropriate weights.
+In the density case, observations can be weighted by segment areas via the \code{weights=} argument. By default (\code{weights=NULL}), when density is estimated the weights are set to the segment areas (using \code{segment.area} or by calculated from detection function object metadata and \code{Effort} data). Alternatively \code{weights=1} will set the weights to all be equal. A third alternative is to pass in a vector of length equal to the number of segments, containing appropriate weights.
 
 A example analyses are available at \url{http://examples.distancesampling.org}.
 }
 \section{Units}{
 
 
-It is often the case that distances are collected in metres and segment lengths are recorded in kilometres. \code{dsm} allows you to provide a conversation factor (\code{convert.units}) to multiply the areas by. For example: if distances are in metres and segment lengths are in kilometres setting \code{convert.units=1000} will lead to the analysis being in metres. Setting \code{convert.units=1/1000} will lead to the analysis being in kilometres. The conversion factor will be applied to `segment.area` if that is specified.
+It is often the case that distances are collected in metres and segment lengths are recorded in kilometres. \code{dsm} allows you to provide a conversion factor (\code{convert.units}) to multiply the areas by. For example: if distances are in metres and segment lengths are in kilometres setting \code{convert.units=1000} will lead to the analysis being in metres. Setting \code{convert.units=1/1000} will lead to the analysis being in kilometres. The conversion factor will be applied to `segment.area` if that is specified.
 }
 
 \section{Large models}{
