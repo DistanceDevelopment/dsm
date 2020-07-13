@@ -37,7 +37,8 @@ predict.dsm <- function(object, newdata=NULL, off.set=NULL,
     }
   }else{
 
-    if(is.null(newdata$off.set) & is.null(off.set)){
+    if(!any("off.set" %in% colnames(newdata)) &
+       is.null(off.set)){
       stop("You must supply off.set in data or as an argument.")
     }
 

@@ -6,6 +6,7 @@ dsm news!
  * strip transects now handled using the dummy_ddf() function.
  * presence~ response type removed
  * Response options "D", "density", "Dhat", "N", "Nhat" and "n" deprecated. Now only "count", "abundance.est" and "density.est" are allowed.
+ * Make predict.dsm work with tibbles when off.set is not a column in newdata (error is thrown in previous code's check of this). Thanks to Dave Fifield for reporting this issue.
 
 
 # 2.3.0
