@@ -23,7 +23,7 @@ test_that("predictions from density",{
 
   fake_dat <- mod1$data
   fake_dat$off.set <- NULL
-  expect_equal(predict(mod1), predict(mod1, fake_dat, off.set=1))
+  expect_equal(predict(mod1), predict(mod1, fake_dat, off.set=1), tol=par.tol)
 
   # check for error if we don't supply newdata but do supply off.set
   expect_warning(predict(mod1, off.set=1),
@@ -50,5 +50,6 @@ test_that("predictions for count",{
   mod1 <- dsm(count~s(depth), hn.model, segdata, obsdata)
 
   fake_dat <- mod1$data
+  fake_dat$off.set <- exp(fake_dat$off.set)
   expect_equal(predict(mod1), predict(mod1, fake_dat))
 })
