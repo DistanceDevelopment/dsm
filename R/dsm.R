@@ -3,10 +3,10 @@
 #'
 #' Fits a density surface model (DSM) to detection adjusted counts from a spatially-referenced distance sampling analysis. \code{\link{dsm}} takes observations of animals, allocates them to segments of line (or strip transects) and optionally adjusts the counts based on detectability using a supplied detection function model. A generalized additive model, generalized mixed model or generalized linear model is then used to model these adjusted counts based on a formula involving environmental covariates.
 #'
-#' The response (LHS of `formula`) can be one of the following:
+#' The response (LHS of `formula`) can be one of the following (with restrictions outlined below):
 #' \tabular{ll}{
 #'   \code{count} \tab count in each segment\cr
-#'   \code{abundance.est} \tab estimated abundance per segment, estimation is via a Horvitz-Thompson estimator. This should be used when there are covariates in the detection function.\cr
+#'   \code{abundance.est} \tab estimated abundance per segment, estimation is via a Horvitz-Thompson estimator.\cr
 #'   \code{density.est} \tab density per segment\cr
 #'  }
 #'
@@ -16,6 +16,8 @@
 #'   estimated count \tab area of the segment\cr
 #'   density \tab zero\cr
 #'  }
+#'
+#' The \code{count} response can only be used when detection function covariates only vary between segments/points (not within). For example, weather conditions (like visibility or sea state) or foliage cover are usually acceptable as they do not change within the segment, but animal sex or behaviour will not work. The \code{abundance.est} response can be used with any covariates in the detection function.
 #'
 #' In the density case, observations can be weighted by segment areas via the \code{weights=} argument. By default (\code{weights=NULL}), when density is estimated the weights are set to the segment areas (using \code{segment.area} or by calculated from detection function object metadata and \code{Effort} data). Alternatively \code{weights=1} will set the weights to all be equal. A third alternative is to pass in a vector of length equal to the number of segments, containing appropriate weights.
 #'
