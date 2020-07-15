@@ -89,6 +89,10 @@ dsm_varprop <- function(model, newdata, trace=FALSE, var_type="Vp"){
   ddf <- model$ddf
   if(all(class(ddf)!="list")){
     ddf <- list(ddf)
+    # work around for dsms fitted in previous versions
+    if(is.null(model$data$ddfobj)){
+      model$data$ddfobj <- 1
+    }
   }
 
   # get detection function info
