@@ -8,6 +8,7 @@ dsm news!
  * Response options "D", "density", "Dhat", "N", "Nhat" and "n" deprecated. Now only "count", "abundance.est" and "density.est" are allowed.
  * Make predict.dsm work with tibbles when off.set is not a column in newdata (error is thrown in previous code's check of this). Thanks to Dave Fifield for reporting this issue.
  * Fix bug with inconsistent predictions when density.est is used as the response. Code in predict.dsm has been simplified and documentation updated. Thanks to Dave Fifield for reporting this issue.
+ * mrds independent observer (io) models are allowed for the detection function. This feature is currently experimental.
 
 
 # 2.3.0

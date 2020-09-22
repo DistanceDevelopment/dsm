@@ -25,7 +25,7 @@ dsm(
 \arguments{
 \item{formula}{formula for the surface. This should be a valid \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}} formula. See "Details", below, for how to define the response.}
 
-\item{ddf.obj}{result from call to \code{\link{ddf}} or \code{\link[Distance]{ds}}. If multiple detection functions are required a \code{list} can be provided. For strip/circle transects where it is assumed all objects are observed, see \code{\link{dummy_ddf}}.}
+\item{ddf.obj}{result from call to \code{\link{ddf}} or \code{\link[Distance]{ds}}. If multiple detection functions are required a \code{list} can be provided. For strip/circle transects where it is assumed all objects are observed, see \code{\link{dummy_ddf}}. Mark-recapture distance sampling (\code{mrds}) models of type \code{io} (independent observers) are allowed.}
 
 \item{segment.data}{segment data, see \code{\link{dsm-data}}.}
 

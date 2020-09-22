@@ -4,10 +4,10 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
                       family){
 
   # probably want to do something smart here...
-  seglength.name<-'Effort'
-  segnum.name<-'Sample.Label'
-  distance.name<-'distance'
-  cluster.name<-'size'
+  seglength.name <- 'Effort'
+  segnum.name <- 'Sample.Label'
+  distance.name <- 'distance'
+  cluster.name <- 'size'
 
   # avoid irritating "tibble" issues
   segdata <- data.frame(segdata)
@@ -167,19 +167,26 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
         dat[dat$ddfobj == i, ]$p <- 1
       }else{
 
-        if(this_ddf$method != "ds"){
-          stop("Only \"ds\" models are supported!")
+        if(!(this_ddf$method %in% c("ds", "io"))){
+          stop("Only \"ds\" and \"io\" models are supported!")
         }
 
-        # extract formula
-        df_formula <- as.formula(this_ddf$ds$aux$ddfobj$scale$formula)
-        if(!is.null(this_ddf$ds$aux$ddfobj$shape$formula) &&
-           this_ddf$ds$aux$ddfobj$shape$formula != "~1"){
-          stop("Shape parameter formulae are not supported!")
+        if(this_ddf$method == "io"){
+          df_vars <- c(all.vars(as.formula(this_ddf$ds$ds$aux$ddfobj$scale$formula)),
+                       all.vars(as.formula(this_ddf$mr$model)))
+          df_vars <- setdiff(df_vars, "distance")
+        }else{
+          # extract formulae
+          df_formula <- as.formula(this_ddf$ds$aux$ddfobj$scale$formula)
+          if(!is.null(this_ddf$ds$aux$ddfobj$shape$formula) &&
+             this_ddf$ds$aux$ddfobj$shape$formula != "~1"){
+            stop("Shape parameter formulae are not supported!")
+          }
+
+          # extract detection function variables
+          df_vars <- all.vars(df_formula)
         }
 
-        # extract detection function variables
-        df_vars <- all.vars(df_formula)
 
         # check these vars are in the segment table
         if(!all(df_vars %in% colnames(dat))){
@@ -191,7 +198,13 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
         nd <- dat[dat$ddfobj == i, ][, df_vars, drop=FALSE]
         nd$distance <- 0
 
-        dat[dat$ddfobj == i, ]$p <- predict(this_ddf, newdata=nd)$fitted
+        if(this_ddf$method == "io"){
+          nd <- rbind(nd, nd)
+          nd$observer <- c(rep(1, length(nd)/2), rep(2, length(nd)/2))
+          dat[dat$ddfobj == i, ]$p <- predict(this_ddf, newdata=nd)$fitted
+        }else{
+          dat[dat$ddfobj == i, ]$p <- predict(this_ddf, newdata=nd)$fitted
+        }
       }
     }
   }

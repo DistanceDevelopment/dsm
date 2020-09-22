@@ -11,7 +11,7 @@
 
 \item{newdata}{spatially referenced covariates e.g. altitude, depth, distance to shore, etc. Covariates in the \code{data.frame} must have names *identical* to variable names used in fitting the DSM.}
 
-\item{off.set}{area of each of the cells in the prediction grid. Should be in the same units as the segments/distances given to \code{dsm}. Replaces the column in \code{newdata} (or model data) called \code{off.set} if it is supplied. Ignored if \code{newdata} is not supplied.}
+\item{off.set}{area of each of the cells in the prediction grid. Should be in the same units as the segments/distances given to \code{dsm}. Replaces the column in \code{newdata} called \code{off.set} if it is supplied. Ignored if \code{newdata} is not supplied.}
 
 \item{type}{what scale should the results be on. The default is
 \code{"response"}, see \code{\link{predict.gam}} for an explanation of other options (usually not necessary).}
@@ -19,18 +19,18 @@
 \item{\dots}{any other arguments passed to \code{\link{predict.gam}}.}
 }
 \value{
-predicted values on the response scale. If \code{offset=1} densities are returned (i.e., no offset scaling), else abundances are returned.
+predicted values on the response scale by default (unless \code{type} is specified, in which case see \code{\link{predict.gam}}).
 }
 \description{
 Make predictions of density or abundance outside (or inside) the covered area.
 }
 \details{
-If \code{newdata} is not supplied, predictions are made for the data that built the model. Note that the order of the results will not necessarily be the same as the \code{segdata} (segment data) \code{data.frame} that was supplied (it will be sorted by the \code{Segment.Label} field).
+If \code{newdata} is not supplied, predictions are made for the data that built the model. Note that the order of the results will not necessarily be the same as the \code{segdata} (segment data) \code{data.frame} that was supplied to \code{dsm}.
 
-The area \code{off.set} is used to calculate prediction if that argument is supplied, otherwise it will look for the areas in the column named \code{off.set} in the \code{newdata} (or will calculate the areas from the data in \code{object}.
+The area \code{off.set} is used if that argument is supplied, otherwise it will look for the areas in the column named \code{off.set} in the \code{newdata}. Either way the link function (usually \code{log}) will be applied to the offsets, so there is no need to log them before passing them to this function.
 }
 \seealso{
-\code{\link{predict.gam}} \code{\link{dsm.var.gam}} \code{\link{dsm.var.prop}} \code{\link{dsm.var.movblk}}
+\code{\link{predict.gam}} \code{\link{dsm.var.gam}} \code{\link{dsm.var.prop}}
 }
 \author{
 David L. Miller
