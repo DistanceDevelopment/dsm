@@ -9,6 +9,10 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
   distance.name<-'distance'
   cluster.name<-'size'
 
+  # avoid irritating "tibble" issues
+  segdata <- data.frame(segdata)
+  obsdata <- data.frame(obsdata)
+
   # Estimating group abundance/density
   if(group){
     obsdata[, cluster.name][obsdata[, cluster.name] > 0] <- 1
