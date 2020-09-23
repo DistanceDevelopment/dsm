@@ -157,36 +157,20 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
     for(i in seq_along(ddfobject)){
       this_ddf <- ddfobject[[i]]
 
-      # if there are no covariates, and all the fitted ps are the same
-      # then just duplicate that value enough times for the segments
-      if(length(unique(fitted(this_ddf))) == 1){
+      # get all the covariates in this model
+      df_vars <- all_df_vars(this_ddf)
+
+      if("fake_ddf" %in% class(this_ddf)){
+        # strip transect
+        dat[dat$ddfobj == i, ]$p <- 1
+      }else if(length(df_vars) == 0){
+        # if there are no covariates, and all the fitted ps are the same
+        # then just duplicate that value enough times for the segments
         dat[dat$ddfobj == i, ]$p <- rep(fitted(this_ddf)[1],
                                         nrow(dat[dat$ddfobj == i, ]))
-      }else if("fake_ddf" %in% class(this_ddf)){
-        # predict for strip transect
-        dat[dat$ddfobj == i, ]$p <- 1
-      }else{
-
-        if(!(this_ddf$method %in% c("ds", "io"))){
-          stop("Only \"ds\" and \"io\" models are supported!")
-        }
-
-        if(this_ddf$method == "io"){
-          df_vars <- c(all.vars(as.formula(this_ddf$ds$ds$aux$ddfobj$scale$formula)),
-                       all.vars(as.formula(this_ddf$mr$model)))
-          df_vars <- setdiff(df_vars, "distance")
-        }else{
-          # extract formulae
-          df_formula <- as.formula(this_ddf$ds$aux$ddfobj$scale$formula)
-          if(!is.null(this_ddf$ds$aux$ddfobj$shape$formula) &&
-             this_ddf$ds$aux$ddfobj$shape$formula != "~1"){
-            stop("Shape parameter formulae are not supported!")
-          }
-
-          # extract detection function variables
-          df_vars <- all.vars(df_formula)
-        }
-
+      }else if(this_ddf$method %in% c("ds", "io")){
+        # get all the covariates in this model
+        df_vars <- all_df_vars(this_ddf)
 
         # check these vars are in the segment table
         if(!all(df_vars %in% colnames(dat))){
@@ -205,8 +189,10 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
         }else{
           dat[dat$ddfobj == i, ]$p <- predict(this_ddf, newdata=nd)$fitted
         }
+      }else{
+        stop("Only \"ds\" and \"io\" models are supported!")
       }
-    }
+    } # end loop over detection functions
   }
 
   # check that none of the Effort values are zero

@@ -31,6 +31,7 @@
 #'
 #' Wood, S.N., Pya, N. and S{\"a}fken, B. (2016) Smoothing parameter and model selection for general smooth models. Journal of the American Statistical Association, 1-45.
 #'
+#' Bravington, M.V., Miller, D.L. and Hedley, S.L. (2019) Reliable variance propagation for spatial density surface models. https://arxiv.org/abs/1807.07996
 #'
 #' @param model a fitted \code{\link{dsm}}
 #' @param newdata the prediction grid
@@ -109,31 +110,51 @@ dsm_varprop <- function(model, newdata, trace=FALSE, var_type="Vp"){
     fleshy <- relist(par, skel)
 
     ret <- rep(0, nrow(data))
+
+    # loop over the detection functions we have
     for(i in seq_along(ddf)){
       this_ddf <- ddf[[i]]
+
 
       # if we don't have a real detection function
       if("fake_ddf" %in% class(this_ddf)){
         next
       }
       # set the detection function parameters to be par
-      this_ddf$par <- fleshy[[i]]
+      this_ddf <- set_ddf_par(fleshy[[i]], this_ddf)
 
-      # calculate mu (effective strip width)
-      mu <- predict(this_ddf, newdata=ds_newdata[[i]], esw=TRUE,
-                    compute=TRUE)$fitted
+      # for io we need new data from both observers
+      if(this_ddf$method == "io"){
+        ds_newdata[[i]] <- rbind(ds_newdata[[i]], ds_newdata[[i]])
+        ds_newdata[[i]]$observer <- c(rep(1, nrow(ds_newdata[[i]])/2),
+                                      rep(2, nrow(ds_newdata[[i]])/2))
+        # note that predict.io will return a vector of the correct
+        # length
+      }
+      # calculate probability of detection
+      this_p <- predict(this_ddf, newdata=ds_newdata[[i]],
+                        compute=TRUE)$fitted
 
       # repopulate with the duplicates back in
-      mu <- mu[attr(ds_newdata[[i]], "index"), drop=FALSE]
+      this_p <- this_p[attr(ds_newdata[[i]], "index"), drop=FALSE]
+
+      # what is the width?
+      if(this_ddf$method == "io"){
+        this_width <- this_ddf$ds$meta.data$width
+      }else{
+        this_width <- this_ddf$meta.data$width
+      }
 
       # calculate offset
       if(this_ddf$meta.data$point){
         # calculate log effective circle area
         # nb. predict() returns effective area of detection for points
-        ret[data$ddfobj==i] <- linkfn(mu * data$Effort[data$ddfobj==i])
+        ret[data$ddfobj==i] <- linkfn(this_p * pi * this_width^2 *
+                                      data$Effort[data$ddfobj==i])
       }else{
         # calculate log effective strip width
-        ret[data$ddfobj==i] <- linkfn(2 * mu * data$Effort[data$ddfobj==i])
+        ret[data$ddfobj==i] <- linkfn(2 * this_width * this_p *
+                                      data$Effort[data$ddfobj==i])
       }
     }
     return(ret)
@@ -144,28 +165,39 @@ dsm_varprop <- function(model, newdata, trace=FALSE, var_type="Vp"){
   ds_newdata <- list()
   u_ds_newdata <- list()
   for(i in seq_along(ddf)){
-    # extract the formulae
-    ds_formula <- ddf[[i]]$ds$aux$ddfobj$scale$formula
+
+    # get this detection function
+    this_ddf <- ddf[[i]]
+    # get all the covariates in this model
+    df_vars <- all_df_vars(this_ddf)
 
     # if we don't have a real detection function
-    if("fake_ddf" %in% class(ddf[[i]])){
+    if("fake_ddf" %in% class(this_ddf)){
       ds_newdata[[i]] <- NA
       u_ds_newdata[[i]] <- NA
       next
     }
+
     # if we don't have covariates
     # then just setup the data for predict.ds to be a distance of 0,
     # which will be ignored anyway
-    if(ds_formula=="~1"){
+    if(length(df_vars)==0){
       ds_newdata[[i]] <- data.frame(distance=rep(0, sum(model$data$ddfobj==i)))
     }else{
       # otherwise need the covars that are in the data (that we saved
       # with keepData=TRUE :))
       ds_newdata[[i]] <- model$data[model$data$ddfobj==i, ]
-      ds_newdata[[i]] <- ds_newdata[[i]][, all.vars(as.formula(ds_formula)),
-                                     drop=FALSE]
+      ds_newdata[[i]] <- ds_newdata[[i]][ , df_vars, drop=FALSE]
       ds_newdata[[i]]$distance <- 0
     }
+
+    if(this_ddf$method == "io"){
+      #ds_newdata[[i]] <- rbind(ds_newdata[[i]], ds_newdata[[i]])
+      #ds_newdata[[i]]$observer <- c(rep(1, length(ds_newdata[[i]])/2),
+      #                              rep(2, length(ds_newdata[[i]])/2))
+      ds_newdata[[i]]$observer <- 1
+    }
+
 
     # probably a lot of duplicated stuff in the above, so let's just
     # pass the unique combinations
@@ -201,32 +233,32 @@ dsm_varprop <- function(model, newdata, trace=FALSE, var_type="Vp"){
   hess <- matrix(0, length(pars), length(pars))
   ii <- 1
 
-  # loop over our detection functions
+  # loop over our detection functions, extracting the hessian
   for(i in seq_along(ddf)){
-    # hessian needs to be 2nd REAL Hessian from the optimisation, not
-    # "distance sampling" version (product of 1st derivs) that lives in $hessian
-
     this_ddf <- ddf[[i]]
 
     if("fake_ddf" %in% class(this_ddf)){
       next
     }
-    opt_details <- attr(this_ddf$ds, "details")
-    if(is.matrix(opt_details)){
-      this_hess <- opt_details[nrow(opt_details), ]$nhatend
-    }else{
-      this_hess <- opt_details$nhatend
-    }
-    if(any(is.na(this_hess))){
-      # fall back to DS use if things are bad
-      this_hess <- this_ddf$hessian
-    }
+#    opt_details <- attr(this_ddf$ds, "details")
+#    if(is.matrix(opt_details)){
+#      this_hess <- opt_details[nrow(opt_details), ]$nhatend
+#    }else{
+#      this_hess <- opt_details$nhatend
+#    }
+#    if(any(is.na(this_hess))){
+#      # fall back to DS use if things are bad
+#      this_hess <- this_ddf$hessian
+#    }
+
+    this_hess <- get_hessian(this_ddf)
 
     # drop that matrix into the big hessian
     hess[ii:(ii+nrow(this_hess)-1), ii:(ii+ncol(this_hess)-1)] <- this_hess
 
     ii <- ii+nrow(this_hess)
   }
+
   this_call$paraPen <- c(this_call$paraPen, list(XX=list(hess)))
   # tell gam.fixed.priors what to look for
   this_call$fixed.priors <- "XX"

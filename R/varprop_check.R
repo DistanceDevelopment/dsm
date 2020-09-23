@@ -25,19 +25,23 @@ varprop_check <- function(object){
     oddf <- object$old_model$ddf[[ii]]
     nd <- oddf$data
 
+    # get all variables in this model
+    df_vars <- all_df_vars(oddf)
+
     if(any(class(oddf)=="fake_ddf")){
       next
-    }else if(oddf$ds$aux$ddfobj$scale$formula == "~1"){
+    }else if(length(df_vars) == 0){
       nd <- nd[1, "distance", drop=FALSE]
     }else{
-      vars <- all.vars(as.formula(oddf$ds$aux$ddfobj$scale$formula))
-      nd <- mgcv::uniquecombs(nd[, vars, drop=FALSE])
+      nd <- mgcv::uniquecombs(nd[, df_vars, drop=FALSE])
 
       # add distance column back in
       nd$distance <- 1
+      nd$observer <- 1
       # faff to work out which summaries we need...
       numeric_ind <- lapply(nd, is.factor)
       numeric_ind[["distance"]] <- NULL
+      numeric_ind[["observer"]] <- NULL
       numeric_ind <- which(!unlist(numeric_ind))
       for(i in seq_along(numeric_ind)){
         this_ind <- numeric_ind[i]
@@ -55,6 +59,11 @@ varprop_check <- function(object){
       }
 
       nd <- mgcv::uniquecombs(nd)
+
+      if(oddf$method == "io"){
+        nd <- rbind(nd, nd)
+        nd$observer <- c(rep(1, nrow(nd)/2), rep(2, nrow(nd)/2))
+      }
     }
     rownames(nd) <- NULL
 
@@ -63,7 +72,7 @@ varprop_check <- function(object){
 
     # old model standard errors
     predict_f <- function(par, model, newdata){
-      model$par <- par
+      model <- set_ddf_par(par, model)
       predict(model, compute=TRUE, newdata=nd)$fitted
     }
     old_p_se <- sqrt(diag(DeltaMethod(oddf$par, predict_f,
@@ -75,7 +84,7 @@ varprop_check <- function(object){
     # make a copy of the detection function
     fix_ddf <- oddf
     # correct the parameters for this model
-    fix_ddf$par <- fix_ddf$par + ddf_corrections[[ii]]
+    fix_ddf <- set_ddf_par(fix_ddf$par + ddf_corrections[[ii]], fix_ddf)
 
     # calculate detectabilities for new model
     new_p <- predict(fix_ddf, compute=TRUE, newdata=nd)
@@ -92,6 +101,9 @@ varprop_check <- function(object){
       varprop_diagnostic <- varprop_diagnostic[order(nd[, 1],
                                                      decreasing=FALSE), ]
     }
+    # get rid of the observer column and shorten the table
+    varprop_diagnostic$observer <- NULL
+    varprop_diagnostic <- unique(varprop_diagnostic)
 
     # get a somewhat informative model description
     attr(varprop_diagnostic, "model_description") <- ddf.model.description(oddf)

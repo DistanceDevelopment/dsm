@@ -61,6 +61,8 @@ Note that this routine is only useful if a detection function has been used in t
 
 \references{
 Williams, R., Hedley, S.L., Branch, T.A., Bravington, M.V., Zerbini, A.N. and Findlay, K.P. (2011). Chilean Blue Whales as a Case Study to Illustrate Methods to Estimate Abundance and Evaluate Conservation Status of Rare Species. Conservation Biology 25(3), 526-535.
+
+Bravington, M.V., Miller, D.L. and Hedley, S.L. (2019) Reliable variance propagation for spatial density surface models. https://arxiv.org/abs/1807.07996
 }
 \author{
 Mark V. Bravington, Sharon L. Hedley. Bugs added by David L. Miller.
