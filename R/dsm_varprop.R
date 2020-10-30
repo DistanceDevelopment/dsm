@@ -272,6 +272,7 @@ dsm_varprop <- function(model, newdata, trace=FALSE, var_type="Vp"){
   ## refit the model
   refit <- do.call("gam.fixed.priors", this_call)
   refit$data <- dat
+  refit$ddf <- ddf
   class(refit) <- c("dsm", class(refit))
 
   ## now do some predictions
