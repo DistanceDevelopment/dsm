@@ -2,7 +2,9 @@
 # works like all.vars but for ddf objects
 all_df_vars <- function(this_ddf){
 
-  if(this_ddf$method == "io"){
+  if("fake_ddf" %in% class(this_ddf)){
+    df_vars <- NULL
+  }else if(this_ddf$method == "io"){
     df_vars <- c(all.vars(as.formula(this_ddf$ds$ds$aux$ddfobj$scale$formula)),
                  all.vars(as.formula(this_ddf$mr$model)))
     df_vars <- setdiff(df_vars, "distance")
