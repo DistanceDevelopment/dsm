@@ -17,7 +17,7 @@ ddf.model.description <- function(model){
   key <- switch(model$ds$aux$ddfobj$type,
                 hn = "Half-normal",
                 hr = "Hazard-rate")
-  mod.str <- paste(mod.str, key, "key function")
+  mod.str <- paste0(mod.str, key, " key function")
   if(!is.null(model$ds$aux$ddfobj$adjustment)){
     adj.series <- switch(model$ds$aux$ddfobj$adjustment$series,
                         cos  = "cosine",
