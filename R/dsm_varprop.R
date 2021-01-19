@@ -27,11 +27,11 @@
 #'  }
 #' @author David L. Miller, based on code from Mark V. Bravington and Sharon L. Hedley.
 #' @references
+#' Bravington, M.V., Miller, D.L. and Hedley, S.L. (2019) Reliable variance propagation for spatial density surface models. https://arxiv.org/abs/1807.07996
+#'
 #' Williams, R., Hedley, S.L., Branch, T.A., Bravington, M.V., Zerbini, A.N. and Findlay, K.P. (2011). Chilean Blue Whales as a Case Study to Illustrate Methods to Estimate Abundance and Evaluate Conservation Status of Rare Species. Conservation Biology 25(3), 526-535.
 #'
 #' Wood, S.N., Pya, N. and S{\"a}fken, B. (2016) Smoothing parameter and model selection for general smooth models. Journal of the American Statistical Association, 1-45.
-#'
-#' Bravington, M.V., Miller, D.L. and Hedley, S.L. (2019) Reliable variance propagation for spatial density surface models. https://arxiv.org/abs/1807.07996
 #'
 #' @param model a fitted \code{\link{dsm}}
 #' @param newdata the prediction grid
