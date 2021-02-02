@@ -184,7 +184,7 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
 
         if(this_ddf$method == "io"){
           nd <- rbind(nd, nd)
-          nd$observer <- c(rep(1, length(nd)/2), rep(2, length(nd)/2))
+          nd$observer <- c(rep(1, nrow(nd)/2), rep(2, nrow(nd)/2))
           dat[dat$ddfobj == i, ]$p <- predict(this_ddf, newdata=nd)$fitted
         }else{
           dat[dat$ddfobj == i, ]$p <- predict(this_ddf, newdata=nd)$fitted
