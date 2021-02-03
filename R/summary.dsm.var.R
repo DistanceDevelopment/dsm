@@ -147,18 +147,19 @@ summary.dsm.var <- function(object, alpha=0.05, boxplot.coef=1.5,
       sinfo$se <- sqrt(object$pred.var)
     }else{
       # re run the variance calculation, putting everything together
-      pd<-c()
-      off<-c()
+      pd <- c()
+      off <- c()
       for(i in 1:length(object$pred.data)){
-        pd<-rbind(pd,object$pred.data[[i]])
-        off<-rbind(off,object$off.set[[i]])
+        pd <- rbind(pd, object$pred.data[[i]])
+        off <- rbind(off, object$off.set[[i]])
       }
       object$pred.data <- pd
       object$off.set <- as.vector(off)
 
       if(object$var.prop){
-        var.prop <- dsm.var.prop(object$dsm.obj, object$pred.data,object$off.set,
-                                 object$seglen.varname, object$type.pred)
+        var.prop <- dsm.var.prop(object$dsm.obj, object$pred.data,
+                                 object$off.set, object$seglen.varname,
+                                 object$type.pred)
       }else{
         var.prop <- dsm.var.gam(object$dsm.obj, object$pred.data,object$off.set,
                                  object$seglen.varname, object$type.pred)
@@ -167,14 +168,6 @@ summary.dsm.var <- function(object, alpha=0.05, boxplot.coef=1.5,
       sinfo$se <- sqrt(var.prop$pred.var)
     }
     # grab the predicted values
-#    if(length(object$pred)==0){
-#      dsm.obj <- object$dsm.obj
-#      class(dsm.obj) <- c("dsm",class(dsm.obj))
-#      mod1.pred <- predict(dsm.obj,
-#                           newdata=object$pred.data,
-#                           off.set=object$off.set)
-#      sinfo$pred.est <- sum(mod1.pred,na.rm=TRUE)
-#    }else if(length(object$pred)>1 | length(object$pred)==0){
     if(length(object$pred)>1){
       sinfo$pred.est <- sum(unlist(object$pred), na.rm=TRUE)
     }else{
@@ -213,7 +206,6 @@ summary.dsm.var <- function(object, alpha=0.05, boxplot.coef=1.5,
           this_cvp.sq <- NA
         }
         sinfo$detfct.cv <- c(sinfo$detfct.cv, sqrt(this_cvp.sq))
-
       }
 
       sinfo$gam.cv <- sinfo$se/sinfo$pred.est
