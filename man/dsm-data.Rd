@@ -24,4 +24,6 @@ One can often also use \code{observation.data} to fit a detection function (so a
    \code{Effort} \tab the effort (in terms of length of the segment)\cr
    \code{Sample.Label} \tab identifier for the segment (unique!)\cr
    ??? \tab environmental covariates, for example location (projected latitude and longitude), and other relevant covariates (sea surface temperature, foliage type, altitude, bathymetry etc).}
+
+If multiple detection functions are to be used, then a column named \code{ddfobj} must be included in \code{observation.data} and \code{segment.data}.
 }

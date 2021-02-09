@@ -13,6 +13,11 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
   segdata <- data.frame(segdata)
   obsdata <- data.frame(obsdata)
 
+  # matching doesn't work later if we don't ensure character labels
+  obsdata$object <- as.character(obsdata$object)
+  obsdata$Sample.Label <- as.character(obsdata$Sample.Label)
+  segdata$Sample.Label <- as.character(segdata$Sample.Label)
+
   # Estimating group abundance/density
   if(group){
     obsdata[, cluster.name][obsdata[, cluster.name] > 0] <- 1
@@ -22,9 +27,10 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
   if(any(c("ddf", "dsmodel")  %in% class(ddfobject))){
     ddfobject <- list(ddfobject)
     segdata$ddfobj <- 1
+    obsdata$ddfobj <- 1
   }else{
     if(!any("ddfobj" %in% names(segdata))){
-      stop("If there are multiple detection functions there must be a column named \"ddfobj\" in the segment frame, see ?\"dsm-data\"")
+      stop("If there are multiple detection functions there must be a column named \"ddfobj\" in the segment and observation data.frame, see ?\"dsm-data\"")
     }
   }
 
@@ -32,25 +38,43 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
   full_obsdata <- c()
   segdata$segment.area <- NA
   segdata$width <- NA
-  transect <- rep(NA, length(ddfobject))
+
+  # deal with availability
+  if(response == "density.est"){
+    if(!(length(availability) %in% c(1, nrow(obsdata)))){
+      stop("Length of 'availability' must be 1 or 'obsdata' rows")
+    }
+    obsdata$availability <- availability
+  }else if(response == "count"){
+    if(!(length(availability) %in% c(1, nrow(segdata)))){
+      stop("Length of 'availability' must be 1 or 'segdata' rows")
+    }
+    segdata$availability <- availability
+  }else if(response == "abundance.est"){
+    if(!(length(availability) %in% c(1, nrow(obsdata)))){
+      stop("Length of 'availability' must be 1 or 'obsdata' rows")
+    }
+    obsdata$availability <- availability
+  }
 
   for(i in seq_along(ddfobject)){
 
     this_ddf <- ddfobject[[i]]
 
     # make this a mrds ddf object if we had a Distance one
-    if(all(class(this_ddf)=="dsmodel")){
+    if(all(class(this_ddf) == "dsmodel")){
       this_ddf <- this_ddf$ddf
       ddfobject[[i]] <- this_ddf
     }
-    # store the transect type for later
-    transect[i] <- c("line", "point")[this_ddf$meta.data$point+1]
 
     # grab the probabilities of detection
     fitted.p <- fitted(this_ddf)
 
     # remove observations which were not in the detection function
-    this_obsdata <- obsdata[obsdata$object %in% names(fitted.p), ]
+    #this_obsdata <- obsdata[obsdata$object %in% names(fitted.p), ]
+    this_obsdata <- obsdata[obsdata[["ddfobj"]]==i, ]
+
+###
 
     # Check that observations are between left and right truncation
     # warning only -- observations are excluded below
@@ -60,17 +84,17 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
               "truncation!"))
     }
 
-    # reorder the fitted ps, making sure that
-    # they match the ordering in obsdata
-    fitted.p <- fitted.p[match(this_obsdata$object, names(fitted.p))]
+    # reorder the fitted ps, match the ordering in obsdata
+    # put this in a column of this_obsdata
+    this_obsdata$p <- fitted.p[match(this_obsdata$object, names(fitted.p))]
 
-    # set the segment area
-    # calculate the "width" of the transect first, make sure we get it right
+    # calculate the "width" of the transect, make sure we get it right
     # if we are doing left truncation
     width <- this_ddf$meta.data$width
     if(!is.null(this_ddf$meta.data$left)){
       width <- width - this_ddf$meta.data$left
     }
+    segdata$width[segdata$ddfobj==i] <- width
 
     # what if there are no matches? Perhaps this is due to the object
     # numbers being wrong? (HINT: yes.)
@@ -79,17 +103,24 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
                  "matched those in observation table. Check the \"object\" column."))
     }
 
-    # put that all together
-
-    # make a column for the detectabilities
-    this_obsdata$p <- fitted.p
+    # depending on the detection function (and its data format)
+    # we need a different subset of obsdata
+    # ds = all detections
+    # io = only unique obsns
+    # trial = only obs 1
+    if(this_ddf$method == "io"){
+      if(any(duplicated(this_obsdata$object))){
+        stop(paste0("Some object IDs are duplicated in observation data for detection function model ", i, " only unique IDs are required for observation data for io models"))
+      }
+    }else if(this_ddf$method == "trial"){
+      this_obsdata <- this_obsdata[this_obsdata[["observer"]] == 1, ]
+    }
 
     # bind this to the full data
     full_obsdata <- rbind(full_obsdata, this_obsdata)
 
     # set the segment area for this detection function in the segdata
-    segdata$width[segdata$ddfobj==i] <- width
-    if(transect[i]=="point"){
+    if(this_ddf$meta.data$point){
       # here "Effort" is number of visits
       segdata$segment.area[segdata$ddfobj==i] <- pi *
         segdata$width[segdata$ddfobj==i]^2 *
@@ -102,6 +133,7 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
     }
 
   }
+
   # set the full observation data
   obsdata <- full_obsdata
 
@@ -113,17 +145,19 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
 
   ## Aggregate response values of the sightings over segments
   if(response == "density.est"){
-    responsedata <- aggregate(obsdata[,cluster.name]/(obsdata$p*availability),
-                              list(obsdata[,segnum.name]), sum)
+    responsedata <- aggregate(obsdata[, cluster.name]/
+                              (obsdata$p * obsdata$availability),
+                              list(obsdata[, segnum.name]), sum)
     off.set <- "none"
   }else if(response == "count"){
-    responsedata <- aggregate(obsdata[,cluster.name]/availability,
-                              list(obsdata[,segnum.name]), sum)
+    responsedata <- aggregate(obsdata[, cluster.name],
+                              list(obsdata[, segnum.name]), sum)
     off.set <- "eff.area"
   }else if(response == "abundance.est"){
-    responsedata <- aggregate(obsdata[,cluster.name]/(obsdata$p*availability),
-                              list(obsdata[,segnum.name]), sum)
-    off.set<-"area"
+    responsedata <- aggregate(obsdata[, cluster.name]/
+                              (obsdata$p * obsdata$availability),
+                              list(obsdata[, segnum.name]), sum)
+    off.set <- "area"
   }
 
 
@@ -207,10 +241,10 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
 
   # calculate the offset
   #   area we just calculate the area
-  #   effective area multiply by p
+  #   effective area multiply by p (and availability)
   #   when density is response, offset should be 1 (and is ignored anyway)
   dat$off.set <- switch(off.set,
-                        eff.area = dat$segment.area*dat$p,
+                        eff.area = dat$segment.area*dat$p*dat$availability,
                         area     = dat$segment.area,
                         none     = 1)
 

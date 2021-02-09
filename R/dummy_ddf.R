@@ -40,6 +40,9 @@ dummy_ddf <- function(obs, size=1, width, left=0, transect="line"){
     object$meta.data$point <- TRUE
   }
 
+  # make the method be "dummy"
+  object$method <- "dummy"
+
   class(object) <- c("fake_ddf", "ds", "ddf")
   return(object)
 }

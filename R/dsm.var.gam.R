@@ -52,6 +52,11 @@ dsm.var.gam <- function(dsm.obj, pred.data, off.set,
     is.gamm <- TRUE
   }
 
+  # only support log links
+  if(dsm.obj$family$link != "log"){
+    stop("Only models with a log link are supported")
+  }
+
   # if all the offsets are the same then we can just supply 1 and rep it
   if(length(off.set) == 1){
     if(is.null(nrow(pred.data))){
@@ -77,11 +82,8 @@ dsm.var.gam <- function(dsm.obj, pred.data, off.set,
   # depending on whether we have response or link scale predictions...
   if(type.pred=="response"){
     tmfn <- dsm.obj$family$linkinv
-    dtmfn <- function(eta){ifelse(is.na(eta), NA,
-                           grad(tmfn, ifelse(is.na(eta), 0, eta)))}
   }else if(type.pred=="link"){
     tmfn <- identity
-    dtmfn <- function(eta){1}
   }
 
   # grab the coefficients
@@ -106,7 +108,16 @@ dsm.var.gam <- function(dsm.obj, pred.data, off.set,
     }
 
     preddo[[ipg]] <-  this.off.set %**% tmfn(lppred)
-    dpred.db[ipg,] <- this.off.set %**% (dtmfn(lppred)*lpmat)
+
+
+    # NB previously this was done numerically but things didn't work
+    #    when se ~=0 and actual 0s were produced. Use analytical expression
+    #    for the log case here
+    if(type.pred=="link"){
+      dpred.db[ipg, ] <- this.off.set %**% lppred*lpmat
+    }else{
+      dpred.db[ipg, ] <- this.off.set %**% (tmfn(lppred)*lpmat)
+    }
   }
 
   # "'vpred' is the covariance of all the summary-things." - MVB

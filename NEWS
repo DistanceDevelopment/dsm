@@ -8,7 +8,8 @@ dsm news!
  * Response options "D", "density", "Dhat", "N", "Nhat" and "n" deprecated. Now only "count", "abundance.est" and "density.est" are allowed.
  * Make predict.dsm work with tibbles when off.set is not a column in newdata (error is thrown in previous code's check of this). Thanks to Dave Fifield for reporting this issue.
  * Fix bug with inconsistent predictions when density.est is used as the response. Code in predict.dsm has been simplified and documentation updated. Thanks to Dave Fifield for reporting this issue.
- * mrds independent observer (io) models are allowed for the detection function.Variance can be estimated via dsm_varprop (with the usual limitation that covariates may only vary at the segment level) or dsm.var.gam. This feature is currently experimental.
+ * mrds independent observer (io) models are allowed for the detection function.Variance can be estimated via dsm_varprop (with the usual limitation that covariates may only vary at the segment level) or dsm.var.gam. This feature is currently experimental. Thanks to Doug Sigourney and Megan Ferguson for their help and suggestions.
+ * availability= argument now works differently for count models. availability must now be the same length as number of segments (nrow(segment.data)) and will multiply the offset (effective area) rather than the number of animals observed to be more coherent with how detectability is handled in this case.
 
 
 # 2.3.0

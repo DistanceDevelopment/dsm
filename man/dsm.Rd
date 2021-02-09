@@ -41,7 +41,7 @@ dsm(
 
 \item{control}{the usual \code{control} argument for a \code{gam}; \code{keepData} must be \code{TRUE} for variance estimation to work (though this option cannot be set for GLMs or GAMMs.}
 
-\item{availability}{an availability bias used to scale the counts/estimated  counts by. If we have \code{N} animals in a segment, then \code{N/availability} will be entered into the model. Uncertainty in the availability is not handled at present.}
+\item{availability}{an estimate of availability bias. For count models used to multiply the effective strip width (must be a vector of length 1 or length the number of rows in \code{segment.data}); for estimated abundance/estimated density models used to scale the response (must be a vector of length 1 or length the number of rows in \code{observation.data}). Uncertainty in the availability is not handled at present.}
 
 \item{segment.area}{if `NULL` (default) segment areas will be calculated by multiplying the `Effort` column in `segment.data` by the (right minus left) truncation distance for the `ddf.obj` or by `strip.width`. Alternatively a vector of segment areas can be provided (which must be the same length as the number of rows in `segment.data`) or a character string giving the name of a column in `segment.data` which contains the areas. If \code{segment.area} is specified it takes precident.}
 
