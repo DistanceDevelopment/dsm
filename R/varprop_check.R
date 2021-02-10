@@ -60,6 +60,8 @@ varprop_check <- function(object){
 
       nd <- mgcv::uniquecombs(nd)
 
+      # for io models we need to have both observers there for the
+      # prediction to work
       if(oddf$method == "io"){
         nd <- rbind(nd, nd)
         nd$observer <- c(rep(1, nrow(nd)/2), rep(2, nrow(nd)/2))
