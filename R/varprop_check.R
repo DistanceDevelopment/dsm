@@ -36,7 +36,7 @@ varprop_check <- function(object){
       nd <- mgcv::uniquecombs(nd[, df_vars, drop=FALSE])
 
       # add distance column back in
-      nd$distance <- 1
+      nd$distance <- 0
       nd$observer <- 1
       # faff to work out which summaries we need...
       numeric_ind <- lapply(nd, is.factor)
