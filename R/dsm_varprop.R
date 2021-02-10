@@ -192,9 +192,6 @@ dsm_varprop <- function(model, newdata, trace=FALSE, var_type="Vp"){
     }
 
     if(this_ddf$method == "io"){
-      #ds_newdata[[i]] <- rbind(ds_newdata[[i]], ds_newdata[[i]])
-      #ds_newdata[[i]]$observer <- c(rep(1, length(ds_newdata[[i]])/2),
-      #                              rep(2, length(ds_newdata[[i]])/2))
       ds_newdata[[i]]$observer <- 1
     }
 
