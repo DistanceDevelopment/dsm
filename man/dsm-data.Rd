@@ -24,6 +24,20 @@ One can often also use \code{observation.data} to fit a detection function (so a
    \code{Effort} \tab the effort (in terms of length of the segment)\cr
    \code{Sample.Label} \tab identifier for the segment (unique!)\cr
    ??? \tab environmental covariates, for example location (projected latitude and longitude), and other relevant covariates (sea surface temperature, foliage type, altitude, bathymetry etc).}
-
-If multiple detection functions are to be used, then a column named \code{ddfobj} must be included in \code{observation.data} and \code{segment.data}.
 }
+\section{Multiple detection functions}{
+
+
+If multiple detection functions are to be used, then a column named \code{ddfobj} must be included in \code{observation.data} and \code{segment.data}. This lets the model know which detection function each observation is from. These are numeric and ordered as the \code{ddf.obj} argument to \code{\link{dsm}}, e.g., d\code{ddf.obj=list(ship_ddf, aerial_ddf)} means ship detections have \code{ddfobj=1} and aerial detections have \code{ddfobj=2} in the observation data.
+}
+
+\section{Mark-recapture distance sampling models}{
+
+
+When using \code{mrds} models that include mark-recapture components (currently independent observer and trial modes are supported) then the format of the observation data needs to be checked to ensure that observations are not duplicated.
+ \tabular{ll}{
+  Independent observer mode \tab only unique observations (unique object IDs) are required.
+  Trial mode \tab only observations made by observer 1 are required.\
+ }
+}
+

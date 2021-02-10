@@ -202,7 +202,7 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
         # then just duplicate that value enough times for the segments
         dat[dat$ddfobj == i, ]$p <- rep(fitted(this_ddf)[1],
                                         nrow(dat[dat$ddfobj == i, ]))
-      }else if(this_ddf$method %in% c("ds", "io")){
+      }else if(this_ddf$method %in% c("ds", "io", "trial")){
         # get all the covariates in this model
         df_vars <- all_df_vars(this_ddf)
 
@@ -220,11 +220,14 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
           nd <- rbind(nd, nd)
           nd$observer <- c(rep(1, nrow(nd)/2), rep(2, nrow(nd)/2))
           dat[dat$ddfobj == i, ]$p <- predict(this_ddf, newdata=nd)$fitted
+        }else if(this_ddf$method == "trial"){
+          nd$observer <- 1
+          dat[dat$ddfobj == i, ]$p <- predict(this_ddf, newdata=nd)$fitted
         }else{
           dat[dat$ddfobj == i, ]$p <- predict(this_ddf, newdata=nd)$fitted
         }
       }else{
-        stop("Only \"ds\" and \"io\" models are supported!")
+        stop("Only \"ds\", \"io\" and \"trial\" models are supported!")
       }
     } # end loop over detection functions
   }

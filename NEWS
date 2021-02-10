@@ -2,13 +2,14 @@ dsm news!
 
 # 2.3.1
  * transect type (line or point) is now determined from the detection function rather than using the transect= argument
- * multiple detection functions are now possible, use a list() of fitted detection functions supplied to ddf.obj= argument to dsm(). dsm.var.gam, dsm.var.prop and dsm_varprop are compatible. Vignette coming soon. Thanks to Dave Fifield and Ewan Wakefield for extensive testing and suggestions.
+ * multiple detection functions are now possible, use a list() of fitted detection functions supplied to ddf.obj= argument to dsm(). dsm.var.gam, dsm.var.prop and dsm_varprop are compatible. Vignette coming soon. Thanks to Dave Fifield and Ewan Wakefield for extensive testing and suggestions. See ?"dsm-data" for more information on how to set up your data.
  * strip transects now handled using the dummy_ddf() function.
  * presence~ response type removed
  * Response options "D", "density", "Dhat", "N", "Nhat" and "n" deprecated. Now only "count", "abundance.est" and "density.est" are allowed.
  * Make predict.dsm work with tibbles when off.set is not a column in newdata (error is thrown in previous code's check of this). Thanks to Dave Fifield for reporting this issue.
  * Fix bug with inconsistent predictions when density.est is used as the response. Code in predict.dsm has been simplified and documentation updated. Thanks to Dave Fifield for reporting this issue.
- * mrds independent observer (io) models are allowed for the detection function.Variance can be estimated via dsm_varprop (with the usual limitation that covariates may only vary at the segment level) or dsm.var.gam. This feature is currently experimental. Thanks to Doug Sigourney and Megan Ferguson for their help and suggestions.
+ * mrds independent observer (io) and trial models are allowed for the detection function.Variance can be estimated via dsm_varprop (with the usual limitation that covariates may only vary at the segment level) or dsm.var.gam. This feature is currently experimental. Thanks to Doug Sigourney and Megan Ferguson for their help and suggestions. See ?"dsm-data" for more information on how to set up your data.
+ * An example of multiddf and mrds analysis in dsm is at https://github.com/densitymodelling/nefsc_fin_mrds_dsm
  * availability= argument now works differently for count models. availability must now be the same length as number of segments (nrow(segment.data)) and will multiply the offset (effective area) rather than the number of animals observed to be more coherent with how detectability is handled in this case.
 
 

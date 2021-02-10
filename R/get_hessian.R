@@ -8,7 +8,7 @@ get_hessian <- function(this_ddf){
   first_ind <- 1
 
   # get the io hessian first if it exists
-  if(this_ddf$method == "io"){
+  if(this_ddf$method %in% c("io", "trial")){
     mr_hess <- this_ddf$mr$hessian
     hess[1:nrow(mr_hess), 1:ncol(mr_hess)] <- mr_hess
     first_ind <- 1 + nrow(mr_hess)

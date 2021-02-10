@@ -9,6 +9,9 @@ ddf.model.description <- function(model){
   if(model$method=="io"){
     mod.str <- "MR model: Independent observer, DS model:"
     model <- model$ds
+  }else if(model$method=="trial"){
+    mod.str <- "MR model: Trial, DS model:"
+    model <- model$ds
   }else{
     mod.str <- ""
   }
