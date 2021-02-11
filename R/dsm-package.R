@@ -44,7 +44,7 @@ NULL
 #'
 #' When using \code{mrds} models that include mark-recapture components (currently independent observer and trial modes are supported) then the format of the observation data needs to be checked to ensure that observations are not duplicated.
 #'  \tabular{ll}{
-#'   Independent observer mode \tab only unique observations (unique object IDs) are required.
+#'   Independent observer mode \tab only unique observations (unique object IDs) are required.\cr
 #'   Trial mode \tab only observations made by observer 1 are required.\
 #'  }
 #'
