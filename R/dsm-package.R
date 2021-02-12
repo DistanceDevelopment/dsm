@@ -42,7 +42,7 @@ NULL
 #'
 #' @section Mark-recapture distance sampling models:
 #'
-#' When using \code{mrds} models that include mark-recapture components (currently independent observer and trial modes are supported) then the format of the observation data needs to be checked to ensure that observations are not duplicated.
+#' When using \code{mrds} models that include mark-recapture components (currently independent observer and trial modes are supported) then the format of the observation data needs to be checked to ensure that observations are not duplicated. The \code{observer} column is also required in the \code{observation.data} frame.
 #'  \tabular{ll}{
 #'   Independent observer mode \tab only unique observations (unique object IDs) are required.\cr
 #'   Trial mode \tab only observations made by observer 1 are required.\

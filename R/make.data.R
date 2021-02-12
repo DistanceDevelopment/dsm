@@ -71,10 +71,7 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
     fitted.p <- fitted(this_ddf)
 
     # remove observations which were not in the detection function
-    #this_obsdata <- obsdata[obsdata$object %in% names(fitted.p), ]
     this_obsdata <- obsdata[obsdata[["ddfobj"]]==i, ]
-
-###
 
     # Check that observations are between left and right truncation
     # warning only -- observations are excluded below
@@ -101,6 +98,17 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
     if(nrow(this_obsdata) == 0){
       stop(paste("No observations in detection function", i,
                  "matched those in observation table. Check the \"object\" column."))
+    }
+
+    # make sure that the right columns are in the obsdata
+    if(this_ddf$method %in% c("io", "trial")){
+      if(!("observer" %in% names(this_obsdata))){
+        stop("obsdata must have a column named observer")
+      }else{
+        if((this_ddf$method == "trial") && !all(this_obsdata$observer==1)){
+          stop("Only observer 1 data is needed for obsdata with trial mode")
+        }
+      }
     }
 
     # depending on the detection function (and its data format)
