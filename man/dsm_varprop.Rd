@@ -4,14 +4,14 @@
 \alias{dsm_varprop}
 \title{Variance propagation for density surface models}
 \usage{
-dsm_varprop(model, newdata, trace = FALSE, var_type = "Vp")
+dsm_varprop(model, newdata = NULL, trace = FALSE, var_type = "Vp")
 }
 \arguments{
-\item{model}{a fitted \code{\link{dsm}}}
+\item{model}{a fitted \code{\link{dsm}}.}
 
-\item{newdata}{the prediction grid}
+\item{newdata}{the prediction grid. Set to \code{NULL} to avoid making predictions and just return model objects.}
 
-\item{trace}{for debugging, see how the scale parameter estimation is going}
+\item{trace}{for debugging, see how the scale parameter estimation is going.}
 
 \item{var_type}{which variance-covariance matrix should be used (\code{"Vp"} for variance-covariance conditional on smoothing parameter(s), \code{"Vc"} for unconditional). See \code{\link{gamObject}} for an details/explanation. If in doubt, stick with the default, \code{"Vp"}.}
 }
@@ -23,6 +23,7 @@ a list with elements
              \code{var} \tab total variance calculated over all of \code{newdata}\cr
              \code{ses} \tab standard error for each prediction cell in \code{newdata}\cr
  }
+if \code{newdata=NULL} then the last three entries are \code{NA}.
 }
 \description{
 Calculate the uncertainty in predictions from a fitted DSM, including uncertainty from the detection function.
@@ -46,7 +47,7 @@ The summary output from the function includes a simply diagnostic that shows the
 }
 
 \references{
-Bravington, M.V., Miller, D.L. and Hedley, S.L. (2019) Reliable variance propagation for spatial density surface models. https://arxiv.org/abs/1807.07996
+Bravington, M.V., Miller, D.L. and Hedley, S.L. (2021) Reliable variance propagation for spatial density surface models. Journal of Agricultural, Biological and Environmental Statistics. https://arxiv.org/abs/1807.07996
 
 Williams, R., Hedley, S.L., Branch, T.A., Bravington, M.V., Zerbini, A.N. and Findlay, K.P. (2011). Chilean Blue Whales as a Case Study to Illustrate Methods to Estimate Abundance and Evaluate Conservation Status of Rare Species. Conservation Biology 25(3), 526-535.
 

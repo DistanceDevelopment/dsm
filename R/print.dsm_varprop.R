@@ -9,8 +9,6 @@
 #' @author David L. Miller
 #' @seealso \code{\link{summary.dsm_varprop}}
 #' @keywords utility
-print.dsm_varprop<-function(x, ...){
-
+print.dsm_varprop <- function(x, ...){
   print(summary(x))
-
 }

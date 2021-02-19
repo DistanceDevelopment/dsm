@@ -11,6 +11,7 @@ dsm news!
  * mrds independent observer (io) and trial models are allowed for the detection function.Variance can be estimated via dsm_varprop (with the usual limitation that covariates may only vary at the segment level) or dsm.var.gam. This feature is currently experimental. Thanks to Doug Sigourney and Megan Ferguson for their help and suggestions. See ?"dsm-data" for more information on how to set up your data.
  * An example of multiddf and mrds analysis in dsm is at https://github.com/densitymodelling/nefsc_fin_mrds_dsm
  * availability= argument now works differently for count models. availability must now be the same length as number of segments (nrow(segment.data)) and will multiply the offset (effective area) rather than the number of animals observed to be more coherent with how detectability is handled in this case.
+ * dsm_varprop no longer requies newdata to be supplied. If newdata isn't present just the refitted and original models are returned, with other entries NA.
 
 
 # 2.3.0

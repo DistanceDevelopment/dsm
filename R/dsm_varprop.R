@@ -25,17 +25,18 @@
 #'              \code{var} \tab total variance calculated over all of \code{newdata}\cr
 #'              \code{ses} \tab standard error for each prediction cell in \code{newdata}\cr
 #'  }
+#' if \code{newdata=NULL} then the last three entries are \code{NA}.
 #' @author David L. Miller, based on code from Mark V. Bravington and Sharon L. Hedley.
 #' @references
-#' Bravington, M.V., Miller, D.L. and Hedley, S.L. (2019) Reliable variance propagation for spatial density surface models. https://arxiv.org/abs/1807.07996
+#' Bravington, M.V., Miller, D.L. and Hedley, S.L. (2021) Reliable variance propagation for spatial density surface models. Journal of Agricultural, Biological and Environmental Statistics. https://arxiv.org/abs/1807.07996
 #'
 #' Williams, R., Hedley, S.L., Branch, T.A., Bravington, M.V., Zerbini, A.N. and Findlay, K.P. (2011). Chilean Blue Whales as a Case Study to Illustrate Methods to Estimate Abundance and Evaluate Conservation Status of Rare Species. Conservation Biology 25(3), 526-535.
 #'
 #' Wood, S.N., Pya, N. and S{\"a}fken, B. (2016) Smoothing parameter and model selection for general smooth models. Journal of the American Statistical Association, 1-45.
 #'
-#' @param model a fitted \code{\link{dsm}}
-#' @param newdata the prediction grid
-#' @param trace for debugging, see how the scale parameter estimation is going
+#' @param model a fitted \code{\link{dsm}}.
+#' @param newdata the prediction grid. Set to \code{NULL} to avoid making predictions and just return model objects.
+#' @param trace for debugging, see how the scale parameter estimation is going.
 #' @param var_type which variance-covariance matrix should be used (\code{"Vp"} for variance-covariance conditional on smoothing parameter(s), \code{"Vc"} for unconditional). See \code{\link{gamObject}} for an details/explanation. If in doubt, stick with the default, \code{"Vp"}.
 #' @export
 #'
@@ -60,7 +61,7 @@
 # summary(mod1.varp)
 # # this will give a summary over the whole area in mexdolphins$preddata
 # }
-dsm_varprop <- function(model, newdata, trace=FALSE, var_type="Vp"){
+dsm_varprop <- function(model, newdata=NULL, trace=FALSE, var_type="Vp"){
 
   # die if the link isn't log
   if(model$family$link != "log"){
@@ -272,6 +273,17 @@ dsm_varprop <- function(model, newdata, trace=FALSE, var_type="Vp"){
   refit$ddf <- ddf
   class(refit) <- c("dsm", class(refit))
 
+  # if no newdata was supplied warn and return
+  if(is.null(newdata)){
+    warning("No newdata provided, no predictions returned.")
+    ret <- list(old_model = model,
+                refit     = refit,
+                pred      = NA,
+                var       = NA,
+                ses       = NA)
+    class(ret) <- "dsm_varprop"
+    return(ret)
+  }
   ## now do some predictions
 
   # make some zeros for the paraPen term so they have no mean effect
