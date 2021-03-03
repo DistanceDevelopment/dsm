@@ -13,7 +13,7 @@
 #' @importFrom stats qnorm update.formula
 summary.dsm_varprop <- function(object, alpha=0.05, ...){
 
-  if(is.na(object$pred) & is.na(object$var) & is.na(object$ses)){
+  if(all(is.na(object$pred)) & all(is.na(object$var)) & all(is.na(object$ses))){
     stop("Cannot get summary when newdata=NULL, rerun dsm_varprop with prediction data")
   }
 
