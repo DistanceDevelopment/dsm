@@ -31,7 +31,7 @@
 #'                      }
 #' @author Mark V. Bravington, Sharon L. Hedley. Bugs added by David L. Miller.
 #' @references
-#' Bravington, M.V., Miller, D.L. and Hedley, S.L. (2019) Reliable variance propagation for spatial density surface models. https://arxiv.org/abs/1807.07996
+#' Bravington, M. V., Miller, D. L., & Hedley, S. L. (2021). Variance Propagation for Density Surface Models. Journal of Agricultural, Biological and Environmental Statistics. https://doi.org/10.1007/s13253-021-00438-2
 #'
 #' Williams, R., Hedley, S.L., Branch, T.A., Bravington, M.V., Zerbini, A.N. and Findlay, K.P. (2011). Chilean Blue Whales as a Case Study to Illustrate Methods to Estimate Abundance and Evaluate Conservation Status of Rare Species. Conservation Biology 25(3), 526-535.
 #' @export

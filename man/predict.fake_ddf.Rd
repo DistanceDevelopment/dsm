@@ -17,7 +17,18 @@
 \item{object}{model object}
 
 \item{newdata}{how many 1s should we return?}
+
+\item{compute}{unused, for compatability with \code{predict} from \code{mrds}}
+
+\item{int.range}{unused, for compatability with \code{predict} from \code{mrds}}
+
+\item{esw}{should the strip width be returned?}
+
+\item{\dots}{for S3 consistency}
 }
 \description{
-Dummy function to return the correct number of 1s.
+Prediction function for dummy detection functions. The function returns as many 1s as there are rows in \code{newdata}. If \code{esw=TRUE} then the strip width is returned.
+}
+\author{
+David L Miller
 }

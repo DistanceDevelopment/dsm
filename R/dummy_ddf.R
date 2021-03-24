@@ -1,59 +1,68 @@
-#' Make a dummy detection function for strip transects
+#' Detection function objects when detection is certain
 #'
-#' Strip transects aren't really detection functions, but this allows you to use them like detection functions in \code{dsm}.
+#' Create a detection function object for strip/plot surveys for use in density surface models.
 #'
 #' @export
-#' @param obs which observations are to be included? Numeric vector corresponding to object IDs
-#' @param size group size of observed group (default all groups size 1)
+#' @param object numeric vector of object identifiers, relating to the \code{object} field in the observation data of the DSM.
+#' @param size group size for each observation (default all groups size 1)
 #' @param width right truncation
-#' @param left left truncation
-#' @param transect "line" or "point" transect (character)
+#' @param left left truncation (default 0, no left truncation)
+#' @param transect \code{"line"} or \code{"point"} transect
 #' @author David L Miller
-dummy_ddf <- function(obs, size=1, width, left=0, transect="line"){
+dummy_ddf <- function(object, size=1, width, left=0, transect="line"){
 
-  if(!is.numeric(obs)){
-    stop("obs should to be a numeric vector")
+  if(!is.numeric(object)){
+    stop("object should to be a numeric vector")
   }
-  if(!is.vector(obs)){
-    stop("obs should be a numeric vector")
+  if(!is.vector(object)){
+    stop("object should be a numeric vector")
   }
 
-  object <- list()
+  if(!(transect %in% c("line", "point"))){
+    stop("transect should be \"line\" or \"point\"")
+  }
+
+  df_obj <- list()
 
   # put object IDs in a data.frame...
-  object$data <- data.frame(object   = obs,
-                            detected = rep(1, length(obs)),
-                            observer = rep(1, length(obs)),
-                            distance = rep(left, length(obs)),
+  df_obj$data <- data.frame(object   = object,
+                            detected = rep(1, length(object)),
+                            observer = rep(1, length(object)),
+                            distance = rep(left, length(object)),
                             size     = size)
   # set the fitted values
-  object$fitted <- rep(1, length(obs))
-  names(object$fitted) <- obs
+  df_obj$fitted <- rep(1, length(object))
+  names(df_obj$fitted) <- object
 
   # truncation(s)
-  object$meta.data <- list()
-  object$meta.data$width <- width
-  object$meta.data$left <- left
+  df_obj$meta.data <- list()
+  df_obj$meta.data$width <- width
+  df_obj$meta.data$left <- left
 
-  object$meta.data$point <- FALSE
+  df_obj$meta.data$point <- FALSE
   if(transect == "point"){
-    object$meta.data$point <- TRUE
+    df_obj$meta.data$point <- TRUE
   }
 
   # make the method be "dummy"
-  object$method <- "dummy"
+  df_obj$method <- "dummy"
 
-  class(object) <- c("fake_ddf", "ds", "ddf")
-  return(object)
+  class(df_obj) <- c("fake_ddf", "ds", "ddf")
+  return(df_obj)
 }
 
 #' Prediction for fake detection functions
 #'
-#' Dummy function to return the correct number of 1s.
+#' Prediction function for dummy detection functions. The function returns as many 1s as there are rows in \code{newdata}. If \code{esw=TRUE} then the strip width is returned.
 #'
 #' @export
 #' @param object model object
 #' @param newdata how many 1s should we return?
+#' @param compute unused, for compatability with \code{predict} from \code{mrds}
+#' @param int.range unused, for compatability with \code{predict} from \code{mrds}
+#' @param esw should the strip width be returned?
+#' @param \dots for S3 consistency
+#' @author David L Miller
 predict.fake_ddf <- function(object, newdata=NULL, compute=FALSE,
                              int.range=NULL, esw=FALSE, ...){
 

@@ -2,23 +2,23 @@
 % Please edit documentation in R/dummy_ddf.R
 \name{dummy_ddf}
 \alias{dummy_ddf}
-\title{Make a dummy detection function for strip transects}
+\title{Detection function objects when detection is certain}
 \usage{
-dummy_ddf(obs, size = 1, width, left = 0, transect = "line")
+dummy_ddf(object, size = 1, width, left = 0, transect = "line")
 }
 \arguments{
-\item{obs}{which observations are to be included? Numeric vector corresponding to object IDs}
+\item{object}{numeric vector of object identifiers, relating to the \code{object} field in the observation data of the DSM.}
 
-\item{size}{group size of observed group (default all groups size 1)}
+\item{size}{group size for each observation (default all groups size 1)}
 
 \item{width}{right truncation}
 
-\item{left}{left truncation}
+\item{left}{left truncation (default 0, no left truncation)}
 
-\item{transect}{"line" or "point" transect (character)}
+\item{transect}{\code{"line"} or \code{"point"} transect}
 }
 \description{
-Strip transects aren't really detection functions, but this allows you to use them like detection functions in \code{dsm}.
+Create a detection function object for strip/plot surveys for use in density surface models.
 }
 \author{
 David L Miller
