@@ -239,19 +239,9 @@ dsm_varprop <- function(model, newdata=NULL, trace=FALSE, var_type="Vp"){
     if("fake_ddf" %in% class(this_ddf)){
       next
     }
-#    opt_details <- attr(this_ddf$ds, "details")
-#    if(is.matrix(opt_details)){
-#      this_hess <- opt_details[nrow(opt_details), ]$nhatend
-#    }else{
-#      this_hess <- opt_details$nhatend
-#    }
-#    if(any(is.na(this_hess))){
-#      # fall back to DS use if things are bad
-#      this_hess <- this_ddf$hessian
-#    }
 
+    # extract the hessian
     this_hess <- get_hessian(this_ddf)
-
     # drop that matrix into the big hessian
     hess[ii:(ii+nrow(this_hess)-1), ii:(ii+ncol(this_hess)-1)] <- this_hess
 
