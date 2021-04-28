@@ -295,11 +295,6 @@ dsm_varprop <- function(model, newdata=NULL, trace=FALSE, var_type="Vp"){
   # make a sandwich
   var_p <- dNdbeta %*% vc %*% t(dNdbeta)
 
-  # apply the link function to the offset
-  # NB this is because refit is a gam not dsm object! If refit is dsm
-  #    then this will get done in predict.dsm
-  newdata$off.set <- linkfn(newdata$off.set)
-
   # if we are using Vc we need to set unconditional=TRUE
   if(var_type=="Vc"){
     uncond <- TRUE

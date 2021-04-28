@@ -1,5 +1,8 @@
 dsm news!
 
+# 2.3.2
+ * fixed bug in offset calculation in dsm_varprop se estimation where offsets were logged twice. Thanks to Megan Ferguson for spotting this.
+
 # 2.3.1
  * transect type (line or point) is now determined from the detection function rather than using the transect= argument
  * multiple detection functions are now possible, use a list() of fitted detection functions supplied to ddf.obj= argument to dsm(). dsm.var.gam, dsm.var.prop and dsm_varprop are compatible. Vignette coming soon. Thanks to Dave Fifield and Ewan Wakefield for extensive testing and suggestions. See ?"dsm-data" for more information on how to set up your data.
