@@ -1,7 +1,3 @@
-library(dsm)
-library(Distance)
-library(testthat)
-
 par.tol<-1e-5
 
 context("test inputs")

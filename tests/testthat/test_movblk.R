@@ -1,7 +1,3 @@
-library(dsm)
-library(Distance)
-library(testthat)
-
 cv.tol<-1e-5
 N.tol<-1e-4
 

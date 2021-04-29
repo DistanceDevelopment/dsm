@@ -1,7 +1,4 @@
 # test that we can use glms as models
-library(dsm)
-library(Distance)
-library(testthat)
 
 lnl.tol<-1e-4
 par.tol<-1e-6
