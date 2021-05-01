@@ -74,9 +74,9 @@
 #' @param convert.units conversion factor to multiply the area of the segments
 #' by. See 'Units' below.
 #' @param family response distribution (popular choices include
-#' [`quasipoisson`][quasipoisson], [`Tweedie`][mgcv::Tweedie]/[`tw`][mgcv::tw]
+#' [`quasipoisson`][stats::quasipoisson], [`Tweedie`][mgcv::Tweedie]/[`tw`][mgcv::tw]
 #' and [`negbin`][mgcv::negbin]/[`nb`][mgcv::nb]). Defaults
-#' [`quasipoisson`][quasipossion].
+#' [`quasipoisson`][stats::quasipoisson].
 #' @param group if `TRUE` the abundance of *groups* will be calculated rather
 #' than the abundance of *individuals*. Setting this option to `TRUE` is
 #' equivalent to setting the size of each group to be 1.

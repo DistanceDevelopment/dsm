@@ -44,9 +44,9 @@ allowed.}
 by. See 'Units' below.}
 
 \item{family}{response distribution (popular choices include
-\code{\link{quasipoisson}}, \code{\link[mgcv:Tweedie]{Tweedie}}/\code{\link[mgcv:Tweedie]{tw}}
+\code{\link[stats:family]{quasipoisson}}, \code{\link[mgcv:Tweedie]{Tweedie}}/\code{\link[mgcv:Tweedie]{tw}}
 and \code{\link[mgcv:negbin]{negbin}}/\code{\link[mgcv:negbin]{nb}}). Defaults
-\code{\link[=quasipossion]{quasipoisson}}.}
+\code{\link[stats:family]{quasipoisson}}.}
 
 \item{group}{if \code{TRUE} the abundance of \emph{groups} will be calculated rather
 than the abundance of \emph{individuals}. Setting this option to \code{TRUE} is
