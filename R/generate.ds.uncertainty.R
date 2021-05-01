@@ -99,8 +99,8 @@ generate.ds.uncertainty <- function(ds.object){
     # make sure that we got the right number
     dists <- dists[1:n.ds.samples]
     dists <- data.frame(distance = dists,
-                        detected = rep(1,length(dists)),
-                        object   = 1:length(dists))
+                        detected = rep(1, length(dists)),
+                        object   = seq_len(length(dists)))
 
     # fit the model to the new data
     ddf.call <- ds.object$call

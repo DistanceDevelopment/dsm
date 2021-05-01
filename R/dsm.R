@@ -64,8 +64,9 @@
 #' @param ddf.obj result from call to [`ddf`][mrds::ddf] or
 #' [`ds`][Distance::ds]. If multiple detection functions are required a `list`
 #' can be provided. For strip/circle transects where it is assumed all objects
-#' are observed, see [`dummy_ddf`][dummy_ddf]. Mark-recapture distance sampling (`mrds`)
-#' models of type `io` (independent observers) and `trial` are allowed.
+#' are observed, see [`dummy_ddf`][dummy_ddf]. Mark-recapture distance sampling
+#' (`mrds`) models of type `io` (independent observers) and `trial` are
+#' allowed.
 #' @param segment.data segment data, see [`dsm-data`][dsm-data].
 #' @param observation.data observation data, see [`dsm-data`][dsm-data].
 #' @param engine which fitting engine should be used for the DSM

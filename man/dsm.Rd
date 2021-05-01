@@ -29,8 +29,9 @@ dsm(
 \item{ddf.obj}{result from call to \code{\link[mrds:ddf]{ddf}} or
 \code{\link[Distance:ds]{ds}}. If multiple detection functions are required a \code{list}
 can be provided. For strip/circle transects where it is assumed all objects
-are observed, see \code{\link{dummy_ddf}}. Mark-recapture distance sampling (\code{mrds})
-models of type \code{io} (independent observers) and \code{trial} are allowed.}
+are observed, see \code{\link{dummy_ddf}}. Mark-recapture distance sampling
+(\code{mrds}) models of type \code{io} (independent observers) and \code{trial} are
+allowed.}
 
 \item{segment.data}{segment data, see \code{\link{dsm-data}}.}
 

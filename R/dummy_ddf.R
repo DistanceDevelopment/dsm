@@ -55,13 +55,15 @@ dummy_ddf <- function(object, size=1, width, left=0, transect="line"){
 
 #' Prediction for fake detection functions
 #'
-#' Prediction function for dummy detection functions. The function returns as many 1s as there are rows in \code{newdata}. If \code{esw=TRUE} then the strip width is returned.
+#' Prediction function for dummy detection functions. The function returns as
+#' many 1s as there are rows in \code{newdata}. If \code{esw=TRUE} then the
+#' strip width is returned.
 #'
 #' @export
 #' @param object model object
 #' @param newdata how many 1s should we return?
-#' @param compute unused, for compatability with \code{predict} from \code{mrds}
-#' @param int.range unused, for compatability with \code{predict} from \code{mrds}
+#' @param compute unused, compatability with [`mrds::predict`][mrds::predict]
+#' @param int.range unused, compatability with [`mrds::predict`][mrds::predict]
 #' @param esw should the strip width be returned?
 #' @param \dots for S3 consistency
 #' @author David L Miller

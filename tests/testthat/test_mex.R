@@ -3,6 +3,8 @@ par.tol<-1e-6
 
 context("Mexico pantropical dolphin data")
 
+library(Distance)
+
 # load the Gulf of Mexico dolphin data
 data(mexdolphins)
 

@@ -4,6 +4,8 @@ N.tol<-1e-4
 ## NB the 444km^2 for the prediction grid is INCORRECT but
 ## serves us fine for the purpose of these tests.
 context("GAM variance")
+library(Distance)
+
 
 # load the Gulf of Mexico dolphin data
 data(mexdolphins)

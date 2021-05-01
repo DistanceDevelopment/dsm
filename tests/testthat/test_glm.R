@@ -5,6 +5,8 @@ par.tol<-1e-6
 
 context("Do GLMs work")
 
+library(Distance)
+
 # load the Gulf of Mexico dolphin data
 data(mexdolphins)
 

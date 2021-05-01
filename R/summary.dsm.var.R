@@ -155,7 +155,7 @@ summary.dsm.var <- function(object, alpha=0.05, boxplot.coef=1.5,
       # re run the variance calculation, putting everything together
       pd <- c()
       off <- c()
-      for(i in 1:length(object$pred.data)){
+      for(i in seq_len(length(object$pred.data))){
         pd <- rbind(pd, object$pred.data[[i]])
         off <- rbind(off, object$off.set[[i]])
       }

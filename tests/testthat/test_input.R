@@ -1,6 +1,9 @@
 par.tol<-1e-5
 
 context("test inputs")
+
+library(Distance)
+
 # load the Gulf of Mexico dolphin data
 data(mexdolphins)
 

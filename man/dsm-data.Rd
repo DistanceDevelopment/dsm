@@ -16,7 +16,8 @@ the detection function and the samples (segments), so that we can aggregate
 the observations to the segments (i.e., \code{observation.data} is a "look-up
 table" between the observations and the segments).
 
-\code{observation.data} - the observation \code{data.frame} must have (at least) the following columns:
+\code{observation.data} - the observation \code{data.frame} must have (at least) the
+following columns:
 \itemize{
 \item \code{object} unique object identifier
 \item \code{Sample.Label} the identifier for the segment where observation occurred
@@ -53,9 +54,14 @@ and aerial detections have \code{ddfobj=2} in the observation data.
 \section{Mark-recapture distance sampling models}{
 
 
-When using \code{mrds} models that include mark-recapture components (currently independent observer and trial modes are supported) then the format of the observation data needs to be checked to ensure that observations are not duplicated. The \code{observer} column is also required in the \code{observation.data}.
+When using \code{mrds} models that include mark-recapture components (currently
+independent observer and trial modes are supported) then the format of the
+observation data needs to be checked to ensure that observations are not
+duplicated. The \code{observer} column is also required in the
+\code{observation.data}.
 \itemize{
-\item \emph{Independent observer mode} only unique observations (unique object IDs) are required.
+\item \emph{Independent observer mode} only unique observations (unique object IDs)
+are required.
 \item \emph{Trial mode} only observations made by observer 1 are required.
 }
 }

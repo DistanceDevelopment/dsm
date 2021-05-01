@@ -25,7 +25,7 @@ check.cols <- function(ddf.obj, segment.data, observation.data, segment.area){
     checks$segment.data <- checks$segment.data[checks$segment.data != "Effort"]
   }
 
-  for(i in 1:length(checks)){
+  for(i in seq_len(length(checks))){
     check.res <- checks[[i]] %in% names(get(names(checks)[[i]]))
     if(any(!check.res)){
 

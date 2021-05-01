@@ -10,7 +10,7 @@ get_hessian <- function(this_ddf){
   # get the io hessian first if it exists
   if(this_ddf$method %in% c("io", "trial")){
     mr_hess <- this_ddf$mr$hessian
-    hess[1:nrow(mr_hess), 1:ncol(mr_hess)] <- mr_hess
+    hess[seq_len(nrow(mr_hess)), seq_len(ncol(mr_hess))] <- mr_hess
     first_ind <- 1 + nrow(mr_hess)
     ds_bit <- this_ddf$ds
   }else{

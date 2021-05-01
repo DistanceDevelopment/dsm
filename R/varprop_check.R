@@ -54,7 +54,7 @@ varprop_check <- function(object){
 
         quants <- quants[rep(1:3, nrow(nd))]
 
-        nd <- nd[rep(1:nrow(nd), 3), , drop=FALSE]
+        nd <- nd[rep(seq_len(nrow(nd)), 3), , drop=FALSE]
         nd[[colname]] <- quants
       }
 

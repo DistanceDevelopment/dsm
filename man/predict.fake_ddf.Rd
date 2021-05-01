@@ -18,16 +18,18 @@
 
 \item{newdata}{how many 1s should we return?}
 
-\item{compute}{unused, for compatability with \code{predict} from \code{mrds}}
+\item{compute}{unused, compatability with \code{\link[mrds:predict.ds]{mrds::predict}}}
 
-\item{int.range}{unused, for compatability with \code{predict} from \code{mrds}}
+\item{int.range}{unused, compatability with \code{\link[mrds:predict.ds]{mrds::predict}}}
 
 \item{esw}{should the strip width be returned?}
 
 \item{\dots}{for S3 consistency}
 }
 \description{
-Prediction function for dummy detection functions. The function returns as many 1s as there are rows in \code{newdata}. If \code{esw=TRUE} then the strip width is returned.
+Prediction function for dummy detection functions. The function returns as
+many 1s as there are rows in \code{newdata}. If \code{esw=TRUE} then the
+strip width is returned.
 }
 \author{
 David L Miller

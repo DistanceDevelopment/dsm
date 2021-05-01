@@ -1,8 +1,12 @@
 #' Density surface modelling
 #'
-#' `dsm` implements spatial models for distance sampling data. Models for detectability can be fitted using packages `mrds` or `Distance`. `dsm` fits generalized additive models to spatially-referenced data. See Miller et al (2013) for an introduction.
+#' `dsm` implements spatial models for distance sampling data. Models for
+#' detectability can be fitted using packages `mrds` or `Distance`. `dsm` fits
+#' generalized additive models to spatially-referenced data. See Miller et al
+#' (2013) for an introduction.
 #'
-#' Further information on distance sampling methods and example code is available at <http://distancesampling.org/R/>.
+#' Further information on distance sampling methods and example code is
+#' available at <http://distancesampling.org/R/>.
 #'
 #' For help with distance sampling and this package, there is a Google Group
 #' <https://groups.google.com/forum/#!forum/distance-sampling>.
@@ -39,7 +43,8 @@ NULL
 #' the observations to the segments (i.e., `observation.data` is a "look-up
 #' table" between the observations and the segments).
 #'
-#' `observation.data` - the observation `data.frame` must have (at least) the following columns:
+#' `observation.data` - the observation `data.frame` must have (at least) the
+#' following columns:
 #'   * `object` unique object identifier
 #'   * `Sample.Label` the identifier for the segment where observation occurred
 #'   * `size` the size of each observed group (e.g., 1 if all animals occurred
@@ -69,8 +74,13 @@ NULL
 #'
 #' @section Mark-recapture distance sampling models:
 #'
-#' When using `mrds` models that include mark-recapture components (currently independent observer and trial modes are supported) then the format of the observation data needs to be checked to ensure that observations are not duplicated. The `observer` column is also required in the `observation.data`.
-#' * *Independent observer mode* only unique observations (unique object IDs) are required.
+#' When using `mrds` models that include mark-recapture components (currently
+#' independent observer and trial modes are supported) then the format of the
+#' observation data needs to be checked to ensure that observations are not
+#' duplicated. The `observer` column is also required in the
+#' `observation.data`.
+#' * *Independent observer mode* only unique observations (unique object IDs)
+#' are required.
 #'  * *Trial mode* only observations made by observer 1 are required.
 #'
 #' @name dsm-data
