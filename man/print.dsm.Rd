@@ -7,16 +7,16 @@
 \method{print}{dsm}(x, ...)
 }
 \arguments{
-\item{x}{a \code{dsm} object}
+\item{x}{a model fitted by \code{\link{dsm}}}
 
 \item{\dots}{unspecified and unused arguments for S3 consistency}
+}
+\value{
+\code{NULL}
 }
 \description{
 This method just gives a short description of the fitted model. Use the
 \code{\link{summary.dsm}} method for more information.
-}
-\seealso{
-\code{\link{summary.ds}}
 }
 \author{
 David L. Miller

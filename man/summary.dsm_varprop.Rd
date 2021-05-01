@@ -9,18 +9,20 @@
 \arguments{
 \item{object}{a \code{dsm.var} object}
 
-\item{alpha}{alpha level for confidence intervals (default 0.05 to give a 95\% confidence internal)}
+\item{alpha}{alpha level for confidence intervals (default 0.05 to give a
+95\% confidence internal)}
 
-\item{\dots}{unused arguments for S3 compatibility}
+\item{...}{unused arguments for S3 compatibility}
 }
 \value{
 a summary object
 }
 \description{
-Gives a brief summary of a fitted \code{dsm_varprop} variance object.
+Gives a brief summary of a fitted \code{\link{dsm_varprop}} variance
+object.
 }
 \seealso{
-dsm_varprop summary.dsm.var
+\code{\link{dsm_varprop}}, \code{\link{summary.dsm.var}}
 }
 \author{
 David L. Miller

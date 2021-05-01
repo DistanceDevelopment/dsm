@@ -1,21 +1,35 @@
 #' Predict from a fitted density surface model
 #'
-#' Make predictions of density or abundance outside (or inside) the covered area.
+#' Make predictions of density or abundance outside (or inside) the covered
+#' area.
 #'
-#' If \code{newdata} is not supplied, predictions are made for the data that built the model. Note that the order of the results will not necessarily be the same as the \code{segdata} (segment data) \code{data.frame} that was supplied to \code{dsm}.
+#' If `newdata` is not supplied, predictions are made for the data that built
+#' the model. Note that the order of the results will not necessarily be the
+#' same as the `segdata` (segment data) `data.frame` that was supplied to
+#' [`dsm`][dsm].
 #'
-#' The area \code{off.set} is used if that argument is supplied, otherwise it will look for the areas in the column named \code{off.set} in the \code{newdata}. Either way the link function (usually \code{log}) will be applied to the offsets, so there is no need to log them before passing them to this function.
+#' The area `off.set` is used if that argument is supplied, otherwise it will
+#' look for the areas in the column named `off.set` in the `newdata`. Either
+#' way the link function (usually `log`) will be applied to the offsets, so
+#' there is no need to log them before passing them to this function.
 #'
-#' @param object a fitted \code{\link{dsm}} object as produced by \code{dsm()}.
-#' @param newdata spatially referenced covariates e.g. altitude, depth, distance to shore, etc. Covariates in the \code{data.frame} must have names *identical* to variable names used in fitting the DSM.
-#' @param off.set area of each of the cells in the prediction grid. Should be in the same units as the segments/distances given to \code{dsm}. Replaces the column in \code{newdata} called \code{off.set} if it is supplied. Ignored if \code{newdata} is not supplied.
+#' @param object a fitted [`dsm`][dsm] object
+#' @param newdata spatially referenced covariates e.g. altitude, depth,
+#' distance to shore, etc. Covariates in the `data.frame` must have names
+#' *identical* to variable names used in fitting the model
+#' @param off.set area of each of the cells in the prediction grid. Should be
+#' in the same units as the segments/distances given to `dsm`. Replaces the
+#' column in `newdata` called `off.set` if it is supplied. Ignored if `newdata`
+#' is not supplied
 #' @param type what scale should the results be on. The default is
-#'  \code{"response"}, see \code{\link{predict.gam}} for an explanation of other options (usually not necessary).
-#' @param \dots any other arguments passed to \code{\link{predict.gam}}.
-#' @return predicted values on the response scale by default (unless \code{type} is specified, in which case see \code{\link{predict.gam}}).
+#' `"response"`, see [`predict.gam`][mgcv::predict.gam] for an explanation of
+#' other options (usually not necessary)
+#' @param \dots any other arguments passed to [`predict.gam`][mgcv::predict.gam]
+#' @return predicted values on the response scale by default (unless `type` is
+#' specified, in which case see [`predict.gam`][mgcv::predict.gam]).
 #' @export
-#'
-#' @seealso \code{\link{predict.gam}} \code{\link{dsm.var.gam}} \code{\link{dsm.var.prop}}
+#' @seealso [`predict.gam`][mgcv::predict.gam], [`dsm.var.gam`][dsm.var.gam],
+#' [`dsm.var.prop`][dsm.var.prop]
 #' @author David L. Miller
 #' @importFrom stats predict
 predict.dsm <- function(object, newdata=NULL, off.set=NULL,

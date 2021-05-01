@@ -9,13 +9,18 @@ vis.concurvity(model, type = "estimate")
 \arguments{
 \item{model}{fitted model}
 
-\item{type}{concurvity measure to plot, see \code{\link{concurvity}}}
+\item{type}{concurvity measure to plot, see \code{\link[mgcv:concurvity]{concurvity}}}
 }
 \description{
-Plot measures of how much one term in the model could be explained by another. When values are high, one should consider re-running variable selection with one of the offending variables removed to check for stability in term selection.
+Plot measures of how much one term in the model could be explained by
+another. When values are high, one should consider re-running variable
+selection with one of the offending variables removed to check for stability
+in term selection.
 }
 \details{
-These methods are considered somewhat experimental at this time. Consult \code{\link{concurvity}} for more information on how concurvity measures are calculated.
+These methods are considered somewhat experimental at this time. Consult
+\code{\link[mgcv:concurvity]{concurvity}} for more information on how concurvity
+measures are calculated.
 }
 \examples{
 \dontrun{

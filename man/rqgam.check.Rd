@@ -7,7 +7,8 @@
 rqgam.check(gam.obj, ...)
 }
 \arguments{
-\item{gam.obj}{a \code{gam}, \code{glm} or \code{dsm} object.}
+\item{gam.obj}{a \code{\link[mgcv:gam]{gam}}, \code{\link[stats:glm]{glm}} or \code{\link{dsm}}
+object.}
 
 \item{...}{arguments passed on to all plotting functions}
 }
@@ -15,12 +16,21 @@ rqgam.check(gam.obj, ...)
 just plots!
 }
 \description{
-Reproduces the "Resids vs. linear pred" plot from \code{\link{gam.check}} but using randomised quantile residuals, a la Dunn and Smyth (1996). Checks for heteroskedasticity as as usual, looking for "funnel"-type structures in the points, which is much easier with randomised quantile residuals than with deviance residuals, when your model uses a count distribution as the response.
+Reproduces the "Resids vs. linear pred" plot from
+\code{\link[mgcv:gam.check]{gam.check}} but using randomised quantile residuals, a la
+Dunn and Smyth (1996). Checks for heteroskedasticity as as usual, looking
+for "funnel"-type structures in the points, which is much easier with
+randomised quantile residuals than with deviance residuals, when your model
+uses a count distribution as the response.
 }
 \details{
-Note that this function only works with negative binomial and Tweedie response distributions.
+Note that this function only works with negative binomial and Tweedie
+response distributions.
 
-Earlier versions of this function produced the full \code{gam.check} output, but this was confusing as only one of the plots was really useful. Checks of \code{k} are not computed, these need to be done using \code{\link{gam.check}}.
+Earlier versions of this function produced the full
+\code{\link[mgcv:gam.check]{gam.check}} output, but this was confusing as only one of
+the plots was really useful.  Checks of \code{k} are not computed, these need to
+be done using \code{\link[mgcv:gam.check]{gam.check}}.
 }
 \examples{
 \donttest{
@@ -42,5 +52,5 @@ rqgam.check(mod1)
 }
 }
 \author{
-Based on code provided by Natalie Kelly, bugs added by Dave Miller
+Based on code by Natalie Kelly, bugs added by Dave Miller
 }

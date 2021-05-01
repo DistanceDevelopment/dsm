@@ -1,12 +1,13 @@
 #' Moving block bootstrap sampler
 #'
-#' Not usually used on its own, called from within \code{\link{dsm.var.movblk}}.
+#' Not usually used on its own, called from within
+#' [`dsm.var.movblk`][dsm.var.movblk].
 #'
 #' @param  num.blocks.required number of blocks that we need.
 #' @param  block.size number of segments per block.
 #' @param  which.blocks which blocks should be sampled.
-#' @param  dsm.data the \code{$data} element of the result of a call to \code{dsm}.
-#' @param  unit.info result of calling \code{\link{block.info.per.su}}.
+#' @param  dsm.data the `$data` element of the result of a call to [`dsm`][dsm].
+#' @param  unit.info result of calling [`block.info.per.su`][block.info.per.su].
 #' @param  n.units number of sampling units.
 #'
 #' @return vector of log-residuals

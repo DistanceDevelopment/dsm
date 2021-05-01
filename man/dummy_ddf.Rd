@@ -7,7 +7,8 @@
 dummy_ddf(object, size = 1, width, left = 0, transect = "line")
 }
 \arguments{
-\item{object}{numeric vector of object identifiers, relating to the \code{object} field in the observation data of the DSM.}
+\item{object}{numeric vector of object identifiers, relating to the \code{object}
+field in the observation data of the DSM.}
 
 \item{size}{group size for each observation (default all groups size 1)}
 
@@ -18,7 +19,8 @@ dummy_ddf(object, size = 1, width, left = 0, transect = "line")
 \item{transect}{\code{"line"} or \code{"point"} transect}
 }
 \description{
-Create a detection function object for strip/plot surveys for use in density surface models.
+Create a detection function object for strip/plot surveys for use in density
+surface models.
 }
 \author{
 David L Miller

@@ -5,17 +5,15 @@
 #'
 #' @param block.size number of segments per block
 #' @param data data used to build the model
-#' @param name.su names of the sampling units (ie. transects)
+#' @param name.su names of the sampling units (i.e., transects)
 #'
-#' @return a \code{data.frame} with the following columns
-#'    \tabular{ll}{name        \tab the sample unit name (e.g. transect 
-#'                                  label) \cr
-#'                 num.seg     \tab number of segments in that transect \cr
-#'                 num.block   \tab number of blocks available\cr
-#'                 start.block \tab block # for first block\cr
-#'                 end.block   \tab block # for last block\cr
-#'                 num.req     \tab number of blocks needed for the unit\cr
-#'                }
+#' @return a `data.frame` with the following columns
+#'  * `name`        the sample unit name (e.g. transect label)
+#'  * `num.seg`     number of segments in that transect
+#'  * `num.block`   number of blocks available
+#'  * `start.block` block number for first block
+#'  * `end.block`   block number for last block
+#'  * `num.req`     number of blocks needed for the unit
 block.info.per.su <- function(block.size,data,name.su){
 
   unit <- data.frame(name=name.su)

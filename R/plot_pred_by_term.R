@@ -1,13 +1,17 @@
 #' Spatially plot predictions per model term
 #'
-#' Plot the effect of each smooth in the model spatially. For each term in the model, plot its effect in space. Plots are made on the same scale, so that the relative influence of each smooth can be seen.
+#' Plot the effect of each smooth in the model spatially. For each term in the
+#' model, plot its effect in space. Plots are made on the same scale, so that
+#' the relative influence of each smooth can be seen.
 #'
-#' @param dsm.obj fitted \code{dsm} object
-#' @param data data to use to plot (often the same as the precition grid), data should also include \code{width} and \code{height} columns for plotting
-#' @param location_cov which covariates to plot by (usually 2, spatial covariates, by default \code{=c("x","y")}
-#' @return a \code{ggplot2} plot
+#' @param dsm.obj fitted [`dsm`][dsm] object
+#' @param data data to use to plot (often the same as the precition grid), data
+#' should also include `width` and `height` columns for plotting
+#' @param location_cov which covariates to plot by (usually 2, spatial
+#' covariates, by default `c("x", "y")`
+#' @return a `ggplot2` plot
 #' @export
-#' @author David L Miller (idea taken from \code{inlabru})
+#' @author David L Miller (idea taken from `inlabru`)
 #' @importFrom ggplot2 ggplot geom_tile facet_wrap
 #' @examples
 #' \dontrun{
@@ -29,7 +33,7 @@
 #' # library(viridis)
 #' # plot_pred_by_term(mod1, preddata, c("x","y")) + scale_fill_viridis()
 #' }
-plot_pred_by_term <- function(dsm.obj, data, location_cov=c("x","y")){
+plot_pred_by_term <- function(dsm.obj, data, location_cov=c("x", "y")){
 
   # don't need offset
   data$off.set <- 0
@@ -42,7 +46,7 @@ plot_pred_by_term <- function(dsm.obj, data, location_cov=c("x","y")){
   # bind x,y,cov,covlabel for each cov
   for(col in colnames(preds)){
     plot_data <- rbind(plot_data,
-                       cbind.data.frame(data, value=preds[,col], term=col))
+                       cbind.data.frame(data, value=preds[, col], term=col))
   }
 
 

@@ -20,7 +20,7 @@ generate.mb.sample(
 
 \item{which.blocks}{which blocks should be sampled.}
 
-\item{dsm.data}{the \code{$data} element of the result of a call to \code{dsm}.}
+\item{dsm.data}{the \verb{$data} element of the result of a call to \code{\link{dsm}}.}
 
 \item{unit.info}{result of calling \code{\link{block.info.per.su}}.}
 
@@ -30,5 +30,6 @@ generate.mb.sample(
 vector of log-residuals
 }
 \description{
-Not usually used on its own, called from within \code{\link{dsm.var.movblk}}.
+Not usually used on its own, called from within
+\code{\link{dsm.var.movblk}}.
 }

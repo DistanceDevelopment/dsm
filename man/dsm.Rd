@@ -23,71 +23,136 @@ dsm(
 )
 }
 \arguments{
-\item{formula}{formula for the surface. This should be a valid \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}} formula. See "Details", below, for how to define the response.}
+\item{formula}{formula for the surface. This should be a valid formula. See
+"Details", below, for how to define the response.}
 
-\item{ddf.obj}{result from call to \code{\link{ddf}} or \code{\link[Distance]{ds}}. If multiple detection functions are required a \code{list} can be provided. For strip/circle transects where it is assumed all objects are observed, see \code{\link{dummy_ddf}}. Mark-recapture distance sampling (\code{mrds}) models of type \code{io} (independent observers) are allowed.}
+\item{ddf.obj}{result from call to \code{\link[mrds:ddf]{ddf}} or
+\code{\link[Distance:ds]{ds}}. If multiple detection functions are required a \code{list}
+can be provided. For strip/circle transects where it is assumed all objects
+are observed, see \code{\link{dummy_ddf}}. Mark-recapture distance sampling (\code{mrds})
+models of type \code{io} (independent observers) and \code{trial} are allowed.}
 
 \item{segment.data}{segment data, see \code{\link{dsm-data}}.}
 
 \item{observation.data}{observation data, see \code{\link{dsm-data}}.}
 
-\item{engine}{which fitting engine should be used for the DSM (\code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}}/\code{\link{bam}}).}
+\item{engine}{which fitting engine should be used for the DSM
+(\code{"glm"}/\code{"gam"}/\code{"gamm"}/\code{"bam"}).}
 
-\item{convert.units}{conversion factor to multiply the area of the segments by. See 'Units' below.}
+\item{convert.units}{conversion factor to multiply the area of the segments
+by. See 'Units' below.}
 
-\item{family}{response distribution (popular choices include \code{\link{quasipoisson}}, \code{\link{Tweedie}}/\code{\link{tw}} and \code{\link{negbin}}/\code{\link{nb}}). Defaults to \code{quasipossion}.}
+\item{family}{response distribution (popular choices include
+\code{\link{quasipoisson}}, \code{\link[mgcv:Tweedie]{Tweedie}}/\code{\link[mgcv:Tweedie]{tw}}
+and \code{\link[mgcv:negbin]{negbin}}/\code{\link[mgcv:negbin]{nb}}). Defaults
+\code{\link[=quasipossion]{quasipoisson}}.}
 
-\item{group}{if \code{TRUE} the abundance of groups will be calculated rather than the abundance of individuals. Setting this option to \code{TRUE} is equivalent to setting the size of each group to be 1.}
+\item{group}{if \code{TRUE} the abundance of \emph{groups} will be calculated rather
+than the abundance of \emph{individuals}. Setting this option to \code{TRUE} is
+equivalent to setting the size of each group to be 1.}
 
-\item{control}{the usual \code{control} argument for a \code{gam}; \code{keepData} must be \code{TRUE} for variance estimation to work (though this option cannot be set for GLMs or GAMMs.}
+\item{control}{the usual \code{control} argument for a \code{\link[mgcv:gam]{gam}};
+\code{keepData} must be \code{TRUE} for variance estimation to work (though this
+option cannot be set for GLMs or GAMMs).}
 
-\item{availability}{an estimate of availability bias. For count models used to multiply the effective strip width (must be a vector of length 1 or length the number of rows in \code{segment.data}); for estimated abundance/estimated density models used to scale the response (must be a vector of length 1 or length the number of rows in \code{observation.data}). Uncertainty in the availability is not handled at present.}
+\item{availability}{an estimate of availability bias. For count models used
+to multiply the effective strip width (must be a vector of length 1 or
+length the number of rows in \code{segment.data}); for estimated
+abundance/estimated density models used to scale the response (must be a
+vector of length 1 or length the number of rows in \code{observation.data}).
+Uncertainty in the availability is not handled at present.}
 
-\item{segment.area}{if `NULL` (default) segment areas will be calculated by multiplying the `Effort` column in `segment.data` by the (right minus left) truncation distance for the `ddf.obj` or by `strip.width`. Alternatively a vector of segment areas can be provided (which must be the same length as the number of rows in `segment.data`) or a character string giving the name of a column in `segment.data` which contains the areas. If \code{segment.area} is specified it takes precident.}
+\item{segment.area}{if \code{NULL} (default) segment areas will be calculated by
+multiplying the \code{Effort} column in \code{segment.data} by the (right minus left)
+truncation distance for the \code{ddf.obj} or by \code{strip.width}. Alternatively a
+vector of segment areas can be provided (which must be the same length as
+the number of rows in \code{segment.data}) or a character string giving the name
+of a column in \code{segment.data} which contains the areas. If \code{segment.area} is
+specified it takes precident.}
 
-\item{weights}{weights for each observation used in model fitting. The default, \code{weights=NULL}, weights each observation by its area (see Details). Setting a scalar value (e.g. \code{weights=1}) all observations are equally weighted.}
+\item{weights}{weights for each observation used in model fitting. The
+default, \code{weights=NULL}, weights each observation by its area (see Details).
+Setting a scalar value (e.g., \code{weights=1}) all observations are equally
+weighted.}
 
-\item{method}{The smoothing parameter estimation method. Default is \code{"REML"}, using Restricted Maximum Likelihood. See \code{\link{gam}} for other options. Ignored for \code{engine="glm"}.}
+\item{method}{The smoothing parameter estimation method. Default is
+\code{"REML"}, using Restricted Maximum Likelihood. See \code{\link[mgcv:gam]{gam}} for
+other options. Ignored for \code{engine="glm"}.}
 
-\item{\dots}{anything else to be passed straight to \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}}/\code{\link{bam}}.}
+\item{\dots}{anything else to be passed straight to \code{\link[stats:glm]{glm}},
+\code{\link[mgcv:gam]{gam}}, \code{\link[mgcv:gamm]{gamm}} or \code{\link[mgcv:bam]{bam}}.}
 }
 \value{
-a \code{\link{glm}}/\code{\link{gam}}/\code{\link{gamm}} object, with an additional element, \code{ddf} which holds the detection function object.
+a \code{\link[stats:glm]{glm}}, \code{\link[mgcv:gam]{gam}}, \code{\link[mgcv:gamm]{gamm}} or
+\code{\link[mgcv:bam]{bam}} object, with an additional element, \verb{$ddf} which holds the
+detection function object.
 }
 \description{
-Fits a density surface model (DSM) to detection adjusted counts from a spatially-referenced distance sampling analysis. \code{\link{dsm}} takes observations of animals, allocates them to segments of line (or strip transects) and optionally adjusts the counts based on detectability using a supplied detection function model. A generalized additive model, generalized mixed model or generalized linear model is then used to model these adjusted counts based on a formula involving environmental covariates.
+Fits a density surface model (DSM) to detection adjusted counts from a
+spatially-referenced distance sampling analysis. \code{dsm} takes observations of
+animals, allocates them to segments of line (or strip transects) and
+optionally adjusts the counts based on detectability using a supplied
+detection function model. A generalized additive model, generalized mixed
+model or generalized linear model is then used to model these adjusted
+counts based on a formula involving environmental covariates.
 }
 \details{
-The response (LHS of `formula`) can be one of the following (with restrictions outlined below):
-\tabular{ll}{
-  \code{count} \tab count in each segment\cr
-  \code{abundance.est} \tab estimated abundance per segment, estimation is via a Horvitz-Thompson estimator.\cr
-  \code{density.est} \tab density per segment\cr
- }
+The response (LHS of \code{formula}) can be one of the following (with
+restrictions outlined below):
+\itemize{
+\item \code{count} count in each segment
+\item \code{abundance.est} estimated abundance per segment, estimation is via a
+Horvitz-Thompson estimator
+\item \code{density.est} density per segment
+}
 
 The offset used in the model is dependent on the response:
-\tabular{ll}{
-  count \tab area of segment multiplied by average probability of detection in the segment\cr
-  estimated count \tab area of the segment\cr
-  density \tab zero\cr
- }
+\itemize{
+\item \code{count} area of segment multiplied by average probability of detection
+in the segment
+\item \code{abundance.est} area of the segment
+\item \code{density} zero
+}
 
-The \code{count} response can only be used when detection function covariates only vary between segments/points (not within). For example, weather conditions (like visibility or sea state) or foliage cover are usually acceptable as they do not change within the segment, but animal sex or behaviour will not work. The \code{abundance.est} response can be used with any covariates in the detection function.
+The \code{count} response can only be used when detection function covariates
+only vary between segments/points (not within). For example, weather
+conditions (like visibility or sea state) or foliage cover are usually
+acceptable as they do not change within the segment, but animal sex or
+behaviour will not work. The \code{abundance.est} response can be used with any
+covariates in the detection function.
 
-In the density case, observations can be weighted by segment areas via the \code{weights=} argument. By default (\code{weights=NULL}), when density is estimated the weights are set to the segment areas (using \code{segment.area} or by calculated from detection function object metadata and \code{Effort} data). Alternatively \code{weights=1} will set the weights to all be equal. A third alternative is to pass in a vector of length equal to the number of segments, containing appropriate weights.
+In the density case, observations can be weighted by segment areas via the
+\verb{weights=} argument. By default (\code{weights=NULL}), when density is estimated
+the weights are set to the segment areas (using \code{segment.area} or by
+calculated from detection function object metadata and \code{Effort} data).
+Alternatively \code{weights=1} will set the weights to all be equal. A third
+alternative is to pass in a vector of length equal to the number of
+segments, containing appropriate weights.
 
 A example analyses are available at \url{http://examples.distancesampling.org}.
 }
 \section{Units}{
 
 
-It is often the case that distances are collected in metres and segment lengths are recorded in kilometres. \code{dsm} allows you to provide a conversion factor (\code{convert.units}) to multiply the areas by. For example: if distances are in metres and segment lengths are in kilometres setting \code{convert.units=1000} will lead to the analysis being in metres. Setting \code{convert.units=1/1000} will lead to the analysis being in kilometres. The conversion factor will be applied to `segment.area` if that is specified.
+It is often the case that distances are collected in metres and segment
+lengths are recorded in kilometres. \code{dsm} allows you to provide a conversion
+factor (\code{convert.units}) to multiply the areas by. For example: if distances
+are in metres and segment lengths are in kilometres setting
+\code{convert.units=1000} will lead to the analysis being in metres. Setting
+\code{convert.units=1/1000} will lead to the analysis being in kilometres. The
+conversion factor will be applied to \code{segment.area} if that is specified.
 }
 
 \section{Large models}{
 
 
-For large models, \code{engine="bam"} with \code{method="fREML"} may be useful. Models specified for \code{bam} should be as \code{gam}. READ \code{\link{bam}} before using this option; this option is considered EXPERIMENTAL at the moment. In particular note that the default basis choice (thin plate regression splines) will be slow and that in general fitting is less stable than when using \code{gam}. For negative binomial response, theta must be specified when using \code{bam}.
+For large models, \code{engine="bam"} with \code{method="fREML"} may be useful. Models
+specified for \code{bam} should be as \code{gam}. Read \code{\link[mgcv:bam]{bam}} before using
+this option; this option is considered EXPERIMENTAL at the moment. In
+particular note that the default basis choice (thin plate regression
+splines) will be slow and that in general fitting is less stable than when
+using \code{\link[mgcv:gam]{gam}}. For negative binomial response, theta must be
+specified when using \code{\link[mgcv:bam]{bam}}.
 }
 
 \examples{
@@ -118,11 +183,17 @@ plot(mod1)
 }
 }
 \references{
-Hedley, S. and S. T. Buckland. 2004. Spatial models for line transect sampling. JABES 9:181-199.
+Hedley, S. and S. T. Buckland. 2004. Spatial models for line
+transect sampling. JABES 9:181-199.
 
-Miller, D. L., Burt, M. L., Rexstad, E. A., Thomas, L. (2013), Spatial models for distance sampling data: recent developments and future directions. Methods in Ecology and Evolution, 4: 1001-1010. doi: 10.1111/2041-210X.12105 (Open Access, available at http://onlinelibrary.wiley.com/doi/10.1111/2041-210X.12105/abstract)
+Miller, D. L., Burt, M. L., Rexstad, E. A., Thomas, L. (2013), Spatial
+models for distance sampling data: recent developments and future
+directions. Methods in Ecology and Evolution, 4: 1001-1010. doi:
+10.1111/2041-210X.12105 (Open Access, available at
+\url{http://onlinelibrary.wiley.com/doi/10.1111/2041-210X.12105/abstract})
 
-Wood, S.N. 2006. Generalized Additive Models: An Introduction with R. CRC/Chapman & Hall.
+Wood, S.N. 2006. Generalized Additive Models: An Introduction with R.
+CRC/Chapman & Hall.
 }
 \author{
 David L. Miller

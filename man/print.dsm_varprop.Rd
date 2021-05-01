@@ -12,7 +12,8 @@
 \item{\dots}{unspecified and unused arguments for S3 consistency}
 }
 \description{
-This method only provides a short summary, see \code{\link{summary.dsm_varprop}}.
+This method only provides a short summary, see
+\code{\link{summary.dsm_varprop}}.
 }
 \seealso{
 \code{\link{summary.dsm_varprop}}

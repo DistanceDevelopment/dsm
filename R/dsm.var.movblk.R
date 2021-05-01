@@ -5,7 +5,7 @@
 #' function uncertainty, one not.
 #'
 #' @inheritParams dsm.var.gam
-#' @param dsm.object object returned from \code{\link{dsm}}.
+#' @param dsm.object object returned from [`dsm`][dsm].
 #' @param n.boot number of bootstrap resamples.
 #' @param block.size number of segments in each block.
 #' @param ds.uncertainty incorporate uncertainty in the detection function? See
@@ -13,24 +13,26 @@
 #' @param samp.unit.name name sampling unit to resample (default
 #'        'Transect.Label').
 #' @param progress.file path to a file to be used (usually by Distance) to
-#'        generate a progress bar (default \code{NULL} -- no file written).
+#'        generate a progress bar (default `NULL` -- no file written).
 #' @param bs.file path to a file to store each bootstrap round. This stores all
 #'        of the bootstrap results rather than just the summaries, enabling
-#'        outliers to be detected and removed. (Default \code{NULL}).
-#' @param bar should a progress bar be printed to screen? (Default \code{TRUE}).
+#'        outliers to be detected and removed. (Default `NULL`).
+#' @param bar should a progress bar be printed to screen? (Default `TRUE`).
 #'
 #' @section Details:
-#'  Setting \code{ds.uncertainty=TRUE} will incorporate detection function
+#'  Setting `ds.uncertainty=TRUE` will incorporate detection function
 #'  uncertainty directly into the bootstrap. This is done by generating
 #'  observations from the fitted detection function and then re-fitting a new
 #'  detection function (of the same form), then calculating a new effective
-#'  strip width. Rejection sampling is used to generate the observations (except
-#'  in the half-normal case) so the procedure can be rather slow. Note that this
-#'  is currently not supported with covariates in the detection function.
+#'  strip width. Rejection sampling is used to generate the observations
+#'  (except in the half-normal case) so the procedure can be rather slow. Note
+#'  that this is currently not supported with covariates in the detection
+#'  function.
 #'
-#'  Setting \code{ds.uncertainty=FALSE} will incorporate detection function
-#'  uncertainty using the delta method. This assumes that the detection function
-#'  and the spatial model are INDEPENDENT. This is probably not reasonable.
+#'  Setting `ds.uncertainty=FALSE` will incorporate detection function
+#'  uncertainty using the delta method. This assumes that the detection
+#'  function and the spatial model are INDEPENDENT. This is probably not
+#'  reasonable.
 #'
 #' @export
 #' @importFrom utils write.table setTxtProgressBar txtProgressBar

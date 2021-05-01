@@ -7,20 +7,25 @@
 obs_exp(model, covar, cut = NULL)
 }
 \arguments{
-\item{model}{a fitted \code{dsm} model object}
+\item{model}{a fitted \code{\link{dsm}} model object}
 
-\item{covar}{covariate to aggregate by (character)}
+\item{covar}{covariate to aggregate by (\code{character})}
 
-\item{cut}{vector of cut points to aggregate at. If not supplied, the unique values of \code{covar} are used.}
+\item{cut}{vector of cut points to aggregate at. If not supplied, the unique
+values of \code{covar} are used.}
 }
 \value{
 \code{data.frame} with values of observed and expected counts.
 }
 \description{
-Given a covariate, calculate the observed and expected counts for each unique value of the covariate. This can be a useful goodness of fit check for DSMs.
+Given a covariate, calculate the observed and expected counts for each
+unique value of the covariate. This can be a useful goodness of fit check
+for DSMs.
 }
 \details{
-One strategy for model checking is to calculate observed and expected counts at different aggregations of the variable. If these match well then the model fit is good.
+One strategy for model checking is to calculate observed and expected counts
+at different aggregations of the variable. If these match well then the
+model fit is good.
 }
 \examples{
 library(Distance)

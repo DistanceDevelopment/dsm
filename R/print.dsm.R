@@ -1,14 +1,13 @@
 #' Print a description of a density surface model object
 #'
 #' This method just gives a short description of the fitted model. Use the
-#' \code{\link{summary.dsm}} method for more information.
+#' [`summary.dsm`][summary.dsm] method for more information.
 #'
-#' @param x a \code{dsm} object
+#' @param x a model fitted by [`dsm`][dsm]
 #' @param \dots unspecified and unused arguments for S3 consistency
-#' @return NULL
+#' @return `NULL`
 #' @export
 #' @author David L. Miller
-#' @seealso \code{\link{summary.ds}}
 #' @keywords utility
 print.dsm <- function(x, ...){
 

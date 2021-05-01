@@ -7,7 +7,7 @@
 check.cols(ddf.obj, segment.data, observation.data, segment.area)
 }
 \arguments{
-\item{ddf.obj}{a ddf object from `mrds`}
+\item{ddf.obj}{a \code{ddf} object from \code{\link{mrds}}}
 
 \item{segment.data}{segment data as defined in \code{\link{dsm}}}
 
@@ -19,7 +19,8 @@ check.cols(ddf.obj, segment.data, observation.data, segment.area)
 nothing, but throws an error if something went wrong
 }
 \description{
-Internal function to check that supplied `data.frames` have the correct columns and checks that sample labels are all unique.
+Internal function to check that supplied \code{data.frames} have the correct
+columns and checks that sample labels are all unique.
 }
 \author{
 David Lawrence Miller

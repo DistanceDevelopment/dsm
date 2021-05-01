@@ -2,6 +2,7 @@ dsm 2.3.2
 ------------------
 
 * fixed bug in offset calculation in dsm_varprop se estimation where offsets were logged twice. Thanks to Megan Ferguson for spotting this.
+* documentation now in rmarkdown format
 
 dsm 2.3.1
 ------------------

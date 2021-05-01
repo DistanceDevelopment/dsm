@@ -4,15 +4,21 @@
 #'
 #' @aliases summary.dsm.var
 #'
-#' @param object a \code{dsm.var} object
-#' @param alpha alpha level for confidence intervals (default 0.05 to give a 95\% confidence internal, i.e. we generate \code{100*c(alpha/2, 1-alpha/2)} confidence intervals)
-#' @param boxplot.coef the value of \code{coef} used to calculate the outliers see \code{\link{boxplot}}.
-#' @param bootstrap.subregions list of vectors of logicals or indices for subregions for which variances need to be calculated (only for bootstraps (see \code{\link{dsm.var.prop}} for how to use subregions with variance propagation).
+#' @param object a `dsm.var` object
+#' @param alpha alpha level for confidence intervals (default 0.05 to give a
+#' 95\% confidence internal, i.e. we generate `100*c(alpha/2, 1-alpha/2)`
+#' confidence intervals)
+#' @param boxplot.coef the value of `coef` used to calculate the outliers see
+#' [`boxplot`][graphics::boxplot].
+#' @param bootstrap.subregions list of vectors of logicals or indices for
+#' subregions for which variances need to be calculated (only for bootstraps
+#' (see [`dsm.var.prop`][dsm.var.prop] for how to use subregions with variance
+#' propagation).
 #' @param \dots unused arguments for S3 compatibility
 #' @return a summary object
 #' @export
 #'
-#' @seealso dsm.var.movblk dsm.var.prop
+#' @seealso [`dsm.var.movblk`][dsm.var.movblk], [`dsm.var.prop`][dsm.var.prop]
 #' @author David L. Miller
 #' @importFrom stats qnorm
 # @importFrom mgcv uniquecombs

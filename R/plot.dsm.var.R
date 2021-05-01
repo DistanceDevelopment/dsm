@@ -1,27 +1,27 @@
 #' Create plots of abundance uncertainty
 #'
-#' Note that the prediction data set must have \code{x} and \code{y} columns
-#' even if these were not used in the model.
+#' Note that the prediction data set must have `x` and `y` columns even if
+#' these were not used in the model.
 #'
 #' @aliases plot.dsm.var
 #'
-#' @param x a \code{dsm.var} object
-#' @param poly a \code{list} or \code{data.frame} with columns \code{x} and 
-#'        \code{y}, which gives the coordinates of a polygon to draw. It may
-#'        also optionally have a column \code{group}, if there are many 
-#'        polygons.
+#' @param x a `dsm.var` object
+#' @param poly a `list` or `data.frame` with columns `x` and `y`, which gives
+#' the coordinates of a polygon to draw. It may also optionally have a column
+#' `group`, if there are many polygons.
 #' @param limits limits for the fill colours
 #' @param breaks breaks for the colour fill
 #' @param legend.breaks breaks as they should be displayed
-#' @param xlab label for the \code{x} axis
-#' @param ylab label for the \code{y} axis
+#' @param xlab label for the `x` axis
+#' @param ylab label for the `y` axis
 #' @param observations should observations be plotted?
-#' @param plot actually plot the map, or just return a \code{ggplot2} object?
-#' @param boxplot.coef control trimming (as in \code{summary.dsm.var}), only
-#'        has an effect if the bootstrap file was saved.
-#' @param x.name name of the variable to plot as the x axis.
-#' @param y.name name of the variable to plot as the y axis.
-#' @param gg.grad optional \code{\link{ggplot}} gradient object.
+#' @param plot actually plot the map, or just return a `ggplot2` object?
+#' @param boxplot.coef control trimming (as in
+#' [`summary.dsm.var`][summary.dsm.var]), only has an effect if the bootstrap
+#' file was saved.
+#' @param x.name name of the variable to plot as the `x` axis.
+#' @param y.name name of the variable to plot as the `y` axis.
+#' @param gg.grad optional [`ggplot`][ggplot2::ggplot] gradient object.
 #' @param \dots any other arguments
 #' @return a plot
 #' @export
@@ -30,17 +30,18 @@
 #'
 #' @section Details:
 #'
-#'  In order to get plotting to work with \code{\link{dsm.var.prop}} and
-#'  \code{\link{dsm.var.gam}}, one must first format the data correctly since
-#'  these functions are designed to compute very general summaries. One summary
-#'  is calculated for each element of the list \code{pred} supplied to
-#'  \code{dsm.var.prop} and \code{dsm.var.gam}.
+#'  In order to get plotting to work with [`dsm.var.prop`][dsm.var.prop] and
+#'  [`dsm.var.gam`][dsm.var.gam], one must first format the data correctly
+#'  since these functions are designed to compute very general summaries. One
+#'  summary is calculated for each element of the list `pred` supplied to
+#'  [`dsm.var.prop`][dsm.var.prop] and [`dsm.var.gam`][dsm.var.gam].
 #'
-#'  For a plot of uncertainty over a prediction grid, \code{pred} (a
-#'  \code{data.frame}), say, we can create the correct format by simply using
-#'  \code{pred.new <- split(pred,1:nrow(pred))}.
+#'  For a plot of uncertainty over a prediction grid, `pred` (a `data.frame`),
+#'  say, we can create the correct format by simply using `pred.new <-
+#'  split(pred,1:nrow(pred))`.
 #'
-#' @seealso dsm.var.prop, dsm.var.gam, dsm.var.movblk
+#' @seealso [`dsm.var.prop`][dsm.var.prop], [`dsm.var.gam`][dsm.var.gam],
+#' [`dsm.var.movblk`][dsm.var.movblk]
 #'
 #' @author David L. Miller
 #' @import ggplot2

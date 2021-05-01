@@ -11,11 +11,23 @@
 \alias{survey.area}
 \title{Pan-tropical spotted dolphins in the Gulf of Mexico}
 \description{
-Data from a combination of several NOAA shipboard surveys conducted on pan-tropical spotted dolphins in the Gulf of Mexico. 47 observations of groups of dolphins The group size was recorded, as well as the Beaufort sea state at the time of the observation. Coordinates for each observation and bathymetry data were also available as covariates for the analysis. A complete example analysis (and description of the data) is provided at \url{http://distancesampling.org/R/vignettes/mexico-analysis.html}.
+Data from a combination of several NOAA shipboard surveys conducted on
+pan-tropical spotted dolphins in the Gulf of Mexico. The data consist of 47
+observations of groups of dolphins. The group size was recorded, as well as
+the Beaufort sea state at the time of the observation. Coordinates for each
+observation and bathymetry data were also available as covariates for the
+analysis. A complete example analysis (and description of the data) is
+provided at \url{http://distancesampling.org/R/vignettes/mexico-analysis.html}.
 }
 \references{
-Halpin, P.N., A.J. Read, E. Fujioka, B.D. Best, B. Donnelly, L.J. Hazen, C. Kot, K. Urian, E. LaBrecque, A. Dimatteo, J. Cleary, C. Good, L.B. Crowder, and K.D. Hyrenbach. 2009. OBIS-SEAMAP: The world data center for marine mammal, sea bird, and sea turtle distributions. Oceanography 22(2):104-115
+Halpin, P.N., A.J. Read, E. Fujioka, B.D. Best, B. Donnelly,
+L.J. Hazen, C. Kot, K. Urian, E. LaBrecque, A. Dimatteo, J. Cleary, C. Good,
+L.B. Crowder, and K.D. Hyrenbach. 2009. OBIS-SEAMAP: The world data center
+for marine mammal, sea bird, and sea turtle distributions. Oceanography
+22(2):104-115
 
-NOAA Southeast Fisheries Science Center. 1996. Report of a Cetacean Survey of Oceanic and Selected Continental Shelf Waters of the Northern Gulf of Mexico aboard NOAA Ship Oregon II (Cruise 220)
+NOAA Southeast Fisheries Science Center. 1996. Report of a Cetacean Survey
+of Oceanic and Selected Continental Shelf Waters of the Northern Gulf of
+Mexico aboard NOAA Ship Oregon II (Cruise 220)
 }
 \keyword{datasets}

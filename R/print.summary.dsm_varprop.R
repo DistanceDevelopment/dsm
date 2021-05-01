@@ -1,15 +1,15 @@
 #' Print summary of density surface model variance object
 #'
-#' See \code{\link{summary.dsm_varprop}} for information.
+#' See [`summary.dsm_varprop`][summary.dsm_varprop] for information.
 #'
-#' @param x a summary of \code{dsm} variance object
+#' @param x a summary of `dsm` variance object
 #' @param \dots unspecified and unused arguments for S3 consistency
-#' @return NULL
+#' @return `NULL`
 #' @export
 #' @author David L. Miller
-#' @seealso \code{\link{summary.dsm.var}}
+#' @seealso [`summary.dsm.var`][summary.dsm.var]
 #' @keywords utility
-print.summary.dsm_varprop<-function(x, ...){
+print.summary.dsm_varprop <- function(x, ...){
 
   cat("Summary of uncertainty in a density surface model calculated\n")
   cat(" by variance propagation.\n")

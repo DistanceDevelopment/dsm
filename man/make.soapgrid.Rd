@@ -7,18 +7,15 @@
 make.soapgrid(bnd, n.grid)
 }
 \arguments{
-\item{bnd}{list with elements \code{x} and \code{y} which give the locations
-of the boundary vertices. The first and last elements should be the
-same.}
+\item{bnd}{\code{list} with elements \code{x} and \code{y} which give the locations of the
+boundary vertices. The first and last elements should be the same.}
 
-\item{n.grid}{either one number giving the number of points along the 
-\code{x} and \code{y} axes that should be used to create the grid, or
-a vector giving the number in the \code{x} direction, then \code{y}
-direction.}
+\item{n.grid}{either one number giving the number of points along the \code{x}
+and \code{y} axes that should be used to create the grid, or a vector giving the
+number in the \code{x} direction, then \code{y} direction.}
 }
 \value{
-a list with elements \code{x} and \code{y}, containing the knot 
-        locations.
+a list with elements \code{x} and \code{y}, containing the knot locations.
 }
 \description{
 This routine simply creates a grid of knots (in the correct format) to be

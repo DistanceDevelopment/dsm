@@ -1,15 +1,15 @@
 #' Print summary of density surface model variance object
 #'
-#' See \code{\link{summary.dsm.var}} for information.
+#' See [`summary.dsm.var`][summary.dsm.var] for information.
 #'
-#' @param x a summary of \code{dsm} variance object
+#' @param x a summary of `dsm` variance object
 #' @param \dots unspecified and unused arguments for S3 consistency
-#' @return NULL
+#' @return `NULL`
 #' @export
 #' @author David L. Miller
-#' @seealso \code{\link{summary.dsm.var}}
+#' @seealso [`summary.dsm.var`][summary.dsm.var]
 #' @keywords utility
-print.summary.dsm.var<-function(x, ...){
+print.summary.dsm.var <- function(x, ...){
 
   if(x$bootstrap){
     cat("Summary of bootstrap uncertainty in a density surface model\n")
@@ -110,7 +110,9 @@ print.summary.dsm.var<-function(x, ...){
   # print the individual CVs if we used the delta method
   if(x$bootstrap){
     if(!x$ds.uncertainty){
-      if(!is.null(x$detfct.cv)) cat("CV of detection function       :",x$detfct.cv,"\n")
+      if(!is.null(x$detfct.cv)){
+        cat("CV of detection function       :",x$detfct.cv,"\n")
+      }
       cat("CV from bootstrap              :", round(x$bootstrap.cv,4),"\n")
       cat("Total standard error           :", x$se,"\n")
       cat("Total coefficient of variation :", round(x$cv,4),"\n")
@@ -123,7 +125,9 @@ print.summary.dsm.var<-function(x, ...){
       cat("Standard error                 :", x$se,"\n")
       cat("Coefficient of variation       :", round(x$cv,4),"\n")
     }else{
-      if(!is.null(x$detfct.cv)) cat("CV of detection function       :",x$detfct.cv,"\n")
+      if(!is.null(x$detfct.cv)){
+        cat("CV of detection function       :",x$detfct.cv,"\n")
+      }
       cat("CV from GAM                    :", round(x$gam.cv,4),"\n")
       cat("Total standard error           :", x$se,"\n")
       cat("Total coefficient of variation :", round(x$cv,4),"\n")
@@ -133,9 +137,9 @@ print.summary.dsm.var<-function(x, ...){
 
 
   if(!is.null(x$subregions)){
-    i<-1
+    i <- 1
     for(subreg in x$subregions){
-      cat("Subregion",i,"\n")
+      cat("Subregion", i, "\n")
       print(subreg)
       cat("\n")
       i <- i+1

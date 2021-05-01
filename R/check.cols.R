@@ -1,23 +1,24 @@
 #' Check column names exist
 #'
-#' Internal function to check that supplied `data.frames` have the correct columns and checks that sample labels are all unique.
-#' @param ddf.obj a ddf object from `mrds`
-#' @param segment.data segment data as defined in \code{\link{dsm}}
-#' @param observation.data observation data as defined in \code{\link{dsm}}
-# @param strip.width strip width if strip transects are being used
+#' Internal function to check that supplied `data.frames` have the correct
+#' columns and checks that sample labels are all unique.
+#' @param ddf.obj a `ddf` object from [`mrds`][mrds]
+#' @param segment.data segment data as defined in [`dsm`][dsm]
+#' @param observation.data observation data as defined in [`dsm`][dsm]
 #' @param segment.area area of segments
 #' @return nothing, but throws an error if something went wrong
 #' @author David Lawrence Miller
-
 check.cols <- function(ddf.obj, segment.data, observation.data, segment.area){
 
   ## check that the columns are there
-  checks <-list(segment.data = c("Effort","Sample.Label"),
-                observation.data = c("object","Sample.Label","size","distance"))
+  checks <- list(segment.data = c("Effort", "Sample.Label"),
+                observation.data = c("object", "Sample.Label", "size",
+                                    "distance"))
 
   # don't need to check distance if we don't have a detection function
   if(is.null(ddf.obj)){
-    checks$observation.data <- checks$observation.data[checks$observation.data!="distance"]
+    checks$observation.data <- checks$observation.data[checks$observation.data!=
+                                                       "distance"]
   }
 
   if(!is.null(segment.area)){
@@ -40,7 +41,6 @@ check.cols <- function(ddf.obj, segment.data, observation.data, segment.area){
                             unique(segment.data$Sample.Label))){
     warning("'Sample.Labels are non-unique in segment data!")
   }
-
 
   invisible()
 }

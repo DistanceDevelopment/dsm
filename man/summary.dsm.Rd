@@ -7,18 +7,18 @@
 \method{summary}{dsm}(object, ...)
 }
 \arguments{
-\item{object}{a \code{dsm} object}
+\item{object}{a model fitted by \code{\link{dsm}}}
 
-\item{\dots}{other arguments passed to \code{\link{summary.gam}}.}
+\item{\dots}{other arguments passed to \code{\link[mgcv:summary.gam]{summary.gam}}}
 }
 \value{
 a summary object
 }
 \description{
-Gives a brief summary of a fitted \code{dsm} object.
+Gives a brief summary of a fitted \code{\link{dsm}} object.
 }
 \seealso{
-dsm
+\code{\link{dsm}}
 }
 \author{
 David L. Miller

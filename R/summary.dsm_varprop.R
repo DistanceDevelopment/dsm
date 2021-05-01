@@ -1,14 +1,16 @@
 #' Summarize the variance of a density surface model
 #'
-#' Gives a brief summary of a fitted \code{dsm_varprop} variance object.
+#' Gives a brief summary of a fitted [`dsm_varprop`][dsm_varprop] variance
+#' object.
 #'
-#' @param object a \code{dsm.var} object
-#' @param alpha alpha level for confidence intervals (default 0.05 to give a 95\% confidence internal)
-#' @param \dots unused arguments for S3 compatibility
+#' @param object a `dsm.var` object
+#' @param alpha alpha level for confidence intervals (default 0.05 to give a
+#' 95% confidence internal)
+#' @param ... unused arguments for S3 compatibility
 #' @return a summary object
 #' @export
 #'
-#' @seealso dsm_varprop summary.dsm.var
+#' @seealso [`dsm_varprop`][dsm_varprop], [`summary.dsm.var`][summary.dsm.var]
 #' @author David L. Miller
 #' @importFrom stats qnorm update.formula
 summary.dsm_varprop <- function(object, alpha=0.05, ...){

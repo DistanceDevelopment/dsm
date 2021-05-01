@@ -7,18 +7,18 @@
 \method{plot}{dsm}(x, ...)
 }
 \arguments{
-\item{x}{a \code{dsm} object}
+\item{x}{a model fitted by \code{\link{dsm}}}
 
-\item{\dots}{other arguments passed to \code{\link{plot.gam}}.}
+\item{\dots}{other arguments passed to \code{\link[mgcv:plot.gam]{plot.gam}}.}
 }
 \value{
 a plot!
 }
 \description{
-See \code{\link{plot.gam}}.
+See \code{\link[mgcv:plot.gam]{plot.gam}}.
 }
 \seealso{
-dsm plot.gam
+\code{\link{dsm}} \code{\link[mgcv:plot.gam]{plot.gam}}
 }
 \author{
 David L. Miller

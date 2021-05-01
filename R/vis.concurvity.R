@@ -1,11 +1,16 @@
 #' Visualise concurvity between terms in a GAM
 #'
-#' Plot measures of how much one term in the model could be explained by another. When values are high, one should consider re-running variable selection with one of the offending variables removed to check for stability in term selection.
+#' Plot measures of how much one term in the model could be explained by
+#' another. When values are high, one should consider re-running variable
+#' selection with one of the offending variables removed to check for stability
+#' in term selection.
 #'
-#' These methods are considered somewhat experimental at this time. Consult \code{\link{concurvity}} for more information on how concurvity measures are calculated.
+#' These methods are considered somewhat experimental at this time. Consult
+#' [`concurvity`][mgcv::concurvity] for more information on how concurvity
+#' measures are calculated.
 #'
 #' @param model fitted model
-#' @param type concurvity measure to plot, see \code{\link{concurvity}}
+#' @param type concurvity measure to plot, see [`concurvity`][mgcv::concurvity]
 #' @author David L Miller
 #' @export
 #' @importFrom graphics image layout

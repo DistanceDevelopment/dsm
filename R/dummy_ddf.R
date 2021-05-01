@@ -1,13 +1,15 @@
 #' Detection function objects when detection is certain
 #'
-#' Create a detection function object for strip/plot surveys for use in density surface models.
+#' Create a detection function object for strip/plot surveys for use in density
+#' surface models.
 #'
 #' @export
-#' @param object numeric vector of object identifiers, relating to the \code{object} field in the observation data of the DSM.
+#' @param object numeric vector of object identifiers, relating to the `object`
+#' field in the observation data of the DSM.
 #' @param size group size for each observation (default all groups size 1)
 #' @param width right truncation
 #' @param left left truncation (default 0, no left truncation)
-#' @param transect \code{"line"} or \code{"point"} transect
+#' @param transect `"line"` or `"point"` transect
 #' @author David L Miller
 dummy_ddf <- function(object, size=1, width, left=0, transect="line"){
 

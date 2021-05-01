@@ -4,12 +4,26 @@
 \alias{dsm-package}
 \title{Density surface modelling}
 \description{
-\code{dsm} implements spatial models for distance sampling data.
+\code{dsm} implements spatial models for distance sampling data. Models for detectability can be fitted using packages \code{mrds} or \code{Distance}. \code{dsm} fits generalized additive models to spatially-referenced data. See Miller et al (2013) for an introduction.
 }
 \details{
 Further information on distance sampling methods and example code is available at \url{http://distancesampling.org/R/}.
 
-For help with distance sampling and this package, there is a Google Group \url{https://groups.google.com/forum/#!forum/distance-sampling}.
+For help with distance sampling and this package, there is a Google Group
+\url{https://groups.google.com/forum/#!forum/distance-sampling}.
 
 A example analyses are available at \url{http://examples.distancesampling.org}.
+}
+\references{
+Hedley, S. and S. T. Buckland. 2004. Spatial models for line
+transect sampling. JABES 9:181-199.
+
+Miller, D. L., Burt, M. L., Rexstad, E. A., Thomas, L. (2013), Spatial
+models for distance sampling data: recent developments and future
+directions. Methods in Ecology and Evolution, 4: 1001-1010. doi:
+10.1111/2041-210X.12105 (Open Access, available at
+\url{http://onlinelibrary.wiley.com/doi/10.1111/2041-210X.12105/abstract})
+
+Wood, S.N. 2006. Generalized Additive Models: An Introduction with R.
+CRC/Chapman & Hall.
 }

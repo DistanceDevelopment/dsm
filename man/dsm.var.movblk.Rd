@@ -20,13 +20,19 @@ dsm.var.movblk(
 \arguments{
 \item{dsm.object}{object returned from \code{\link{dsm}}.}
 
-\item{pred.data}{either: a single prediction grid or list of prediction grids. Each grid should be a \code{data.frame} with the same columns as the original data.}
+\item{pred.data}{either: a single prediction grid or list of prediction
+grids. Each grid should be a \code{data.frame} with the same columns as the
+original data.}
 
 \item{n.boot}{number of bootstrap resamples.}
 
 \item{block.size}{number of segments in each block.}
 
-\item{off.set}{a a vector or list of vectors with as many elements as there are in \code{pred.data}. Each vector is as long as the number of rows in the corresponding element of \code{pred.data}. These give the area associated with each prediction cell. If a single number is supplied it will be replicated for the length of \code{pred.data}.}
+\item{off.set}{a a vector or list of vectors with as many elements as there
+are in \code{pred.data}. Each vector is as long as the number of rows in the
+corresponding element of \code{pred.data}. These give the area associated with
+each prediction cell. If a single number is supplied it will be replicated
+for the length of \code{pred.data}.}
 
 \item{ds.uncertainty}{incorporate uncertainty in the detection function? See
 Details, below. Note that this feature is EXPERIMENTAL at the moment.}
@@ -50,17 +56,19 @@ function uncertainty, one not.
 }
 \section{Details}{
 
- Setting \code{ds.uncertainty=TRUE} will incorporate detection function
- uncertainty directly into the bootstrap. This is done by generating
- observations from the fitted detection function and then re-fitting a new
- detection function (of the same form), then calculating a new effective
- strip width. Rejection sampling is used to generate the observations (except
- in the half-normal case) so the procedure can be rather slow. Note that this
- is currently not supported with covariates in the detection function.
+Setting \code{ds.uncertainty=TRUE} will incorporate detection function
+uncertainty directly into the bootstrap. This is done by generating
+observations from the fitted detection function and then re-fitting a new
+detection function (of the same form), then calculating a new effective
+strip width. Rejection sampling is used to generate the observations
+(except in the half-normal case) so the procedure can be rather slow. Note
+that this is currently not supported with covariates in the detection
+function.
 
- Setting \code{ds.uncertainty=FALSE} will incorporate detection function
- uncertainty using the delta method. This assumes that the detection function
- and the spatial model are INDEPENDENT. This is probably not reasonable.
+Setting \code{ds.uncertainty=FALSE} will incorporate detection function
+uncertainty using the delta method. This assumes that the detection
+function and the spatial model are INDEPENDENT. This is probably not
+reasonable.
 }
 
 \examples{

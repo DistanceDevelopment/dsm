@@ -1,11 +1,13 @@
 #' Trimmed variance
 #'
-#' Trim the variance estimates from the bootstrap. This is defined as the percentage defined as amount necessary to bring median and trimmed mean within 8% of each other these are defined as 'outliers'.
+#' Trim the variance estimates from the bootstrap. This is defined as the
+#' percentage defined as amount necessary to bring median and trimmed mean
+#' within 8% of each other these are defined as 'outliers'.
 #'
-#' @param untrimmed.bootstraps (usually the \code{$study.area.total} element
-#'        of a returned \code{dsm} bootstrap object.
-#' @param boxplot.coef the value of \code{coef} used to calculate the outliers
-#'        see \code{\link{boxplot}}.
+#' @param untrimmed.bootstraps (usually the `$study.area.total` element of a
+#' returned [`dsm.var.movblk`][dsm.var.movblk] bootstrap object.
+#' @param boxplot.coef the value of `coef` used to calculate the outliers see
+#' [`boxplot`][graphics::boxplot].
 #'
 #' @return trimmed variance
 #'
@@ -21,7 +23,7 @@ trim.var <- function(untrimmed.bootstraps, boxplot.coef=1.5){
 
   attr(ret,"trim.prop") <- length(outliers) / length(untrimmed.bootstraps)
   attr(ret,"untrimn") <- length(untrimmed.bootstraps)
-  attr(ret,"outliers") <- length(outliers) 
+  attr(ret,"outliers") <- length(outliers)
   attr(ret,"trim.ind") <- !(untrimmed.bootstraps %in% outliers)
   attr(ret,"boxplot.coef") <- boxplot.coef
 

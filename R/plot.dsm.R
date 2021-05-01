@@ -1,19 +1,19 @@
 #' Plot a density surface model.
 #'
-#' See \code{\link{plot.gam}}.
+#' See [`plot.gam`][mgcv::plot.gam].
 #'
 #' @aliases plot.dsm
 #'
-#' @param x a \code{dsm} object
-#' @param \dots other arguments passed to \code{\link{plot.gam}}.
+#' @param x a model fitted by [`dsm`][dsm]
+#' @param \dots other arguments passed to [`plot.gam`][mgcv::plot.gam].
 #' @return a plot!
 #' @export
 #'
-#' @seealso dsm plot.gam
+#' @seealso [`dsm`][dsm] [`plot.gam`][mgcv::plot.gam]
 #' @author David L. Miller
 #' @importFrom graphics plot
 #'
-plot.dsm<-function(x,...){
+plot.dsm <- function(x, ...){
   class(x) <- class(x)[class(x)!="dsm"]
-  return(plot(x,...))
+  return(plot(x, ...))
 }

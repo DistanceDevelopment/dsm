@@ -11,6 +11,9 @@
 
 \item{\dots}{unspecified and unused arguments for S3 consistency}
 }
+\value{
+\code{NULL}
+}
 \description{
 See \code{\link{summary.dsm_varprop}} for information.
 }

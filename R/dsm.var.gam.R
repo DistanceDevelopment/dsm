@@ -1,22 +1,29 @@
 #' Prediction variance estimation assuming independence
 #'
-#' If one is willing to assume the the detection function and spatial model are independent, this function will produce estimates of variance of predictions of abundance, using the result that squared coefficients of variation will add.
+#' If one is willing to assume the the detection function and spatial model are
+#' independent, this function will produce estimates of variance of predictions
+#' of abundance, using the result that squared coefficients of variation will
+#' add.
 #'
-#' This is based on \code{\link{dsm.var.prop}} taken from code by Mark Bravington and Sharon Hedley.
-#'
-#' @param dsm.obj a model object returned from running \code{\link{dsm}}.
-#' @param pred.data either: a single prediction grid or list of prediction grids. Each grid should be a \code{data.frame} with the same columns as the original data.
-#' @param off.set a a vector or list of vectors with as many elements as there are in \code{pred.data}. Each vector is as long as the number of rows in the corresponding element of \code{pred.data}. These give the area associated with each prediction cell. If a single number is supplied it will be replicated for the length of \code{pred.data}.
-#' @param seglen.varname name for the column which holds the segment length (default value \code{"Effort"}).
-#' @param type.pred should the predictions be on the "response" or "link" scale? (default \code{"response"}).
-#' @return a list with elements
-#'         \tabular{ll}{\code{model} \tab the fitted model object\cr
-#'                      \code{pred.var} \tab variance of the regions given
-#'                      in \code{pred.data}.\cr
-#'                      \code{bootstrap} \tab logical, always \code{FALSE}\cr
-#'                      \code{model}\tab the fitted model with the extra term\cr
-#'                      \code{dsm.object} \tab the original model, as above
-#'                      }
+#' @param dsm.obj a model object fitted by [`dsm`][dsm].
+#' @param pred.data either: a single prediction grid or list of prediction
+#' grids. Each grid should be a `data.frame` with the same columns as the
+#' original data.
+#' @param off.set a a vector or list of vectors with as many elements as there
+#' are in `pred.data`. Each vector is as long as the number of rows in the
+#' corresponding element of `pred.data`. These give the area associated with
+#' each prediction cell. If a single number is supplied it will be replicated
+#' for the length of `pred.data`.
+#' @param seglen.varname name for the column which holds the segment length
+#' (default value `"Effort"`).
+#' @param type.pred should the predictions be on the "response" or "link"
+#' scale? (default `"response"`).
+#' @return a `list` with elements
+#'   * `model` the fitted model object
+#'   * `pred.var` variance of the regions given in `pred.data`.
+#'   * `bootstrap` logical, always `FALSE`
+#'   * `model` the fitted model with the extra term
+#'   * `dsm.object` the original model (`dsm.obj` above)
 #' @author David L. Miller
 #' @importFrom stats coef vcov
 #' @export

@@ -1,19 +1,19 @@
 #' Convert latitude and longitude to Northings and Eastings
 #'
 #' Convert longitude and latitude co-ordinates to kilometres west-east and 
-#' south-north from axes through (\code{lon0},\code{lat0}) using the 
+#' south-north from axes through (`lon0`,`lat0`) using the 
 #' "spherical law of cosines".
 #'
 #' WARNING: This is an approximate procedure for converting between latitude/
 #' longitude and Northing/Easting. Consider using projection conversions
-#' available in packages \code{sp} and \code{rgdal} for better results.
+#' available in packages `sp`, `sf` and `rgdal` for better results.
 #'
 #' @param lon longitude
 #' @param lat latitude
 #' @param lon0 longitude reference point (defaults to mean longitude)
 #' @param lat0 latitude reference point (defaults to mean latitude)
 #'
-#' @return list with elements \code{km.e} and \code{km.n}.
+#' @return list with elements `km.e` and `km.n`.
 #'
 #' @author Simon N. Wood
 #' @export

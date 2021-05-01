@@ -1,39 +1,70 @@
 #' Prediction variance propagation for DSMs
 #'
-#' To ensure that uncertainty from the detection function is correctly propagated to the final variance estimate of abundance, this function uses a method first detailed in Williams et al (2011).
+#' To ensure that uncertainty from the detection function is correctly
+#' propagated to the final variance estimate of abundance, this function uses a
+#' method first detailed in Williams et al (2011), further explanation is given
+#' in Bravington et al. (2021).
 #'
-#' The idea is to refit the spatial model but including an extra random effect. This random effect has zero mean and hence to effect on point estimates. Its variance is the Hessian of the detection function. Variance estimates then incorporate detection function uncertainty. Further mathematical details are given in the paper in the references below.
+#' The idea is to refit the spatial model but including an extra random effect.
+#' This random effect has zero mean and hence to effect on point estimates. Its
+#' variance is the Hessian of the detection function. Variance estimates then
+#' incorporate detection function uncertainty. Further mathematical details are
+#' given in the paper in the references below.
 #'
-#' Many prediction grids can be supplied by supplying a list of \code{data.frame}s to the function.
+#' Many prediction grids can be supplied by supplying a list of `data.frame`s
+#' to the function.
 #'
-#' Note that this routine simply calls \code{\link{dsm_varprop}}. If you don't require multiple prediction grids, the other routine will probably be faster.
+#' Note that this routine simply calls [`dsm_varprop`][dsm_varprop]. If you
+#' don't require multiple prediction grids, the other routine will probably be
+#' faster.
 #'
-#' This routine is only useful if a detection function with covariates has been used in the DSM.
+#' This routine is only useful if a detection function with covariates has been
+#' used in the DSM.
 #'
 #' @section Diagnostics:
-#' The summary output from the function includes a simply diagnostic that shows the average probability of detection from the "original" fitted model (the model supplied to this function; column \code{Fitted.model}) and the probability of detection from the refitted model (used for variance propagation; column \code{Refitted.model}) along with the standard error of the probability of detection from the fitted model (\code{Fitted.model.se}), at the unique values of any factor covariates used in the detection function (for continuous covariates the 5%, 50% and 95% quantiles are shown). If there are large differences between the probabilities of detection then there are potentially problems with the fitted model, the variance propagation or both. This can be because the fitted model does not account for enough of the variability in the data and in refitting the variance model accounts for this in the random effect.
+#' The summary output from the function includes a simply diagnostic that shows
+#' the average probability of detection from the "original" fitted model (the
+#' model supplied to this function; column `Fitted.model`) and the probability
+#' of detection from the refitted model (used for variance propagation; column
+#' `Refitted.model`) along with the standard error of the probability of
+#' detection from the fitted model (`Fitted.model.se`), at the unique values of
+#' any factor covariates used in the detection function (for continuous
+#' covariates the 5%, 50% and 95% quantiles are shown). If there are large
+#' differences between the probabilities of detection then there are
+#' potentially problems with the fitted model, the variance propagation or
+#' both. This can be because the fitted model does not account for enough of
+#' the variability in the data and in refitting the variance model accounts for
+#' this in the random effect.
 #'
 #' @section Limitations:
-#' Note that this routine is only useful if a detection function has been used in the DSM. It cannot be used when the \code{abundance.est} or \code{density.est} responses are used. Importantly this requires that if the detection function has covariates, then these do not vary within a segment (so, for example covariates like sex cannot be used).
+#' Note that this routine is only useful if a detection function has been used
+#' in the DSM. It cannot be used when the `abundance.est` or `density.est`
+#' responses are used. Importantly this requires that if the detection function
+#' has covariates, then these do not vary within a segment (so, for example
+#' covariates like sex cannot be used).
 #'
 #' @inheritParams dsm.var.gam
-#' @return a list with elements
-#'         \tabular{ll}{\code{model} \tab the fitted model object\cr
-#'                      \code{pred.var} \tab variance of each region given
-#'                      in \code{pred.data}.\cr
-#'                      \code{bootstrap} \tab logical, always \code{FALSE}\cr
-#'                      \code{pred.data} \tab as above\cr
-#'                      \code{off.set} \tab as above\cr
-#'                      \code{model}\tab the fitted model with the extra term\cr
-#'                      \code{dsm.object} \tab the original model, as above\cr
-#'                      \code{model.check} \tab simple check of subtracting the coefficients of the two models to see if there is a large difference\cr
-#'                      \code{deriv} \tab numerically calculated Hessian of the offset\cr
-#'                      }
+#' @return a `list` with elements
+#'   * `model` the fitted model object
+#'   * `pred.var` variance of each region given in `pred.data`
+#'   * `bootstrap` logical, always `FALSE`
+#'   * `pred.data` as above
+#'   * `off.set` as above
+#'   * `model` the fitted model with the extra term
+#'   * `dsm.object` the original model, as above
+#'   * `model.check` simple check of subtracting the coefficients of the two
+#'   models to see if there is a large difference
+#'   * `deriv` numerically calculated Hessian of the offset
 #' @author Mark V. Bravington, Sharon L. Hedley. Bugs added by David L. Miller.
 #' @references
-#' Bravington, M. V., Miller, D. L., & Hedley, S. L. (2021). Variance Propagation for Density Surface Models. Journal of Agricultural, Biological and Environmental Statistics. https://doi.org/10.1007/s13253-021-00438-2
+#' Bravington, M. V., Miller, D. L., & Hedley, S. L. (2021). Variance
+#' Propagation for Density Surface Models. Journal of Agricultural, Biological
+#' and Environmental Statistics. https://doi.org/10.1007/s13253-021-00438-2
 #'
-#' Williams, R., Hedley, S.L., Branch, T.A., Bravington, M.V., Zerbini, A.N. and Findlay, K.P. (2011). Chilean Blue Whales as a Case Study to Illustrate Methods to Estimate Abundance and Evaluate Conservation Status of Rare Species. Conservation Biology 25(3), 526-535.
+#' Williams, R., Hedley, S.L., Branch, T.A., Bravington, M.V., Zerbini, A.N.
+#' and Findlay, K.P. (2011). Chilean Blue Whales as a Case Study to Illustrate
+#' Methods to Estimate Abundance and Evaluate Conservation Status of Rare
+#' Species. Conservation Biology 25(3), 526-535.
 #' @export
 #' @importFrom stats as.formula update
 #' @importFrom numDeriv grad
