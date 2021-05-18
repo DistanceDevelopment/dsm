@@ -4,7 +4,7 @@ License: GPL (>= 2)
 Title: Density Surface Modelling of Distance Sampling Data
 LazyLoad: yes
 Author: David L. Miller, Eric Rexstad, Louise Burt, Mark V. Bravington,
-    Sharon Hedley.
+    Sharon Hedley, Megan Ferguson, Natalie Kelly.
 Description: Density surface modelling of line transect data. A Generalized
     Additive Model-based approach is used to calculate spatially-explicit estimates
     of animal abundance from distance sampling (also presence/absence and strip
