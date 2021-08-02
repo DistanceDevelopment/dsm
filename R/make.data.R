@@ -71,6 +71,9 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
     fitted.p <- fitted(this_ddf)
 
     # remove observations which were not in the detection function
+    if(!("ddfobj" %in% names(obsdata))){
+      stop("No ddfobj column in observation data")
+    }
     this_obsdata <- obsdata[obsdata[["ddfobj"]]==i, ]
 
     # Check that observations are between left and right truncation
