@@ -1,13 +1,30 @@
 #' Using RMark models in density surface models
 #'
-#' Create a detection function or availability object from a fitted RMark model.
+#' Create a detectability/perception/availability object from a fitted RMark
+#' model for use with DSM. This is primarily intended to be used with UAV-type
+#' data where RMark has been used to analyse videos by multiple viewers. For
+#' classic double observer distance sampling use the package `mrds`.
 #'
-#' Models fitted by RMark can be used in DSM.... CHAT HERE
+#' Models fitted by RMark can be used in DSM. This function can construct an
+#' appropriate object to be used by `dsm`.
 #'
-#' RMark models can't contain variables named `detected`, `distance` or `observer`.
-#' `Time` is the observer id
+#' @section Data format:
+#' There is a significant mismatch between the data that RMark needs and the
+#' data that `dsm` needs to fit models. Some care needs to be taken to ensure
+#' that the two work together well.
 #'
-#' Obs should only contain *one* observation per detected group!
+#' When setting-up the model in RMark, the observer is used as the `Time`
+#' (capture occasion).
+#'
+#' RMark models can't contain variables named `detected`, `distance` or
+#' `observer` as these are reserved for use by `dsm` in various processing
+#' steps.
+#'
+#' The `obs` `data.frame` should only contain *one* observation per detected
+#' group, not the multiple observations for each observer used by RMark.
+#' Internally this `data.frame` is used to predict the combined "probability of
+#' capture" for each observation (using the `predict_real` function from
+#' RMark).
 #'
 #' @export
 #' @param rmark_model model fitted by RMark
@@ -83,14 +100,14 @@ rmark_ddf <- function(rmark_model, obs, width, left=0, transect="line"){
 
 #' Prediction for RMark-dervied "detection" functions
 #'
-#' Prediction function for detection functions dervied from RMark models. 
+#' Prediction function for detection functions dervied from RMark models.
 #'
 #' @export
 #' @param object model object
 #' @param newdata covariates needed to get a probabilities of detection
 #' @param compute unused, compatability with [`mrds::predict`][mrds::predict]
 #' @param int.range unused, compatability with [`mrds::predict`][mrds::predict]
-#' @param esw should the strip width be returned?
+#' @param esw unused, compatability with [`mrds::predict`][mrds::predict]
 #' @param \dots for S3 consistency
 #' @author David L Miller
 predict.rmark_ddf <- function(object, newdata=NULL, compute=FALSE,
@@ -125,7 +142,7 @@ predict.rmark_ddf <- function(object, newdata=NULL, compute=FALSE,
 }
 
 #' @export
-print.fake_ddf <- function(x, ...){
+print.rmark_ddf <- function(x, ...){
   print(summary(x))
 }
 

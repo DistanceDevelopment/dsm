@@ -19,16 +19,35 @@ plus all covariates used in \code{rmark_model}.}
 \item{transect}{\code{"line"} or \code{"point"} transect}
 }
 \description{
-Create a detection function or availability object from a fitted RMark model.
+Create a detectability/perception/availability object from a fitted RMark
+model for use with DSM. This is primarily intended to be used with UAV-type
+data where RMark has been used to analyse videos by multiple viewers. For
+classic double observer distance sampling use the package \code{mrds}.
 }
 \details{
-Models fitted by RMark can be used in DSM.... CHAT HERE
-
-RMark models can't contain variables named \code{detected}, \code{distance} or \code{observer}.
-\code{Time} is the observer id
-
-Obs should only contain \emph{one} observation per detected group!
+Models fitted by RMark can be used in DSM. This function can construct an
+appropriate object to be used by \code{dsm}.
 }
+\section{Data format}{
+
+There is a significant mismatch between the data that RMark needs and the
+data that \code{dsm} needs to fit models. Some care needs to be taken to ensure
+that the two work together well.
+
+When setting-up the model in RMark, the observer is used as the \code{Time}
+(capture occasion).
+
+RMark models can't contain variables named \code{detected}, \code{distance} or
+\code{observer} as these are reserved for use by \code{dsm} in various processing
+steps.
+
+The \code{obs} \code{data.frame} should only contain \emph{one} observation per detected
+group, not the multiple observations for each observer used by RMark.
+Internally this \code{data.frame} is used to predict the combined "probability of
+capture" for each observation (using the \code{predict_real} function from
+RMark).
+}
+
 \author{
 David L Miller
 }

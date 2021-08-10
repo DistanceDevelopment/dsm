@@ -22,7 +22,7 @@
 
 \item{int.range}{unused, compatability with \code{\link[mrds:predict.ds]{mrds::predict}}}
 
-\item{esw}{should the strip width be returned?}
+\item{esw}{unused, compatability with \code{\link[mrds:predict.ds]{mrds::predict}}}
 
 \item{\dots}{for S3 consistency}
 }
