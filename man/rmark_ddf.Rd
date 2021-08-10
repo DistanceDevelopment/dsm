@@ -25,7 +25,7 @@ Create a detection function or availability object from a fitted RMark model.
 Models fitted by RMark can be used in DSM.... CHAT HERE
 
 RMark models can't contain variables named \code{detected}, \code{distance} or \code{observer}.
-Time is the observer id
+\code{Time} is the observer id
 
 Obs should only contain \emph{one} observation per detected group!
 }

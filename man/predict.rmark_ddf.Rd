@@ -2,7 +2,7 @@
 % Please edit documentation in R/rmark_ddf.R
 \name{predict.rmark_ddf}
 \alias{predict.rmark_ddf}
-\title{Prediction for fake detection functions}
+\title{Prediction for RMark-dervied "detection" functions}
 \usage{
 \method{predict}{rmark_ddf}(
   object,
@@ -27,9 +27,7 @@
 \item{\dots}{for S3 consistency}
 }
 \description{
-Prediction function for dummy detection functions. The function returns as
-many 1s as there are rows in \code{newdata}. If \code{esw=TRUE} then the
-strip width is returned.
+Prediction function for detection functions dervied from RMark models.
 }
 \author{
 David L Miller
