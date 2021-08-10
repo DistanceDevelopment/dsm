@@ -131,18 +131,20 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
     full_obsdata <- rbind(full_obsdata, this_obsdata)
 
     # set the segment area for this detection function in the segdata
-    if(this_ddf$meta.data$point){
-      # here "Effort" is number of visits
-      segdata$segment.area[segdata$ddfobj==i] <- pi *
-        segdata$width[segdata$ddfobj==i]^2 *
-        segdata[, seglength.name][segdata$ddfobj==i]
-    }else{
-    # line transects
-      segdata$segment.area[segdata$ddfobj==i] <- 2 *
-        segdata[, seglength.name][segdata$ddfobj==i] *
-        segdata$width[segdata$ddfobj==i]
+    # unless we set segment area!
+    if(is.null(segment.area)){
+      if(this_ddf$meta.data$point){
+        # here "Effort" is number of visits
+        segdata$segment.area[segdata$ddfobj==i] <- pi *
+          segdata$width[segdata$ddfobj==i]^2 *
+          segdata[, seglength.name][segdata$ddfobj==i]
+      }else{
+        # line transects
+        segdata$segment.area[segdata$ddfobj==i] <- 2 *
+          segdata[, seglength.name][segdata$ddfobj==i] *
+          segdata$width[segdata$ddfobj==i]
+      }
     }
-
   }
 
   # set the full observation data
@@ -150,9 +152,14 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
 
   # set the segment area in the data
   if(!is.null(segment.area)){
-    segdata$segment.area <- segment.area
+    if(is.character(segment.area)){
+      segdata$segment.area <- segdata[[segment.area]]
+    }else if(is.numeric(segment.area) && length(segment.area) == nrow(segdata)){
+      segdata$segment.area <- segment.area
+    }else{
+      stop("Invalid segment.area supplied")
+    }
   }
-
 
   ## Aggregate response values of the sightings over segments
   if(response == "density.est"){
@@ -244,7 +251,7 @@ make.data <- function(response, ddfobject, segdata, obsdata, group,
   }
 
   # check that none of the Effort values are zero
-  if(any(dat[, seglength.name]==0)){
+  if(is.null(segment.area) && any(dat[, seglength.name]==0)){
     stop(paste0("Effort values for segments: ",
                 paste(which(dat[, seglength.name]==0), collapse=", "),
                 " are 0."))

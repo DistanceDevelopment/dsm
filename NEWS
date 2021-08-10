@@ -3,6 +3,7 @@ dsm 2.3.2
 
 * fixed bug in offset calculation in dsm_varprop se estimation where offsets were logged twice. Thanks to Megan Ferguson for spotting this.
 * documentation now in rmarkdown format
+* fix bug when supplying segment.area as a character (to identify a column)
 
 dsm 2.3.1
 ------------------
