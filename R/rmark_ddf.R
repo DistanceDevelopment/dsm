@@ -5,7 +5,7 @@
 #' Models fitted by RMark can be used in DSM.... CHAT HERE
 #'
 #' RMark models can't contain variables named `detected`, `distance` or `observer`.
-#' Time is the observer id
+#' `Time` is the observer id
 #'
 #' Obs should only contain *one* observation per detected group!
 #'
@@ -81,11 +81,9 @@ rmark_ddf <- function(rmark_model, obs, width, left=0, transect="line"){
   return(df_obj)
 }
 
-#' Prediction for fake detection functions
+#' Prediction for RMark-dervied "detection" functions
 #'
-#' Prediction function for dummy detection functions. The function returns as
-#' many 1s as there are rows in \code{newdata}. If \code{esw=TRUE} then the
-#' strip width is returned.
+#' Prediction function for detection functions dervied from RMark models. 
 #'
 #' @export
 #' @param object model object
