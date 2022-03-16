@@ -17,14 +17,16 @@
 #' @export
 #' @return `data.frame` with values of observed and expected counts.
 #' @examples
+#' \dontrun{
 #' library(Distance)
 #' library(dsm)
 #'
 #' # example with the Gulf of Mexico dolphin data
 #' data(mexdolphins)
-#' hr.model <- ds(distdata, max(distdata$distance),
+#' hr.model <- ds(distdata, truncation=6000,
 #'                key = "hr", adjustment = NULL)
 #' mod1 <- dsm(count~s(x,y), hr.model, segdata, obsdata)
+#' }
 obs_exp <- function(model, covar, cut=NULL){
 
   # get data

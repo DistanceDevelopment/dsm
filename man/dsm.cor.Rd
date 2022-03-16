@@ -77,7 +77,7 @@ smoother will not have fitted values there). Code like
  data(mexdolphins)
 
  # fit a model
- hr.model <- ds(distdata, max(distdata$distance),
+ hr.model <- ds(distdata, truncation=6000,
                 key = "hr", adjustment = NULL)
  mod1 <- dsm(count~s(x,y), hr.model, segdata, obsdata)
 

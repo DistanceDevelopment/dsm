@@ -89,7 +89,7 @@
 # data(mexdolphins)
 #
 # # fit a detection function
-# df <- ds(distdata, max(distdata$distance),
+# df <- ds(distdata, truncation=6000,
 #          key = "hn", adjustment = NULL)
 #
 # # fit a simple smooth of x and y

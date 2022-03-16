@@ -30,7 +30,7 @@ library(dsm)
 
 # load the Gulf of Mexico dolphin data and fit a model
 data(mexdolphins)
-hr.model <- ds(distdata, max(distdata$distance),
+hr.model <- ds(distdata, truncation=6000,
                key = "hr", adjustment = NULL)
 mod1 <- dsm(count~s(x,y) + s(depth), hr.model, segdata, obsdata)
 

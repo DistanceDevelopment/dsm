@@ -36,7 +36,7 @@
 #'  data(mexdolphins)
 #'
 #'  # fit a detection function and look at the summary
-#'  hr.model <- ds(distdata, max(distdata$distance),
+#'  hr.model <- ds(distdata, truncation=6000,
 #'                 key = "hr", adjustment = NULL)
 #'  summary(hr.model)
 #'
