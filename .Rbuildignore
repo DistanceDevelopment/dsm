@@ -2,3 +2,4 @@ LICENSE
 ^\.travis\.yml$
 ^appveyor\.yml$
 .gitignore
+.github
