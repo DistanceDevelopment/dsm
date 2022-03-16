@@ -5,7 +5,7 @@
 #' the relative influence of each smooth can be seen.
 #'
 #' @param dsm.obj fitted [`dsm`][dsm] object
-#' @param data data to use to plot (often the same as the precition grid), data
+#' @param data data to use to plot (often the same as the prediction grid), data
 #' should also include `width` and `height` columns for plotting
 #' @param location_cov which covariates to plot by (usually 2, spatial
 #' covariates, by default `c("x", "y")`

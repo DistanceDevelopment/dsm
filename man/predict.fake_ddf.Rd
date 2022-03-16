@@ -18,7 +18,7 @@
 
 \item{newdata}{how many 1s should we return?}
 
-\item{compute}{unused, compatability with \code{\link[mrds:predict.ds]{mrds::predict}}}
+\item{compute}{unused, compatibility with \code{\link[mrds:predict.ds]{mrds::predict}}}
 
 \item{int.range}{unused, compatability with \code{\link[mrds:predict.ds]{mrds::predict}}}
 

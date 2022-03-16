@@ -69,7 +69,7 @@ truncation distance for the \code{ddf.obj} or by \code{strip.width}. Alternative
 vector of segment areas can be provided (which must be the same length as
 the number of rows in \code{segment.data}) or a character string giving the name
 of a column in \code{segment.data} which contains the areas. If \code{segment.area} is
-specified it takes precident.}
+specified it takes precedent.}
 
 \item{weights}{weights for each observation used in model fitting. The
 default, \code{weights=NULL}, weights each observation by its area (see Details).

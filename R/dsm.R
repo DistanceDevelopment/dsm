@@ -95,7 +95,7 @@
 #' vector of segment areas can be provided (which must be the same length as
 #' the number of rows in `segment.data`) or a character string giving the name
 #' of a column in `segment.data` which contains the areas. If `segment.area` is
-#' specified it takes precident.
+#' specified it takes precedent.
 #' @param weights weights for each observation used in model fitting. The
 #' default, `weights=NULL`, weights each observation by its area (see Details).
 #' Setting a scalar value (e.g., `weights=1`) all observations are equally
