@@ -22,7 +22,7 @@
 #' This routine is only useful if a detection function with covariates has been
 #' used in the DSM.
 #'
-#' Note that we can use `var_type="Vc"` here (see `gamObject`), which is the
+#' Note that we can use `var.type="Vc"` here (see `gamObject`), which is the
 #' variance-covariance matrix for the spatial model, corrected for smoothing
 #' parameter uncertainty. See Wood, Pya & S{\"a}fken (2016) for more
 #' information.
@@ -73,7 +73,7 @@
 #' @param newdata the prediction grid. Set to `NULL` to avoid making
 #' predictions and just return model objects.
 #' @param trace for debugging, see how the scale parameter estimation is going.
-#' @param var_type which variance-covariance matrix should be used (`"Vp"` for
+#' @param var.type which variance-covariance matrix should be used (`"Vp"` for
 #' variance-covariance conditional on smoothing parameter(s), `"Vc"` for
 #' unconditional). See [`gamObject`][gamObject] for an details/explanation. If
 #' in doubt, stick with the default, `"Vp"`.
@@ -101,16 +101,16 @@
 # summary(mod1.varp)
 # # this will give a summary over the whole area in mexdolphins$preddata
 # }
-dsm_varprop <- function(model, newdata=NULL, trace=FALSE, var_type="Vp"){
+dsm_varprop <- function(model, newdata=NULL, trace=FALSE, var.type="Vp"){
 
   # die if the link isn't log
   if(model$family$link != "log"){
     stop("log link must be used!")
   }
 
-  # check for valid var_type
-  if(!(var_type %in% c("Vp","Vc"))){
-    stop("var_type must be \"Vp\" or \"Vc\"")
+  # check for valid var.type
+  if(!(var.type %in% c("Vp","Vc"))){
+    stop("var.type must be \"Vp\" or \"Vc\"")
   }
 
   # extract the link & invlink
@@ -326,7 +326,7 @@ dsm_varprop <- function(model, newdata=NULL, trace=FALSE, var_type="Vp"){
   pred <- newdata$off.set * linkinvfn(pred)
 
   # get variance-covariance matrix
-  vc <- refit[[var_type]]
+  vc <- refit[[var.type]]
 
   # this is why we can only use log link
   dNdbeta <- t(pred)%*%Lp
@@ -335,7 +335,7 @@ dsm_varprop <- function(model, newdata=NULL, trace=FALSE, var_type="Vp"){
   var_p <- dNdbeta %*% vc %*% t(dNdbeta)
 
   # if we are using Vc we need to set unconditional=TRUE
-  if(var_type=="Vc"){
+  if(var.type=="Vc"){
     uncond <- TRUE
   }else{
     uncond <- FALSE

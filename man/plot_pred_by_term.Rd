@@ -4,7 +4,7 @@
 \alias{plot_pred_by_term}
 \title{Spatially plot predictions per model term}
 \usage{
-plot_pred_by_term(dsm.obj, data, location_cov = c("x", "y"))
+plot_pred_by_term(dsm.obj, data, location.cov = c("x", "y"))
 }
 \arguments{
 \item{dsm.obj}{fitted \code{\link{dsm}} object}
@@ -12,7 +12,7 @@ plot_pred_by_term(dsm.obj, data, location_cov = c("x", "y"))
 \item{data}{data to use to plot (often the same as the prediction grid), data
 should also include \code{width} and \code{height} columns for plotting}
 
-\item{location_cov}{which covariates to plot by (usually 2, spatial
+\item{location.cov}{which covariates to plot by (usually 2, spatial
 covariates, by default \code{c("x", "y")}}
 }
 \value{

@@ -7,7 +7,7 @@
 #' @param dsm.obj fitted [`dsm`][dsm] object
 #' @param data data to use to plot (often the same as the prediction grid), data
 #' should also include `width` and `height` columns for plotting
-#' @param location_cov which covariates to plot by (usually 2, spatial
+#' @param location.cov which covariates to plot by (usually 2, spatial
 #' covariates, by default `c("x", "y")`
 #' @return a `ggplot2` plot
 #' @export
@@ -33,7 +33,7 @@
 #' # library(viridis)
 #' # plot_pred_by_term(mod1, preddata, c("x","y")) + scale_fill_viridis()
 #' }
-plot_pred_by_term <- function(dsm.obj, data, location_cov=c("x", "y")){
+plot_pred_by_term <- function(dsm.obj, data, location.cov=c("x", "y")){
 
   # don't need offset
   data$off.set <- 0
@@ -52,7 +52,7 @@ plot_pred_by_term <- function(dsm.obj, data, location_cov=c("x", "y")){
 
   # make a plot
   p <- ggplot(plot_data) +
-    geom_tile(aes_string(x=location_cov[1], y=location_cov[2], fill="value")) +
+    geom_tile(aes_string(x=location.cov[1], y=location.cov[2], fill="value")) +
     facet_wrap(~term)
 
   return(p)
