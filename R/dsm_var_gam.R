@@ -45,9 +45,9 @@
 #'
 #'  # Calculate the variance
 #'  # this will give a summary over the whole area in mexdolphins$preddata
-#'  mod1.var <- dsm.var.gam(mod1, preddata, off.set=preddata$area)
+#'  mod1.var <- dsm_var_gam(mod1, preddata, off.set=preddata$area)
 #' }
-dsm.var.gam <- function(dsm.obj, pred.data, off.set,
+dsm_var_gam <- function(dsm.obj, pred.data, off.set,
                         seglen.varname='Effort', type.pred="response"){
 
   # strip dsm class so we can use gam methods

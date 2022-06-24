@@ -28,7 +28,7 @@ test_that("Do we get the same results?",{
   expect_equal(unname(mod1$gcv.ubre), 936.0362722, tolerance=par.tol, check.attributes=FALSE)
 
 
-  expect_error(dsm.cor(mod1,resid.type="d",max.lag=9),
+  expect_error(dsm_cor(mod1, resid.type="d", max.lag=9),
                "No column called Segment.Label in data")
 
   # predict(model) shoudld be the same as fitted(model)

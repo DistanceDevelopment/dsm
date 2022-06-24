@@ -49,14 +49,14 @@ test_that("mexdolphins - works for strip transects",{
   dum <- dummy_ddf(obsdata$object, obsdata$size, 8000)
   mod1_nodf <- dsm(abundance.est~s(x,y), dum, segdata, obsdata)
   set.seed(1123)
-  mod1.var <- dsm.var.gam(mod1_nodf, preddata, off.set=preddata$area)
+  mod1.var <- dsm_var_gam(mod1_nodf, preddata, off.set=preddata$area)
 
   expect_equal(summary(mod1.var)$cv,
                0.1639757, tol=cv.tol)
 
   # throw an error if you want detection function uncertainty with no
   # detection function
-  expect_error(dsm.var.prop(mod1_nodf, preddata, off.set=preddata$area),
+  expect_error(dsm_var_prop(mod1_nodf, preddata, off.set=preddata$area),
                "Variance propagation can only be used with count as the response.")
 
 })
@@ -64,7 +64,7 @@ test_that("mexdolphins - works for strip transects",{
 test_that("varprop doesn't work for estimated abundance", {
 
   mod1_Nhat <- dsm(abundance.est~s(x,y), hn.model, segdata, obsdata)
-  expect_error(dsm.var.prop(mod1_Nhat, preddata, off.set=preddata$area),
+  expect_error(dsm_var_prop(mod1_Nhat, preddata, off.set=preddata$area),
                "Variance propagation can only be used with count as the response.")
 })
 
