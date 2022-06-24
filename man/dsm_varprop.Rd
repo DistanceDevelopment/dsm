@@ -4,7 +4,13 @@
 \alias{dsm_varprop}
 \title{Variance propagation for density surface models}
 \usage{
-dsm_varprop(model, newdata = NULL, trace = FALSE, var.type = "Vp")
+dsm_varprop(
+  model,
+  newdata = NULL,
+  trace = FALSE,
+  var.type = "Vp",
+  var_type = NULL
+)
 }
 \arguments{
 \item{model}{a fitted \code{\link{dsm}}.}
@@ -18,6 +24,8 @@ predictions and just return model objects.}
 variance-covariance conditional on smoothing parameter(s), \code{"Vc"} for
 unconditional). See \code{\link{gamObject}} for an details/explanation. If
 in doubt, stick with the default, \code{"Vp"}.}
+
+\item{var_type}{deprecated, use \code{var.type} instead.}
 }
 \value{
 a \code{list} with elements:

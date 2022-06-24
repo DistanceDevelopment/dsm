@@ -77,6 +77,7 @@
 #' variance-covariance conditional on smoothing parameter(s), `"Vc"` for
 #' unconditional). See [`gamObject`][gamObject] for an details/explanation. If
 #' in doubt, stick with the default, `"Vp"`.
+#' @param var_type deprecated, use `var.type` instead.
 #' @export
 #' @importFrom utils relist
 #'
@@ -101,7 +102,13 @@
 # summary(mod1.varp)
 # # this will give a summary over the whole area in mexdolphins$preddata
 # }
-dsm_varprop <- function(model, newdata=NULL, trace=FALSE, var.type="Vp"){
+dsm_varprop <- function(model, newdata=NULL, trace=FALSE, var.type="Vp", var_type=NULL){
+
+  # warn on using deprecated args
+  this_call <- match.call(expand.dots = FALSE)
+  if("var_type" %in% names(this_call)){
+    stop("Argument: var_type is deprecated, check documentation.")
+  }
 
   # die if the link isn't log
   if(model$family$link != "log"){

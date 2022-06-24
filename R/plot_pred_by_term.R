@@ -9,6 +9,7 @@
 #' should also include `width` and `height` columns for plotting
 #' @param location.cov which covariates to plot by (usually 2, spatial
 #' covariates, by default `c("x", "y")`
+#' @param location_cov deprecated, use `location.cov`
 #' @return a `ggplot2` plot
 #' @export
 #' @author David L Miller (idea taken from `inlabru`)
@@ -34,6 +35,12 @@
 #' # plot_pred_by_term(mod1, preddata, c("x","y")) + scale_fill_viridis()
 #' }
 plot_pred_by_term <- function(dsm.obj, data, location.cov=c("x", "y")){
+
+  # warn on using deprecated args
+  this_call <- match.call(expand.dots = FALSE)
+  if("location_cov" %in% names(this_call)){
+    stop("Argument: location_cov is deprecated, check documentation.")
+  }
 
   # don't need offset
   data$off.set <- 0
