@@ -43,7 +43,7 @@
 #' has covariates, then these do not vary within a segment (so, for example
 #' covariates like sex cannot be used).
 #'
-#' @inheritParams dsm.var.gam
+#' @inheritParams dsm_var_gam
 #' @return a `list` with elements
 #'   * `model` the fitted model object
 #'   * `pred.var` variance of each region given in `pred.data`
@@ -85,10 +85,10 @@
 #
 #  # Calculate the variance
 #  # this will give a summary over the whole area in mexdolphins$preddata
-#  mod1.var <- dsm.var.prop(mod1, preddata, off.set=preddata$area)
+#  mod1.var <- dsm_var_prop(mod1, preddata, off.set=preddata$area)
 #  summary(mod1.var)
 # }
-dsm.var.prop <- function(dsm.obj, pred.data, off.set,
+dsm_var_prop <- function(dsm.obj, pred.data, off.set,
                          seglen.varname='Effort', type.pred="response") {
 
   ## pre-checking...
@@ -105,7 +105,7 @@ dsm.var.prop <- function(dsm.obj, pred.data, off.set,
   # if there is no ddf object, then we should stop!
   # thanks to Adrian Schiavini for spotting this
   if(any(class(dsm.obj$ddf)=="fake_ddf")){
-    stop("No detection function in this analysis, use dsm.var.gam")
+    stop("No detection function in this analysis, use dsm_var_gam")
   }
 
   ## end of checks
