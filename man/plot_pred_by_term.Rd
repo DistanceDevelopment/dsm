@@ -12,10 +12,7 @@ plot_pred_by_term(dsm.obj, data, location.cov = c("x", "y"))
 \item{data}{data to use to plot (often the same as the prediction grid), data
 should also include \code{width} and \code{height} columns for plotting}
 
-\item{location.cov}{which covariates to plot by (usually 2, spatial
-covariates, by default \code{c("x", "y")}}
-
-\item{location_cov}{deprecated, use \code{location.cov}}
+\item{location.cov}{deprecated, use \code{location.cov}}
 }
 \value{
 a \code{ggplot2} plot

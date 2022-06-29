@@ -9,7 +9,7 @@
 #' should also include `width` and `height` columns for plotting
 #' @param location.cov which covariates to plot by (usually 2, spatial
 #' covariates, by default `c("x", "y")`
-#' @param location_cov deprecated, use `location.cov`
+#' @param location.cov deprecated, use `location.cov`
 #' @return a `ggplot2` plot
 #' @export
 #' @author David L Miller (idea taken from `inlabru`)
