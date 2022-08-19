@@ -1,3 +1,16 @@
+dsm 2.3.3
+------------------
+
+* To improve consistency in functions in the package, some functions have changed from . separation to _. For function arguments some separators have been switched from _ to .. An error is now thrown when the "old" arguments/functions using . are used. This error will be removed in dsm 2.3.4.
+  - dsm.var.prop -> dsm_var_prop
+  - dsm.var.gam -> dsm_var_gam
+  - dsm.var.movblk -> dsm_var_movblk
+  - dsm.cor -> dsm_cor
+  - rqgam.check -> rqgam_check
+  - vis.concurvity -> vis_concurvity
+  - dsm_varprop
+    - var_type -> var.type
+
 dsm 2.3.2
 ------------------
 

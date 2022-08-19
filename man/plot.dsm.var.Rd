@@ -64,19 +64,19 @@ these were not used in the model.
 \section{Details}{
 
 
-In order to get plotting to work with \code{\link{dsm.var.prop}} and
-\code{\link{dsm.var.gam}}, one must first format the data correctly
+In order to get plotting to work with \code{\link{dsm_var_prop}} and
+\code{\link{dsm_var_gam}}, one must first format the data correctly
 since these functions are designed to compute very general summaries. One
 summary is calculated for each element of the list \code{pred} supplied to
-\code{\link{dsm.var.prop}} and \code{\link{dsm.var.gam}}.
+\code{\link{dsm_var_prop}} and \code{\link{dsm_var_gam}}.
 
 For a plot of uncertainty over a prediction grid, \code{pred} (a \code{data.frame}),
 say, we can create the correct format by simply using \code{pred.new <- split(pred,1:nrow(pred))}.
 }
 
 \seealso{
-\code{\link{dsm.var.prop}}, \code{\link{dsm.var.gam}},
-\code{\link{dsm.var.movblk}}
+\code{\link{dsm_var_prop}}, \code{\link{dsm_var_gam}},
+\code{\link{dsm_var_movblk}}
 }
 \author{
 David L. Miller

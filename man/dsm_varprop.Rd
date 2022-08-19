@@ -4,7 +4,13 @@
 \alias{dsm_varprop}
 \title{Variance propagation for density surface models}
 \usage{
-dsm_varprop(model, newdata = NULL, trace = FALSE, var_type = "Vp")
+dsm_varprop(
+  model,
+  newdata = NULL,
+  trace = FALSE,
+  var.type = "Vp",
+  var_type = NULL
+)
 }
 \arguments{
 \item{model}{a fitted \code{\link{dsm}}.}
@@ -14,10 +20,12 @@ predictions and just return model objects.}
 
 \item{trace}{for debugging, see how the scale parameter estimation is going.}
 
-\item{var_type}{which variance-covariance matrix should be used (\code{"Vp"} for
+\item{var.type}{which variance-covariance matrix should be used (\code{"Vp"} for
 variance-covariance conditional on smoothing parameter(s), \code{"Vc"} for
 unconditional). See \code{\link{gamObject}} for an details/explanation. If
 in doubt, stick with the default, \code{"Vp"}.}
+
+\item{var_type}{deprecated, use \code{var.type} instead.}
 }
 \value{
 a \code{list} with elements:
@@ -54,7 +62,7 @@ For more information on how to construct the prediction grid \code{data.frame},
 This routine is only useful if a detection function with covariates has been
 used in the DSM.
 
-Note that we can use \code{var_type="Vc"} here (see \code{gamObject}), which is the
+Note that we can use \code{var.type="Vc"} here (see \code{gamObject}), which is the
 variance-covariance matrix for the spatial model, corrected for smoothing
 parameter uncertainty. See Wood, Pya & S{\"a}fken (2016) for more
 information.

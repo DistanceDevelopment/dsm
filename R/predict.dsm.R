@@ -28,8 +28,8 @@
 #' @return predicted values on the response scale by default (unless `type` is
 #' specified, in which case see [`predict.gam`][mgcv::predict.gam]).
 #' @export
-#' @seealso [`predict.gam`][mgcv::predict.gam], [`dsm.var.gam`][dsm.var.gam],
-#' [`dsm.var.prop`][dsm.var.prop]
+#' @seealso [`predict.gam`][mgcv::predict.gam], [`dsm_var_gam`][dsm_var_gam],
+#' [`dsm_var_prop`][dsm_var_prop]
 #' @author David L. Miller
 #' @importFrom stats predict
 predict.dsm <- function(object, newdata=NULL, off.set=NULL,

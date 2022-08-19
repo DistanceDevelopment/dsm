@@ -56,12 +56,12 @@
 #'
 #'  # look at lag 1 differences up to a maximum of lag 9, using deviance
 #'  # residuals
-#'  dsm.cor(mod1, resid.type="deviance", max.lag=9,
+#'  dsm_cor(mod1, resid.type="deviance", max.lag=9,
 #'          Segment.Label="Sample.Label")
 #'}
 #' @author David L. Miller
 #' @export
-dsm.cor <- function(dsm.obj, Transect.Label="Transect.Label",
+dsm_cor <- function(dsm.obj, Transect.Label="Transect.Label",
                     Segment.Label="Segment.Label", max.lag=10,
                     resid.type="scaled.pearson",
                     fun=cor, ylim=c(0, 1), subset="all", ...){

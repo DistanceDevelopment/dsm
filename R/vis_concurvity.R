@@ -30,9 +30,9 @@
 #' mod1 <- dsm(count~s(x,y)+s(depth), hr.model, segdata, obsdata)
 #'
 #' # visualise concurvity using the "estimate" metric
-#' vis.concurvity(mod1)
+#' vis_concurvity(mod1)
 #'}
-vis.concurvity <- function(model, type="estimate"){
+vis_concurvity <- function(model, type="estimate"){
 
   # calculate concurvity for this model
   cc <- concurvity(model, full=FALSE)[[type]]

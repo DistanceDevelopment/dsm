@@ -7,8 +7,9 @@
 #' @param dsm.obj fitted [`dsm`][dsm] object
 #' @param data data to use to plot (often the same as the prediction grid), data
 #' should also include `width` and `height` columns for plotting
-#' @param location_cov which covariates to plot by (usually 2, spatial
+#' @param location.cov which covariates to plot by (usually 2, spatial
 #' covariates, by default `c("x", "y")`
+#' @param location.cov deprecated, use `location.cov`
 #' @return a `ggplot2` plot
 #' @export
 #' @author David L Miller (idea taken from `inlabru`)
@@ -33,7 +34,13 @@
 #' # library(viridis)
 #' # plot_pred_by_term(mod1, preddata, c("x","y")) + scale_fill_viridis()
 #' }
-plot_pred_by_term <- function(dsm.obj, data, location_cov=c("x", "y")){
+plot_pred_by_term <- function(dsm.obj, data, location.cov=c("x", "y")){
+
+  # warn on using deprecated args
+  this_call <- match.call(expand.dots = FALSE)
+  if("location_cov" %in% names(this_call)){
+    stop("Argument: location_cov is deprecated, check documentation.")
+  }
 
   # don't need offset
   data$off.set <- 0
@@ -52,7 +59,7 @@ plot_pred_by_term <- function(dsm.obj, data, location_cov=c("x", "y")){
 
   # make a plot
   p <- ggplot(plot_data) +
-    geom_tile(aes_string(x=location_cov[1], y=location_cov[2], fill="value")) +
+    geom_tile(aes_string(x=location.cov[1], y=location.cov[2], fill="value")) +
     facet_wrap(~term)
 
   return(p)

@@ -44,8 +44,8 @@ way the link function (usually \code{log}) will be applied to the offsets, so
 there is no need to log them before passing them to this function.
 }
 \seealso{
-\code{\link[mgcv:predict.gam]{predict.gam}}, \code{\link{dsm.var.gam}},
-\code{\link{dsm.var.prop}}
+\code{\link[mgcv:predict.gam]{predict.gam}}, \code{\link{dsm_var_gam}},
+\code{\link{dsm_var_prop}}
 }
 \author{
 David L. Miller

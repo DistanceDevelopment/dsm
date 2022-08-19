@@ -4,7 +4,7 @@
 #' bootstrap. Two procedures are implemented, one incorporating detection
 #' function uncertainty, one not.
 #'
-#' @inheritParams dsm.var.gam
+#' @inheritParams dsm_var_gam
 #' @param dsm.object object returned from [`dsm`][dsm].
 #' @param n.boot number of bootstrap resamples.
 #' @param block.size number of segments in each block.
@@ -54,7 +54,7 @@
 #' summary(mod1)
 #'
 #' # calculate the variance by 500 moving block bootstraps
-#' mod1.movblk <- dsm.var.movblk(mod1, preddata, n.boot = 500,
+#' mod1.movblk <- dsm_var_movblk(mod1, preddata, n.boot = 500,
 #'    block.size = 3, samp.unit.name = "Transect.Label",
 #'    off.set = preddata$area,
 #'    bar = TRUE, bs.file = "mexico-bs.csv", ds.uncertainty = TRUE)
@@ -69,7 +69,7 @@
 #  * should we be calculating the offset in here?
 
 # this used to be called param.movblk.variance
-dsm.var.movblk <- function(dsm.object, pred.data, n.boot, block.size,
+dsm_var_movblk <- function(dsm.object, pred.data, n.boot, block.size,
                            off.set, ds.uncertainty=FALSE,
                            samp.unit.name='Transect.Label',
                            progress.file=NULL, bs.file=NULL,bar=TRUE){

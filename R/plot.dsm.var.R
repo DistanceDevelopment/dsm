@@ -30,18 +30,18 @@
 #'
 #' @section Details:
 #'
-#'  In order to get plotting to work with [`dsm.var.prop`][dsm.var.prop] and
-#'  [`dsm.var.gam`][dsm.var.gam], one must first format the data correctly
+#'  In order to get plotting to work with [`dsm_var_prop`][dsm_var_prop] and
+#'  [`dsm_var_gam`][dsm_var_gam], one must first format the data correctly
 #'  since these functions are designed to compute very general summaries. One
 #'  summary is calculated for each element of the list `pred` supplied to
-#'  [`dsm.var.prop`][dsm.var.prop] and [`dsm.var.gam`][dsm.var.gam].
+#'  [`dsm_var_prop`][dsm_var_prop] and [`dsm_var_gam`][dsm_var_gam].
 #'
 #'  For a plot of uncertainty over a prediction grid, `pred` (a `data.frame`),
 #'  say, we can create the correct format by simply using `pred.new <-
 #'  split(pred,1:nrow(pred))`.
 #'
-#' @seealso [`dsm.var.prop`][dsm.var.prop], [`dsm.var.gam`][dsm.var.gam],
-#' [`dsm.var.movblk`][dsm.var.movblk]
+#' @seealso [`dsm_var_prop`][dsm_var_prop], [`dsm_var_gam`][dsm_var_gam],
+#' [`dsm_var_movblk`][dsm_var_movblk]
 #'
 #' @author David L. Miller
 #' @import ggplot2
@@ -62,7 +62,7 @@ plot.dsm.var<-function(x, poly=NULL, limits=NULL, breaks=NULL,
     stop("Looks like you're calling plot on a whole area summary, see ?plot.dsm.var for how to format your data correctly for plotting")
   }
 
-  # if we used GAM intervals (via dsm.var.prop or dsm.var.gam)
+  # if we used GAM intervals (via dsm_var_prop or dsm_var_gam)
   if(!object$bootstrap){
     cnames <- names(object$pred.data[[1]])
     object$pred.data <- do.call(rbind.data.frame, object$pred.data)
