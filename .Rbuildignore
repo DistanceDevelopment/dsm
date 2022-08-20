@@ -3,3 +3,5 @@ LICENSE
 ^appveyor\.yml$
 .gitignore
 .github
+^.*\.Rproj$
+^\.Rproj\.user$
