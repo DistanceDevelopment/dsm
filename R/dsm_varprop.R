@@ -321,16 +321,28 @@ dsm_varprop <- function(model, newdata=NULL, trace=FALSE, var.type="Vp", var_typ
     class(ret) <- "dsm_varprop"
     return(ret)
   }
-  ## now do some predictions
 
   # make some zeros for the paraPen term so they have no mean effect
   newdata[["XX"]] <- matrix(0, nrow(newdata), ncol(firstD))
 
+  # get the standard errors
+  # if we are using Vc we need to set unconditional=TRUE
+  if(var.type=="Vc"){
+    uncond <- TRUE
+  }else{
+    uncond <- FALSE
+  }
+  # also use this to find the NAs for e.g. soap where we need to remove them
+  preds <- predict(refit, newdata=newdata, type="response", se.fit=TRUE,
+                   unconditional=uncond)
+  ses <- preds$se.fit
+  nas <- is.na(preds$fit)
+
   # get everyone's favourite matrix
-  Lp <- predict(refit, newdata=newdata, type="lpmatrix")
+  Lp <- predict(refit, newdata=newdata, type="lpmatrix")[!nas, ]
   # predictions on the link scale
   pred <- Lp %*% coef(refit)
-  pred <- newdata$off.set * linkinvfn(pred)
+  pred <- newdata$off.set[!nas] * linkinvfn(pred)
 
   # get variance-covariance matrix
   vc <- refit[[var.type]]
@@ -341,15 +353,6 @@ dsm_varprop <- function(model, newdata=NULL, trace=FALSE, var.type="Vp", var_typ
   # make a sandwich
   var_p <- dNdbeta %*% vc %*% t(dNdbeta)
 
-  # if we are using Vc we need to set unconditional=TRUE
-  if(var.type=="Vc"){
-    uncond <- TRUE
-  }else{
-    uncond <- FALSE
-  }
-  # get the standard errors
-  ses <- predict(refit, newdata=newdata, type="response", se.fit=TRUE,
-                 unconditional=uncond)$se.fit
 
   # what should we return?
   ret <- list(old_model = model,

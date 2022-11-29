@@ -104,7 +104,8 @@ dsm_var_gam <- function(dsm.obj, pred.data, off.set,
     # set the offset to be zero here so we can use lp
     pred.data[[ipg]]$off.set<-rep(0, nrow(pred.data[[ipg]]))
 
-    lpmat <- predict(dsm.obj, newdata=pred.data[[ipg]], type='lpmatrix')
+    nas <- is.na(predict(dsm.obj, newdata=pred.data[[ipg]]))
+    lpmat <- predict(dsm.obj, newdata=pred.data[[ipg]], type='lpmatrix')[!nas, ]
     lppred <- lpmat %**% cft
 
     # if the offset is just one number then repeat it enough times
@@ -114,16 +115,16 @@ dsm_var_gam <- function(dsm.obj, pred.data, off.set,
       this.off.set <- off.set[[ipg]]
     }
 
-    preddo[[ipg]] <-  this.off.set %**% tmfn(lppred)
+    preddo[[ipg]] <-  this.off.set[!nas] %**% tmfn(lppred)
 
 
     # NB previously this was done numerically but things didn't work
     #    when se ~=0 and actual 0s were produced. Use analytical expression
     #    for the log case here
     if(type.pred=="link"){
-      dpred.db[ipg, ] <- this.off.set %**% lppred*lpmat
+      dpred.db[ipg, ] <- this.off.set[!nas] %**% lppred*lpmat
     }else{
-      dpred.db[ipg, ] <- this.off.set %**% (tmfn(lppred)*lpmat)
+      dpred.db[ipg, ] <- this.off.set[!nas] %**% (tmfn(lppred)*lpmat)
     }
   }
 

@@ -10,7 +10,7 @@ Description: Density surface modelling of line transect data. A Generalized
     of animal abundance from distance sampling (also presence/absence and strip
     transect) data. Several utility functions are provided for model checking,
     plotting and variance estimation.
-Version: 2.3.3
+Version: 2.3.3.9001
 Language: en-GB
 Encoding: UTF-8
 URL: https://github.com/DistanceDevelopment/dsm
