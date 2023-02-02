@@ -3,3 +3,7 @@ LICENSE
 ^appveyor\.yml$
 .gitignore
 .github
+^.*\.Rproj$
+^\.Rproj\.user$
+^CRAN-SUBMISSION$
+cran-comments.md
