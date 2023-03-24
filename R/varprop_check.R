@@ -7,8 +7,12 @@ varprop_check <- function(object){
 
   # make a skeleton for the detection function parameters over all models
   parskel <- list()
-  for(i in seq_along(object$old_model$ddf)){
-    parskel[[i]] <- object$old_model$ddf[[i]]$par
+  if(class(object) == "list") {
+    for(i in seq_along(object$old_model$ddf)){
+      parskel[[i]] <- object$old_model$ddf[[i]]$par
+    }
+  } else if(class(object) == "dsm_varprop"){
+    parskel[[1]] <- object$old_model$ddf$par
   }
 
   # which parameters in the GAM are only in the refit?
@@ -19,6 +23,10 @@ varprop_check <- function(object){
   ddf_corrections <- relist(extra_gam_pars, parskel)
 
   vp_diag <- list()
+  
+  if(class(object) == "dsm_varprop") {
+    object$old_model$ddf <- list(object$old_model$ddf)
+  }
 
   for(ii in seq_along(object$old_model$ddf)){
     # get the data in order
