@@ -7,13 +7,21 @@ author:
     url: http://distancesampling.org
     affiliation: CREEM, Univ of St Andrews
     affiliation_url: https://creem.st-andrews.ac.uk
-date: "`r Sys.Date()`"
+date: "`r format(Sys.time(), '%B %Y')`"
 output: 
-  distill::distill_article:
+  bookdown::html_document2:
+    number_sections: false
     toc: true
     toc_depth: 2
+    base_format: rmarkdown::html_vignette
+pkgdown:
+  as_is: true  
 bibliography: mexdolph.bib
-csl: apa.csl
+csl: ../apa.csl
+vignette: >
+  %\VignetteIndexEntry{Example `dsm` analysis: pantropical dolphins in the Gulf of Mexico}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
 ---
 
 ```{r echo=FALSE}
@@ -109,19 +117,39 @@ Using latitude and longitude when performing spatial smoothing can be problemati
 We give an example of projecting the polygon that defines the survey area (which as simply been read into R using `readShapeSpatial` from a shapefile produced by GIS).
 
 ```{r projectsurvey, results='hide', message=FALSE}
-library(rgdal)
-library(maptools)
+library(sf)
 library(plyr)
 
 # tell R that the survey.area object is currently in lat/long
-proj4string(survey.area) <- CRS("+proj=longlat +datum=WGS84")
+sp::proj4string(survey.area) <- sp::CRS("+proj=longlat +datum=WGS84")
 
+predsf <- st_as_sf(pred.polys)
+
+area.sf <- st_as_sf(survey.area)
+st_crs(area.sf) <- "WGS84"
+area.sf.proj <- st_transform(area.sf, crs = st_crs(predsf))
+
+# Convert preddata to a spatial object
+preddata_sf <- st_as_sf(preddata, coords=c("x", "y"))
+st_crs(preddata_sf) <- st_crs(area.sf.proj)
+# Perform the intersection
+preddata_sf <- st_intersection(preddata_sf, area.sf.proj)
+
+coords_preddata <- data.frame(st_coordinates(preddata_sf))
+
+preddata_sf$x <- coords_preddata$X
+preddata_sf$y <- coords_preddata$Y 
+```
+
+Next bit of code works with the `study.area` outline, massaging it for use with soap film smoother. If you will not be using soap film smoothers, the code is extraneous.
+
+```{r studyareasoap}
 # proj 4 string
 # using http://spatialreference.org/ref/esri/north-america-lambert-conformal-conic/
-lcc_proj4 <- CRS("+proj=lcc +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +datum=NAD83 +units=m +no_defs ")
+lcc_proj4 <- sp::CRS("+proj=lcc +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +datum=NAD83 +units=m +no_defs ")
 
 # project using LCC
-survey.area <- spTransform(survey.area, CRSobj=lcc_proj4)
+survey.area <- sp::spTransform(survey.area, CRSobj=lcc_proj4)
 
 # simplify the object
 survey.area <- data.frame(survey.area@polygons[[1]]@Polygons[[1]]@coords)
@@ -130,64 +158,28 @@ names(survey.area) <- c("x", "y")
 
 The below code generates this plot, which shows the survey area with the transect lines overlaid (using data from `segdata`).
 
-```{r areawithtransects, fig.cap="", fig.height=4}
-p <- qplot(data=survey.area, x=x, y=y, geom="polygon",fill=I("lightblue"),
-ylab="y", xlab="x", alpha=I(0.7))
-p <- p + coord_equal()
-p <- p + geom_line(aes(x,y,group=Transect.Label),data=segdata)
-p <- p + gg.opts
-
-print(p)
+```{r areawithtransects, fig.cap="", fig.dim=c(7,5)}
+segdata_sf <- st_as_sf(segdata, coords = c("x","y"))
+st_crs(segdata_sf) <- st_crs(area.sf.proj)
+# study area outline and segment centres
+plot_segments <- ggplot() +
+  geom_sf(data = area.sf.proj, fill="lightblue", color = "blue", linewidth=.1) +
+  geom_sf(data=segdata_sf, fill=NA, color="black", linewidth=.3) +
+  labs(title="1996 SE Fisheries Science Center Gulf of Mexico cruise",
+       subtitle = "Points are segment centres") +
+  scale_fill_viridis_c(option = "magma", guide = "none")
+plot_segments
 ```
 
-Also note that since we've projected our prediction grid, the "squares" don't look quite like squares. So for plotting we'll use the polygons that we've saved, these polygons (stored in `pred.polys`) are read from a shapefile created in GIS, the object itself is of class `SpatialPolygons` from the `sp` package. This plotting method makes plotting take a little longer, but avoids gaps and overplotting. The following plot compares using latitude/longitude (left) with a projection (right).
+Also note that since we have projected our prediction grid, the "squares" do not look quite like squares. So for plotting we will use the polygons that we have saved, these polygons (stored in `pred.polys`) are read from a shapefile created in GIS, the object itself is of class `SpatialPolygons` from the `sp` package. It needs project for proper plotting using functions in the `sf` package. predsf <- st_as_sf(pred.polys)
 
-```{r projection-compare, fig.cap="", fig.height=3}
-par(mfrow=c(1,2))
-
-# put pred.polys into lat/long
-pred_latlong <- spTransform(pred.polys,CRSobj=CRS("+proj=longlat +datum=WGS84"))
-
-# plot latlong
-plot(pred_latlong, xlab="Longitude", ylab="Latitude")
-axis(1); axis(2); box()
-
+```{r projection-compare, fig.cap="", fig.dim=c(7,5)}
+predsf <- st_as_sf(pred.polys)
 # plot as projected
-plot(pred.polys, xlab="Northing", ylab="Easting")
-axis(1); axis(2); box()
+plot(st_geometry(predsf), axes=TRUE)
 ```
 
-
-Tips on plotting polygons are available from [the `ggplot2` wiki](https://github.com/hadley/ggplot2/wiki/plotting-polygon-shapefiles).
-
-Here we define a convenience function to generate an appropriate data structure for `ggplot2` to plot:
-
-```{r ggpoly}
-# given the argument fill (the covariate vector to use as the fill) and a name,
-# return a geom_polygon object
-# fill must be in the same order as the polygon data
-grid_plot_obj <- function(fill, name, sp){
-
-  # what was the data supplied?
-  names(fill) <- NULL
-  row.names(fill) <- NULL
-  data <- data.frame(fill)
-  names(data) <- name
-
-  spdf <- SpatialPolygonsDataFrame(sp, data)
-  spdf@data$id <- rownames(spdf@data)
-  spdf.points <- fortify(spdf, region="id")
-  spdf.df <- join(spdf.points, spdf@data, by="id")
-
-  # seems to store the x/y even when projected as labelled as
-  # "long" and "lat"
-  spdf.df$x <- spdf.df$long
-  spdf.df$y <- spdf.df$lat
-
-  geom_polygon(aes_string(x="x",y="y",fill=name, group="group"), data=spdf.df)
-}
-```
-
+Tips on plotting polygons are available from [the `ggplot2` pkg_down](https://ggplot2.tidyverse.org/reference/ggsf.html?q=geom_sf#null).
 
 # Exploratory data analysis
 
@@ -197,7 +189,7 @@ The top panels of the EDA plots below show histograms of observed distances and 
 
 The following code generates the EDA plots:
 
-```{r EDA-plots, fig.height=7, fig.width=7, fig.cap="", results="hide"}
+```{r EDA-plots, fig.height=6, fig.width=6, fig.cap="", results="hide"}
 par(mfrow=c(2,2))
 
 # histograms
@@ -219,25 +211,29 @@ plot(distdata$distance,distdata$beaufort, main="", xlab="Distance (m)",
 
 Top row, left to right: histograms of distance and cluster size; bottom row: plot of distance against cluster size and plot of distances against Beaufort sea state.
 
-
 ## Spatial data
 
 Looking separately at the spatial data without thinking about the distances, we can plot the observed group sizes in space (point size is proportional to the group size for each observation). Circle size indicates the size of the group in the observation. There are rather large areas with no observations, which might cause our variance estimates for abundance to be rather large. We also see the depth data which we will use depth later as an explanatory covariate in our spatial model.
 
-```{r spatialEDA, fig.cap=""}
-p <- ggplot() + grid_plot_obj(preddata$depth, "Depth", pred.polys) + coord_equal()
-p <- p + labs(fill="Depth",x="x",y="y",size="Group size")
-p <- p + geom_line(aes(x, y, group=Transect.Label), data=segdata)
-p <- p + geom_point(aes(x, y, size=size), data=distdata, colour="red",alpha=I(0.7))
-p <- p + gg.opts
-print(p)
-```
+```{r spatialEDA, fig.cap="", fig.dim=c(7,5)}
+prediction_grid <- st_make_grid(area.sf.proj, cellsize = c(9000,9000))
+prediction_grid_sf <- st_sf(geometry = prediction_grid)
+cropped_grid <- st_join(prediction_grid_sf, preddata_sf, join = st_nearest_feature)
+cropped_grid <- st_intersection(cropped_grid, area.sf.proj)
 
+depth <- ggplot() +
+         geom_sf(data=cropped_grid, aes(fill=depth), color=NA) +
+         labs(title = "Spotted dolphins, Gulf of Mexico",
+              subtitle = "Depth in meters, size of detected dolphin groups") +
+         xlab("Longitude") + ylab("Latitude") +
+         geom_point(aes(x, y, size=size), data=distdata, colour="red",alpha=I(0.5)) +
+         scale_fill_viridis_c(option = "viridis", direction = 1)
+depth
+```
 
 # Estimating the detection function
 
 We use the `ds` function in the package `Distance` to fit the detection function. (The `Distance` package is intended to make standard distance sampling in `R` relatively straightforward. For a more flexible but more complex alternative, see the function `ddf` in the `mrds` library.)
-
 
 First, loading the `Distance` library:
 
@@ -257,17 +253,14 @@ Calling `summary` gives us information about parameter estimates, probability of
 summary(detfc.hr.null)
 ```
 
-
 The following code generates a plot of the fitted detection function (left) and quantile-quantile plot (right):
 
-``` {r hr-detfct, fig.cap="", fig.width=9, fig.height=6, results="hide"}
-layout(matrix(c(1, 2), 1, 2), width=c(1.5, 1))
+``` {r hr-detfct, fig.cap="", fig.lim=c(6,9), fig.show="hold"}
 plot(detfc.hr.null, showpoints=FALSE, pl.den=0, lwd=2)
 gof_ds(detfc.hr.null)
 ```
 
 The quantile-quantile plot show relatively good goodness of fit for the hazard-rate detection function.
-
 
 ## Adding covariates to the detection function
 
@@ -288,11 +281,9 @@ Here the detection function with covariates does not give a lower AIC than the m
 
 For brevity, detection function model selection has been omitted here. In practise we would fit many different forms for the detection function (and select a model based on goodness of fit testing and AIC).
 
-
 # Fitting a DSM
 
 Before fitting a `dsm` model, the data must be segmented; this consists of chopping up the transects and attributing counts to each of the segments. As mentioned above, these data have already been segmented.
-
 
 ## A simple model
 
@@ -317,7 +308,7 @@ We can use the deviance explained to compare between models[^rsqoffset].
 
 We can also get a rough idea of what the smooth of space looks like using `vis.gam` (white/yellow indicates high values, red low indicates low values):
 
-```{r visgam1, fig.cap=''}
+```{r visgam1, fig.cap='', fig.dim=c(7,5)}
 vis.gam(dsm.xy, plot.type="contour", view=c("x","y"), asp=1, type="response", contour.col="black", n.grid=100)
 ```
 
@@ -338,7 +329,7 @@ Setting `select=TRUE` here (as an argument to `gam`) would impose extra shrinkag
 
 Simply calling `plot` on the model object allows us to look at the relationship between depth and the linear predictor:
 
-```{r dsm-xy-depth-depth, fig.cap=""}
+```{r dsm-xy-depth-depth, fig.cap="", fig.dim=c(7,5)}
 plot(dsm.xy.depth, select=2)
 ```
 
@@ -361,14 +352,13 @@ summary(dsm.est.xy)
 
 As is the resulting spatial smooth (though the resulting surface is somewhat "amplified"):
 
-```{r visgam5, fig.cap=""}
+```{r visgam5, fig.cap="", fig.dim=c(7,5)}
 vis.gam(dsm.est.xy, plot.type="contour", view=c("x","y"), asp=1, type="response", zlim=c(0, 300), contour.col="black", n.grid=100)
 ```
 
-
 ## Other response distributions
 
-Often the quasi-Poisson distribution doesn't give adequate flexibility and doesn't capture the overdispersion in the response data (see [Model checking] and [Model selection] below), so below we illustrate two additional distributions that can be used with count data.
+Often the quasi-Poisson distribution doesn't give adequate flexibility and does not capture the overdispersion in the response data (see [Model checking] and [Model selection] below), so below we illustrate two additional distributions that can be used with count data.
 
 For the models in this section, we'll move back to the `count` response, though the estimated abundance would also work.
 
@@ -380,8 +370,6 @@ Response distributions other than the quasi-Poisson can be used, for example the
 dsm.xy.tweedie <- dsm(count~s(x,y), detfc.hr.null, segdata, obsdata, family=tw(), method="REML")
 summary(dsm.xy.tweedie)
 ```
-
-
 
 ### Negative binomial
 
@@ -424,14 +412,13 @@ dsm.xy.tweedie.soap<-dsm(count~s(x, y, bs="so", k=15, xt=list(bnd=list(survey.ar
 summary(dsm.xy.tweedie.soap)
 ```
 
-
 # Model checking
 
 Fitting models is all well and good, but we'd like to confirm that the models we have are reasonable; `dsm` provides some functions for model checking.
 
 We can use `gam.check` to generate diagnostic plots:
 
-```{r dsm.xy-check, fig.cap="", fig.width=6, fig.height=6}
+```{r dsm.xy-check, fig.cap="", fig.dim=c(7,5)}
 gam.check(dsm.xy)
 ```
 
@@ -448,7 +435,7 @@ The `?choose.k` manual page from `mgcv` gives further guidance and technical det
 
 We can look at the same model form but with a Tweedie distribution specified as the response:
 
-``` {r dsm.xy.tweedie-check, fig.cap="", fig.width=6, fig.height=6}
+``` {r dsm.xy.tweedie-check, fig.cap="", fig.dim=c(7,5)}
 gam.check(dsm.xy.tweedie)
 ```
 
@@ -462,20 +449,19 @@ In the top right panel of the above `gam.check` plots the residuals vs. linear p
 
 Randomised quantile residuals [@dunn_randomized_1996] avoid this issue by transforming the residuals to be exactly normally distributed. This makes the residuals vs. linear predictor plot much easier to interpret as it therefore doesn't include the artifacts generated by the link function. These plots can be produced using `rqgam.check` in `dsm`:
 
-``` {r dsm.xy.tweedie-rqcheck, fig.cap="", fig.width=6, fig.height=6}
-rqgam.check(dsm.xy.tweedie)
+``` {r dsm.xy.tweedie-rqcheck, fig.cap="", fig.dim=c(7,5)}
+rqgam_check(dsm.xy.tweedie)
 ```
 
 Here we can see that there is no issue with heteroskedasticity (no increase in spread in the residuals vs. linear predictor plot with increasing values of the linear predictor). One can also plot these residuals against covariate values to check for pattern in the residuals.
 
 Note that in general, plots other than "Resids vs. linear pred." should be interpreted with caution in the output of `rqgam.check` as the residuals generated are normal by construction (so for example the Q-Q plot and histogram of residuals will always look fine).
 
-
 # Model selection
 
 Assuming that models have "passed" the checks in `gam.check`, `rqgam.check` and are sufficiently flexible, we may be left with a choice of which model is "best". There are several methods for choosing the best model -- AIC, REML/GCV scores, deviance explained, full cross-validation with test data and so on.
 
-Though this document doesn't intend to be a full analysis of the pantropical dolphin data, we can create a results table to compare the various models that have been fitted so far in terms of their abundance estimates and associated uncertainties.
+Though this document does not intend to be a full analysis of the pantropical dolphin data, we can create a results table to compare the various models that have been fitted so far in terms of their abundance estimates and associated uncertainties.
 
 ```{r modelcomp, cache=TRUE}
 # make a data.frame to print out
@@ -509,13 +495,24 @@ Once a model has been checked and selected, we can make predictions over the gri
 dsm.xy.pred <- predict(dsm.xy, preddata, preddata$area)
 ```
 
-We use the `grid_plot_obj` helper function to assign the predictions to grid cells (polygons):
+Given predicted abundance estimates for each cell in the prediction grid, these are connected to the prediction grid object for mapping:
 
-```{r dsm.xy-preds, fig.cap=""}
-p <- ggplot() + grid_plot_obj(dsm.xy.pred, "Abundance", pred.polys) + coord_equal() +gg.opts
-p <- p + geom_path(aes(x=x, y=y),data=survey.area)
-p <- p + labs(fill="Abundance")
-print(p)
+```{r dsm.xy-preds, fig.cap="", fig.dim=c(7,5)}
+prediction_grid <- st_make_grid(area.sf.proj, cellsize = c(9000,9000))
+prediction_grid_sf <- st_sf(geometry = prediction_grid)
+
+preddata_sf$Prediction_xy <- dsm.xy.pred
+
+cropped_grid <- st_join(prediction_grid_sf, preddata_sf, join = st_nearest_feature)
+cropped_grid <- st_intersection(cropped_grid, area.sf.proj)
+
+pred <- ggplot() +
+  geom_sf(data = cropped_grid, aes(fill = Prediction_xy), color = NA) +
+  geom_sf(data=segdata_sf, fill=NA, color="white", linewidth=.001) +
+  labs(title="Spotted dolphins, Gulf of Mexico, abundance estimates",
+       subtitle = "Bivariate smooth of location, quasipoisson") +
+  scale_fill_viridis_c(option = "viridis", direction = 1)
+pred
 ```
 
 We can calculate abundance over the survey area by simply summing these predictions:
@@ -526,12 +523,21 @@ sum(dsm.xy.pred)
 
 We can compare this with a plot of the predictions from this `dsm.xy.depth`:
 
-```{r dsm.xy.depth-preds, fig.cap=""}
+```{r dsm.xy.depth-preds, fig.cap="", fig.dim=c(7,5)}
 dsm.xy.depth.pred <- predict(dsm.xy.depth, preddata, preddata$area)
-p <- ggplot() + grid_plot_obj(dsm.xy.depth.pred, "Abundance", pred.polys) + coord_equal() +gg.opts
-p <- p + geom_path(aes(x=x, y=y), data=survey.area)
-p <- p + labs(fill="Abundance")
-print(p)
+
+preddata_sf$Prediction_xy_depth <- dsm.xy.depth.pred
+
+cropped_grid <- st_join(prediction_grid_sf, preddata_sf, join = st_nearest_feature)
+cropped_grid <- st_intersection(cropped_grid, area.sf.proj)
+
+pred <- ggplot() +
+  geom_sf(data = cropped_grid, aes(fill = Prediction_xy_depth), color = NA) +
+  geom_sf(data=segdata_sf, fill=NA, color="white", linewidth=.001) +
+  labs(title="Spotted dolphins, Gulf of Mexico, abundance estimates",
+       subtitle = "Bivariate smooth of location, smooth of depth, quasipoisson") +
+  scale_fill_viridis_c(option = "viridis", direction = 1)
+pred
 ```
 
 We can see the inclusion of depth into the model has had a noticeable effect on the distribution (note the difference in legend scale between the two plots). We can again also look at the total abundance:
@@ -548,16 +554,16 @@ Obviously point estimates of abundance are important, but we should also calcula
 
 There are two approaches to estimating the uncertainty of an abundance estimate in `dsm`.
 
-- `dsm.var.gam` which assumes that the spatial model and detection function parts of the model are independent of each other. In this case the squared coefficients of variation for each model component are added.
-- `dsm.var.prop` which takes into account the fact that detection probability may be correlated with the spatial part of the model. It uses methods described in [@bravington_reliable_2018].
+- `dsm_var_gam` which assumes that the spatial model and detection function parts of the model are independent of each other. In this case the squared coefficients of variation for each model component are added.
+- `dsm_var_prop` which takes into account the fact that detection probability may be correlated with the spatial part of the model. It uses methods described in [@bravington_variance_2021].
 
-`dsm.var.prop` can only be applied when there is a covariate in the detection function that varies at the level of the segments, and is recorded at each segment (for example Beaufort). We don't have that situation here, so we opt for `dsm.var.gam`.
+`dsm_var_prop` can only be applied when there is a covariate in the detection function that varies at the level of the segments, and is recorded at each segment (for example Beaufort). We don't have that situation here, so we opt for `dsm_var_gam`.
 
- Both methods estimate the variance of the abundance for each element in the list provided in `pred.data`. In our case we wish to obtain an abundance for each of the prediction cells, so we use `split` to chop our data set into list elements to give to `dsm.var.gam` (or `dsm.var.prop`).
+ Both methods estimate the variance of the abundance for each element in the list provided in `pred.data`. In our case we wish to obtain an abundance for each of the prediction cells, so we use `split` to chop our data set into list elements to give to `dsm_var_gam` (or `dsm_var_prop`).
 
 ```{r dsm.xy-var, cache=TRUE}
 preddata.var <- split(preddata, 1:nrow(preddata))
-dsm.xy.var <- dsm.var.gam(dsm.xy, pred.data=preddata.var,
+dsm.xy.var <- dsm_var_gam(dsm.xy, pred.data=preddata.var,
                           off.set=preddata$area)
 ```
 
@@ -569,12 +575,19 @@ summary(dsm.xy.var)
 
 We can also make a plot of the CVs (with transect lines and observations overlaid) using the following code.
 
-```{r dsm.xyvarplot, fig.cap=""}
-p <- ggplot() + grid_plot_obj(sqrt(dsm.xy.var$pred.var)/unlist(dsm.xy.var$pred),
-                              "CV", pred.polys) + coord_equal() +gg.opts
-p <- p + geom_path(aes(x=x, y=y), data=survey.area)
-p <- p + geom_line(aes(x, y, group=Transect.Label), data=segdata)
-print(p)
+```{r dsm.xyvarplot, fig.cap="", fig.dim=c(7,5)}
+preddata_sf$CV <- sqrt(dsm.xy.var$pred.var)/preddata_sf$Prediction_xy
+
+cropped_grid <- st_join(prediction_grid_sf, preddata_sf, join = st_nearest_feature)
+cropped_grid <- st_intersection(cropped_grid, area.sf.proj)
+
+CV <- ggplot() +
+  geom_sf(data = cropped_grid, aes(fill = CV), color = NA) +
+  geom_sf(data=segdata_sf, fill=NA, color="white", linewidth=.001) +
+  labs(title="Spotted dolphins, Gulf of Mexico, uncertainty (CV)",
+       subtitle = "Bivariate smooth of location, quasipoisson") +
+  scale_fill_viridis_c(option = "viridis", direction = 1)
+CV
 ```
 
 Note the increase in CV away from the transect lines.
@@ -582,7 +595,7 @@ Note the increase in CV away from the transect lines.
 We can revisit the model that included both depth and location smooths and observe that the coefficient of variation for that model is larger than that of the model with only the location smooth.
 
 ```{r dsm.xy.depth-varprop, cache=TRUE}
-dsm.xy.depth.var <- dsm.var.gam(dsm.xy.depth, pred.data=preddata.var,
+dsm.xy.depth.var <- dsm_var_gam(dsm.xy.depth, pred.data=preddata.var,
                                 off.set=preddata$area)
 summary(dsm.xy.depth.var)
 ```
@@ -592,13 +605,13 @@ summary(dsm.xy.depth.var)
 
 This document has outlined an analysis of spatially-explicit distance sampling data using the `dsm` package. Note that there are many possible models that can be fitted using `dsm` and that the aim here was to show just a few of the options. Results from the models can be rather different, so care must be taken in performing model selection, discrimination and criticism.
 
-
 # Software
 
  * `Distance` is available at [http://github.com/DistanceDevelopment/Distance](http://github.com/DistanceDevelopment/Distance) as well as on CRAN.
  * `dsm` is available at [http://github.com/DistanceDevelopment/dsm](http://github.com/DistanceDevelopment/dsm), as well as on CRAN.
 
-
 [^offsetcorrection]: An earlier version of this vignette incorrectly stated that the areas of the prediction cells were 444km$^2$. This has been corrected. Thanks to Phil Bouchet for pointing this out.
 [^MGET]: These operations can be performed in R using the `sp` and `rgeos` packages. It may, however, be easier to perform these operations in GIS such as ArcGIS -- in which case the MGET Toolbox may be useful.
 [^rsqoffset]: Note though that the adjusted $R^2$ for the model is defined as the proportion of variance explained but the "original" variance used for comparison doesn't include the offset (the area (or effective of the segments). It is therefore not recommended for one to directly interpret the $R^2$ value (see the `summary.gam` manual page for further details).
+
+# References
