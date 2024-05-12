@@ -1,0 +1,7 @@
+pandoc: 3.1.11
+pkgdown: 2.0.9
+pkgdown_sha: ~
+articles:
+  mexico-analysis: lines_gomex/mexico-analysis.html
+last_built: 2024-05-12T14:52Z
+
