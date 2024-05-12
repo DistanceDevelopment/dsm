@@ -1,0 +1,30 @@
+url: ~
+template:
+  bootstrap: 5
+  bslib:
+    bg: "#fcfaf2"
+    fg: "#000000"
+    primary: "#0542a3"
+  include-in-header:
+    file: Clarity.txt
+
+navbar:
+  bg: primary
+  structure:
+    right: [twitter, github]
+  components:
+    twitter:
+      icon: fa-twitter
+      href: https://twitter.com/distancesamp
+      aria-label: Twitter
+footer:
+  structure:
+    right: donate
+    left: clarity
+
+  components:
+    donate: "If you wish to donate to development and maintenance"    
+    clarity:  "We improve our site and software support by using Microsoft Clarity to see <br>
+      how you use our website. By using our site, you agree that we and Microsoft <br>
+      can collect and use this data. Clarity is GDPR compliant."
+
