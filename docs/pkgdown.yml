@@ -2,6 +2,7 @@ pandoc: 3.1.11
 pkgdown: 2.0.9
 pkgdown_sha: ~
 articles:
+  dsm-data-formatting: data_format/dsm-data-formatting.html
   mexico-analysis: lines_gomex/mexico-analysis.html
-last_built: 2024-05-12T14:52Z
+last_built: 2024-05-13T07:13Z
 
