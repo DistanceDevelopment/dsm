@@ -5,83 +5,62 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="'Making sure your data is in the correct format for `dsm`.'
-">
 <title>`dsm` data formatting example • dsm</title>
 <script src="../../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js" integrity="sha512-7O5pXpc0oCRrxk8RUfDYFgn0nO1t+jLuIOQdOMRp4APB7uZ4vSjspzp5y6YDtDs4VzUSTbWzBFZ/LKJhnyFOKw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../../pkgdown.js"></script><meta property="og:title" content="`dsm` data formatting example">
+<script src="../../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
+<link href="../../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../../deps/headroom-0.11.0/headroom.min.js"></script><script src="../../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../../deps/search-1.0.0/fuse.min.js"></script><script src="../../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../../pkgdown.js"></script><meta property="og:title" content="`dsm` data formatting example">
+<meta name="description" content="'Making sure your data is in the correct format for `dsm`.'
+">
 <meta property="og:description" content="'Making sure your data is in the correct format for `dsm`.'
 ">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
-    
 
-    <nav class="navbar fixed-top navbar-dark navbar-expand-lg bg-primary" data-bs-theme="dark"><div class="container">
-    
+
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../../index.html">dsm</a>
 
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.3.3.9001</small>
 
-    
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="../../reference/index.html">Reference</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../../articles/data_format/dsm-data-formatting.html">`dsm` data formatting example</a>
-    <a class="dropdown-item" href="../../articles/lines_gomex/mexico-analysis.html">Example `dsm` analysis: pantropical dolphins in the Gulf of Mexico</a>
-  </div>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="../../articles/data_format/dsm-data-formatting.html">`dsm` data formatting example</a></li>
+    <li><a class="dropdown-item" href="../../articles/lines_gomex/mexico-analysis.html">Example `dsm` analysis: pantropical dolphins in the Gulf of Mexico</a></li>
+  </ul>
 </li>
-<li class="nav-item">
-  <a class="nav-link" href="../../news/index.html">Changelog</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../../news/index.html">Changelog</a></li>
       </ul>
-<form class="form-inline my-2 my-lg-0" role="search">
-        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../../search.json" id="search-input" placeholder="Search for" autocomplete="off">
-</form>
-
-      <ul class="navbar-nav">
-<li class="nav-item">
-  <a class="external-link nav-link" href="https://twitter.com/distancesamp" aria-label="Twitter">
-    <span class="fa fa-twitter"></span>
-     
-  </a>
-</li>
-<li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/DistanceDevelopment/dsm/" aria-label="github">
-    <span class="fab fa fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+<ul class="navbar-nav">
+<li class="nav-item"><a class="external-link nav-link" href="https://twitter.com/distancesamp" aria-label="Twitter"><span class="fa fa-twitter"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/DistanceDevelopment/dsm/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
-    
+
   </div>
 </nav><div class="container template-article">
 
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="" class="logo" alt=""><h1>`dsm` data formatting example</h1>
+
+      <h1>`dsm` data formatting example</h1>
                         <h4 data-toc-skip class="author">David L Miller</h4>
             <address class="author_afil">
-      CREEM, University of St Andrews<br><h4 data-toc-skip class="date">May 2024</h4>
+      CREEM, University of St Andrews<br><h4 data-toc-skip class="date">November 2024</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/DistanceDevelopment/dsm/blob/HEAD/vignettes/data_format/dsm-data-formatting.Rmd" class="external-link"><code>vignettes/data_format/dsm-data-formatting.Rmd</code></a></small>
       <div class="d-none name"><code>dsm-data-formatting.Rmd</code></div>
@@ -128,7 +107,7 @@
 <li>a table linking the above two (argument <code>observation.data</code>), making sure each detection has a corresponding segment.</li>
 </ul>
 <div class="float">
-<img src="images/dsm_tables.png" style="width:100.0%" alt="Correspondence between dsm tables"><div class="figcaption">Correspondence between <code>dsm</code> tables</div>
+<img src="images%2Fdsm_tables.png" style="width:100.0%" alt="Correspondence between dsm tables"><div class="figcaption">Correspondence between <code>dsm</code> tables</div>
 </div>
 <p>The above image gives an overview of how the different <code>data.frames</code> interact, along with how that corresponds to the real life situation of collecting data on a transect.</p>
 <p>The rest of this example goes through each table in turn, explaining their construction.</p>
@@ -179,9 +158,10 @@
 <p>As an example, we will look at an aerial survey of seabirds off the coast of Rhode Island, USA. Data from these surveys were collected by the University of Rhode Island and analysed in <span class="citation">K. Winiarski, Miller, Paton, &amp; McWilliams (2013)</span>, <span class="citation">K. J. Winiarski, Burt, et al. (2014)</span> and <span class="citation">K. J. Winiarski, Miller, Paton, &amp; McWilliams (2014)</span>. I have the transects saved as a shapefile that I will then “chop-up” into segments. To start with let’s plot the data with the coastline:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># coast data, just for reference</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Warning: package 'sf' was built under R version 4.4.2</span></span></code></pre>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># coast data, just for reference</span></span>
 <span><span class="va">coastline</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">read_sf</a></span><span class="op">(</span><span class="st">"data/ri_coast.shp"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># our transect lines</span></span>
@@ -201,7 +181,7 @@
 <p><img src="dsm-data-formatting_files/figure-html/unnamed-chunk-4-1.png"><!-- --></p>
 <p>In the above code we have loaded the <a href="https://r-spatial.github.io/sf/" class="external-link"><code>sf</code> package</a>. This is the package we will use to do most of our spatial work in segmenting the data. It has most of the tools expected from a GIS, though the package is still being developed so its functionality is always increasing.</p>
 <p>Investigating the <code>transects</code> data we loaded, we can see it consists of a <code>data.frame</code> with some extra bits (the spatial information, including locations (<code>geometry</code>) and projection (<code>CRS</code>)):</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">transects</span></span></code></pre></div>
 <pre><code><span><span class="co">## Simple feature collection with 26 features and 1 field</span></span>
 <span><span class="co">## Geometry type: LINESTRING</span></span>
@@ -224,7 +204,7 @@
 <span><span class="co">## <span style="color: #949494;"># ℹ 16 more rows</span></span></span></code></pre>
 <p>We have one row per transect (for a total of 24 transects), each of which consists of a line joining the start and end points that make up the transects. If we want we can plot individual rows via <code>plot(transects[1,])</code>; this can be useful to check that each row is a single line, or if further processing is needed (this can be tricky and is not covered in this tutorial but see “More information” below).</p>
 <p>This data looks in good shape, so we can use the <code>st_segmentize</code> function to take each transect and make segments from them. To make sure everything works correctly, we need to project the data first. Here I’m using an appropriate projected coordinate system (EPSG code 6348), which is the Rhode Island State Plane.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># project transects</span></span>
 <span><span class="va">transects</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">transects</span>, <span class="fl">6348</span><span class="op">)</span></span>
 <span></span>
@@ -236,7 +216,7 @@
 <span><span class="va">transects</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">transects</span>, <span class="fl">4326</span><span class="op">)</span></span></code></pre></div>
 <p>Here we know the truncation used for the detection function was 1000m (the distances were collected in bins and this was the further bin), and since we’re trying to make our segments approximately square, we set the length to be twice that (since the truncation applies to either side of the transect), so 2000m.</p>
 <p>Looking at what that did:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">segs</span></span></code></pre></div>
 <pre><code><span><span class="co">## Simple feature collection with 26 features and 1 field</span></span>
 <span><span class="co">## Geometry type: LINESTRING</span></span>
@@ -258,13 +238,13 @@
 <span><span class="co">## <span style="color: #BCBCBC;">10</span>       10 (-71.421 41.38723, -71.41952 41.36946, -71.41804 41.3517, -71.41656…</span></span>
 <span><span class="co">## <span style="color: #949494;"># ℹ 16 more rows</span></span></span></code></pre>
 <p>See now that each row has many coordinates attached to it, just looking at the first row (transect 1) and comparing the coordinates between <code>transects</code> and <code>segs</code></p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html" class="external-link">st_coordinates</a></span><span class="op">(</span><span class="va">transects</span><span class="op">[</span><span class="fl">1</span>,<span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##              X        Y L1</span></span>
 <span><span class="co">## [1,] -71.86948 41.29969  1</span></span>
 <span><span class="co">## [2,] -71.86581 41.25891  1</span></span></code></pre>
 <p><code>transects</code> has just two coordinates in it (the start and end points of the line). Whereas:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html" class="external-link">st_coordinates</a></span><span class="op">(</span><span class="va">segs</span><span class="op">[</span><span class="fl">1</span>,<span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##              X        Y L1</span></span>
 <span><span class="co">## [1,] -71.86948 41.29969  1</span></span>
@@ -273,7 +253,7 @@
 <span><span class="co">## [4,] -71.86581 41.25891  1</span></span></code></pre>
 <p><code>segs</code> has 5, corresponding to our segment cut points.</p>
 <p>We now need to break up the rows of <code>segs</code> into multiple rows, one per segment. This is a bit fiddly. We use a function provided by <a href="https://dieghernan.github.io" class="external-link"><code>dieghernan</code></a> on <a href="https://dieghernan.github.io/201905_Cast-to-subsegments/" class="external-link">their site</a> to do this. We first load the function (don’t worry about understanding the code!):</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">stdh_cast_substring</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">to</span> <span class="op">=</span> <span class="st">"MULTILINESTRING"</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">ggg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_geometry</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span></span>
@@ -310,11 +290,11 @@
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">endgeom</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>We can then use it to separate the segments and look at the results:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">segs</span> <span class="op">&lt;-</span> <span class="fu">stdh_cast_substring</span><span class="op">(</span><span class="va">segs</span>, to<span class="op">=</span><span class="st">"LINESTRING"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning in st_cast.sf(., "LINESTRING"): repeating attributes for all</span></span>
 <span><span class="co">## sub-geometries for which they may not be constant</span></span></code></pre>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">segs</span></span></code></pre></div>
 <pre><code><span><span class="co">## Simple feature collection with 590 features and 1 field</span></span>
 <span><span class="co">## Geometry type: LINESTRING</span></span>
@@ -336,17 +316,17 @@
 <span><span class="co">## <span style="color: #BCBCBC;">10</span>        3 (-71.78654 41.29813, -71.78505 41.28065)</span></span>
 <span><span class="co">## <span style="color: #949494;"># ℹ 580 more rows</span></span></span></code></pre>
 <p>We now have 590 segments between 1km and 2km long. We can check the lengths using the <code>st_length</code> function and plot a histogram of the segment lengths:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html" class="external-link">st_length</a></span><span class="op">(</span><span class="va">segs</span><span class="op">)</span>, xlab<span class="op">=</span><span class="st">"Segment lengths (m)"</span>, main<span class="op">=</span><span class="st">""</span><span class="op">)</span></span></code></pre></div>
 <p><img src="dsm-data-formatting_files/figure-html/length-segs-1.png"><!-- --></p>
 <p>Note that in setting the <code>dfMaxLength</code> argument to <code>st_segmentize</code> we are giving a rough guide to the segment length and the algorithm inside <code>st_segmentize</code> tries to get segments to be as equal in length as possible (note the <span class="math inline">\(x\)</span> axis in the histogram).</p>
 <p>Note also that the <code>Transect</code> column in <code>segs</code> now has duplicate entries as each transect has multiple segments in it. We can now create our required columns for <code>dsm</code>.</p>
 <p>First, the <code>Effort</code> column can be generated using <code>st_length</code>:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">segs</span><span class="op">$</span><span class="va">Effort</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html" class="external-link">st_length</a></span><span class="op">(</span><span class="va">segs</span><span class="op">)</span></span></code></pre></div>
 <p>Then we can generate the <code>Sample.Labels</code>. Here I’ll use a more complicated naming scheme to show how that’s done, but one could simply write <code>segs$Sample.Label &lt;- 1:nrow(segs)</code> and that would be sufficient. Instead, I would like to have my <code>Sample.Label</code> be the “<code>YEAR</code>-<code>AREA</code>-<code>LINE</code>-<code>SEGMENT</code>” scheme I suggested above.</p>
 <p>There are fancier ways to do this, but for clarity, let’s use a <code>for</code> loop:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># create a dummy column that we can fill in as we go</span></span>
 <span><span class="va">segs</span><span class="op">$</span><span class="va">Sample.Label</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
 <span></span>
@@ -363,7 +343,7 @@
 <span>                                                           <span class="fl">1</span><span class="op">:</span><span class="va">n_segs</span>, sep<span class="op">=</span><span class="st">"-"</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>Now we can check that looks right:</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">segs</span></span></code></pre></div>
 <pre><code><span><span class="co">## Simple feature collection with 590 features and 3 fields</span></span>
 <span><span class="co">## Geometry type: LINESTRING</span></span>
@@ -386,7 +366,7 @@
 <span><span class="co">## <span style="color: #949494;"># ℹ 580 more rows</span></span></span></code></pre>
 <p>With the required columns taken care of, we can also calculate the centroids of our segments to get the locations of each segment to use in the spatial model. Handily we can use <code>st_centroid</code> to do this in one step and keep all our data at the same time.</p>
 <p>We get a warning about how centroids might not be calculated correctly when latitude/longitude are used. So again we need to project the data first (to Rhode Island State Plane) for this step using <code>st_transform</code>.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># save the line version of segs for plotting later</span></span>
 <span><span class="va">segs_lines</span> <span class="op">&lt;-</span> <span class="va">segs</span></span>
 <span></span>
@@ -396,7 +376,7 @@
 <span><span class="co"># find centroids</span></span>
 <span><span class="va">segs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html" class="external-link">st_centroid</a></span><span class="op">(</span><span class="va">segs</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning: st_centroid assumes attributes are constant over geometries</span></span></code></pre>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># project back to lat/long</span></span>
 <span><span class="va">segs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">segs</span>, <span class="fl">4326</span><span class="op">)</span></span>
 <span></span>
@@ -422,7 +402,7 @@
 <span><span class="co">## <span style="color: #BCBCBC;">10</span>        3  (-71.7858 41.28939)  <span style="text-decoration: underline;">1</span>948. 2010-RI-3-2 </span></span>
 <span><span class="co">## <span style="color: #949494;"># ℹ 580 more rows</span></span></span></code></pre>
 <p>Notice that our <code>geometry type</code> is now <code>POINT</code>. We can plot these centroids on our previous map:</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="co"># geom_sf knows what to do with spatial data</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">coastline</span><span class="op">)</span> <span class="op">+</span></span>
@@ -435,11 +415,11 @@
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></code></pre></div>
 <p><img src="dsm-data-formatting_files/figure-html/unnamed-chunk-6-1.png"><!-- --></p>
 <p>At present, the <code>dsm</code> package doesn’t know how to talk to <code>sf</code> objects, so as a final step we need to simplify <code>segs</code> to be a regular <code>data.frame</code>, which <code>dsm</code> can interpret. We can extract the coordinates of the centroids using <code>st_coordinates</code> and then append them onto a <code>data.frame</code> version of the object with the geometry dropped, like so:</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">segs_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="va">segs</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>              <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html" class="external-link">st_coordinates</a></span><span class="op">(</span><span class="va">segs</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>We can double check that looks right:</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">segs_df</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   Transect       Effort Sample.Label         X        Y</span></span>
 <span><span class="co">## 1        1 1515.147 [m]  2010-RI-1-1 -71.86887 41.29289</span></span>
@@ -473,7 +453,7 @@
 </h4>
 <p>There are a few methods for building the observation table. Here I’ll illustrate one assigning detections to segments based on their distance (i.e., detections are associated with their closest segment centroid). This is appropriate when you don’t see forwards too far, so it’s unlikely that detections will be miss assigned. This is true, for instance, in an aerial survey where observers look out windows located on the sides of the plane but might be inappropriate for a shipboard survey where observers on the flying bridge can see way ahead of the ship.</p>
 <p>First loading the detection data for this survey (this would be what we use to fit the detection function, post-processing):</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">obs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">"data/loons.csv"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">obs</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##         Date     Time Bin      Lat      Long Observer object size</span></span>
@@ -484,7 +464,7 @@
 <span><span class="co">## 5 2011-02-23 18991230   A 40.94153 -71.38517       KW    446    1</span></span>
 <span><span class="co">## 6 2011-02-07 18991230   A 40.94225 -71.46438       KW    457    1</span></span></code></pre>
 <p>We can see there are columns for latitude and longitude (<code>Lat</code> and <code>Long</code>). We can make this <code>data.frame</code> be an <code>sf</code> object by telling <code>sf</code> that these columns contain spatial coordinates (in <code>sf</code> lingo, “geometry”):</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">obs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="va">obs</span>, coords<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Long"</span>, <span class="st">"Lat"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># set the coordinate system</span></span>
 <span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="va">obs</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">4326</span></span>
@@ -507,7 +487,7 @@
 <span><span class="co">## 9  2011-02-23 18991230   B       JV    814    1 POINT (-71.51172 40.97912)</span></span>
 <span><span class="co">## 10 2011-04-19 18991230   A       KW    911    1 POINT (-71.59762 40.98571)</span></span></code></pre>
 <p>We can overlay this on our previous map of transects:</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="co"># geom_sf knows what to do with spatial data</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">coastline</span><span class="op">)</span> <span class="op">+</span></span>
@@ -520,7 +500,7 @@
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></code></pre></div>
 <p><img src="dsm-data-formatting_files/figure-html/unnamed-chunk-7-1.png"><!-- --></p>
 <p>Going back to our <code>segs</code> object above, we can use the <code>st_join</code> function, combined with the <code>st_nearest_feature</code> function to control how the tables are linked. Again, we need to project the data to avoid issues.</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># project segs</span></span>
 <span><span class="va">segs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">segs</span>, <span class="fl">6348</span><span class="op">)</span></span>
 <span><span class="va">obs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">obs</span>, <span class="fl">6348</span><span class="op">)</span></span>
@@ -564,7 +544,7 @@
 <span><span class="co">## 9   2010-RI-7-22 POINT (-71.51172 40.97912)</span></span>
 <span><span class="co">## 10  2010-RI-24-9 POINT (-71.59762 40.98571)</span></span></code></pre>
 <p>Now <code>obs</code> has acquired additional columns from <code>segs</code>, including the <code>Sample.Label</code> (which we want) and <code>Effort</code> (which we don’t). To check this worked okay, we can plot the <code>obs</code> and <code>segs_lines</code> (the line version of the segments which we saved earlier) with colour coding for the <code>Sample.Label</code>. I randomized the colour order so it would be easier to tell if observations were misallocated.</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># make a random colour palette to avoid similar colours being near each other</span></span>
 <span><span class="va">pal</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">rainbow</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">segs</span><span class="op">)</span>, s<span class="op">=</span><span class="fl">.6</span>, v<span class="op">=</span><span class="fl">.9</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">segs</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">segs</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
@@ -581,7 +561,7 @@
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></code></pre></div>
 <p><img src="dsm-data-formatting_files/figure-html/plot-check-1.png"><!-- --></p>
 <p>As with <code>segs</code> we can remove unnecessary columns and geometry to get the required columns only:</p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># get rid of "spatialness"</span></span>
 <span><span class="va">obs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="va">obs</span><span class="op">)</span></span>
 <span><span class="co"># select the columns we need</span></span>
@@ -627,7 +607,7 @@ Winiarski, K., Miller, D., Paton, P., &amp; McWilliams, S. (2013). Spatially exp
 </div>
 </div>
 </div>
-  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
 
@@ -638,15 +618,15 @@ Winiarski, K., Miller, D., Paton, P., &amp; McWilliams, S. (2013). Spatially exp
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>If you wish to donate to development and maintenance</p>
+  <p>If you wish to donate to development and maintenance, please <a href="mailto:distance@st-andrews.ac.uk">email us</a>.</p>
 </div>
 
     </footer>
 </div>
 
-  
 
-  
+
+
 
   </body>
 </html>
