@@ -3,8 +3,28 @@ Maintainer: Laura Marshall <lhm@st-andrews.ac.uk>
 License: GPL (>= 2)
 Title: Density Surface Modelling of Distance Sampling Data
 LazyLoad: yes
-Author: David L. Miller, Eric Rexstad, Louise Burt, Mark V. Bravington,
-    Sharon Hedley, Megan Ferguson, Natalie Kelly.
+Authors@R: 
+  c(person(given=c("David", "L."),
+           family="Miller",
+           role=c("aut")),
+    person(given="Eric",
+           family="Rexstad",
+           role="ctb"),
+    person(given="Louise",
+           family="Burt",
+           role="ctb"),
+    person(given=c("Mark", "V."),
+           family="Bravington",
+           role="ctb"),
+    person(given="Sharon",
+           family="Hedley",
+           role="ctb"),
+    person(given="Megan",
+           family="Ferguson",
+           role="ctb"),
+    person(given="Natalie",
+           family="Kelly",
+           role="ctb"))
 Description: Density surface modelling of line transect data. A Generalized
     Additive Model-based approach is used to calculate spatially-explicit estimates
     of animal abundance from distance sampling (also presence/absence and strip
