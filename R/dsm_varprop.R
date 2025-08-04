@@ -24,7 +24,7 @@
 #'
 #' Note that we can use `var.type="Vc"` here (see `gamObject`), which is the
 #' variance-covariance matrix for the spatial model, corrected for smoothing
-#' parameter uncertainty. See Wood, Pya & S{\"a}fken (2016) for more
+#' parameter uncertainty. See Wood, Pya & Säfken (2016) for more
 #' information.
 #'
 #' Models with fixed scale parameters (e.g., negative binomial) do not require
@@ -65,7 +65,7 @@
 #' Methods to Estimate Abundance and Evaluate Conservation Status of Rare
 #' Species. Conservation Biology 25(3), 526-535.
 #'
-#' Wood, S.N., Pya, N. and S{\"a}fken, B. (2016) Smoothing parameter and model
+#' Wood, S.N., Pya, N. and Säfken, B. (2016) Smoothing parameter and model
 #' selection for general smooth models. Journal of the American Statistical
 #' Association, 1-45.
 #'
@@ -75,7 +75,7 @@
 #' @param trace for debugging, see how the scale parameter estimation is going.
 #' @param var.type which variance-covariance matrix should be used (`"Vp"` for
 #' variance-covariance conditional on smoothing parameter(s), `"Vc"` for
-#' unconditional). See [`gamObject`][gamObject] for an details/explanation. If
+#' unconditional). See \code{\link[mgcv]{gamObject}} for an details/explanation. If
 #' in doubt, stick with the default, `"Vp"`.
 #' @param var_type deprecated, use `var.type` instead.
 #' @export

@@ -22,7 +22,7 @@ predictions and just return model objects.}
 
 \item{var.type}{which variance-covariance matrix should be used (\code{"Vp"} for
 variance-covariance conditional on smoothing parameter(s), \code{"Vc"} for
-unconditional). See \code{\link{gamObject}} for an details/explanation. If
+unconditional). See \code{\link[mgcv]{gamObject}} for an details/explanation. If
 in doubt, stick with the default, \code{"Vp"}.}
 
 \item{var_type}{deprecated, use \code{var.type} instead.}
@@ -64,7 +64,7 @@ used in the DSM.
 
 Note that we can use \code{var.type="Vc"} here (see \code{gamObject}), which is the
 variance-covariance matrix for the spatial model, corrected for smoothing
-parameter uncertainty. See Wood, Pya & S{\"a}fken (2016) for more
+parameter uncertainty. See Wood, Pya & Säfken (2016) for more
 information.
 
 Models with fixed scale parameters (e.g., negative binomial) do not require
@@ -97,7 +97,7 @@ and Findlay, K.P. (2011). Chilean Blue Whales as a Case Study to Illustrate
 Methods to Estimate Abundance and Evaluate Conservation Status of Rare
 Species. Conservation Biology 25(3), 526-535.
 
-Wood, S.N., Pya, N. and S{\"a}fken, B. (2016) Smoothing parameter and model
+Wood, S.N., Pya, N. and Säfken, B. (2016) Smoothing parameter and model
 selection for general smooth models. Journal of the American Statistical
 Association, 1-45.
 }

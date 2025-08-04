@@ -10,7 +10,8 @@
 #' @param Segment.Label label for the segments (default: `Segment.Label`).The
 #' result of calling [`order`][base::order] must make sense.
 #' @param resid.type the type of residuals used, see
-#' [`residuals.gam`][residuals.gam]. Defaults to `"scaled.pearson"` in the GAM
+#' \code{\link[mgcv]{residuals.gam}}. Defaults to `"scaled.pearson"`
+#' in the GAM
 #' case and `"normalized"` in the GAMM case (which are equivalent).
 #' @param fun the function to use, by default [`cor`][stats::cor], must take two
 #' column vectors as arguments.
