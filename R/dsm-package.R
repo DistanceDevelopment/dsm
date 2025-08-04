@@ -5,13 +5,12 @@
 #' generalized additive models to spatially-referenced data. See Miller et al
 #' (2013) for an introduction.
 #'
-#' Further information on distance sampling methods and example code is
-#' available at <https://distancesampling.org/R/>.
+#' Further information on distance sampling methods and example code
+#'  (including example analyses) is
+#' available at <https://distancesampling.org/software/Rpackages.html>.
 #'
 #' For help with distance sampling and this package, there is a Google Group
 #' <https://groups.google.com/forum/#!forum/distance-sampling>.
-#'
-#' A example analyses are available at <http://examples.distancesampling.org>.
 #'
 #' @name dsm-package
 #' @import mgcv nlme mrds

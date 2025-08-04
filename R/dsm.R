@@ -37,7 +37,7 @@
 #' alternative is to pass in a vector of length equal to the number of
 #' segments, containing appropriate weights.
 #'
-#' A example analyses are available at <http://examples.distancesampling.org>.
+#' Example analyses are available at <https://distancesampling.org/dsm/index.html>.
 #'
 #' @section Units:
 #'

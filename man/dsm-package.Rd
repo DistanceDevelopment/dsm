@@ -10,13 +10,12 @@ generalized additive models to spatially-referenced data. See Miller et al
 (2013) for an introduction.
 }
 \details{
-Further information on distance sampling methods and example code is
-available at \url{https://distancesampling.org/R/}.
+Further information on distance sampling methods and example code
+(including example analyses) is
+available at \url{https://distancesampling.org/software/Rpackages.html}.
 
 For help with distance sampling and this package, there is a Google Group
 \url{https://groups.google.com/forum/#!forum/distance-sampling}.
-
-A example analyses are available at \url{http://examples.distancesampling.org}.
 }
 \references{
 Hedley, S. and S. T. Buckland. 2004. Spatial models for line
