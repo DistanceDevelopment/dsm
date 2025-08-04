@@ -4,7 +4,11 @@ License: GPL (>= 2)
 Title: Density Surface Modelling of Distance Sampling Data
 LazyLoad: yes
 Authors@R: 
-  c(person(given=c("David", "L."),
+  c(person(given=c("Laura"),
+           family="Marshall",
+           email = "lhm@st-andrews.ac.uk" , 
+           role = "cre"),
+    person(given=c("David", "L."),
            family="Miller",
            role=c("aut")),
     person(given="Eric",
@@ -51,4 +55,4 @@ Suggests:
     tweedie,
     testthat
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.3.2
