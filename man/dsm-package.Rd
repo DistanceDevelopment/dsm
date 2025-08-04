@@ -11,7 +11,7 @@ generalized additive models to spatially-referenced data. See Miller et al
 }
 \details{
 Further information on distance sampling methods and example code is
-available at \url{http://distancesampling.org/R/}.
+available at \url{https://distancesampling.org/R/}.
 
 For help with distance sampling and this package, there is a Google Group
 \url{https://groups.google.com/forum/#!forum/distance-sampling}.

@@ -6,7 +6,7 @@
 #' (2013) for an introduction.
 #'
 #' Further information on distance sampling methods and example code is
-#' available at <http://distancesampling.org/R/>.
+#' available at <https://distancesampling.org/R/>.
 #'
 #' For help with distance sampling and this package, there is a Google Group
 #' <https://groups.google.com/forum/#!forum/distance-sampling>.
@@ -93,7 +93,7 @@ NULL
 #' the Beaufort sea state at the time of the observation. Coordinates for each
 #' observation and bathymetry data were also available as covariates for the
 #' analysis. A complete example analysis (and description of the data) is
-#' provided at <http://distancesampling.org/R/vignettes/mexico-analysis.html>.
+#' provided in the articles at <https://distancesampling.org/dsm/index.html>.
 #'
 #' @references Halpin, P.N., A.J. Read, E. Fujioka, B.D. Best, B. Donnelly,
 #' L.J. Hazen, C. Kot, K. Urian, E. LaBrecque, A. Dimatteo, J. Cleary, C. Good,

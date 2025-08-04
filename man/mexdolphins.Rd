@@ -17,7 +17,7 @@ observations of groups of dolphins. The group size was recorded, as well as
 the Beaufort sea state at the time of the observation. Coordinates for each
 observation and bathymetry data were also available as covariates for the
 analysis. A complete example analysis (and description of the data) is
-provided at \url{http://distancesampling.org/R/vignettes/mexico-analysis.html}.
+provided in the articles at \url{https://distancesampling.org/dsm/index.html}.
 }
 \references{
 Halpin, P.N., A.J. Read, E. Fujioka, B.D. Best, B. Donnelly,

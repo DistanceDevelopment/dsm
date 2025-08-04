@@ -1,7 +1,7 @@
 `dsm` - Density surface modelling
 -------------------------------
 
-[![Build Status](https://travis-ci.org/DistanceDevelopment/dsm.svg?branch=master)](https://travis-ci.org/DistanceDevelopment/dsm)
+[![Build Status](https://travis-ci.org/DistanceDevelopment/dsm.svg?branch=master)](https://app.travis-ci.com/DistanceDevelopment/dsm)
 [![CRAN (RStudio Mirror) Downloads](http://cranlogs.r-pkg.org/badges/dsm)](https://www.r-pkg.org:443/pkg/dsm)
 [![CRAN Version](http://www.r-pkg.org/badges/version/dsm)](https://www.r-pkg.org:443/pkg/dsm)
 

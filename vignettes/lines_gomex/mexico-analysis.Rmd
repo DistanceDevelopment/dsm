@@ -4,7 +4,7 @@ description: |
   Example spatial analysis of pantropical spotted dolphins.
 author:
   - name: David L Miller
-    url: http://distancesampling.org
+    url: https://distancesampling.org
     affiliation: CREEM, Univ of St Andrews
     affiliation_url: https://creem.st-andrews.ac.uk
 date: "`r format(Sys.time(), '%B %Y')`"
