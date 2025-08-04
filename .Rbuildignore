@@ -8,3 +8,5 @@ LICENSE
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^vignettes$
+Clarity.txt
