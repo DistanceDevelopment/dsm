@@ -29,7 +29,8 @@ result of calling \code{\link[base:order]{order}} must make sense.}
 \item{max.lag}{maximum lag to calculate at.}
 
 \item{resid.type}{the type of residuals used, see
-\code{\link{residuals.gam}}. Defaults to \code{"scaled.pearson"} in the GAM
+\code{\link[mgcv]{residuals.gam}}. Defaults to \code{"scaled.pearson"}
+in the GAM
 case and \code{"normalized"} in the GAMM case (which are equivalent).}
 
 \item{fun}{the function to use, by default \code{\link[stats:cor]{cor}}, must take two

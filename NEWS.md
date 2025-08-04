@@ -1,7 +1,7 @@
 # dsm 2.3.4
 
 - fix bug where if predictions were NA (e.g., predictions outside the soap boundary), all variances were NA due to propagation (#4)
-
+- fix CRAN NOTES regarding documentation links and special characters.
 
 # dsm 2.3.3
 
