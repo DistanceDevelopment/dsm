@@ -7,7 +7,7 @@
 check.cols(ddf.obj, segment.data, observation.data, segment.area)
 }
 \arguments{
-\item{ddf.obj}{a \code{ddf} object from \code{\link{mrds}}}
+\item{ddf.obj}{a \code{ddf} object from \code{\link[mrds]{mrds}}}
 
 \item{segment.data}{segment data as defined in \code{\link{dsm}}}
 

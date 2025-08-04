@@ -2,9 +2,9 @@
 #'
 #' Internal function to check that supplied `data.frames` have the correct
 #' columns and checks that sample labels are all unique.
-#' @param ddf.obj a `ddf` object from [`mrds`][mrds]
-#' @param segment.data segment data as defined in [`dsm`][dsm]
-#' @param observation.data observation data as defined in [`dsm`][dsm]
+#' @param ddf.obj a `ddf` object from \code{\link[mrds]{mrds}}
+#' @param segment.data segment data as defined in \code{\link{dsm}}
+#' @param observation.data observation data as defined in \code{\link{dsm}}
 #' @param segment.area area of segments
 #' @return nothing, but throws an error if something went wrong
 #' @author David Lawrence Miller
