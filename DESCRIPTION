@@ -10,7 +10,7 @@ Authors@R:
            role = "cre"),
     person(given=c("David", "L."),
            family="Miller",
-           role=c("aut")),
+           role=c("cre")),
     person(given="Eric",
            family="Rexstad",
            role="ctb"),
